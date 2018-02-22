@@ -19,7 +19,7 @@
 -- 7. When all targets within the engage zone are destroyed, the Su-25T CAS task is set to Accomplished.
 -- 8. The Su-25T will return to base.
 
-
+--test
 
 -- Create a local variable (in this case called CASEngagementZone) and 
 -- using the ZONE function find the pre-defined zone called "Engagement Zone" 
