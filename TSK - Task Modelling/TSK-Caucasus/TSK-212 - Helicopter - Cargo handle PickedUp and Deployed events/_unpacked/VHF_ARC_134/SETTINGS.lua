@@ -1,0 +1,9 @@
+settings=
+{
+	["dials"]=
+	{
+		["mode_dial"]=0,
+		["volume"]=0.98461538553238,
+		["manual_frequency"]=116000000,
+	},
+}
