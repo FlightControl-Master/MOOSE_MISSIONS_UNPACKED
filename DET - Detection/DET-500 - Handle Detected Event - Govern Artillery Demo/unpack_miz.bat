@@ -1,0 +1,4 @@
+del /S /Q "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/DET - Detection/DET-500 - Handle Detected Event - Govern Artillery Demo/_unpacked"
+md "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/DET - Detection/DET-500 - Handle Detected Event - Govern Artillery Demo/_unpacked"
+cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/DET - Detection/DET-500 - Handle Detected Event - Govern Artillery Demo/_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z x -r -y "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/DET - Detection/DET-500 - Handle Detected Event - Govern Artillery Demo/DET-500 - Handle Detected Event - Govern Artillery Demo.miz" *
