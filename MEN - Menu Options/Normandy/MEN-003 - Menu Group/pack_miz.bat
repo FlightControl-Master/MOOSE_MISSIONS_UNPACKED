@@ -1,0 +1,2 @@
+cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/MEN - Menu Options/Normandy/MEN-003 - Menu Group/_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/MEN - Menu Options/Normandy/MEN-003 - Menu Group/MEN-003 - Menu Group.miz" *
