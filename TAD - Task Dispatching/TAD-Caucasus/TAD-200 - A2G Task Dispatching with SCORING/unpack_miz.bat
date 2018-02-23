@@ -1,0 +1,4 @@
+del /S /Q "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TAD - Task Dispatching/TAD-Caucasus/TAD-200 - A2G Task Dispatching with SCORING/_unpacked"
+md "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TAD - Task Dispatching/TAD-Caucasus/TAD-200 - A2G Task Dispatching with SCORING/_unpacked"
+cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TAD - Task Dispatching/TAD-Caucasus/TAD-200 - A2G Task Dispatching with SCORING/_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z x -r -y "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TAD - Task Dispatching/TAD-Caucasus/TAD-200 - A2G Task Dispatching with SCORING/TAD-200 - A2G Task Dispatching with SCORING.miz" *

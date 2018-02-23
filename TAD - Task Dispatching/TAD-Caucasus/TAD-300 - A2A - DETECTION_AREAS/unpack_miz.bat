@@ -1,0 +1,4 @@
+del /S /Q "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TAD - Task Dispatching/TAD-Caucasus/TAD-300 - A2A - DETECTION_AREAS/_unpacked"
+md "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TAD - Task Dispatching/TAD-Caucasus/TAD-300 - A2A - DETECTION_AREAS/_unpacked"
+cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TAD - Task Dispatching/TAD-Caucasus/TAD-300 - A2A - DETECTION_AREAS/_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z x -r -y "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TAD - Task Dispatching/TAD-Caucasus/TAD-300 - A2A - DETECTION_AREAS/TAD-300 - A2A - DETECTION_AREAS.miz" *

@@ -1,0 +1,2 @@
+cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TAD - Task Dispatching/TAD-Caucasus/TAD-320 - A2A Task Dispatching DETECTION_UNITS/_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TAD - Task Dispatching/TAD-Caucasus/TAD-320 - A2A Task Dispatching DETECTION_UNITS/TAD-320 - A2A Task Dispatching DETECTION_UNITS.miz" *

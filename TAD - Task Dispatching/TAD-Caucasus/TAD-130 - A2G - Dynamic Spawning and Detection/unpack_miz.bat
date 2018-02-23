@@ -1,0 +1,4 @@
+del /S /Q "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TAD - Task Dispatching/TAD-Caucasus/TAD-130 - A2G - Dynamic Spawning and Detection/_unpacked"
+md "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TAD - Task Dispatching/TAD-Caucasus/TAD-130 - A2G - Dynamic Spawning and Detection/_unpacked"
+cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TAD - Task Dispatching/TAD-Caucasus/TAD-130 - A2G - Dynamic Spawning and Detection/_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z x -r -y "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TAD - Task Dispatching/TAD-Caucasus/TAD-130 - A2G - Dynamic Spawning and Detection/TAD-130 - A2G - Dynamic Spawning and Detection.miz" *
