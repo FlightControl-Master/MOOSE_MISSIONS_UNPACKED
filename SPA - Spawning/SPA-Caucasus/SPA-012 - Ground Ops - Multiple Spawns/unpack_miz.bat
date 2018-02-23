@@ -1,0 +1,4 @@
+del /S /Q "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/SPA - Spawning/SPA-Caucasus/SPA-012 - Ground Ops - Multiple Spawns/_unpacked"
+md "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/SPA - Spawning/SPA-Caucasus/SPA-012 - Ground Ops - Multiple Spawns/_unpacked"
+cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/SPA - Spawning/SPA-Caucasus/SPA-012 - Ground Ops - Multiple Spawns/_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z x -r -y "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/SPA - Spawning/SPA-Caucasus/SPA-012 - Ground Ops - Multiple Spawns/SPA-012 - Ground Ops - Multiple Spawns.miz" *
