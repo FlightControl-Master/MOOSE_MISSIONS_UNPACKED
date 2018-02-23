@@ -1,0 +1,2 @@
+cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/RAT - Random Air Traffic/Caucasus/RAT-005 - Resticted Coalition/_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/RAT - Random Air Traffic/Caucasus/RAT-005 - Resticted Coalition/RAT-005 - Restricted Coalition.miz" *
