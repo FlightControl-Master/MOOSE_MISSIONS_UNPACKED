@@ -1,0 +1,2 @@
+cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/BAI - Battlefield Air Interdiction/BAI-004 - BAI in a Zone by Airplane Group - Test Abort/_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/BAI - Battlefield Air Interdiction/BAI-004 - BAI in a Zone by Airplane Group - Test Abort/BAI-004 - BAI in a Zone by Airplane Group - Test Abort.miz" *
