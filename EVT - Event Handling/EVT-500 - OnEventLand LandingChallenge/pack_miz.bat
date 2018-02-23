@@ -1,0 +1,2 @@
+cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/EVT - Event Handling/EVT-500 - OnEventLand LandingChallenge/_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/EVT - Event Handling/EVT-500 - OnEventLand LandingChallenge/EVT-500 - OnEventLand LandingChallenge.miz" *
