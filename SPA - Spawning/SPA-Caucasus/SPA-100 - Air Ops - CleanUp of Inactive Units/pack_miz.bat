@@ -1,0 +1,2 @@
+cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/SPA - Spawning/SPA-Caucasus/SPA-100 - Air Ops - CleanUp of Inactive Units/_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/SPA - Spawning/SPA-Caucasus/SPA-100 - Air Ops - CleanUp of Inactive Units/SPA-100 - Air Ops - CleanUp of Inactive Units.miz" *
