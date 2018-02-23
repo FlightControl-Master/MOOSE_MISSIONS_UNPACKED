@@ -1,0 +1,2 @@
+cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/FSM - Finite State Machine/FSM-100 - Transition Explanation/_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/FSM - Finite State Machine/FSM-100 - Transition Explanation/FSM-100 - Transition Explanation.miz" *
