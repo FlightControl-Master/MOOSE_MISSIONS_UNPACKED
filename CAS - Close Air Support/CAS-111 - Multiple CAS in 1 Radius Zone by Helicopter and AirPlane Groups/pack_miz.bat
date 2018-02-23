@@ -1,0 +1,2 @@
+cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/CAS - Close Air Support/CAS-111 - Multiple CAS in 1 Radius Zone by Helicopter and AirPlane Groups/_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/CAS - Close Air Support/CAS-111 - Multiple CAS in 1 Radius Zone by Helicopter and AirPlane Groups/CAS-111 - Multiple CAS in 1 Radius Zone by Helicopter and AirPlane Groups.miz" *
