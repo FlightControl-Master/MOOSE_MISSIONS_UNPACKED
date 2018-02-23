@@ -1,0 +1,2 @@
+cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/FOR - AI Group Formation/FOR-101 - Bomber Right Line Formation/_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/FOR - AI Group Formation/FOR-101 - Bomber Right Line Formation/FOR-101 - Bomber Right Line Formation.miz" *
