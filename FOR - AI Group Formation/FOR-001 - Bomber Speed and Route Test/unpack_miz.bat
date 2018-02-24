@@ -1,4 +1,4 @@
-del /S /Q "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/FOR - AI Group Formation/FOR-001 - Bomber Speed and Route Test/_unpacked"
-md "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/FOR - AI Group Formation/FOR-001 - Bomber Speed and Route Test/_unpacked"
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/FOR - AI Group Formation/FOR-001 - Bomber Speed and Route Test/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z x -r -y "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/FOR - AI Group Formation/FOR-001 - Bomber Speed and Route Test/FOR-001 - Bomber Speed and Route Test.miz" *
+del /S /Q "_unpacked"
+md "_unpacked"
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z x -r -y "..\FOR-001 - Bomber Speed and Route Test.miz" *

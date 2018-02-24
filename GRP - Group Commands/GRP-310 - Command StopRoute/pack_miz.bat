@@ -1,2 +1,2 @@
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/GRP - Group Commands/GRP-310 - Command StopRoute/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/GRP - Group Commands/GRP-310 - Command StopRoute/GRP-310 - Command StopRoute.miz" *
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\GRP-310 - Command StopRoute.miz" *

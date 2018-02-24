@@ -1,2 +1,2 @@
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/DET - Detection/DET-100 - Detection Probability Distance/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/DET - Detection/DET-100 - Detection Probability Distance/DET-100 - Detection Probability Distance.miz" *
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\DET-100 - Detection Probability Distance.miz" *

@@ -1,4 +1,4 @@
-del /S /Q "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/DES - Designation/DES-020 - Designation of AREAS - Status Menu Flash Activate/_unpacked"
-md "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/DES - Designation/DES-020 - Designation of AREAS - Status Menu Flash Activate/_unpacked"
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/DES - Designation/DES-020 - Designation of AREAS - Status Menu Flash Activate/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z x -r -y "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/DES - Designation/DES-020 - Designation of AREAS - Status Menu Flash Activate/DES-020 - Designation of AREAS - Status Menu Flash Activate.miz" *
+del /S /Q "_unpacked"
+md "_unpacked"
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z x -r -y "..\DES-020 - Designation of AREAS - Status Menu Flash Activate.miz" *

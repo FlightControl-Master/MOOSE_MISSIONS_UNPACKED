@@ -1,4 +1,4 @@
-del /S /Q "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/EVT - Event Handling/EVT-500 - OnEventLand LandingChallenge/_unpacked"
-md "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/EVT - Event Handling/EVT-500 - OnEventLand LandingChallenge/_unpacked"
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/EVT - Event Handling/EVT-500 - OnEventLand LandingChallenge/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z x -r -y "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/EVT - Event Handling/EVT-500 - OnEventLand LandingChallenge/EVT-500 - OnEventLand LandingChallenge.miz" *
+del /S /Q "_unpacked"
+md "_unpacked"
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z x -r -y "..VT-500 - OnEventLand LandingChallenge.miz" *

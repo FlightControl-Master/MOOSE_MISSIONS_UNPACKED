@@ -1,2 +1,2 @@
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/GRP - Group Commands/GRP-552 - Patrol in a zone/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/GRP - Group Commands/GRP-552 - Patrol in a zone/GRP-552 - Patrol in a zone.miz" *
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\GRP-552 - Patrol in a zone.miz" *

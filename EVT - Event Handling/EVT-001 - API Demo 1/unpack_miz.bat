@@ -1,4 +1,4 @@
-del /S /Q "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/EVT - Event Handling/EVT-001 - API Demo 1/_unpacked"
-md "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/EVT - Event Handling/EVT-001 - API Demo 1/_unpacked"
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/EVT - Event Handling/EVT-001 - API Demo 1/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z x -r -y "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/EVT - Event Handling/EVT-001 - API Demo 1/EVT-001 - API Demo 1.miz" *
+del /S /Q "_unpacked"
+md "_unpacked"
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z x -r -y "..VT-001 - API Demo 1.miz" *
