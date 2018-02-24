@@ -1,2 +1,2 @@
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TSK - Task Modelling/TSK-Caucasus/TSK-101 - A2G - BAI - WWII Mode/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TSK - Task Modelling/TSK-Caucasus/TSK-101 - A2G - BAI - WWII Mode/TSK-101 - A2G - BAI - WWII Mode.miz" *
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\TSK-101 - A2G - BAI - WWII Mode.miz" *

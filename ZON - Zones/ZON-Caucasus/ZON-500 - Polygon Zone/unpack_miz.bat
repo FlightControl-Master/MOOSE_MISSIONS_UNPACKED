@@ -1,4 +1,4 @@
-del /S /Q "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/ZON - Zones/ZON-Caucasus/ZON-500 - Polygon Zone/_unpacked"
-md "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/ZON - Zones/ZON-Caucasus/ZON-500 - Polygon Zone/_unpacked"
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/ZON - Zones/ZON-Caucasus/ZON-500 - Polygon Zone/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z x -r -y "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/ZON - Zones/ZON-Caucasus/ZON-500 - Polygon Zone/ZON-500 - Polygon Zone.miz" *
+del /S /Q "_unpacked"
+md "_unpacked"
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z x -r -y "..\ZON-500 - Polygon Zone.miz" *

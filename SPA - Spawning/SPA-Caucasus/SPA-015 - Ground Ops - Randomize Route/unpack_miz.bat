@@ -1,4 +1,4 @@
-del /S /Q "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/SPA - Spawning/SPA-Caucasus/SPA-015 - Ground Ops - Randomize Route/_unpacked"
-md "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/SPA - Spawning/SPA-Caucasus/SPA-015 - Ground Ops - Randomize Route/_unpacked"
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/SPA - Spawning/SPA-Caucasus/SPA-015 - Ground Ops - Randomize Route/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z x -r -y "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/SPA - Spawning/SPA-Caucasus/SPA-015 - Ground Ops - Randomize Route/SPA-015 - Ground Ops - Randomize Route.miz" *
+del /S /Q "_unpacked"
+md "_unpacked"
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z x -r -y "..\SPA-015 - Ground Ops - Randomize Route.miz" *

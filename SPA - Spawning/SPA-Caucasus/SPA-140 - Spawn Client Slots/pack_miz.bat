@@ -1,2 +1,2 @@
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/SPA - Spawning/SPA-Caucasus/SPA-140 - Spawn Client Slots/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/SPA - Spawning/SPA-Caucasus/SPA-140 - Spawn Client Slots/SPA-140 - Spawn Client Slots.miz" *
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\SPA-140 - Spawn Client Slots.miz" *

@@ -1,2 +1,2 @@
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TSK - Task Modelling/TSK-Caucasus/TSK-210 - Helicopter - Transport Cargo Group/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TSK - Task Modelling/TSK-Caucasus/TSK-210 - Helicopter - Transport Cargo Group/TSK-210 - Helicopter - Transport Cargo Group.miz" *
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\TSK-210 - Helicopter - Transport Cargo Group.miz" *

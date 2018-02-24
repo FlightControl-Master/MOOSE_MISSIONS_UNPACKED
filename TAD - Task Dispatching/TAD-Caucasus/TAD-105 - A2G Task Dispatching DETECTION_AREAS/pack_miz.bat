@@ -1,2 +1,2 @@
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TAD - Task Dispatching/TAD-Caucasus/TAD-105 - A2G Task Dispatching DETECTION_AREAS/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/TAD - Task Dispatching/TAD-Caucasus/TAD-105 - A2G Task Dispatching DETECTION_AREAS/TAD-105 - A2G Task Dispatching DETECTION_AREAS.miz" *
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\TAD-105 - A2G Task Dispatching DETECTION_AREAS.miz" *

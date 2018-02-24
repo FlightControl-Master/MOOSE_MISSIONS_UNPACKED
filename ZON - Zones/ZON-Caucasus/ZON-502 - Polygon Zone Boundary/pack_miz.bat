@@ -1,2 +1,2 @@
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/ZON - Zones/ZON-Caucasus/ZON-502 - Polygon Zone Boundary/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/ZON - Zones/ZON-Caucasus/ZON-502 - Polygon Zone Boundary/ZON-502 - Polygon Zone Boundary.miz" *
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\ZON-502 - Polygon Zone Boundary.miz" *
