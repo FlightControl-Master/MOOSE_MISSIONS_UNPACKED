@@ -1,2 +1,2 @@
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/AIB - AI Balancing/AIB-005 - Patrol AI and Randomize Zones/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/AIB - AI Balancing/AIB-005 - Patrol AI and Randomize Zones/AIB-005 - Patrol AI and Randomize Zones.miz" *
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\AIB-005 - Patrol AI and Randomize Zones.miz" *

@@ -1,2 +1,2 @@
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/ABP - Airbase Police/ABP-002 - Nevada/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/ABP - Airbase Police/ABP-002 - Nevada/ABP-002 - Nevada.miz" *
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\ABP-002 - Nevada.miz" *
