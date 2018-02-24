@@ -1,2 +1,2 @@
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/MEN - Menu Options/Normandy/MEN-102 - Menu Coalition Multi Player/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/MEN - Menu Options/Normandy/MEN-102 - Menu Coalition Multi Player/MEN-102 - Menu Coalition Multi Player.miz" *
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\MEN-102 - Menu Coalition Multi Player.miz" *
