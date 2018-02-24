@@ -1,4 +1,4 @@
-del /S /Q "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/BAI - Battlefield Air Interdiction/BAI-005 - BAI in a Zone by Airplane Group - Engage with WeaponExpend/_unpacked"
-md "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/BAI - Battlefield Air Interdiction/BAI-005 - BAI in a Zone by Airplane Group - Engage with WeaponExpend/_unpacked"
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/BAI - Battlefield Air Interdiction/BAI-005 - BAI in a Zone by Airplane Group - Engage with WeaponExpend/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z x -r -y "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/BAI - Battlefield Air Interdiction/BAI-005 - BAI in a Zone by Airplane Group - Engage with WeaponExpend/BAI-005 - BAI in a Zone by Airplane Group - Engage with WeaponExpend.miz" *
+del /S /Q "_unpacked"
+md "_unpacked"
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z x -r -y "..\BAI-005 - BAI in a Zone by Airplane Group - Engage with WeaponExpend.miz" *

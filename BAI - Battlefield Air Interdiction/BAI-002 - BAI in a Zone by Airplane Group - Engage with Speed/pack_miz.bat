@@ -1,2 +1,2 @@
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/BAI - Battlefield Air Interdiction/BAI-002 - BAI in a Zone by Airplane Group - Engage with Speed/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/BAI - Battlefield Air Interdiction/BAI-002 - BAI in a Zone by Airplane Group - Engage with Speed/BAI-002 - BAI in a Zone by Airplane Group - Engage with Speed.miz" *
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\BAI-002 - BAI in a Zone by Airplane Group - Engage with Speed.miz" *
