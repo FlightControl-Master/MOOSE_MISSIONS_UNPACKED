@@ -1,2 +1,2 @@
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/SCO - Scoring/SCO-500 - Scoring Multi Player Demo Mission 1/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/SCO - Scoring/SCO-500 - Scoring Multi Player Demo Mission 1/SCO-500 - Scoring Multi Player Demo Mission 1.miz" *
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\SCO-500 - Scoring Multi Player Demo Mission 1.miz" *

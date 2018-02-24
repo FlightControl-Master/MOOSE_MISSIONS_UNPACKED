@@ -1,2 +1,2 @@
-cd "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/RAD - Radio/RAD-002 - Transmission Tips and Tricks/_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/.7z/7z a -r -y -tzip "C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS/RAD - Radio/RAD-002 - Transmission Tips and Tricks/RAD-002 - Transmission Tips and Tricks.miz" *
+cd "_unpacked"
+C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\RAD-002 - Transmission Tips and Tricks.miz" *
