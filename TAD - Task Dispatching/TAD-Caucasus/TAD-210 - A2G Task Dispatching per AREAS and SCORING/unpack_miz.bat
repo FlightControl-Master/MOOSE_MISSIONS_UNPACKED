@@ -1,4 +1,4 @@
 del /S /Q "_unpacked"
 md "_unpacked"
 cd "_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z x -r -y "..\TAD-210 - A2G Task Dispatching per AREAS and SCORING.miz" *
+7z x -r -y "..\TAD-210 - A2G Task Dispatching per AREAS and SCORING.miz" *

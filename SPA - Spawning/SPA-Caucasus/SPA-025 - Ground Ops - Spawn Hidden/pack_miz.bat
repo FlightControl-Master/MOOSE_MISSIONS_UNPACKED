@@ -1,2 +1,2 @@
 cd "_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\SPA-025 - Ground Ops - Spawn Hidden.miz" *
+7z a -r -y -tzip "..\SPA-025 - Ground Ops - Spawn Hidden.miz" *

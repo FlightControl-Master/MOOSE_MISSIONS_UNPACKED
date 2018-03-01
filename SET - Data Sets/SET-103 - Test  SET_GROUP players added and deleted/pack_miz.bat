@@ -1,2 +1,2 @@
 cd "_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\SET-103 - Test  SET_GROUP players added and deleted.miz" *
+7z a -r -y -tzip "..\SET-103 - Test  SET_GROUP players added and deleted.miz" *

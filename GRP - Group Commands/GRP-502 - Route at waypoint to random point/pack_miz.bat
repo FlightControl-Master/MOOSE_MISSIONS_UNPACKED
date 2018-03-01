@@ -1,2 +1,2 @@
 cd "_unpacked"
-C:/Users/vandeves/Documents/GitHub/MOOSE_MISSIONS_UNPACKED/.7z/7z a -r -y -tzip "..\GRP-502 - Route at waypoint to random point.miz" *
+7z a -r -y -tzip "..\GRP-502 - Route at waypoint to random point.miz" *
