@@ -1,5 +1,8 @@
---- This makes a vehicle respawn itself when the mission starts.
--- Name: GRP-600 - Respawn
+--- This makes a vehicle respawn itself within ZONEVEHICLE1 hidden.
+-- The vehicle group consists of multiple units and are spawned in randomized within the new zone.
+-- The vehicle is hidden, so you need to observe from the watch tower (external view).
+--
+-- Name: GRP-617 - Respawn multiple units in Zone randomized hidden
 -- Author: FlightControl
 -- Date Created: 01 Mar 2018
 
@@ -11,6 +14,7 @@ RespawnZone1 = ZONE:New( "ZONEVEHICLE1")
 
 -- Prepare the spawning to be done in RespawnZone1.
 Vehicle:InitZone( RespawnZone1 )
+Vehicle:InitRandomizePositionZone( true )
 
 -- Respawn the vehicle in RespawnZone1.
 Vehicle:Respawn()

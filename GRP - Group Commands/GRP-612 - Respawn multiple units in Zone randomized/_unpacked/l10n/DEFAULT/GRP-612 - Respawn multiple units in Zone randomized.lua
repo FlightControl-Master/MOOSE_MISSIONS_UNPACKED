@@ -1,5 +1,7 @@
---- This makes a vehicle respawn itself when the mission starts.
--- Name: GRP-600 - Respawn
+--- This makes a vehicle respawn itself within ZONEVEHICLE1.
+-- The vehicle group consists of multiple units and are spawned in randomized within the new zone.
+--
+-- Name: GRP-612 - Respawn multiple units in Zone randomized.
 -- Author: FlightControl
 -- Date Created: 01 Mar 2018
 
@@ -11,6 +13,7 @@ RespawnZone1 = ZONE:New( "ZONEVEHICLE1")
 
 -- Prepare the spawning to be done in RespawnZone1.
 Vehicle:InitZone( RespawnZone1 )
+Vehicle:InitRandomizePositionZone( true )
 
 -- Respawn the vehicle in RespawnZone1.
 Vehicle:Respawn()
