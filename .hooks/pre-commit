@@ -65,13 +65,13 @@ else
             
             # Create pack_miz.bat
             printf "cd \"_unpacked\"\r\n" > pack_miz.bat
-            printf "$git_root/.7z/7z a -r -y -tzip \"..\\$mission_base\" *" >> pack_miz.bat
+            printf "7z a -r -y -tzip \"..\\$mission_base\" *" >> pack_miz.bat
             
             # create unpack_miz.bat
             printf "del /S /Q \"_unpacked\"\r\n" > unpack_miz.bat
             printf "md \"_unpacked\"\r\n" >> unpack_miz.bat
             printf "cd \"_unpacked\"\r\n" >> unpack_miz.bat
-            printf "$git_root/.7z/7z x -r -y \"..\\$mission_base\" *" >> unpack_miz.bat
+            printf "7z x -r -y \"..\\$mission_base\" *" >> unpack_miz.bat
             
             cd "$git_root"
             git add "$mission_dir/pack_miz.bat"
