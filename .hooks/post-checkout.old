@@ -1,0 +1,58 @@
+#!/bin/sh
+
+# post-checkout hook for Mission files Git tracking
+echo "post-checkout hook"
+
+# Set UTF-8 encoding
+export LANG=UTF-8
+# Needed to work in SourceTree
+export PATH=/usr/local/bin:$PATH
+
+# Git repository absolute path
+git_root=`git rev-parse --show-toplevel`
+
+IFS=$'\n'
+#find $git_root -regex ".*/_unpacked" -type d 
+for unpacked_directory in $(find $git_root -regex ".*/_unpacked" -type d)
+do
+
+  # Mission unpacked file directory
+  echo "Mission packing = $unpacked_directory"
+  
+  # Mission file path
+  mission_dir=`echo "$unpacked_directory" | sed "s/\/_unpacked//"`
+  #echo "- mission_dir = $mission_dir"
+  
+  mission_base=`basename "$mission_dir"`
+  #echo "- mission_base = $mission_base"
+  
+  mission_base="$mission_base.miz"
+  #echo "- mission_base = $mission_base"
+  
+  mission="$mission_dir/$mission_base"
+  #echo "- mission = $mission"
+  
+
+  #echo "- Processing '$mission_base'."
+
+  if mkdir -p "$mission_dir"
+  then
+    # Zip the directory to recreate the Mission file
+    cd "$mission_dir"
+    #echo "mission = $mission"
+    #rm -f "$mission"
+    printf "cd \"$unpacked_directory\"\r\n" > pack_miz.bat
+    printf "$git_root/.7z/7z a -r -y -tzip \"$mission\" *" >> pack_miz.bat
+    printf "del /S /Q \"$unpacked_directory\"\r\n" > unpack_miz.bat
+    printf "$git_root/.7z/7z x -r -y \"$mission\" _unpacked/*" >> unpack_miz.bat
+    #if $git_root/.7z/7z a -r -y -tzip "$mission" *
+    #then
+    #  echo "- Mission file '$mission_base' generated."
+    #else
+    #  echo "! Couldn't generate '$mission_base' mission file."
+    #  exit 1
+    #fi
+    cd "$git_root"
+  fi
+done
+

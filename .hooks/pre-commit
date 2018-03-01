@@ -1,0 +1,111 @@
+#!/bin/sh
+
+git config --global core.safecrlf false
+
+# pre-commit hook for Mission files Git tracking
+echo "pre-commit hook"
+
+# Set UTF-8 encoding
+export LANG=UTF-8
+# Needed to work in SourceTree
+export PATH=/usr/local/bin:$PATH
+
+# Git repository absolute path
+git_root=`git rev-parse --show-toplevel`
+# Unpacked files path
+unpacked="/_unpacked"
+# Packed files path
+packed="/_packed"
+# Lua files path
+lua="/_lua"
+
+# Array of all staged files
+git_diff=`git diff --name-only --cached | grep ".miz$"`
+
+echo "Files $git_diff"
+
+# Check if any Mission file is staged
+if [[ ${git_diff[0]} == '' ]]
+then
+  echo "Skipping."
+else
+  while read staged_Mission
+  do
+	echo "Processing Mission = $staged_Mission"
+	
+    # Absolute mission file paths
+    mission="$git_root/$staged_Mission"
+    echo "- mission = $mission"
+    mission_base=`basename "$mission"`
+    echo "- mission_base = $mission_base"
+    mission_dir=`dirname "$mission"`
+    echo "- mission_dir = $mission_dir"
+    
+    # Unpacked mission file path
+    mission_unpacked="$mission_dir$unpacked"
+    echo "- mission_unpacked = $mission_unpacked"
+
+    # Delete unpacked directory
+    rm -rf "$mission_unpacked"
+
+    # If Mission file wasn't deleted
+    if ! git diff --summary --cached -- $staged_Mission | grep "delete" 2>&1 > /dev/null
+    then
+
+      # Create directory
+      if mkdir -p "$mission_unpacked"
+      then
+        if cd "$mission_unpacked"
+        then
+          # Unzip Mission file
+          if $git_root/.7z/7z x -r -y "$mission" > /dev/null
+          then
+            echo "- '$mission_base' unpacked."
+            cd "$mission_dir"
+            
+            # Create pack_miz.bat
+            printf "cd \"_unpacked\"\r\n" > pack_miz.bat
+            printf "$git_root/.7z/7z a -r -y -tzip \"..\\$mission_base\" *" >> pack_miz.bat
+            
+            # create unpack_miz.bat
+            printf "del /S /Q \"_unpacked\"\r\n" > unpack_miz.bat
+            printf "md \"_unpacked\"\r\n" >> unpack_miz.bat
+            printf "cd \"_unpacked\"\r\n" >> unpack_miz.bat
+            printf "$git_root/.7z/7z x -r -y \"..\\$mission_base\" *" >> unpack_miz.bat
+            
+            cd "$git_root"
+            git add "$mission_dir/pack_miz.bat"
+            git add "$mission_dir/unpack_miz.bat"
+          else
+            echo "! Couldn't unzip '$mission_base'."
+            rm -rf "$mission_unpacked"
+            exit 1
+          fi
+          cd "$git_root"
+        else
+          echo "! Couldn't change directory to '$mission_unpacked'."
+          exit 1
+        fi
+      else
+        echo "! Couldn't create directory '$mission_unpacked'."
+        exit 1
+      fi
+    else
+      rm "$Mission"
+      #rm -rf "$untouched_Mission"
+      echo "- '$mission_base' was removed with all unpacked and untouched data."
+    fi
+    git add "$mission_unpacked/*"
+    
+    #git reset "$mission_unpacked/*"
+
+    #rm "$mission"
+
+    # Unstage working Mission file
+    git rm --cached "$mission"
+    
+    echo "---"
+  done <<< "$git_diff"
+fi
+
+
