@@ -88,7 +88,7 @@ mission =
             }, -- end of ["func"]
         }, -- end of ["red"]
     }, -- end of ["result"]
-    ["maxDictId"] = 66,
+    ["maxDictId"] = 68,
     ["pictureFileNameN"] = 
     {
     }, -- end of ["pictureFileNameN"]
@@ -252,7 +252,7 @@ mission =
     {
         ["centerY"] = 617378.38200001,
         ["zoom"] = 9705,
-        ["centerX"] = -355683.15185715,
+        ["centerX"] = -355688.69757144,
     }, -- end of ["map"]
     ["coalitions"] = 
     {
@@ -502,13 +502,13 @@ mission =
                                     {
                                         [1] = 
                                         {
-                                            ["alt"] = 10,
+                                            ["alt"] = 9,
                                             ["type"] = "Turning Point",
                                             ["ETA"] = 0,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
-                                            ["y"] = 616802.57285715,
-                                            ["x"] = -356313.0897143,
+                                            ["y"] = 616751.71628572,
+                                            ["x"] = -356291.79400001,
                                             ["name"] = "DictKey_WptName_42",
                                             ["ETA_locked"] = true,
                                             ["speed"] = 5.5555555555556,
@@ -562,15 +562,45 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["unitId"] = 7,
                                         ["skill"] = "Average",
-                                        ["y"] = 616802.57285715,
-                                        ["x"] = -356313.0897143,
+                                        ["y"] = 616751.71628572,
+                                        ["x"] = -356291.79400001,
                                         ["name"] = "DictKey_UnitName_41",
                                         ["playerCanDrive"] = true,
                                         ["heading"] = 5.3618780415805,
                                     }, -- end of [1]
+                                    [2] = 
+                                    {
+                                        ["type"] = "M-113",
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["unitId"] = 12,
+                                        ["skill"] = "Average",
+                                        ["y"] = 616904.22342858,
+                                        ["x"] = -356355.56971429,
+                                        ["name"] = "DictKey_UnitName_67",
+                                        ["playerCanDrive"] = true,
+                                        ["heading"] = 5.3618780415805,
+                                    }, -- end of [2]
+                                    [3] = 
+                                    {
+                                        ["type"] = "M-113",
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["unitId"] = 13,
+                                        ["skill"] = "Average",
+                                        ["y"] = 616873.72200001,
+                                        ["x"] = -356236.33685715,
+                                        ["name"] = "DictKey_UnitName_68",
+                                        ["playerCanDrive"] = true,
+                                        ["heading"] = 5.3618780415805,
+                                    }, -- end of [3]
                                 }, -- end of ["units"]
-                                ["y"] = 616802.57285715,
-                                ["x"] = -356313.0897143,
+                                ["y"] = 616751.71628572,
+                                ["x"] = -356291.79400001,
                                 ["name"] = "DictKey_GroupName_40",
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
@@ -797,6 +827,7 @@ mission =
             {
             }, -- end of ["rules"]
             ["eventlist"] = "",
+            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -810,7 +841,6 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["predicate"] = "triggerStart",
             ["comment"] = "MOOSE",
         }, -- end of [1]
         [2] = 
@@ -819,7 +849,6 @@ mission =
             {
             }, -- end of ["rules"]
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -834,6 +863,7 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
+            ["predicate"] = "triggerStart",
             ["comment"] = "TRACE",
         }, -- end of [2]
         [3] = 
@@ -843,6 +873,7 @@ mission =
             }, -- end of ["rules"]
             ["comment"] = "MISSION",
             ["eventlist"] = "",
+            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -856,10 +887,9 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["predicate"] = "triggerStart",
         }, -- end of [3]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 3196,
+    ["currentKey"] = 3257,
     ["start_time"] = 43200,
     ["forcedOptions"] = 
     {

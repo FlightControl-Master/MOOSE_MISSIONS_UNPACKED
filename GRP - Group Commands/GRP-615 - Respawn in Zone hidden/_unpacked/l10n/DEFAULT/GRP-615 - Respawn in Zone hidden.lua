@@ -1,5 +1,6 @@
---- This makes a vehicle respawn itself when the mission starts.
--- Name: GRP-600 - Respawn
+--- This makes a vehicle respawn within ZONEVEHICLE1.
+-- The vehicle is hidden, so you need to observe at the watch tower through external view.
+-- Name: GRP-615 - Respawn in Zone hidden
 -- Author: FlightControl
 -- Date Created: 01 Mar 2018
 

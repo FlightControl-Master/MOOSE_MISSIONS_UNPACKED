@@ -5,8 +5,8 @@ mission =
     }, -- end of ["requiredModules"]
     ["date"] = 
     {
-        ["Day"] = 1,
         ["Year"] = 2011,
+        ["Day"] = 1,
         ["Month"] = 6,
     }, -- end of ["date"]
     ["trig"] = 
@@ -88,7 +88,7 @@ mission =
             }, -- end of ["func"]
         }, -- end of ["red"]
     }, -- end of ["result"]
-    ["maxDictId"] = 66,
+    ["maxDictId"] = 71,
     ["pictureFileNameN"] = 
     {
     }, -- end of ["pictureFileNameN"]
@@ -136,16 +136,16 @@ mission =
                 ["speed"] = 0,
                 ["dir"] = 0,
             }, -- end of ["at8000"]
-            ["at2000"] = 
-            {
-                ["speed"] = 0,
-                ["dir"] = 0,
-            }, -- end of ["at2000"]
             ["atGround"] = 
             {
                 ["speed"] = 0,
                 ["dir"] = 0,
             }, -- end of ["atGround"]
+            ["at2000"] = 
+            {
+                ["speed"] = 0,
+                ["dir"] = 0,
+            }, -- end of ["at2000"]
         }, -- end of ["wind"]
         ["enable_fog"] = false,
         ["season"] = 
@@ -252,10 +252,32 @@ mission =
     {
         ["centerY"] = 617378.38200001,
         ["zoom"] = 9705,
-        ["centerX"] = -355683.15185715,
+        ["centerX"] = -355688.69757144,
     }, -- end of ["map"]
     ["coalitions"] = 
     {
+        ["blue"] = 
+        {
+            [1] = 11,
+            [2] = 4,
+            [3] = 6,
+            [4] = 16,
+            [5] = 13,
+            [6] = 15,
+            [7] = 9,
+            [8] = 8,
+            [9] = 12,
+            [10] = 2,
+            [11] = 3,
+            [12] = 5,
+            [13] = 10,
+            [14] = 20,
+            [15] = 21,
+            [16] = 40,
+            [17] = 26,
+            [18] = 45,
+            [19] = 28,
+        }, -- end of ["blue"]
         ["neutrals"] = 
         {
             [1] = 7,
@@ -294,28 +316,6 @@ mission =
             [34] = 64,
             [35] = 65,
         }, -- end of ["neutrals"]
-        ["blue"] = 
-        {
-            [1] = 11,
-            [2] = 4,
-            [3] = 6,
-            [4] = 16,
-            [5] = 13,
-            [6] = 15,
-            [7] = 9,
-            [8] = 8,
-            [9] = 12,
-            [10] = 2,
-            [11] = 3,
-            [12] = 5,
-            [13] = 10,
-            [14] = 20,
-            [15] = 21,
-            [16] = 40,
-            [17] = 26,
-            [18] = 45,
-            [19] = 28,
-        }, -- end of ["blue"]
         ["red"] = 
         {
             [1] = 0,
@@ -502,13 +502,13 @@ mission =
                                     {
                                         [1] = 
                                         {
-                                            ["alt"] = 10,
+                                            ["alt"] = 9,
                                             ["type"] = "Turning Point",
                                             ["ETA"] = 0,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
-                                            ["y"] = 616802.57285715,
-                                            ["x"] = -356313.0897143,
+                                            ["y"] = 616751.71628572,
+                                            ["x"] = -356291.79400001,
                                             ["name"] = "DictKey_WptName_42",
                                             ["ETA_locked"] = true,
                                             ["speed"] = 5.5555555555556,
@@ -522,10 +522,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = true,
                                                             ["id"] = "WrappedAction",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["params"] = 
                                                             {
                                                                 ["action"] = 
@@ -550,7 +550,7 @@ mission =
                                 ["tasks"] = 
                                 {
                                 }, -- end of ["tasks"]
-                                ["hidden"] = false,
+                                ["hidden"] = true,
                                 ["units"] = 
                                 {
                                     [1] = 
@@ -562,15 +562,45 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["unitId"] = 7,
                                         ["skill"] = "Average",
-                                        ["y"] = 616802.57285715,
-                                        ["x"] = -356313.0897143,
+                                        ["y"] = 616751.71628572,
+                                        ["x"] = -356291.79400001,
                                         ["name"] = "DictKey_UnitName_41",
                                         ["playerCanDrive"] = true,
                                         ["heading"] = 5.3618780415805,
                                     }, -- end of [1]
+                                    [2] = 
+                                    {
+                                        ["type"] = "M-113",
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["unitId"] = 12,
+                                        ["skill"] = "Average",
+                                        ["y"] = 616904.22342858,
+                                        ["x"] = -356355.56971429,
+                                        ["name"] = "DictKey_UnitName_67",
+                                        ["playerCanDrive"] = true,
+                                        ["heading"] = 5.3618780415805,
+                                    }, -- end of [2]
+                                    [3] = 
+                                    {
+                                        ["type"] = "M-113",
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["unitId"] = 13,
+                                        ["skill"] = "Average",
+                                        ["y"] = 616873.72200001,
+                                        ["x"] = -356236.33685715,
+                                        ["name"] = "DictKey_UnitName_68",
+                                        ["playerCanDrive"] = true,
+                                        ["heading"] = 5.3618780415805,
+                                    }, -- end of [3]
                                 }, -- end of ["units"]
-                                ["y"] = 616802.57285715,
-                                ["x"] = -356313.0897143,
+                                ["y"] = 616751.71628572,
+                                ["x"] = -356291.79400001,
                                 ["name"] = "DictKey_GroupName_40",
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
@@ -666,6 +696,45 @@ mission =
                                 ["name"] = "DictKey_GroupName_54",
                                 ["dead"] = false,
                             }, -- end of [2]
+                            [3] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 615797.85342858,
+                                            ["speed"] = 0,
+                                            ["x"] = -356092.14828573,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 12,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["type"] = "house2arm",
+                                        ["unitId"] = 14,
+                                        ["y"] = 615797.85342858,
+                                        ["x"] = -356092.14828573,
+                                        ["name"] = "DictKey_GroupName_69",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 615797.85342858,
+                                ["x"] = -356092.14828573,
+                                ["name"] = "DictKey_GroupName_69",
+                                ["dead"] = false,
+                            }, -- end of [3]
                         }, -- end of ["group"]
                     }, -- end of ["static"]
                 }, -- end of [10]
@@ -796,6 +865,7 @@ mission =
             ["rules"] = 
             {
             }, -- end of ["rules"]
+            ["comment"] = "MOOSE",
             ["eventlist"] = "",
             ["actions"] = 
             {
@@ -811,22 +881,22 @@ mission =
                 }, -- end of [1]
             }, -- end of ["actions"]
             ["predicate"] = "triggerStart",
-            ["comment"] = "MOOSE",
         }, -- end of [1]
         [2] = 
         {
             ["rules"] = 
             {
             }, -- end of ["rules"]
+            ["comment"] = "TRACE",
             ["eventlist"] = "",
             ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
                 {
-                    ["KeyDict_text"] = "DictKey_ActionText_22",
-                    ["text"] = "DictKey_ActionText_22",
                     ["predicate"] = "a_do_script",
+                    ["text"] = "DictKey_ActionText_22",
+                    ["KeyDict_text"] = "DictKey_ActionText_22",
                     ["ai_task"] = 
                     {
                         [1] = "",
@@ -834,15 +904,14 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["comment"] = "TRACE",
         }, -- end of [2]
         [3] = 
         {
             ["rules"] = 
             {
             }, -- end of ["rules"]
-            ["comment"] = "MISSION",
             ["eventlist"] = "",
+            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -856,10 +925,10 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["predicate"] = "triggerStart",
+            ["comment"] = "MISSION",
         }, -- end of [3]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 3196,
+    ["currentKey"] = 3284,
     ["start_time"] = 43200,
     ["forcedOptions"] = 
     {
