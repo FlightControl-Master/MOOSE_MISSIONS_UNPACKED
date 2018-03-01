@@ -14,12 +14,12 @@ RespawnZone1 = ZONE:New( "ZONEVEHICLE1")
 
 -- Prepare the spawning to be done in RespawnZone1.
 Vehicle:InitZone( RespawnZone1 )
-Vehicle:InitRandomizePositions( true )
+Vehicle:InitRandomizePositionZone( true )
 
 Vehicle:HandleEvent( EVENTS.Dead )
 function Vehicle:OnEventDead( EventData )
 
-  self:E( "I just got dead and I am part of " .. EventData.IniGroupName )
+  self:E( { "Size ", Size = Vehicle:GetSize() } )
   
   -- When the last vehicle of the group is declared dead, respawn the group.
   if Vehicle:GetSize() == 1 then

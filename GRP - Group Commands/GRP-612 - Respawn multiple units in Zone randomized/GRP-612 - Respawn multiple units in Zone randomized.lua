@@ -13,7 +13,7 @@ RespawnZone1 = ZONE:New( "ZONEVEHICLE1")
 
 -- Prepare the spawning to be done in RespawnZone1.
 Vehicle:InitZone( RespawnZone1 )
-Vehicle:InitRandomizePositions( true )
+Vehicle:InitRandomizePositionZone( true )
 
 -- Respawn the vehicle in RespawnZone1.
 Vehicle:Respawn()
