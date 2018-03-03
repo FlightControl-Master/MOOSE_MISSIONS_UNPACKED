@@ -1,0 +1,60 @@
+version: 0.0.1.{build}
+shallow_clone: false
+skip_branch_with_pr: false
+skip_commits:
+  message: /!nobuild/
+skip_tags: false
+
+environment:
+  access_token_documentation:
+    secure: JVBVVL8uJUcLXN+48eRdELEeCGOGCCaMzCqutsUqNuaZ/KblG5ZTt7+LV4UKv/0f
+
+platform:
+  - x64
+
+init:
+  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
+        https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
+        Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
+        throw "There are newer queued builds for this pull request, failing early." }
+#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+
+
+build_script:
+   - ps: | 
+       if( $env:appveyor_repo_branch -eq 'master' )     
+       {
+         $apiUrl = 'https://ci.appveyor.com/api'
+         $token = 'qts80b5kpq0ooj4x6vvw'
+         $headers = @{
+           "Authorization" = "Bearer $token"
+           "Content-type" = "application/json"
+           }
+         $RequestBody = @{ accountName = 'FlightControl-Master'; projectSlug = 'moose-missions'; branch = 'master'; environmentVariables = @{} } | ConvertTo-Json
+         # get project with last build details
+         $project = Invoke-RestMethod -method Post -Uri "$apiUrl/builds" -Headers $headers -Body $RequestBody
+       }
+   - ps: | 
+       if( $env:appveyor_repo_branch -eq 'master' )     
+       {
+         $apiUrl = 'https://ci.appveyor.com/api'
+         $token = 'qts80b5kpq0ooj4x6vvw'
+         $headers = @{
+           "Authorization" = "Bearer $token"
+           "Content-type" = "application/json"
+           }
+         $RequestBody = @{ accountName = 'FlightControl-Master'; projectSlug = 'moose-missions-dynamic'; branch = 'master'; environmentVariables = @{} } | ConvertTo-Json
+         # get project with last build details
+         $project = Invoke-RestMethod -method Post -Uri "$apiUrl/builds" -Headers $headers -Body $RequestBody
+       }
+
+
+artifacts:
+  - path: 'Moose_Include_Static\*.lua'
+    name: Static
+  - path: 'Moose_Include_Dynamic\*.lua'
+    name: Dynamic
+
+on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
