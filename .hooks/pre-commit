@@ -58,7 +58,7 @@ else
         if cd "$mission_unpacked"
         then
           # Unzip Mission file
-          if $git_root/.7z/7z x -r -y "$mission" > /dev/null
+          if 7z x -r -y "$mission" > /dev/null
           then
             echo "- '$mission_base' unpacked."
             cd "$mission_dir"
