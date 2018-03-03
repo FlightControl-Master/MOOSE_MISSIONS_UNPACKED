@@ -50,11 +50,5 @@ build_script:
        }
 
 
-artifacts:
-  - path: 'Moose_Include_Static\*.lua'
-    name: Static
-  - path: 'Moose_Include_Dynamic\*.lua'
-    name: Dynamic
-
 on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
