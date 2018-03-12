@@ -1,5 +1,5 @@
 ---
--- Name: DES-200 - Designation in AREAS
+-- Name: DES-201 - AREAS - Day Test
 -- Author: FlightControl
 -- Date Created: 23 Apr 2017
 --
@@ -32,8 +32,6 @@
 --   - Check that when you deactive the lasing, that the Recce report the deactivation.
 --   - Check that when you smoke a target, that a message appears that the Recce is smoking the target.
 --   - Check that when you smoke a target, that a smoke appears at the target.
---   - Check that when you illuminate a target group, that a message appears that the Recce is illuminating the target.
---   - Check that when you illuminate a target group, that the target area gets illuminated after a while.
 
 
 RecceSetGroup = SET_GROUP:New():FilterPrefixes( "Recce" ):FilterStart()
@@ -48,9 +46,18 @@ RecceDetection = DETECTION_AREAS:New( RecceSetGroup, 1000 )
 -- Create a 
 AttackSet = SET_GROUP:New():FilterPrefixes("Attack"):FilterStart()
 
+-- Setup Designation for the AttackSet.
 RecceDesignation = DESIGNATE:New( CC, RecceDetection, AttackSet )
+
+-- Generate the random laser codes.
 RecceDesignation:GenerateLaserCodes()
+
+-- The su-25T uses a specific laser code to guide its laser guides rockets.
+-- The code is 1113. A special menu option will be added that allows to lase with 1113.
 RecceDesignation:AddMenuLaserCode( 1113, "Lase for SU-25T (%d)" )
+
+-- The A-10A etc use a specific laser code to guide its laser guides rockets.
+-- The code is 1680. A special menu option will be added that allows to lase with 1680.
 RecceDesignation:AddMenuLaserCode( 1680, "Lase for A-10A (%d)" )
 
 
