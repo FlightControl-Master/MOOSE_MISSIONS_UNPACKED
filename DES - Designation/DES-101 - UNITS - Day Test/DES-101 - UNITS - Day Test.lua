@@ -1,8 +1,9 @@
--- Name: DES-201 - AREAS - Day Test
+-- Name: DES-101 - UNITS - Day Test
 -- Author: FlightControl
--- Date Created: 23 Apr 2017
+-- Date Created: 14 Mar 2018
 --
--- Demonstrates the designation of units, which are grouped in AREAs.
+-- Demonstrates the designation of units, which are grouped per detected UNIT.
+-- So each DetectedItem contains one detected unit only.
 -- A Set of Recce are detecting a large group of units.
 -- 
 --   - Wait until all units are detected by the recce. A report should appear.
@@ -35,7 +36,7 @@ HQ = GROUP:FindByName( "HQ" )
 CC = COMMANDCENTER:New( HQ, "HQ" )
 
 -- Let the RecceSetGroup vehicles in the collection detect targets and group them in AREAS of 1000 meters.
-RecceDetection = DETECTION_AREAS:New( RecceSetGroup, 1000 )
+RecceDetection = DETECTION_UNITS:New( RecceSetGroup )
 
 -- Create a 
 AttackSet = SET_GROUP:New():FilterPrefixes("Attack"):FilterStart()

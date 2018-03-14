@@ -1,8 +1,9 @@
--- Name: DES-201 - AREAS - Day Test
+-- Name: DES-100 - UNITS - Night Test
 -- Author: FlightControl
 -- Date Created: 23 Apr 2017
 --
--- Demonstrates the designation of units, which are grouped in AREAs.
+-- Demonstrates the designation of units, which are grouped per detected UNIT.
+-- So each DetectedItem contains one detected unit only.
 -- A Set of Recce are detecting a large group of units.
 -- 
 --   - Wait until all units are detected by the recce. A report should appear.
@@ -24,8 +25,8 @@
 --   - Check that if all targets are destroyed, that the Recce reports that.
 --   - Check that while a Recce is lasing a target, that it is marking the target.
 --   - Check that when you deactive the lasing, that the Recce report the deactivation.
---   - Check that when you smoke a target, that a message appears that the Recce is smoking the target.
---   - Check that when you smoke a target, that a smoke appears at the target.
+--   - Check that when you illuminate a target group, that a message appears that the Recce is illuminating the target.
+--   - Check that when you illuminate a target group, that the target area gets illuminated after a while.
 
 
 RecceSetGroup = SET_GROUP:New():FilterPrefixes( "Recce" ):FilterStart()
@@ -35,7 +36,7 @@ HQ = GROUP:FindByName( "HQ" )
 CC = COMMANDCENTER:New( HQ, "HQ" )
 
 -- Let the RecceSetGroup vehicles in the collection detect targets and group them in AREAS of 1000 meters.
-RecceDetection = DETECTION_AREAS:New( RecceSetGroup, 1000 )
+RecceDetection = DETECTION_UNITS:New( RecceSetGroup )
 
 -- Create a 
 AttackSet = SET_GROUP:New():FilterPrefixes("Attack"):FilterStart()
