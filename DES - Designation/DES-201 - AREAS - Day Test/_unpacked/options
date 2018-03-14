@@ -123,17 +123,14 @@ options =
         {
             ["CPLocalList"] = "default",
         }, -- end of ["A-10C"]
-        ["FC3"] = 
+        ["Ka-50"] = 
         {
-            ["CPLocalList_F-15C"] = "default",
-            ["CPLocalList_MiG-29S"] = "default",
-            ["CPLocalList_MiG-29A"] = "default",
-            ["CPLocalList_Su-25"] = "default",
-            ["CPLocalList_A-10A"] = "default",
-            ["CPLocalList_Su-27"] = "chinese",
-            ["CPLocalList_MiG-29G"] = "default",
-            ["CPLocalList_Su-33"] = "default",
-        }, -- end of ["FC3"]
+            ["Ka50TrimmingMethod"] = 0,
+            ["altTrimmingMethod"] = false,
+            ["helmetCircleDisplacement"] = 11,
+            ["CPLocalList"] = "english",
+            ["Ka50RudderTrimmer"] = false,
+        }, -- end of ["Ka-50"]
         ["P-51D"] = 
         {
             ["assistance"] = 100,
@@ -155,6 +152,19 @@ options =
             ["landSeatAdjustF86"] = true,
             ["gunCamera"] = 0,
         }, -- end of ["F-86F"]
+        ["Mi-8MTV2"] = 
+        {
+            ["altMi8TrimmingMethod"] = false,
+            ["Mi8CockpitShake"] = 50,
+            ["gunCamera"] = 0,
+            ["CPLocalList"] = "default",
+            ["weapTooltipsMi8"] = true,
+            ["Mi8RudderTrimmer"] = false,
+            ["controlHelperMi8"] = false,
+            ["Mi8AutopilotAdjustment"] = false,
+            ["Mi8TrimmingMethod"] = 0,
+            ["Mi8FOV"] = 120,
+        }, -- end of ["Mi-8MTV2"]
         ["CA"] = 
         {
             ["kompass_options"] = 1,
@@ -163,28 +173,18 @@ options =
             ["ground_platform_shake"] = false,
             ["ground_automatic"] = true,
         }, -- end of ["CA"]
-        ["FW-190D9"] = 
-        {
-            ["assistance"] = 100,
-            ["CPLocalList"] = "default",
-            ["autoRudder"] = false,
-        }, -- end of ["FW-190D9"]
         ["TF-51D"] = 
         {
             ["assistance"] = 100,
             ["CPLocalList"] = "default",
             ["autoRudder"] = false,
         }, -- end of ["TF-51D"]
-        ["Mi-8MTV2"] = 
+        ["FW-190D9"] = 
         {
-            ["altMi8TrimmingMethod"] = false,
-            ["Mi8AutopilotAdjustment"] = false,
-            ["Mi8FOV"] = 120,
+            ["assistance"] = 100,
             ["CPLocalList"] = "default",
-            ["controlHelperMi8"] = false,
-            ["weapTooltipsMi8"] = true,
-            ["Mi8RudderTrimmer"] = false,
-        }, -- end of ["Mi-8MTV2"]
+            ["autoRudder"] = false,
+        }, -- end of ["FW-190D9"]
         ["UH-1H"] = 
         {
             ["UHRudderTrimmer"] = false,
@@ -194,12 +194,17 @@ options =
             ["weapTooltips"] = true,
             ["UHTrackIRAiming"] = true,
         }, -- end of ["UH-1H"]
-        ["Ka-50"] = 
+        ["FC3"] = 
         {
-            ["CPLocalList"] = "english",
-            ["Ka50RudderTrimmer"] = false,
-            ["altTrimmingMethod"] = false,
-        }, -- end of ["Ka-50"]
+            ["CPLocalList_F-15C"] = "default",
+            ["CPLocalList_MiG-29S"] = "default",
+            ["CPLocalList_MiG-29A"] = "default",
+            ["CPLocalList_Su-25"] = "default",
+            ["CPLocalList_A-10A"] = "default",
+            ["CPLocalList_Su-27"] = "chinese",
+            ["CPLocalList_MiG-29G"] = "default",
+            ["CPLocalList_Su-33"] = "default",
+        }, -- end of ["FC3"]
     }, -- end of ["plugins"]
     ["format"] = 1,
     ["sound"] = 
