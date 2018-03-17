@@ -1,5 +1,5 @@
  ---
--- Name: TAD-A2G-200 - UNITS - Detection Test
+-- Name: TAD-A2G-100 - TYPES - Detection Test
 -- Author: FlightControl
 -- Date Created: 15 Mar 2018
 --
@@ -7,7 +7,7 @@
 -- 
 -- This mission demonstrates the dynamic task dispatching for Air to Ground operations.
 -- Reconnassance vehicles are placed at strategic locations, scanning for the enemy locations.
--- The detection method used is the DETECTION_UNITS method, which groups detected targets per detected unit.
+-- The detection method used is the DETECTION_TYPES method, which groups detected targets into Unit Types that were detected.
 -- The AttackSet will engage upon the enemy, which is a Set of Groups seated by Players.
 -- A2G Tasks are being dispatched to the Players as enemy locations are being detected by the Recce.
 -- Observe that A2G Tasks are being dispatched to the player.
@@ -32,8 +32,8 @@ local RecceSet = SET_GROUP
   :FilterStart() -- Start the dynamic building of the set.
 
 -- Setup the detection. We use DETECTION_AREAS to detect and group the enemies.
-local DetectionAreas = DETECTION_UNITS
-  :New( RecceSet )  -- The RecceSet will detect the enemies, and group them per detected unit.
+local DetectionAreas = DETECTION_TYPES
+  :New( RecceSet )  -- The RecceSet will detect the enemies, and group them into unit types that were detected.
 
 -- Setup the AttackSet, which is a SET_GROUP.
 -- The SET_GROUP is a dynamic collection of GROUP objects.  
