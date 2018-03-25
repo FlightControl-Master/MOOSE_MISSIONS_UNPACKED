@@ -23,29 +23,29 @@ init:
 
 build_script:
    - ps: | 
-       if( $env:appveyor_repo_branch -eq 'master' )     
+       if( $env:appveyor_repo_branch -eq 'master' -or $env:appveyor_repo_branch -eq 'develop' )     
        {
+	     # Create MOOSE_MISSIONS in master or develop branch.
          $apiUrl = 'https://ci.appveyor.com/api'
          $token = 'qts80b5kpq0ooj4x6vvw'
          $headers = @{
            "Authorization" = "Bearer $token"
            "Content-type" = "application/json"
            }
-         $RequestBody = @{ accountName = 'FlightControl-Master'; projectSlug = 'moose-missions'; branch = 'master'; environmentVariables = @{} } | ConvertTo-Json
-         # get project with last build details
+         $RequestBody = @{ accountName = 'FlightControl-Master'; projectSlug = 'moose-missions'; branch = "$env:appveyor_repo_branch"; environmentVariables = @{} } | ConvertTo-Json
          $project = Invoke-RestMethod -method Post -Uri "$apiUrl/builds" -Headers $headers -Body $RequestBody
        }
    - ps: | 
-       if( $env:appveyor_repo_branch -eq 'master' )     
+       if( $env:appveyor_repo_branch -eq 'master' -or $env:appveyor_repo_branch -eq 'develop' )     
        {
+	     # Create MOOSE_MISSIONS_DYNAMIC in master or develop branch.
          $apiUrl = 'https://ci.appveyor.com/api'
          $token = 'qts80b5kpq0ooj4x6vvw'
          $headers = @{
            "Authorization" = "Bearer $token"
            "Content-type" = "application/json"
            }
-         $RequestBody = @{ accountName = 'FlightControl-Master'; projectSlug = 'moose-missions-dynamic'; branch = 'master'; environmentVariables = @{} } | ConvertTo-Json
-         # get project with last build details
+         $RequestBody = @{ accountName = 'FlightControl-Master'; projectSlug = 'moose-missions-dynamic'; branch = "$env:appveyor_repo_branch"; environmentVariables = @{} } | ConvertTo-Json
          $project = Invoke-RestMethod -method Post -Uri "$apiUrl/builds" -Headers $headers -Body $RequestBody
        }
 
