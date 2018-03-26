@@ -25,7 +25,7 @@ build_script:
    - ps: | 
        if( $env:appveyor_repo_branch -eq 'master' -or $env:appveyor_repo_branch -eq 'develop' )     
        {
-	     # Create MOOSE_MISSIONS in master or develop branch.
+         # Create MOOSE_MISSIONS in master or develop branch.
          $apiUrl = 'https://ci.appveyor.com/api'
          $token = 'qts80b5kpq0ooj4x6vvw'
          $headers = @{
@@ -38,7 +38,7 @@ build_script:
    - ps: | 
        if( $env:appveyor_repo_branch -eq 'master' -or $env:appveyor_repo_branch -eq 'develop' )     
        {
-	     # Create MOOSE_MISSIONS_DYNAMIC in master or develop branch.
+         # Create MOOSE_MISSIONS_DYNAMIC in master or develop branch.
          $apiUrl = 'https://ci.appveyor.com/api'
          $token = 'qts80b5kpq0ooj4x6vvw'
          $headers = @{
