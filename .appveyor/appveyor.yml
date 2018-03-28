@@ -36,7 +36,7 @@ build_script:
              }
            $RequestBody = @{ accountName = 'FlightControl-Master'; projectSlug = 'moose-missions'; branch = "$env:appveyor_repo_branch"; environmentVariables = @{} } | ConvertTo-Json
            $project = Invoke-RestMethod -method Post -Uri "$apiUrl/builds" -Headers $headers -Body $RequestBody
-	     }
+         }
        }
    - ps: | 
        if( $env:appveyor_repo_branch -eq 'master' -or $env:appveyor_repo_branch -eq 'develop' )     
