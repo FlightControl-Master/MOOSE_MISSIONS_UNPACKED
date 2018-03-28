@@ -10,4 +10,4 @@ local InfantryCargo = CARGO_GROUP:New( InfantryGroup, "Engineers", "Infantry Eng
 
 local CargoCarrier = UNIT:FindByName( "Carrier" )
 
-CargoTroops = AI_CARGO_TROOPS:New( CargoCarrier, InfantryCargo, 1500 )
+CargoTroops = AI_CARGO_TROOPS:New( CargoCarrier, InfantryCargo, 500 )
