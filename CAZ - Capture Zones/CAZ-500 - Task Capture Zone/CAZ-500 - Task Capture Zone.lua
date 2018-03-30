@@ -103,7 +103,7 @@ function ZoneCaptureCoalition:OnEnterCaptured()
 end
 
 ZoneCaptureCoalition:MonitorDestroyedUnits()
-ZoneCaptureCoalition:__Guard( 1 )
+ZoneCaptureCoalition:Start()
   
 -- Create the tasks under the mission
   
