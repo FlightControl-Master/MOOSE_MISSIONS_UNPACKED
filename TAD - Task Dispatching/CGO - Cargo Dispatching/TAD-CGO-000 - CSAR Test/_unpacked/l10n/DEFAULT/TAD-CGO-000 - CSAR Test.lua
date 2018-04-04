@@ -20,5 +20,10 @@ AttackGroups = SET_GROUP:New():FilterCoalitions( "red" ):FilterPrefixes( "Rescue
 
 TaskDispatcher = TASK_CARGO_DISPATCHER:New( Mission, AttackGroups )
 
-TaskDispatcher:SetCSARDeployZone( ZONE_UNIT:New( "Hospital", STATIC:FindByName( "Hospital" ), 100 ) )
+TaskDispatcher:StartCSARTasks( 
+  "CSAR", 
+  { ZONE_UNIT:New( "Hospital", STATIC:FindByName( "Hospital" ), 100 ) }, 
+  "One of our pilots has ejected. Go out to Search and Rescue our pilot!\n" .. 
+  "Use the radio menu to let the command center assist you with the CSAR tasking."
+)
 
