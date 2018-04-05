@@ -14,9 +14,9 @@ CommandCenter = COMMANDCENTER
   :New( HQ, "Lima" )
 
 Mission = MISSION
-  :New( CommandCenter, "Operation SandStorm", "Tactical", "Transport Cargo", coalition.side.RED )
+  :New( CommandCenter, "Operation SandStorm", "Tactical", "Transport Cargo", coalition.side.BLUE )
 
-TransportGroups = SET_GROUP:New():FilterCoalitions( "red" ):FilterPrefixes( "Transport" ):FilterStart()
+TransportGroups = SET_GROUP:New():FilterCoalitions( "blue" ):FilterPrefixes( "Transport" ):FilterStart()
 
 TaskDispatcher = TASK_CARGO_DISPATCHER:New( Mission, TransportGroups )
 
@@ -32,8 +32,6 @@ local CrateCargo = CARGO_CRATE:New( STATIC:FindByName( "Crate" ), "Workmaterials
 local EnginesCargo = CARGO_CRATE:New( STATIC:FindByName( "Engines" ), "Workmaterials", "Engines", 1000, 25 )
 local FuelCargo = CARGO_SLINGLOAD:New( STATIC:FindByName( "Fuel" ), "Workmaterials", "Fuel", 1000, 25 )
 local MetalCargo = CARGO_CRATE:New( STATIC:FindByName( "Metal" ), "Workmaterials", "Metal", 1000, 25 )
-
-
 
 TaskDispatcher:AddTransportTask( "Transport Team", CargoSet, "Transport the workers, engineers and the equipment near the Workplace." )
 
