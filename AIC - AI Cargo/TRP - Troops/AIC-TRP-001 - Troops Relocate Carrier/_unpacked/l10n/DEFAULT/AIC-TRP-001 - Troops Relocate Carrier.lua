@@ -1,8 +1,10 @@
 ---
--- Name: AIC-TRP-000 - Troops
+-- Name: AIC-TRP-001 - Troops Relocate Carrier
 -- Author: FlightControl
--- Date Created: 26 Mar 2018
---
+-- Date Created: 07 Apr 2018
+-- 
+-- Demonstration of troops relocation when carrier is destroyed...
+-- Carrier will relocate to the rescue carrier.
 
 local InfantryGroup = GROUP:FindByName( "Infantry" )
 
