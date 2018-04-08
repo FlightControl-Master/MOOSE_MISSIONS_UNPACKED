@@ -5,8 +5,8 @@ mission =
     }, -- end of ["requiredModules"]
     ["date"] = 
     {
-        ["Year"] = 2011,
         ["Day"] = 1,
+        ["Year"] = 2011,
         ["Month"] = 6,
     }, -- end of ["date"]
     ["trig"] = 
@@ -88,7 +88,7 @@ mission =
             }, -- end of ["func"]
         }, -- end of ["red"]
     }, -- end of ["result"]
-    ["maxDictId"] = 723,
+    ["maxDictId"] = 729,
     ["pictureFileNameN"] = 
     {
     }, -- end of ["pictureFileNameN"]
@@ -136,16 +136,16 @@ mission =
                 ["speed"] = 0,
                 ["dir"] = 0,
             }, -- end of ["at8000"]
-            ["at2000"] = 
-            {
-                ["speed"] = 0,
-                ["dir"] = 0,
-            }, -- end of ["at2000"]
             ["atGround"] = 
             {
                 ["speed"] = 0,
                 ["dir"] = 0,
             }, -- end of ["atGround"]
+            ["at2000"] = 
+            {
+                ["speed"] = 0,
+                ["dir"] = 0,
+            }, -- end of ["at2000"]
         }, -- end of ["wind"]
         ["enable_fog"] = false,
         ["season"] = 
@@ -202,32 +202,12 @@ mission =
     }, -- end of ["triggers"]
     ["map"] = 
     {
-        ["centerY"] = 807667.18942857,
-        ["zoom"] = 5461,
-        ["centerX"] = -264427.57157142,
+        ["centerY"] = 807797.33485714,
+        ["zoom"] = 2461,
+        ["centerX"] = -264591.93757141,
     }, -- end of ["map"]
     ["coalitions"] = 
     {
-        ["neutrals"] = 
-        {
-            [1] = 7,
-            [2] = 17,
-            [3] = 22,
-            [4] = 23,
-            [5] = 25,
-            [6] = 29,
-            [7] = 30,
-            [8] = 31,
-            [9] = 32,
-            [10] = 33,
-            [11] = 35,
-            [12] = 36,
-            [13] = 39,
-            [14] = 41,
-            [15] = 42,
-            [16] = 44,
-            [17] = 46,
-        }, -- end of ["neutrals"]
         ["blue"] = 
         {
             [1] = 11,
@@ -250,6 +230,26 @@ mission =
             [18] = 45,
             [19] = 28,
         }, -- end of ["blue"]
+        ["neutrals"] = 
+        {
+            [1] = 7,
+            [2] = 17,
+            [3] = 22,
+            [4] = 23,
+            [5] = 25,
+            [6] = 29,
+            [7] = 30,
+            [8] = 31,
+            [9] = 32,
+            [10] = 33,
+            [11] = 35,
+            [12] = 36,
+            [13] = 39,
+            [14] = 41,
+            [15] = 42,
+            [16] = 44,
+            [17] = 46,
+        }, -- end of ["neutrals"]
         ["red"] = 
         {
             [1] = 0,
@@ -390,7 +390,7 @@ mission =
                                     [1] = 
                                     {
                                         ["alt"] = 45,
-                                        ["hardpoint_racks"] = true,
+                                        ["hardpoint_racks"] = false,
                                         ["alt_type"] = "BARO",
                                         ["livery_id"] = "USA_AFG",
                                         ["skill"] = "Client",
@@ -400,10 +400,10 @@ mission =
                                         {
                                             ["LeftEngineResource"] = 90,
                                             ["RightEngineResource"] = 90,
-                                            ["GunnersAISkill"] = 90,
+                                            ["NetCrewControlPriority"] = 1,
                                             ["ExhaustScreen"] = true,
                                             ["CargoHalfdoor"] = true,
-                                            ["NetCrewControlPriority"] = 1,
+                                            ["GunnersAISkill"] = 90,
                                             ["AdditionalArmor"] = true,
                                             ["NS430allow"] = true,
                                         }, -- end of ["AddPropAircraft"]
@@ -432,8 +432,8 @@ mission =
                                                     [13] = 123,
                                                     [7] = 141,
                                                     [14] = 131,
-                                                    [19] = 124,
                                                     [15] = 134,
+                                                    [19] = 124,
                                                 }, -- end of ["channels"]
                                             }, -- end of [1]
                                             [2] = 
@@ -463,8 +463,8 @@ mission =
                                             ["pylons"] = 
                                             {
                                             }, -- end of ["pylons"]
-                                            ["fuel"] = "1929",
-                                            ["flare"] = 128,
+                                            ["fuel"] = 579,
+                                            ["flare"] = 0,
                                             ["chaff"] = 0,
                                             ["gun"] = 100,
                                         }, -- end of ["payload"]
@@ -501,10 +501,10 @@ mission =
                                     {
                                         [1] = 
                                         {
-                                            ["alt"] = 850,
-                                            ["action"] = "From Ground Area Hot",
-                                            ["alt_type"] = "BARO",
-                                            ["speed"] = 41.666666666667,
+                                            ["alt"] = 30,
+                                            ["action"] = "Fly Over Point",
+                                            ["alt_type"] = "RADIO",
+                                            ["speed"] = 1.3888888888889,
                                             ["task"] = 
                                             {
                                                 ["id"] = "ComboTask",
@@ -515,11 +515,11 @@ mission =
                                                     }, -- end of ["tasks"]
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
-                                            ["type"] = "TakeOffGroundHot",
+                                            ["type"] = "Turning Point",
                                             ["ETA"] = 0,
                                             ["ETA_locked"] = true,
-                                            ["y"] = 807716.14685718,
-                                            ["x"] = -264694.86999997,
+                                            ["y"] = 807703.21942857,
+                                            ["x"] = -264682.96571427,
                                             ["name"] = "DictKey_WptName_711",
                                             ["formation_template"] = "",
                                             ["speed_locked"] = true,
@@ -532,13 +532,13 @@ mission =
                                 {
                                     [1] = 
                                     {
-                                        ["alt"] = 850,
-                                        ["hardpoint_racks"] = true,
-                                        ["alt_type"] = "BARO",
+                                        ["alt"] = 30,
+                                        ["hardpoint_racks"] = false,
+                                        ["alt_type"] = "RADIO",
                                         ["livery_id"] = "USA_AFG",
                                         ["skill"] = "Client",
                                         ["ropeLength"] = 15,
-                                        ["speed"] = 41.666666666667,
+                                        ["speed"] = 1.3888888888889,
                                         ["AddPropAircraft"] = 
                                         {
                                             ["LeftEngineResource"] = 90,
@@ -575,8 +575,8 @@ mission =
                                                     [13] = 123,
                                                     [7] = 141,
                                                     [14] = 131,
-                                                    [15] = 134,
                                                     [19] = 124,
+                                                    [15] = 134,
                                                 }, -- end of ["channels"]
                                             }, -- end of [1]
                                             [2] = 
@@ -597,21 +597,21 @@ mission =
                                             }, -- end of [2]
                                         }, -- end of ["Radio"]
                                         ["unitId"] = 201,
-                                        ["psi"] = -0,
-                                        ["y"] = 807716.14685718,
-                                        ["x"] = -264694.86999997,
+                                        ["psi"] = 1.2071403937674,
+                                        ["y"] = 807703.21942857,
+                                        ["x"] = -264682.96571427,
                                         ["name"] = "DictKey_UnitName_710",
                                         ["payload"] = 
                                         {
                                             ["pylons"] = 
                                             {
                                             }, -- end of ["pylons"]
-                                            ["fuel"] = "1929",
-                                            ["flare"] = 128,
+                                            ["fuel"] = 965,
+                                            ["flare"] = 0,
                                             ["chaff"] = 0,
                                             ["gun"] = 100,
                                         }, -- end of ["payload"]
-                                        ["heading"] = 0,
+                                        ["heading"] = -0.59187105623154,
                                         ["callsign"] = 
                                         {
                                             [1] = 2,
@@ -622,8 +622,8 @@ mission =
                                         ["onboard_num"] = "050",
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-                                ["y"] = 807716.14685718,
-                                ["x"] = -264694.86999997,
+                                ["y"] = 807703.21942857,
+                                ["x"] = -264682.96571427,
                                 ["name"] = "DictKey_GroupName_709",
                                 ["communication"] = true,
                                 ["start_time"] = 0,
@@ -678,66 +678,46 @@ mission =
                                         ["alt"] = 851,
                                         ["hardpoint_racks"] = true,
                                         ["alt_type"] = "BARO",
-                                        ["livery_id"] = "USA_AFG",
+                                        ["livery_id"] = "Army Standard",
                                         ["skill"] = "Client",
                                         ["ropeLength"] = 15,
                                         ["speed"] = 41.666666666667,
                                         ["AddPropAircraft"] = 
                                         {
-                                            ["LeftEngineResource"] = 90,
-                                            ["RightEngineResource"] = 90,
-                                            ["GunnersAISkill"] = 90,
                                             ["ExhaustScreen"] = true,
-                                            ["CargoHalfdoor"] = true,
                                             ["NetCrewControlPriority"] = 1,
-                                            ["AdditionalArmor"] = true,
-                                            ["NS430allow"] = true,
+                                            ["GunnersAISkill"] = 90,
+                                            ["EngineResource"] = 90,
                                         }, -- end of ["AddPropAircraft"]
-                                        ["type"] = "Mi-8MT",
+                                        ["type"] = "UH-1H",
                                         ["Radio"] = 
                                         {
                                             [1] = 
                                             {
                                                 ["channels"] = 
                                                 {
-                                                    [1] = 127.5,
-                                                    [2] = 135,
-                                                    [4] = 127,
-                                                    [8] = 128,
-                                                    [16] = 132,
-                                                    [17] = 138,
-                                                    [9] = 126,
-                                                    [18] = 122,
-                                                    [5] = 125,
-                                                    [10] = 133,
-                                                    [20] = 137,
-                                                    [11] = 130,
-                                                    [3] = 136,
-                                                    [6] = 121,
-                                                    [12] = 129,
-                                                    [13] = 123,
-                                                    [7] = 141,
-                                                    [14] = 131,
-                                                    [15] = 134,
-                                                    [19] = 124,
+                                                    [1] = 251,
+                                                    [2] = 264,
+                                                    [4] = 256,
+                                                    [8] = 257,
+                                                    [16] = 261,
+                                                    [17] = 267,
+                                                    [9] = 255,
+                                                    [18] = 251,
+                                                    [5] = 254,
+                                                    [10] = 262,
+                                                    [20] = 266,
+                                                    [11] = 259,
+                                                    [3] = 265,
+                                                    [6] = 250,
+                                                    [12] = 268,
+                                                    [13] = 269,
+                                                    [7] = 270,
+                                                    [14] = 260,
+                                                    [19] = 253,
+                                                    [15] = 263,
                                                 }, -- end of ["channels"]
                                             }, -- end of [1]
-                                            [2] = 
-                                            {
-                                                ["channels"] = 
-                                                {
-                                                    [7] = 40,
-                                                    [1] = 21.5,
-                                                    [2] = 25.7,
-                                                    [4] = 28,
-                                                    [8] = 50,
-                                                    [9] = 55.5,
-                                                    [5] = 30,
-                                                    [10] = 59.9,
-                                                    [3] = 27,
-                                                    [6] = 32,
-                                                }, -- end of ["channels"]
-                                            }, -- end of [2]
                                         }, -- end of ["Radio"]
                                         ["unitId"] = 202,
                                         ["psi"] = -0,
@@ -749,8 +729,8 @@ mission =
                                             ["pylons"] = 
                                             {
                                             }, -- end of ["pylons"]
-                                            ["fuel"] = "1929",
-                                            ["flare"] = 128,
+                                            ["fuel"] = "631",
+                                            ["flare"] = 60,
                                             ["chaff"] = 0,
                                             ["gun"] = 100,
                                         }, -- end of ["payload"]
@@ -770,7 +750,7 @@ mission =
                                 ["name"] = "DictKey_GroupName_712",
                                 ["communication"] = true,
                                 ["start_time"] = 0,
-                                ["frequency"] = 127.5,
+                                ["frequency"] = 251,
                             }, -- end of [3]
                             [4] = 
                             {
@@ -821,66 +801,46 @@ mission =
                                         ["alt"] = 851,
                                         ["hardpoint_racks"] = true,
                                         ["alt_type"] = "BARO",
-                                        ["livery_id"] = "USA_AFG",
+                                        ["livery_id"] = "Army Standard",
                                         ["skill"] = "Client",
                                         ["ropeLength"] = 15,
                                         ["speed"] = 41.666666666667,
                                         ["AddPropAircraft"] = 
                                         {
-                                            ["LeftEngineResource"] = 90,
-                                            ["RightEngineResource"] = 90,
-                                            ["GunnersAISkill"] = 90,
                                             ["ExhaustScreen"] = true,
-                                            ["CargoHalfdoor"] = true,
                                             ["NetCrewControlPriority"] = 1,
-                                            ["AdditionalArmor"] = true,
-                                            ["NS430allow"] = true,
+                                            ["GunnersAISkill"] = 90,
+                                            ["EngineResource"] = 90,
                                         }, -- end of ["AddPropAircraft"]
-                                        ["type"] = "Mi-8MT",
+                                        ["type"] = "UH-1H",
                                         ["Radio"] = 
                                         {
                                             [1] = 
                                             {
                                                 ["channels"] = 
                                                 {
-                                                    [1] = 127.5,
-                                                    [2] = 135,
-                                                    [4] = 127,
-                                                    [8] = 128,
-                                                    [16] = 132,
-                                                    [17] = 138,
-                                                    [9] = 126,
-                                                    [18] = 122,
-                                                    [5] = 125,
-                                                    [10] = 133,
-                                                    [20] = 137,
-                                                    [11] = 130,
-                                                    [3] = 136,
-                                                    [6] = 121,
-                                                    [12] = 129,
-                                                    [13] = 123,
-                                                    [7] = 141,
-                                                    [14] = 131,
-                                                    [15] = 134,
-                                                    [19] = 124,
+                                                    [1] = 251,
+                                                    [2] = 264,
+                                                    [4] = 256,
+                                                    [8] = 257,
+                                                    [16] = 261,
+                                                    [17] = 267,
+                                                    [9] = 255,
+                                                    [18] = 251,
+                                                    [5] = 254,
+                                                    [10] = 262,
+                                                    [20] = 266,
+                                                    [11] = 259,
+                                                    [3] = 265,
+                                                    [6] = 250,
+                                                    [12] = 268,
+                                                    [13] = 269,
+                                                    [7] = 270,
+                                                    [14] = 260,
+                                                    [19] = 253,
+                                                    [15] = 263,
                                                 }, -- end of ["channels"]
                                             }, -- end of [1]
-                                            [2] = 
-                                            {
-                                                ["channels"] = 
-                                                {
-                                                    [7] = 40,
-                                                    [1] = 21.5,
-                                                    [2] = 25.7,
-                                                    [4] = 28,
-                                                    [8] = 50,
-                                                    [9] = 55.5,
-                                                    [5] = 30,
-                                                    [10] = 59.9,
-                                                    [3] = 27,
-                                                    [6] = 32,
-                                                }, -- end of ["channels"]
-                                            }, -- end of [2]
                                         }, -- end of ["Radio"]
                                         ["unitId"] = 203,
                                         ["psi"] = -0,
@@ -892,8 +852,8 @@ mission =
                                             ["pylons"] = 
                                             {
                                             }, -- end of ["pylons"]
-                                            ["fuel"] = "1929",
-                                            ["flare"] = 128,
+                                            ["fuel"] = "631",
+                                            ["flare"] = 60,
                                             ["chaff"] = 0,
                                             ["gun"] = 100,
                                         }, -- end of ["payload"]
@@ -913,7 +873,7 @@ mission =
                                 ["name"] = "DictKey_GroupName_715",
                                 ["communication"] = true,
                                 ["start_time"] = 0,
-                                ["frequency"] = 127.5,
+                                ["frequency"] = 251,
                             }, -- end of [4]
                         }, -- end of ["group"]
                     }, -- end of ["helicopter"]
@@ -1136,8 +1096,8 @@ mission =
                                         {
                                             [1] = 
                                             {
-                                                ["y"] = 807623.6617143,
-                                                ["x"] = -264847.40399999,
+                                                ["y"] = 807615.22085714,
+                                                ["x"] = -264741.35542855,
                                             }, -- end of [1]
                                             [2] = 
                                             {
@@ -1181,8 +1141,8 @@ mission =
                                             ["ETA"] = 0,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
-                                            ["y"] = 807623.6617143,
-                                            ["x"] = -264847.40399999,
+                                            ["y"] = 807615.22085714,
+                                            ["x"] = -264741.35542855,
                                             ["name"] = "DictKey_WptName_675",
                                             ["ETA_locked"] = true,
                                             ["speed"] = 16.666666666667,
@@ -1203,7 +1163,7 @@ mission =
                                         {
                                             ["alt"] = 850,
                                             ["type"] = "Turning Point",
-                                            ["ETA"] = 12.61491934647,
+                                            ["ETA"] = 24.234182014167,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["y"] = 807604.41428573,
@@ -1228,7 +1188,7 @@ mission =
                                         {
                                             ["alt"] = 850,
                                             ["type"] = "Turning Point",
-                                            ["ETA"] = 30.899043573894,
+                                            ["ETA"] = 11.227921942572,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
                                             ["y"] = 807598.49200002,
@@ -1260,22 +1220,22 @@ mission =
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "HEMTT TFFT",
+                                        ["type"] = "M 818",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
                                         ["unitId"] = 188,
                                         ["skill"] = "Average",
-                                        ["y"] = 807623.6617143,
-                                        ["x"] = -264847.40399999,
+                                        ["y"] = 807615.22085714,
+                                        ["x"] = -264741.35542855,
                                         ["name"] = "DictKey_UnitName_674",
                                         ["playerCanDrive"] = false,
-                                        ["heading"] = -0.14345226328446,
+                                        ["heading"] = -0.37814094783477,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-                                ["y"] = 807623.6617143,
-                                ["x"] = -264847.40399999,
+                                ["y"] = 807615.22085714,
+                                ["x"] = -264741.35542855,
                                 ["name"] = "DictKey_GroupName_673",
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
@@ -1576,10 +1536,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["auto"] = false,
                                                             ["id"] = "WrappedAction",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["params"] = 
                                                             {
                                                                 ["action"] = 
@@ -1674,6 +1634,162 @@ mission =
                                 ["start_time"] = 0,
                                 ["task"] = "Ground Nothing",
                             }, -- end of [7]
+                            [8] = 
+                            {
+                                ["visible"] = false,
+                                ["taskSelected"] = true,
+                                ["route"] = 
+                                {
+                                    ["spans"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            [1] = 
+                                            {
+                                                ["y"] = 807906.322,
+                                                ["x"] = -264527.59999998,
+                                            }, -- end of [1]
+                                            [2] = 
+                                            {
+                                                ["y"] = 807886.634,
+                                                ["x"] = -264509.3182857,
+                                            }, -- end of [2]
+                                        }, -- end of [1]
+                                        [2] = 
+                                        {
+                                            [1] = 
+                                            {
+                                                ["y"] = 807886.634,
+                                                ["x"] = -264509.3182857,
+                                            }, -- end of [1]
+                                            [2] = 
+                                            {
+                                                ["y"] = 807862.72714285,
+                                                ["x"] = -264501.58371427,
+                                            }, -- end of [2]
+                                        }, -- end of [2]
+                                        [3] = 
+                                        {
+                                            [1] = 
+                                            {
+                                                ["y"] = 807889.59314288,
+                                                ["x"] = -264467.82457142,
+                                            }, -- end of [1]
+                                            [2] = 
+                                            {
+                                                ["y"] = 807889.59314288,
+                                                ["x"] = -264467.82457142,
+                                            }, -- end of [2]
+                                        }, -- end of [3]
+                                    }, -- end of ["spans"]
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 850,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = 807906.322,
+                                            ["x"] = -264527.59999998,
+                                            ["name"] = "DictKey_WptName_727",
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 16.666666666667,
+                                            ["action"] = "Off Road",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                        [2] = 
+                                        {
+                                            ["alt"] = 850,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 4.8360691524874,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = 807886.634,
+                                            ["x"] = -264509.3182857,
+                                            ["name"] = "DictKey_WptName_728",
+                                            ["ETA_locked"] = false,
+                                            ["speed"] = 5.5555555555556,
+                                            ["action"] = "Off Road",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [2]
+                                        [3] = 
+                                        {
+                                            ["alt"] = 850,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 11.174491726441,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = 807862.72714285,
+                                            ["x"] = -264501.58371427,
+                                            ["name"] = "DictKey_WptName_729",
+                                            ["ETA_locked"] = false,
+                                            ["speed"] = 5.5555555555556,
+                                            ["action"] = "Off Road",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [3]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 104,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "M 818",
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["unitId"] = 206,
+                                        ["skill"] = "Average",
+                                        ["y"] = 807906.322,
+                                        ["x"] = -264527.59999998,
+                                        ["name"] = "DictKey_UnitName_726",
+                                        ["playerCanDrive"] = false,
+                                        ["heading"] = -0.82241827942878,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 807906.322,
+                                ["x"] = -264527.59999998,
+                                ["name"] = "DictKey_GroupName_725",
+                                ["start_time"] = 0,
+                                ["task"] = "Ground Nothing",
+                            }, -- end of [8]
                         }, -- end of ["group"]
                     }, -- end of ["vehicle"]
                     ["static"] = 
@@ -1735,9 +1851,9 @@ mission =
                                             ["alt"] = 0,
                                             ["type"] = "",
                                             ["name"] = "",
-                                            ["y"] = 807591.89314287,
+                                            ["y"] = 807591.314,
                                             ["speed"] = 0,
-                                            ["x"] = -264639.75314284,
+                                            ["x"] = -264642.2122857,
                                             ["formation_template"] = "",
                                             ["action"] = "",
                                         }, -- end of [1]
@@ -1755,14 +1871,14 @@ mission =
                                         ["type"] = "ammo_cargo",
                                         ["unitId"] = 194,
                                         ["rate"] = 100,
-                                        ["y"] = 807591.89314287,
-                                        ["x"] = -264639.75314284,
+                                        ["y"] = 807591.314,
+                                        ["x"] = -264642.2122857,
                                         ["name"] = "DictKey_GroupName_686",
                                         ["heading"] = 0,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-                                ["y"] = 807591.89314287,
-                                ["x"] = -264639.75314284,
+                                ["y"] = 807591.314,
+                                ["x"] = -264642.2122857,
                                 ["name"] = "DictKey_GroupName_686",
                                 ["dead"] = false,
                             }, -- end of [2]
@@ -1821,9 +1937,9 @@ mission =
                                             ["alt"] = 0,
                                             ["type"] = "",
                                             ["name"] = "",
-                                            ["y"] = 807756.39257144,
+                                            ["y"] = 807755.14628571,
                                             ["speed"] = 0,
-                                            ["x"] = -264555.9802857,
+                                            ["x"] = -264559.24142855,
                                             ["formation_template"] = "",
                                             ["action"] = "",
                                         }, -- end of [1]
@@ -1841,14 +1957,14 @@ mission =
                                         ["type"] = "f_bar_cargo",
                                         ["unitId"] = 183,
                                         ["rate"] = 100,
-                                        ["y"] = 807756.39257144,
-                                        ["x"] = -264555.9802857,
+                                        ["y"] = 807755.14628571,
+                                        ["x"] = -264559.24142855,
                                         ["name"] = "DictKey_GroupName_663",
                                         ["heading"] = 0,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-                                ["y"] = 807756.39257144,
-                                ["x"] = -264555.9802857,
+                                ["y"] = 807755.14628571,
+                                ["x"] = -264559.24142855,
                                 ["name"] = "DictKey_GroupName_663",
                                 ["dead"] = false,
                             }, -- end of [4]
@@ -2066,7 +2182,6 @@ mission =
             ["rules"] = 
             {
             }, -- end of ["rules"]
-            ["comment"] = "Load Moose",
             ["eventlist"] = "",
             ["predicate"] = "triggerStart",
             ["actions"] = 
@@ -2082,21 +2197,22 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
+            ["comment"] = "Load Moose",
         }, -- end of [1]
         [2] = 
         {
             ["rules"] = 
             {
             }, -- end of ["rules"]
+            ["comment"] = "Moose Trace",
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
                 {
-                    ["KeyDict_text"] = "DictKey_ActionText_19",
-                    ["text"] = "DictKey_ActionText_19",
                     ["predicate"] = "a_do_script",
+                    ["text"] = "DictKey_ActionText_19",
+                    ["KeyDict_text"] = "DictKey_ActionText_19",
                     ["ai_task"] = 
                     {
                         [1] = "",
@@ -2104,14 +2220,13 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["comment"] = "Moose Trace",
+            ["predicate"] = "triggerStart",
         }, -- end of [2]
         [3] = 
         {
             ["rules"] = 
             {
             }, -- end of ["rules"]
-            ["comment"] = "Load Mission",
             ["eventlist"] = "",
             ["predicate"] = "triggerStart",
             ["actions"] = 
@@ -2127,9 +2242,10 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
+            ["comment"] = "Load Mission",
         }, -- end of [3]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 96946,
+    ["currentKey"] = 98094,
     ["start_time"] = 27000,
     ["forcedOptions"] = 
     {
@@ -2253,15 +2369,15 @@ mission =
             ["id"] = "tail_reductor_chip",
             ["mm"] = 0,
         }, -- end of ["tail_reductor_chip"]
-        ["TACAN_FAILURE_TOTAL"] = 
+        ["l_gen"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TACAN_FAILURE_TOTAL",
+            ["id"] = "l_gen",
             ["mm"] = 0,
-        }, -- end of ["TACAN_FAILURE_TOTAL"]
+        }, -- end of ["l_gen"]
         ["OIL_RADIATOR_MOTOR"] = 
         {
             ["hh"] = 0,
@@ -2316,15 +2432,15 @@ mission =
             ["id"] = "CADC_FAILURE_STATIC",
             ["mm"] = 0,
         }, -- end of ["CADC_FAILURE_STATIC"]
-        ["r_gen"] = 
+        ["AN_ALE_40V_FAILURE_CONTAINER_LEFT_WING"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "r_gen",
+            ["id"] = "AN_ALE_40V_FAILURE_CONTAINER_LEFT_WING",
             ["mm"] = 0,
-        }, -- end of ["r_gen"]
+        }, -- end of ["AN_ALE_40V_FAILURE_CONTAINER_LEFT_WING"]
         ["OIL_DILUTION_WIRE"] = 
         {
             ["hh"] = 0,
@@ -2352,15 +2468,15 @@ mission =
             ["id"] = "HYD_ALT_2_FAIL",
             ["mm"] = 0,
         }, -- end of ["HYD_ALT_2_FAIL"]
-        ["AAR_47_FAILURE_SENSOR_RIGHT"] = 
+        ["TAIL_GEAR_FAIL_GO_DOWN"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "AAR_47_FAILURE_SENSOR_RIGHT",
+            ["id"] = "TAIL_GEAR_FAIL_GO_DOWN",
             ["mm"] = 0,
-        }, -- end of ["AAR_47_FAILURE_SENSOR_RIGHT"]
+        }, -- end of ["TAIL_GEAR_FAIL_GO_DOWN"]
         ["GUN_FAIL_RIGHT_CENTER_GUN"] = 
         {
             ["hh"] = 0,
@@ -2397,15 +2513,15 @@ mission =
             ["id"] = "R_GEAR_DLK_FAULT",
             ["mm"] = 0,
         }, -- end of ["R_GEAR_DLK_FAULT"]
-        ["GMC_GYRO_FAILURE"] = 
+        ["BOOSTER_COIL"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GMC_GYRO_FAILURE",
+            ["id"] = "BOOSTER_COIL",
             ["mm"] = 0,
-        }, -- end of ["GMC_GYRO_FAILURE"]
+        }, -- end of ["BOOSTER_COIL"]
         ["L_GEAR_DLK_FAULT"] = 
         {
             ["hh"] = 0,
@@ -2469,15 +2585,15 @@ mission =
             ["id"] = "COOLANT_POOR_CONNTECT",
             ["mm"] = 0,
         }, -- end of ["COOLANT_POOR_CONNTECT"]
-        ["FAULTY_ROCKET_LEFT"] = 
+        ["TURNIND_POINTER_FAILS_DEFECTIVE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "FAULTY_ROCKET_LEFT",
+            ["id"] = "TURNIND_POINTER_FAILS_DEFECTIVE",
             ["mm"] = 0,
-        }, -- end of ["FAULTY_ROCKET_LEFT"]
+        }, -- end of ["TURNIND_POINTER_FAILS_DEFECTIVE"]
         ["GUN_FAIL_RIGHT_OUT_GUN"] = 
         {
             ["hh"] = 0,
@@ -2514,15 +2630,15 @@ mission =
             ["id"] = "hydro_main",
             ["mm"] = 0,
         }, -- end of ["hydro_main"]
-        ["TACH_BREAK_IN_INDICATOR"] = 
+        ["LeftEngine_LowOilPressure"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TACH_BREAK_IN_INDICATOR",
+            ["id"] = "LeftEngine_LowOilPressure",
             ["mm"] = 0,
-        }, -- end of ["TACH_BREAK_IN_INDICATOR"]
+        }, -- end of ["LeftEngine_LowOilPressure"]
         ["GUN_LEFT_OUT_MOUNT_LOOSE"] = 
         {
             ["hh"] = 0,
@@ -2720,15 +2836,15 @@ mission =
             ["id"] = "asc_p",
             ["mm"] = 0,
         }, -- end of ["asc_p"]
-        ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"] = 
+        ["sas_pitch_left"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "BOMBS_ARMING_BROKEN_SOLENOID_LEFT",
+            ["id"] = "sas_pitch_left",
             ["mm"] = 0,
-        }, -- end of ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"]
+        }, -- end of ["sas_pitch_left"]
         ["GUN_LEFT_IN_AMMUN_FAULT"] = 
         {
             ["hh"] = 0,
@@ -2846,15 +2962,15 @@ mission =
             ["id"] = "PILOT_KILLED_FAILURE",
             ["mm"] = 0,
         }, -- end of ["PILOT_KILLED_FAILURE"]
-        ["GUN_LEFT_CENTER_MOUNT_LOOSE"] = 
+        ["BOMBS_ARMING_BROKEN_WIRING_RIGHT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_LEFT_CENTER_MOUNT_LOOSE",
+            ["id"] = "BOMBS_ARMING_BROKEN_WIRING_RIGHT",
             ["mm"] = 0,
-        }, -- end of ["GUN_LEFT_CENTER_MOUNT_LOOSE"]
+        }, -- end of ["BOMBS_ARMING_BROKEN_WIRING_RIGHT"]
         ["VHF_VT_BURNED_OUT"] = 
         {
             ["hh"] = 0,
@@ -2864,15 +2980,15 @@ mission =
             ["id"] = "VHF_VT_BURNED_OUT",
             ["mm"] = 0,
         }, -- end of ["VHF_VT_BURNED_OUT"]
-        ["COPILOT_KILLED_FAILURE"] = 
+        ["COMPASS_ERRATIC_OPERATION"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "COPILOT_KILLED_FAILURE",
+            ["id"] = "COMPASS_ERRATIC_OPERATION",
             ["mm"] = 0,
-        }, -- end of ["COPILOT_KILLED_FAILURE"]
+        }, -- end of ["COMPASS_ERRATIC_OPERATION"]
         ["asc_a"] = 
         {
             ["hh"] = 0,
@@ -2918,15 +3034,15 @@ mission =
             ["id"] = "GUN_FAIL_LEFT_OUT_GUN",
             ["mm"] = 0,
         }, -- end of ["GUN_FAIL_LEFT_OUT_GUN"]
-        ["SAR_1_101"] = 
+        ["PUMP_FAILS"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "SAR_1_101",
+            ["id"] = "PUMP_FAILS",
             ["mm"] = 0,
-        }, -- end of ["SAR_1_101"]
+        }, -- end of ["PUMP_FAILS"]
         ["ROCKETS_INTERVALOMETER_WIRING"] = 
         {
             ["hh"] = 0,
@@ -2981,15 +3097,15 @@ mission =
             ["id"] = "BOMBS_RUST_LEFT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_RUST_LEFT"]
-        ["GUN_RIGHT_CENTER_BARREL_WORN"] = 
+        ["ARN_83_ADF_DAMAGE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_RIGHT_CENTER_BARREL_WORN",
+            ["id"] = "ARN_83_ADF_DAMAGE",
             ["mm"] = 0,
-        }, -- end of ["GUN_RIGHT_CENTER_BARREL_WORN"]
+        }, -- end of ["ARN_83_ADF_DAMAGE"]
         ["INSUF_FUEL_PRES"] = 
         {
             ["hh"] = 0,
@@ -3062,15 +3178,15 @@ mission =
             ["id"] = "STARTER_BURNOUT",
             ["mm"] = 0,
         }, -- end of ["STARTER_BURNOUT"]
-        ["OIL_SYSTEM_FAIL_050"] = 
+        ["UNLOAD_VALVE_NOT_LOAD"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "OIL_SYSTEM_FAIL_050",
+            ["id"] = "UNLOAD_VALVE_NOT_LOAD",
             ["mm"] = 0,
-        }, -- end of ["OIL_SYSTEM_FAIL_050"]
+        }, -- end of ["UNLOAD_VALVE_NOT_LOAD"]
         ["TURNIND_INCORRECT_SENS_VAC_LOW"] = 
         {
             ["hh"] = 0,
@@ -3269,15 +3385,15 @@ mission =
             ["id"] = "VHF_VT207_DEFECTIVE",
             ["mm"] = 0,
         }, -- end of ["VHF_VT207_DEFECTIVE"]
-        ["RightEngine_LowOilPressure"] = 
+        ["CARBAIR_OPEN_CIRCUIT_BLB"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "RightEngine_LowOilPressure",
+            ["id"] = "CARBAIR_OPEN_CIRCUIT_BLB",
             ["mm"] = 0,
-        }, -- end of ["RightEngine_LowOilPressure"]
+        }, -- end of ["CARBAIR_OPEN_CIRCUIT_BLB"]
         ["radar"] = 
         {
             ["hh"] = 0,
@@ -3314,15 +3430,15 @@ mission =
             ["id"] = "GUN_LEFT_OUT_OPEN_CIRCUIT",
             ["mm"] = 0,
         }, -- end of ["GUN_LEFT_OUT_OPEN_CIRCUIT"]
-        ["TURNIND_INCORRECT_SENS_DEFECTIVE"] = 
+        ["FLEX_S_NO_POWER_SUPPLY"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TURNIND_INCORRECT_SENS_DEFECTIVE",
+            ["id"] = "FLEX_S_NO_POWER_SUPPLY",
             ["mm"] = 0,
-        }, -- end of ["TURNIND_INCORRECT_SENS_DEFECTIVE"]
+        }, -- end of ["FLEX_S_NO_POWER_SUPPLY"]
         ["eos"] = 
         {
             ["hh"] = 0,
@@ -3556,15 +3672,15 @@ mission =
             ["id"] = "GUN_RIGHT_IN_MOUNT_LOOSE",
             ["mm"] = 0,
         }, -- end of ["GUN_RIGHT_IN_MOUNT_LOOSE"]
-        ["hydro_right"] = 
+        ["LEFT_MFCD_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "hydro_right",
+            ["id"] = "LEFT_MFCD_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["hydro_right"]
+        }, -- end of ["LEFT_MFCD_FAILURE"]
         ["sas_yaw_right"] = 
         {
             ["hh"] = 0,
@@ -3601,24 +3717,24 @@ mission =
             ["id"] = "fs_damage_left_cell_boost_pump",
             ["mm"] = 0,
         }, -- end of ["fs_damage_left_cell_boost_pump"]
-        ["BOOST_REG"] = 
+        ["BOMBS_DAMAGE_ELINKAGE_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "BOOST_REG",
+            ["id"] = "BOMBS_DAMAGE_ELINKAGE_LEFT",
             ["mm"] = 0,
-        }, -- end of ["BOOST_REG"]
-        ["hydro_left"] = 
+        }, -- end of ["BOMBS_DAMAGE_ELINKAGE_LEFT"]
+        ["r_conv"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "hydro_left",
+            ["id"] = "r_conv",
             ["mm"] = 0,
-        }, -- end of ["hydro_left"]
+        }, -- end of ["r_conv"]
         ["ENGINE_JAM"] = 
         {
             ["hh"] = 0,
@@ -3772,15 +3888,15 @@ mission =
             ["id"] = "INS_PART_FAIL",
             ["mm"] = 0,
         }, -- end of ["INS_PART_FAIL"]
-        ["UNLOAD_VALVE_NOT_LOAD"] = 
+        ["OIL_SYSTEM_FAIL_050"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "UNLOAD_VALVE_NOT_LOAD",
+            ["id"] = "OIL_SYSTEM_FAIL_050",
             ["mm"] = 0,
-        }, -- end of ["UNLOAD_VALVE_NOT_LOAD"]
+        }, -- end of ["OIL_SYSTEM_FAIL_050"]
         ["es_damage_GeneratorLeft"] = 
         {
             ["hh"] = 0,
@@ -3790,15 +3906,15 @@ mission =
             ["id"] = "es_damage_GeneratorLeft",
             ["mm"] = 0,
         }, -- end of ["es_damage_GeneratorLeft"]
-        ["FLEX_S_NO_POWER_SUPPLY"] = 
+        ["TURNIND_INCORRECT_SENS_DEFECTIVE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "FLEX_S_NO_POWER_SUPPLY",
+            ["id"] = "TURNIND_INCORRECT_SENS_DEFECTIVE",
             ["mm"] = 0,
-        }, -- end of ["FLEX_S_NO_POWER_SUPPLY"]
+        }, -- end of ["TURNIND_INCORRECT_SENS_DEFECTIVE"]
         ["INS_TOTAL_FAIL"] = 
         {
             ["hh"] = 0,
@@ -3844,15 +3960,15 @@ mission =
             ["id"] = "engine_chip",
             ["mm"] = 0,
         }, -- end of ["engine_chip"]
-        ["ARN_83_TOTAL_FAILURE"] = 
+        ["GMC_TOTAL_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "ARN_83_TOTAL_FAILURE",
+            ["id"] = "GMC_TOTAL_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["ARN_83_TOTAL_FAILURE"]
+        }, -- end of ["GMC_TOTAL_FAILURE"]
         ["CADC_FAILURE_MACH"] = 
         {
             ["hh"] = 0,
@@ -3888,240 +4004,42 @@ mission =
             ["id"] = "ROCKETS_DEFECTIVE_WIRING",
             ["mm"] = 0,
         }, -- end of ["ROCKETS_DEFECTIVE_WIRING"]
-        ["ARN_83_ADF_DAMAGE"] = 
+        ["GUN_RIGHT_CENTER_BARREL_WORN"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "ARN_83_ADF_DAMAGE",
+            ["id"] = "GUN_RIGHT_CENTER_BARREL_WORN",
             ["mm"] = 0,
-        }, -- end of ["ARN_83_ADF_DAMAGE"]
-        ["ARN_82_FAILURE_TOTAL"] = 
+        }, -- end of ["GUN_RIGHT_CENTER_BARREL_WORN"]
+        ["RADAR_ALTIMETR_RIGHT_ANT_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "ARN_82_FAILURE_TOTAL",
+            ["id"] = "RADAR_ALTIMETR_RIGHT_ANT_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["ARN_82_FAILURE_TOTAL"]
-        ["COMPASS_ERRATIC_OPERATION"] = 
+        }, -- end of ["RADAR_ALTIMETR_RIGHT_ANT_FAILURE"]
+        ["TURNIND_POINTER_VIBRATES"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "COMPASS_ERRATIC_OPERATION",
+            ["id"] = "TURNIND_POINTER_VIBRATES",
             ["mm"] = 0,
-        }, -- end of ["COMPASS_ERRATIC_OPERATION"]
-        ["CLOCK_FAILURE"] = 
+        }, -- end of ["TURNIND_POINTER_VIBRATES"]
+        ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "CLOCK_FAILURE",
+            ["id"] = "AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR",
             ["mm"] = 0,
-        }, -- end of ["CLOCK_FAILURE"]
-        ["RIGHT_WING_TANK_LEAK"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "RIGHT_WING_TANK_LEAK",
-            ["mm"] = 0,
-        }, -- end of ["RIGHT_WING_TANK_LEAK"]
-        ["GMC_TOTAL_FAILURE"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "GMC_TOTAL_FAILURE",
-            ["mm"] = 0,
-        }, -- end of ["GMC_TOTAL_FAILURE"]
-        ["laser_failure"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "laser_failure",
-            ["mm"] = 0,
-        }, -- end of ["laser_failure"]
-        ["BATTERY_OVERHEAT"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "BATTERY_OVERHEAT",
-            ["mm"] = 0,
-        }, -- end of ["BATTERY_OVERHEAT"]
-        ["BOMBS_NO_VOLATAGE_BOTH"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "BOMBS_NO_VOLATAGE_BOTH",
-            ["mm"] = 0,
-        }, -- end of ["BOMBS_NO_VOLATAGE_BOTH"]
-        ["AN_ALR69V_FAILURE_SENSOR_TAIL_LEFT"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "AN_ALR69V_FAILURE_SENSOR_TAIL_LEFT",
-            ["mm"] = 0,
-        }, -- end of ["AN_ALR69V_FAILURE_SENSOR_TAIL_LEFT"]
-        ["hydro_main_irreversible_valve"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "hydro_main_irreversible_valve",
-            ["mm"] = 0,
-        }, -- end of ["hydro_main_irreversible_valve"]
-        ["sas_pitch_left"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "sas_pitch_left",
-            ["mm"] = 0,
-        }, -- end of ["sas_pitch_left"]
-        ["TAIL_GEAR_D_LOCK"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "TAIL_GEAR_D_LOCK",
-            ["mm"] = 0,
-        }, -- end of ["TAIL_GEAR_D_LOCK"]
-        ["CARBAIR_SHORT_CIRCUIT_LEADS"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "CARBAIR_SHORT_CIRCUIT_LEADS",
-            ["mm"] = 0,
-        }, -- end of ["CARBAIR_SHORT_CIRCUIT_LEADS"]
-        ["NOSE_AIRSPEED_INDICATOR_FAILURE"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "NOSE_AIRSPEED_INDICATOR_FAILURE",
-            ["mm"] = 0,
-        }, -- end of ["NOSE_AIRSPEED_INDICATOR_FAILURE"]
-        ["GUN_LEFT_CENTER_AMMUN_FAULT"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "GUN_LEFT_CENTER_AMMUN_FAULT",
-            ["mm"] = 0,
-        }, -- end of ["GUN_LEFT_CENTER_AMMUN_FAULT"]
-        ["fuel_sys_left_transfer_pump"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "fuel_sys_left_transfer_pump",
-            ["mm"] = 0,
-        }, -- end of ["fuel_sys_left_transfer_pump"]
-        ["HYD_PUMP_3_FAIL_100"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "HYD_PUMP_3_FAIL_100",
-            ["mm"] = 0,
-        }, -- end of ["HYD_PUMP_3_FAIL_100"]
-        ["HYD_PUMP_2_FAIL_100"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "HYD_PUMP_2_FAIL_100",
-            ["mm"] = 0,
-        }, -- end of ["HYD_PUMP_2_FAIL_100"]
-        ["es_damage_StarterGenerator"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "es_damage_StarterGenerator",
-            ["mm"] = 0,
-        }, -- end of ["es_damage_StarterGenerator"]
-        ["DEFECTIVE_MECHANISM"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "DEFECTIVE_MECHANISM",
-            ["mm"] = 0,
-        }, -- end of ["DEFECTIVE_MECHANISM"]
-        ["STARTER_SOLENOID"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "STARTER_SOLENOID",
-            ["mm"] = 0,
-        }, -- end of ["STARTER_SOLENOID"]
-        ["LeftEngine_LowOilPressure"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "LeftEngine_LowOilPressure",
-            ["mm"] = 0,
-        }, -- end of ["LeftEngine_LowOilPressure"]
-        ["BOMBS_DAMAGE_ELINKAGE_LEFT"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "BOMBS_DAMAGE_ELINKAGE_LEFT",
-            ["mm"] = 0,
-        }, -- end of ["BOMBS_DAMAGE_ELINKAGE_LEFT"]
-        ["TACH_BREAK_CIRCUIT"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "TACH_BREAK_CIRCUIT",
-            ["mm"] = 0,
-        }, -- end of ["TACH_BREAK_CIRCUIT"]
-        ["r_conv"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "r_conv",
-            ["mm"] = 0,
-        }, -- end of ["r_conv"]
+        }, -- end of ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"]
         ["COOLANT_DEFECTIVE_IND"] = 
         {
             ["hh"] = 0,
@@ -4131,6 +4049,204 @@ mission =
             ["id"] = "COOLANT_DEFECTIVE_IND",
             ["mm"] = 0,
         }, -- end of ["COOLANT_DEFECTIVE_IND"]
+        ["HYD_PUMP_2_FAIL_100"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "HYD_PUMP_2_FAIL_100",
+            ["mm"] = 0,
+        }, -- end of ["HYD_PUMP_2_FAIL_100"]
+        ["laser_failure"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "laser_failure",
+            ["mm"] = 0,
+        }, -- end of ["laser_failure"]
+        ["AAR_47_FAILURE_SENSOR_BOTTOM"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "AAR_47_FAILURE_SENSOR_BOTTOM",
+            ["mm"] = 0,
+        }, -- end of ["AAR_47_FAILURE_SENSOR_BOTTOM"]
+        ["BOMBS_NO_VOLATAGE_BOTH"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "BOMBS_NO_VOLATAGE_BOTH",
+            ["mm"] = 0,
+        }, -- end of ["BOMBS_NO_VOLATAGE_BOTH"]
+        ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "BOMBS_ARMING_BROKEN_SOLENOID_LEFT",
+            ["mm"] = 0,
+        }, -- end of ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"]
+        ["hydro_main_irreversible_valve"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "hydro_main_irreversible_valve",
+            ["mm"] = 0,
+        }, -- end of ["hydro_main_irreversible_valve"]
+        ["CARBAIR_SHORT_CIRCUIT_LEADS"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "CARBAIR_SHORT_CIRCUIT_LEADS",
+            ["mm"] = 0,
+        }, -- end of ["CARBAIR_SHORT_CIRCUIT_LEADS"]
+        ["COOLANT_SHORT_CIRCUIT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "COOLANT_SHORT_CIRCUIT",
+            ["mm"] = 0,
+        }, -- end of ["COOLANT_SHORT_CIRCUIT"]
+        ["BATTERY_OVERHEAT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "BATTERY_OVERHEAT",
+            ["mm"] = 0,
+        }, -- end of ["BATTERY_OVERHEAT"]
+        ["NOSE_AIRSPEED_INDICATOR_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "NOSE_AIRSPEED_INDICATOR_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["NOSE_AIRSPEED_INDICATOR_FAILURE"]
+        ["fuel_sys_left_transfer_pump"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "fuel_sys_left_transfer_pump",
+            ["mm"] = 0,
+        }, -- end of ["fuel_sys_left_transfer_pump"]
+        ["TAIL_GEAR_D_LOCK"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "TAIL_GEAR_D_LOCK",
+            ["mm"] = 0,
+        }, -- end of ["TAIL_GEAR_D_LOCK"]
+        ["ARN_83_TOTAL_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ARN_83_TOTAL_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["ARN_83_TOTAL_FAILURE"]
+        ["es_damage_StarterGenerator"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "es_damage_StarterGenerator",
+            ["mm"] = 0,
+        }, -- end of ["es_damage_StarterGenerator"]
+        ["AN_ALR69V_FAILURE_SENSOR_TAIL_LEFT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "AN_ALR69V_FAILURE_SENSOR_TAIL_LEFT",
+            ["mm"] = 0,
+        }, -- end of ["AN_ALR69V_FAILURE_SENSOR_TAIL_LEFT"]
+        ["DEFECTIVE_MECHANISM"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "DEFECTIVE_MECHANISM",
+            ["mm"] = 0,
+        }, -- end of ["DEFECTIVE_MECHANISM"]
+        ["GUN_LEFT_CENTER_AMMUN_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "GUN_LEFT_CENTER_AMMUN_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_LEFT_CENTER_AMMUN_FAULT"]
+        ["STARTER_SOLENOID"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "STARTER_SOLENOID",
+            ["mm"] = 0,
+        }, -- end of ["STARTER_SOLENOID"]
+        ["TACH_BREAK_IN_INDICATOR"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "TACH_BREAK_IN_INDICATOR",
+            ["mm"] = 0,
+        }, -- end of ["TACH_BREAK_IN_INDICATOR"]
+        ["TACH_BREAK_CIRCUIT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "TACH_BREAK_CIRCUIT",
+            ["mm"] = 0,
+        }, -- end of ["TACH_BREAK_CIRCUIT"]
+        ["BOOST_REG"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "BOOST_REG",
+            ["mm"] = 0,
+        }, -- end of ["BOOST_REG"]
+        ["CADC_FAILURE_DYNAMIC"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "CADC_FAILURE_DYNAMIC",
+            ["mm"] = 0,
+        }, -- end of ["CADC_FAILURE_DYNAMIC"]
         ["hud"] = 
         {
             ["hh"] = 0,
@@ -4140,24 +4256,24 @@ mission =
             ["id"] = "hud",
             ["mm"] = 0,
         }, -- end of ["hud"]
-        ["TURNIND_POINTER_FAILS_DEFECTIVE"] = 
+        ["FAULTY_ROCKET_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TURNIND_POINTER_FAILS_DEFECTIVE",
+            ["id"] = "FAULTY_ROCKET_LEFT",
             ["mm"] = 0,
-        }, -- end of ["TURNIND_POINTER_FAILS_DEFECTIVE"]
-        ["es_damage_MainGenerator"] = 
+        }, -- end of ["FAULTY_ROCKET_LEFT"]
+        ["RWR_FAILURE_SENSOR_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "es_damage_MainGenerator",
+            ["id"] = "RWR_FAILURE_SENSOR_LEFT",
             ["mm"] = 0,
-        }, -- end of ["es_damage_MainGenerator"]
+        }, -- end of ["RWR_FAILURE_SENSOR_LEFT"]
         ["SAR_1_2_95"] = 
         {
             ["hh"] = 0,
@@ -4176,33 +4292,33 @@ mission =
             ["id"] = "RWR_FAILURE_SENSOR_TAIL_R",
             ["mm"] = 0,
         }, -- end of ["RWR_FAILURE_SENSOR_TAIL_R"]
-        ["LEFT_MFCD_FAILURE"] = 
+        ["es_damage_MainGenerator"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "LEFT_MFCD_FAILURE",
+            ["id"] = "es_damage_MainGenerator",
             ["mm"] = 0,
-        }, -- end of ["LEFT_MFCD_FAILURE"]
-        ["COOLANT_SHORT_CIRCUIT"] = 
+        }, -- end of ["es_damage_MainGenerator"]
+        ["AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "COOLANT_SHORT_CIRCUIT",
+            ["id"] = "AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT",
             ["mm"] = 0,
-        }, -- end of ["COOLANT_SHORT_CIRCUIT"]
-        ["GUN_LEFT_OUT_BARREL_WORN"] = 
+        }, -- end of ["AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT"]
+        ["IGNITION_TERM_CONNECT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_LEFT_OUT_BARREL_WORN",
+            ["id"] = "IGNITION_TERM_CONNECT",
             ["mm"] = 0,
-        }, -- end of ["GUN_LEFT_OUT_BARREL_WORN"]
+        }, -- end of ["IGNITION_TERM_CONNECT"]
         ["GUN_LEFT_CENTER_OPEN_CIRCUIT"] = 
         {
             ["hh"] = 0,
@@ -4212,15 +4328,15 @@ mission =
             ["id"] = "GUN_LEFT_CENTER_OPEN_CIRCUIT",
             ["mm"] = 0,
         }, -- end of ["GUN_LEFT_CENTER_OPEN_CIRCUIT"]
-        ["BOOSTER_COIL"] = 
+        ["GMC_GYRO_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "BOOSTER_COIL",
+            ["id"] = "GMC_GYRO_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["BOOSTER_COIL"]
+        }, -- end of ["GMC_GYRO_FAILURE"]
         ["ENG_ALT_1_FAIL"] = 
         {
             ["hh"] = 0,
@@ -4248,15 +4364,15 @@ mission =
             ["id"] = "ILS_FAILURE_ANT_MARKER",
             ["mm"] = 0,
         }, -- end of ["ILS_FAILURE_ANT_MARKER"]
-        ["AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT"] = 
+        ["VHF_SHORTED_CTL_BOX"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT",
+            ["id"] = "VHF_SHORTED_CTL_BOX",
             ["mm"] = 0,
-        }, -- end of ["AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT"]
+        }, -- end of ["VHF_SHORTED_CTL_BOX"]
         ["BOMBS_DAMAGE_LINKAGE_RIGHT"] = 
         {
             ["hh"] = 0,
@@ -4266,15 +4382,15 @@ mission =
             ["id"] = "BOMBS_DAMAGE_LINKAGE_RIGHT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_DAMAGE_LINKAGE_RIGHT"]
-        ["GUN_LEFT_OUT_AMMUN_FAULT"] = 
+        ["ecm"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_LEFT_OUT_AMMUN_FAULT",
+            ["id"] = "ecm",
             ["mm"] = 0,
-        }, -- end of ["GUN_LEFT_OUT_AMMUN_FAULT"]
+        }, -- end of ["ecm"]
         ["sas_pitch_right"] = 
         {
             ["hh"] = 0,
@@ -4284,33 +4400,33 @@ mission =
             ["id"] = "sas_pitch_right",
             ["mm"] = 0,
         }, -- end of ["sas_pitch_right"]
-        ["RADAR_ALTIMETR_RIGHT_ANT_FAILURE"] = 
+        ["ARN_82_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "RADAR_ALTIMETR_RIGHT_ANT_FAILURE",
+            ["id"] = "ARN_82_FAILURE_TOTAL",
             ["mm"] = 0,
-        }, -- end of ["RADAR_ALTIMETR_RIGHT_ANT_FAILURE"]
-        ["TAIL_GEAR_FAIL_GO_DOWN"] = 
+        }, -- end of ["ARN_82_FAILURE_TOTAL"]
+        ["AAR_47_FAILURE_SENSOR_RIGHT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TAIL_GEAR_FAIL_GO_DOWN",
+            ["id"] = "AAR_47_FAILURE_SENSOR_RIGHT",
             ["mm"] = 0,
-        }, -- end of ["TAIL_GEAR_FAIL_GO_DOWN"]
-        ["AN_ALE_40V_FAILURE_CONTAINER_LEFT_WING"] = 
+        }, -- end of ["AAR_47_FAILURE_SENSOR_RIGHT"]
+        ["r_gen"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "AN_ALE_40V_FAILURE_CONTAINER_LEFT_WING",
+            ["id"] = "r_gen",
             ["mm"] = 0,
-        }, -- end of ["AN_ALE_40V_FAILURE_CONTAINER_LEFT_WING"]
+        }, -- end of ["r_gen"]
         ["CADC_FAILURE_IAS"] = 
         {
             ["hh"] = 0,
@@ -4338,24 +4454,24 @@ mission =
             ["id"] = "VHF_CRYSTAL",
             ["mm"] = 0,
         }, -- end of ["VHF_CRYSTAL"]
-        ["TURNIND_POINTER_VIBRATES"] = 
+        ["COPILOT_KILLED_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TURNIND_POINTER_VIBRATES",
+            ["id"] = "COPILOT_KILLED_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["TURNIND_POINTER_VIBRATES"]
-        ["l_gen"] = 
+        }, -- end of ["COPILOT_KILLED_FAILURE"]
+        ["TACAN_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "l_gen",
+            ["id"] = "TACAN_FAILURE_TOTAL",
             ["mm"] = 0,
-        }, -- end of ["l_gen"]
+        }, -- end of ["TACAN_FAILURE_TOTAL"]
         ["F2_TOP_CYLINDER"] = 
         {
             ["hh"] = 0,
@@ -4374,15 +4490,15 @@ mission =
             ["id"] = "FLEX_S_MAIN_LAMP_DEFECTIVE",
             ["mm"] = 0,
         }, -- end of ["FLEX_S_MAIN_LAMP_DEFECTIVE"]
-        ["GUN_FAIL_RIGHT_IN_GUN"] = 
+        ["HYD_PUMP_3_FAIL_100"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_FAIL_RIGHT_IN_GUN",
+            ["id"] = "HYD_PUMP_3_FAIL_100",
             ["mm"] = 0,
-        }, -- end of ["GUN_FAIL_RIGHT_IN_GUN"]
+        }, -- end of ["HYD_PUMP_3_FAIL_100"]
         ["ENG_ALT_2_FAIL"] = 
         {
             ["hh"] = 0,
@@ -4392,15 +4508,15 @@ mission =
             ["id"] = "ENG_ALT_2_FAIL",
             ["mm"] = 0,
         }, -- end of ["ENG_ALT_2_FAIL"]
-        ["CARBAIR_OPEN_CIRCUIT_BLB"] = 
+        ["RightEngine_LowOilPressure"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "CARBAIR_OPEN_CIRCUIT_BLB",
+            ["id"] = "RightEngine_LowOilPressure",
             ["mm"] = 0,
-        }, -- end of ["CARBAIR_OPEN_CIRCUIT_BLB"]
+        }, -- end of ["RightEngine_LowOilPressure"]
         ["K14_NO_POWER_SUPPLY"] = 
         {
             ["hh"] = 0,
@@ -4644,15 +4760,15 @@ mission =
             ["id"] = "COOLANT_RADIATOR_MOTOR",
             ["mm"] = 0,
         }, -- end of ["COOLANT_RADIATOR_MOTOR"]
-        ["RightEngine_ShaveInOil"] = 
+        ["GUN_LEFT_OUT_AMMUN_FAULT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "RightEngine_ShaveInOil",
+            ["id"] = "GUN_LEFT_OUT_AMMUN_FAULT",
             ["mm"] = 0,
-        }, -- end of ["RightEngine_ShaveInOil"]
+        }, -- end of ["GUN_LEFT_OUT_AMMUN_FAULT"]
         ["AAR_47_FAILURE_SENSOR_TAIL"] = 
         {
             ["hh"] = 0,
@@ -4662,15 +4778,15 @@ mission =
             ["id"] = "AAR_47_FAILURE_SENSOR_TAIL",
             ["mm"] = 0,
         }, -- end of ["AAR_47_FAILURE_SENSOR_TAIL"]
-        ["BOMBS_ARMING_BROKEN_WIRING_RIGHT"] = 
+        ["SAR_1_101"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "BOMBS_ARMING_BROKEN_WIRING_RIGHT",
+            ["id"] = "SAR_1_101",
             ["mm"] = 0,
-        }, -- end of ["BOMBS_ARMING_BROKEN_WIRING_RIGHT"]
+        }, -- end of ["SAR_1_101"]
         ["TACAN_FAILURE_TRANSMITTER"] = 
         {
             ["hh"] = 0,
@@ -4689,15 +4805,15 @@ mission =
             ["id"] = "hydro_common",
             ["mm"] = 0,
         }, -- end of ["hydro_common"]
-        ["PUMP_FAILS"] = 
+        ["GUN_LEFT_OUT_BARREL_WORN"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "PUMP_FAILS",
+            ["id"] = "GUN_LEFT_OUT_BARREL_WORN",
             ["mm"] = 0,
-        }, -- end of ["PUMP_FAILS"]
+        }, -- end of ["GUN_LEFT_OUT_BARREL_WORN"]
         ["VHF_SQUELCH_RELAY"] = 
         {
             ["hh"] = 0,
@@ -4716,15 +4832,6 @@ mission =
             ["id"] = "GUN_LEFT_IN_BARREL_WORN",
             ["mm"] = 0,
         }, -- end of ["GUN_LEFT_IN_BARREL_WORN"]
-        ["ecm"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "ecm",
-            ["mm"] = 0,
-        }, -- end of ["ecm"]
         ["VHF_AM_RADIO_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
@@ -4743,6 +4850,15 @@ mission =
             ["id"] = "TACAN_FAILURE_RECEIVER",
             ["mm"] = 0,
         }, -- end of ["TACAN_FAILURE_RECEIVER"]
+        ["GUN_RIGHT_OUT_AMMUN_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "GUN_RIGHT_OUT_AMMUN_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_RIGHT_OUT_AMMUN_FAULT"]
         ["ROCKETS_INTERVALOMETER_SEQ"] = 
         {
             ["hh"] = 0,
@@ -4752,15 +4868,15 @@ mission =
             ["id"] = "ROCKETS_INTERVALOMETER_SEQ",
             ["mm"] = 0,
         }, -- end of ["ROCKETS_INTERVALOMETER_SEQ"]
-        ["IGNITION_TERM_CONNECT"] = 
+        ["hydro_right"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "IGNITION_TERM_CONNECT",
+            ["id"] = "hydro_right",
             ["mm"] = 0,
-        }, -- end of ["IGNITION_TERM_CONNECT"]
+        }, -- end of ["hydro_right"]
         ["SAR_2_95"] = 
         {
             ["hh"] = 0,
@@ -4779,24 +4895,24 @@ mission =
             ["id"] = "SAR_2_101",
             ["mm"] = 0,
         }, -- end of ["SAR_2_101"]
-        ["RWR_FAILURE_SENSOR_LEFT"] = 
+        ["CLOCK_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "RWR_FAILURE_SENSOR_LEFT",
+            ["id"] = "CLOCK_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["RWR_FAILURE_SENSOR_LEFT"]
-        ["TURNIND_INCORRECT_SENS_VAC_HIGH"] = 
+        }, -- end of ["CLOCK_FAILURE"]
+        ["hydro_left"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TURNIND_INCORRECT_SENS_VAC_HIGH",
+            ["id"] = "hydro_left",
             ["mm"] = 0,
-        }, -- end of ["TURNIND_INCORRECT_SENS_VAC_HIGH"]
+        }, -- end of ["hydro_left"]
         ["FAULTY_ROCKET_RIGHT"] = 
         {
             ["hh"] = 0,
@@ -4842,15 +4958,15 @@ mission =
             ["id"] = "PUMP_SEPARATOR_CLOGGED",
             ["mm"] = 0,
         }, -- end of ["PUMP_SEPARATOR_CLOGGED"]
-        ["VHF_SHORTED_CTL_BOX"] = 
+        ["GUN_FAIL_RIGHT_IN_GUN"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "VHF_SHORTED_CTL_BOX",
+            ["id"] = "GUN_FAIL_RIGHT_IN_GUN",
             ["mm"] = 0,
-        }, -- end of ["VHF_SHORTED_CTL_BOX"]
+        }, -- end of ["GUN_FAIL_RIGHT_IN_GUN"]
         ["BOMBS_RUST_RIGHT"] = 
         {
             ["hh"] = 0,
@@ -4869,15 +4985,15 @@ mission =
             ["id"] = "CLOGGED_FUEL_STRAINER",
             ["mm"] = 0,
         }, -- end of ["CLOGGED_FUEL_STRAINER"]
-        ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"] = 
+        ["TURNIND_INCORRECT_SENS_VAC_HIGH"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR",
+            ["id"] = "TURNIND_INCORRECT_SENS_VAC_HIGH",
             ["mm"] = 0,
-        }, -- end of ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"]
+        }, -- end of ["TURNIND_INCORRECT_SENS_VAC_HIGH"]
         ["r_engine"] = 
         {
             ["hh"] = 0,
@@ -4923,15 +5039,15 @@ mission =
             ["id"] = "D2_RIGHT_CYLINDER",
             ["mm"] = 0,
         }, -- end of ["D2_RIGHT_CYLINDER"]
-        ["AAR_47_FAILURE_SENSOR_BOTTOM"] = 
+        ["RightEngine_ShaveInOil"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "AAR_47_FAILURE_SENSOR_BOTTOM",
+            ["id"] = "RightEngine_ShaveInOil",
             ["mm"] = 0,
-        }, -- end of ["AAR_47_FAILURE_SENSOR_BOTTOM"]
+        }, -- end of ["RightEngine_ShaveInOil"]
         ["AN_ALR69V_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
@@ -4941,24 +5057,24 @@ mission =
             ["id"] = "AN_ALR69V_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["AN_ALR69V_FAILURE_TOTAL"]
-        ["CADC_FAILURE_DYNAMIC"] = 
+        ["RIGHT_WING_TANK_LEAK"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "CADC_FAILURE_DYNAMIC",
+            ["id"] = "RIGHT_WING_TANK_LEAK",
             ["mm"] = 0,
-        }, -- end of ["CADC_FAILURE_DYNAMIC"]
-        ["GUN_RIGHT_OUT_AMMUN_FAULT"] = 
+        }, -- end of ["RIGHT_WING_TANK_LEAK"]
+        ["GUN_LEFT_CENTER_MOUNT_LOOSE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_RIGHT_OUT_AMMUN_FAULT",
+            ["id"] = "GUN_LEFT_CENTER_MOUNT_LOOSE",
             ["mm"] = 0,
-        }, -- end of ["GUN_RIGHT_OUT_AMMUN_FAULT"]
+        }, -- end of ["GUN_LEFT_CENTER_MOUNT_LOOSE"]
         ["SUPERCHARGER_SOLENOID"] = 
         {
             ["hh"] = 0,
