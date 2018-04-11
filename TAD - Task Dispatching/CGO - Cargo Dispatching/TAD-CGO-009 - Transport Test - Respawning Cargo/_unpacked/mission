@@ -5,8 +5,8 @@ mission =
     }, -- end of ["requiredModules"]
     ["date"] = 
     {
-        ["Year"] = 2011,
         ["Day"] = 1,
+        ["Year"] = 2011,
         ["Month"] = 6,
     }, -- end of ["date"]
     ["trig"] = 
@@ -88,7 +88,7 @@ mission =
             }, -- end of ["func"]
         }, -- end of ["red"]
     }, -- end of ["result"]
-    ["maxDictId"] = 1033,
+    ["maxDictId"] = 1036,
     ["pictureFileNameN"] = 
     {
     }, -- end of ["pictureFileNameN"]
@@ -136,16 +136,16 @@ mission =
                 ["speed"] = 0,
                 ["dir"] = 0,
             }, -- end of ["at8000"]
-            ["at2000"] = 
-            {
-                ["speed"] = 0,
-                ["dir"] = 0,
-            }, -- end of ["at2000"]
             ["atGround"] = 
             {
                 ["speed"] = 0,
                 ["dir"] = 0,
             }, -- end of ["atGround"]
+            ["at2000"] = 
+            {
+                ["speed"] = 0,
+                ["dir"] = 0,
+            }, -- end of ["at2000"]
         }, -- end of ["wind"]
         ["enable_fog"] = false,
         ["season"] = 
@@ -234,32 +234,12 @@ mission =
     }, -- end of ["triggers"]
     ["map"] = 
     {
-        ["centerY"] = 808573.89342858,
-        ["zoom"] = 13089,
-        ["centerX"] = -268253.55157141,
+        ["centerY"] = 810447.37142857,
+        ["zoom"] = 79143,
+        ["centerX"] = -265016.17642855,
     }, -- end of ["map"]
     ["coalitions"] = 
     {
-        ["neutrals"] = 
-        {
-            [1] = 7,
-            [2] = 17,
-            [3] = 22,
-            [4] = 23,
-            [5] = 25,
-            [6] = 29,
-            [7] = 30,
-            [8] = 31,
-            [9] = 32,
-            [10] = 33,
-            [11] = 35,
-            [12] = 36,
-            [13] = 39,
-            [14] = 41,
-            [15] = 42,
-            [16] = 44,
-            [17] = 46,
-        }, -- end of ["neutrals"]
         ["blue"] = 
         {
             [1] = 11,
@@ -282,6 +262,26 @@ mission =
             [18] = 45,
             [19] = 28,
         }, -- end of ["blue"]
+        ["neutrals"] = 
+        {
+            [1] = 7,
+            [2] = 17,
+            [3] = 22,
+            [4] = 23,
+            [5] = 25,
+            [6] = 29,
+            [7] = 30,
+            [8] = 31,
+            [9] = 32,
+            [10] = 33,
+            [11] = 35,
+            [12] = 36,
+            [13] = 39,
+            [14] = 41,
+            [15] = 42,
+            [16] = 44,
+            [17] = 46,
+        }, -- end of ["neutrals"]
         ["red"] = 
         {
             [1] = 0,
@@ -432,10 +432,10 @@ mission =
                                         {
                                             ["LeftEngineResource"] = 90,
                                             ["RightEngineResource"] = 90,
-                                            ["NetCrewControlPriority"] = 1,
+                                            ["GunnersAISkill"] = 90,
                                             ["ExhaustScreen"] = false,
                                             ["CargoHalfdoor"] = true,
-                                            ["GunnersAISkill"] = 90,
+                                            ["NetCrewControlPriority"] = 1,
                                             ["AdditionalArmor"] = false,
                                             ["NS430allow"] = true,
                                         }, -- end of ["AddPropAircraft"]
@@ -464,8 +464,8 @@ mission =
                                                     [13] = 123,
                                                     [7] = 141,
                                                     [14] = 131,
-                                                    [15] = 134,
                                                     [19] = 124,
+                                                    [15] = 134,
                                                 }, -- end of ["channels"]
                                             }, -- end of [1]
                                             [2] = 
@@ -575,10 +575,10 @@ mission =
                                         {
                                             ["LeftEngineResource"] = 90,
                                             ["RightEngineResource"] = 90,
-                                            ["GunnersAISkill"] = 90,
+                                            ["NetCrewControlPriority"] = 1,
                                             ["ExhaustScreen"] = false,
                                             ["CargoHalfdoor"] = true,
-                                            ["NetCrewControlPriority"] = 1,
+                                            ["GunnersAISkill"] = 90,
                                             ["AdditionalArmor"] = false,
                                             ["NS430allow"] = true,
                                         }, -- end of ["AddPropAircraft"]
@@ -607,8 +607,8 @@ mission =
                                                     [13] = 123,
                                                     [7] = 141,
                                                     [14] = 131,
-                                                    [19] = 124,
                                                     [15] = 134,
+                                                    [19] = 124,
                                                 }, -- end of ["channels"]
                                             }, -- end of [1]
                                             [2] = 
@@ -716,10 +716,10 @@ mission =
                                         ["speed"] = 41.666666666667,
                                         ["AddPropAircraft"] = 
                                         {
-                                            ["EngineResource"] = 90,
+                                            ["ExhaustScreen"] = false,
                                             ["NetCrewControlPriority"] = 1,
                                             ["GunnersAISkill"] = 90,
-                                            ["ExhaustScreen"] = false,
+                                            ["EngineResource"] = 90,
                                         }, -- end of ["AddPropAircraft"]
                                         ["type"] = "UH-1H",
                                         ["Radio"] = 
@@ -746,8 +746,8 @@ mission =
                                                     [13] = 269,
                                                     [7] = 270,
                                                     [14] = 260,
-                                                    [15] = 263,
                                                     [19] = 253,
+                                                    [15] = 263,
                                                 }, -- end of ["channels"]
                                             }, -- end of [1]
                                         }, -- end of ["Radio"]
@@ -839,10 +839,10 @@ mission =
                                         ["speed"] = 41.666666666667,
                                         ["AddPropAircraft"] = 
                                         {
-                                            ["EngineResource"] = 90,
+                                            ["ExhaustScreen"] = false,
                                             ["NetCrewControlPriority"] = 1,
                                             ["GunnersAISkill"] = 90,
-                                            ["ExhaustScreen"] = false,
+                                            ["EngineResource"] = 90,
                                         }, -- end of ["AddPropAircraft"]
                                         ["type"] = "UH-1H",
                                         ["Radio"] = 
@@ -869,8 +869,8 @@ mission =
                                                     [13] = 269,
                                                     [7] = 270,
                                                     [14] = 260,
-                                                    [15] = 263,
                                                     [19] = 253,
+                                                    [15] = 263,
                                                 }, -- end of ["channels"]
                                             }, -- end of [1]
                                         }, -- end of ["Radio"]
@@ -964,10 +964,10 @@ mission =
                                         {
                                             ["LeftEngineResource"] = 90,
                                             ["RightEngineResource"] = 90,
-                                            ["GunnersAISkill"] = 90,
+                                            ["NetCrewControlPriority"] = 1,
                                             ["ExhaustScreen"] = false,
                                             ["CargoHalfdoor"] = true,
-                                            ["NetCrewControlPriority"] = 1,
+                                            ["GunnersAISkill"] = 90,
                                             ["AdditionalArmor"] = false,
                                             ["NS430allow"] = true,
                                         }, -- end of ["AddPropAircraft"]
@@ -996,8 +996,8 @@ mission =
                                                     [13] = 123,
                                                     [7] = 141,
                                                     [14] = 131,
-                                                    [15] = 134,
                                                     [19] = 124,
+                                                    [15] = 134,
                                                 }, -- end of ["channels"]
                                             }, -- end of [1]
                                             [2] = 
@@ -1105,10 +1105,10 @@ mission =
                                         ["speed"] = 41.666666666667,
                                         ["AddPropAircraft"] = 
                                         {
-                                            ["EngineResource"] = 90,
+                                            ["ExhaustScreen"] = false,
                                             ["NetCrewControlPriority"] = 1,
                                             ["GunnersAISkill"] = 90,
-                                            ["ExhaustScreen"] = false,
+                                            ["EngineResource"] = 90,
                                         }, -- end of ["AddPropAircraft"]
                                         ["type"] = "UH-1H",
                                         ["Radio"] = 
@@ -1135,8 +1135,8 @@ mission =
                                                     [13] = 269,
                                                     [7] = 270,
                                                     [14] = 260,
-                                                    [15] = 263,
                                                     [19] = 253,
+                                                    [15] = 263,
                                                 }, -- end of ["channels"]
                                             }, -- end of [1]
                                         }, -- end of ["Radio"]
@@ -1228,10 +1228,10 @@ mission =
                                         ["speed"] = 41.666666666667,
                                         ["AddPropAircraft"] = 
                                         {
-                                            ["EngineResource"] = 90,
+                                            ["ExhaustScreen"] = false,
                                             ["NetCrewControlPriority"] = 1,
                                             ["GunnersAISkill"] = 90,
-                                            ["ExhaustScreen"] = false,
+                                            ["EngineResource"] = 90,
                                         }, -- end of ["AddPropAircraft"]
                                         ["type"] = "UH-1H",
                                         ["Radio"] = 
@@ -1258,8 +1258,8 @@ mission =
                                                     [13] = 269,
                                                     [7] = 270,
                                                     [14] = 260,
-                                                    [15] = 263,
                                                     [19] = 253,
+                                                    [15] = 263,
                                                 }, -- end of ["channels"]
                                             }, -- end of [1]
                                         }, -- end of ["Radio"]
@@ -1353,10 +1353,10 @@ mission =
                                         {
                                             ["LeftEngineResource"] = 90,
                                             ["RightEngineResource"] = 90,
-                                            ["GunnersAISkill"] = 90,
+                                            ["NetCrewControlPriority"] = 1,
                                             ["ExhaustScreen"] = false,
                                             ["CargoHalfdoor"] = true,
-                                            ["NetCrewControlPriority"] = 1,
+                                            ["GunnersAISkill"] = 90,
                                             ["AdditionalArmor"] = false,
                                             ["NS430allow"] = true,
                                         }, -- end of ["AddPropAircraft"]
@@ -1385,8 +1385,8 @@ mission =
                                                     [13] = 123,
                                                     [7] = 141,
                                                     [14] = 131,
-                                                    [15] = 134,
                                                     [19] = 124,
+                                                    [15] = 134,
                                                 }, -- end of ["channels"]
                                             }, -- end of [1]
                                             [2] = 
@@ -1468,10 +1468,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["key"] = "CAS",
                                                             ["id"] = "EngageTargets",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["auto"] = true,
                                                             ["params"] = 
                                                             {
@@ -1536,10 +1536,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["auto"] = false,
                                                             ["id"] = "Land",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["params"] = 
                                                             {
                                                                 ["y"] = 806800.14460698,
@@ -1575,10 +1575,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = false,
                                                             ["id"] = "Orbit",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["params"] = 
                                                             {
                                                                 ["altitude"] = 910,
@@ -1847,10 +1847,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = true,
                                                             ["id"] = "EngageTargets",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["key"] = "CAS",
                                                             ["params"] = 
                                                             {
@@ -1915,10 +1915,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["auto"] = false,
                                                             ["id"] = "Land",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["params"] = 
                                                             {
                                                                 ["y"] = 805247.07317838,
@@ -2187,10 +2187,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = true,
                                                             ["id"] = "WrappedAction",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["params"] = 
                                                             {
                                                                 ["action"] = 
@@ -2256,10 +2256,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["auto"] = false,
                                                             ["id"] = "Land",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["params"] = 
                                                             {
                                                                 ["y"] = 807857.40289269,
@@ -2295,10 +2295,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = false,
                                                             ["id"] = "Orbit",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["params"] = 
                                                             {
                                                                 ["altitude"] = 910,
@@ -2582,10 +2582,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["key"] = "CAS",
                                                             ["id"] = "EngageTargets",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = true,
                                                             ["params"] = 
                                                             {
@@ -2650,10 +2650,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["auto"] = false,
                                                             ["id"] = "Land",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["params"] = 
                                                             {
                                                                 ["y"] = 807400.90917841,
@@ -2922,10 +2922,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["key"] = "CAS",
                                                             ["id"] = "EngageTargets",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = true,
                                                             ["params"] = 
                                                             {
@@ -2990,10 +2990,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["auto"] = false,
                                                             ["id"] = "Land",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["params"] = 
                                                             {
                                                                 ["y"] = 807376.63946412,
@@ -3261,10 +3261,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["key"] = "CAS",
                                                             ["id"] = "EngageTargets",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["auto"] = true,
                                                             ["params"] = 
                                                             {
@@ -3327,10 +3327,10 @@ mission =
                                             {
                                                 ["channels"] = 
                                                 {
-                                                    [14] = 0.283,
+                                                    [15] = 0.995,
                                                     [13] = 0.583,
                                                     [7] = 0.443,
-                                                    [1] = 0.625,
+                                                    [14] = 0.283,
                                                     [2] = 0.303,
                                                     [4] = 0.591,
                                                     [8] = 0.215,
@@ -3338,11 +3338,11 @@ mission =
                                                     [9] = 0.525,
                                                     [5] = 0.408,
                                                     [10] = 1.065,
-                                                    [11] = 0.718,
                                                     [3] = 0.289,
+                                                    [11] = 0.718,
                                                     [6] = 0.803,
                                                     [12] = 0.35,
-                                                    [15] = 0.995,
+                                                    [1] = 0.625,
                                                 }, -- end of ["channels"]
                                             }, -- end of [2]
                                         }, -- end of ["Radio"]
@@ -4048,15 +4048,34 @@ mission =
                                                             {
                                                                 ["action"] = 
                                                                 {
-                                                                    ["id"] = "SetCallsign",
+                                                                    ["id"] = "SetImmortal",
                                                                     ["params"] = 
                                                                     {
-                                                                        ["callsign"] = 602,
-                                                                        ["callnameFlag"] = false,
+                                                                        ["value"] = true,
                                                                     }, -- end of ["params"]
                                                                 }, -- end of ["action"]
                                                             }, -- end of ["params"]
                                                         }, -- end of [1]
+                                                        [2] = 
+                                                        {
+                                                            ["number"] = 2,
+                                                            ["auto"] = false,
+                                                            ["id"] = "WrappedAction",
+                                                            ["enabled"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "SetCallsign",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["number"] = 1,
+                                                                        ["callnameFlag"] = true,
+                                                                        ["callname"] = 2,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [2]
                                                     }, -- end of ["tasks"]
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
@@ -4591,10 +4610,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = true,
                                                             ["id"] = "WrappedAction",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["params"] = 
                                                             {
                                                                 ["action"] = 
@@ -5034,16 +5053,16 @@ mission =
                                                 ["y"] = 806420.00220492,
                                                 ["x"] = -264755.15646701,
                                             }, -- end of [30]
-                                            [47] = 
-                                            {
-                                                ["y"] = 805802.22657144,
-                                                ["x"] = -265042.80530203,
-                                            }, -- end of [47]
                                             [63] = 
                                             {
                                                 ["y"] = 806126.98522533,
                                                 ["x"] = -265600.5290909,
                                             }, -- end of [63]
+                                            [47] = 
+                                            {
+                                                ["y"] = 805802.22657144,
+                                                ["x"] = -265042.80530203,
+                                            }, -- end of [47]
                                         }, -- end of [2]
                                         [3] = 
                                         {
@@ -5083,10 +5102,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = true,
                                                             ["id"] = "WrappedAction",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["params"] = 
                                                             {
                                                                 ["action"] = 
@@ -5663,16 +5682,16 @@ mission =
                                                 ["y"] = 806849.15575862,
                                                 ["x"] = -267713.70420835,
                                             }, -- end of [26]
-                                            [47] = 
+                                            [99] = 
                                             {
-                                                ["y"] = 805699.27460082,
-                                                ["x"] = -267904.00236073,
-                                            }, -- end of [47]
-                                            [63] = 
+                                                ["y"] = 806195.2739614,
+                                                ["x"] = -265325.61358673,
+                                            }, -- end of [99]
+                                            [95] = 
                                             {
-                                                ["y"] = 805623.01236763,
-                                                ["x"] = -267063.76053406,
-                                            }, -- end of [63]
+                                                ["y"] = 806179.28691402,
+                                                ["x"] = -265337.45272911,
+                                            }, -- end of [95]
                                             [94] = 
                                             {
                                                 ["y"] = 806176.0528004,
@@ -5683,16 +5702,16 @@ mission =
                                                 ["y"] = 806841.34733276,
                                                 ["x"] = -267707.4611084,
                                             }, -- end of [27]
-                                            [67] = 
+                                            [91] = 
                                             {
-                                                ["y"] = 805813.86157004,
-                                                ["x"] = -266164.36141871,
-                                            }, -- end of [67]
-                                            [71] = 
+                                                ["y"] = 806168.8951552,
+                                                ["x"] = -265354.39521184,
+                                            }, -- end of [91]
+                                            [87] = 
                                             {
-                                                ["y"] = 805828.75595744,
-                                                ["x"] = -265599.98097921,
-                                            }, -- end of [71]
+                                                ["y"] = 806169.11690753,
+                                                ["x"] = -265553.88598662,
+                                            }, -- end of [87]
                                             [7] = 
                                             {
                                                 ["y"] = 808246.1994891,
@@ -5703,11 +5722,11 @@ mission =
                                                 ["y"] = 806837.24157052,
                                                 ["x"] = -267704.60852551,
                                             }, -- end of [28]
-                                            [75] = 
+                                            [83] = 
                                             {
-                                                ["y"] = 806133.33829498,
-                                                ["x"] = -265598.55681839,
-                                            }, -- end of [75]
+                                                ["y"] = 806162.7298583,
+                                                ["x"] = -265572.7185562,
+                                            }, -- end of [83]
                                             [79] = 
                                             {
                                                 ["y"] = 806150.45609291,
@@ -5723,36 +5742,36 @@ mission =
                                                 ["y"] = 806832.98826743,
                                                 ["x"] = -267701.98118669,
                                             }, -- end of [29]
-                                            [83] = 
+                                            [75] = 
                                             {
-                                                ["y"] = 806162.7298583,
-                                                ["x"] = -265572.7185562,
-                                            }, -- end of [83]
-                                            [87] = 
+                                                ["y"] = 806133.33829498,
+                                                ["x"] = -265598.55681839,
+                                            }, -- end of [75]
+                                            [71] = 
                                             {
-                                                ["y"] = 806169.11690753,
-                                                ["x"] = -265553.88598662,
-                                            }, -- end of [87]
-                                            [91] = 
+                                                ["y"] = 805828.75595744,
+                                                ["x"] = -265599.98097921,
+                                            }, -- end of [71]
+                                            [67] = 
                                             {
-                                                ["y"] = 806168.8951552,
-                                                ["x"] = -265354.39521184,
-                                            }, -- end of [91]
+                                                ["y"] = 805813.86157004,
+                                                ["x"] = -266164.36141871,
+                                            }, -- end of [67]
                                             [30] = 
                                             {
                                                 ["y"] = 806828.58438289,
                                                 ["x"] = -267699.61544384,
                                             }, -- end of [30]
-                                            [95] = 
+                                            [63] = 
                                             {
-                                                ["y"] = 806179.28691402,
-                                                ["x"] = -265337.45272911,
-                                            }, -- end of [95]
-                                            [99] = 
+                                                ["y"] = 805623.01236763,
+                                                ["x"] = -267063.76053406,
+                                            }, -- end of [63]
+                                            [47] = 
                                             {
-                                                ["y"] = 806195.2739614,
-                                                ["x"] = -265325.61358673,
-                                            }, -- end of [99]
+                                                ["y"] = 805699.27460082,
+                                                ["x"] = -267904.00236073,
+                                            }, -- end of [47]
                                         }, -- end of [1]
                                         [2] = 
                                         {
@@ -6088,11 +6107,11 @@ mission =
                                                 ["y"] = 806162.58351295,
                                                 ["x"] = -265373.61672426,
                                             }, -- end of [44]
-                                            [31] = 
+                                            [39] = 
                                             {
-                                                ["y"] = 806195.97806884,
-                                                ["x"] = -265322.13084035,
-                                            }, -- end of [31]
+                                                ["y"] = 806167.95616198,
+                                                ["x"] = -265349.4481536,
+                                            }, -- end of [39]
                                             [43] = 
                                             {
                                                 ["y"] = 806162.65154568,
@@ -6128,11 +6147,11 @@ mission =
                                                 ["y"] = 807364.35411561,
                                                 ["x"] = -264975.6920297,
                                             }, -- end of [23]
-                                            [39] = 
+                                            [31] = 
                                             {
-                                                ["y"] = 806167.95616198,
-                                                ["x"] = -265349.4481536,
-                                            }, -- end of [39]
+                                                ["y"] = 806195.97806884,
+                                                ["x"] = -265322.13084035,
+                                            }, -- end of [31]
                                         }, -- end of [1]
                                         [2] = 
                                         {
@@ -6172,10 +6191,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = true,
                                                             ["id"] = "WrappedAction",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["params"] = 
                                                             {
                                                                 ["action"] = 
@@ -6467,11 +6486,11 @@ mission =
                                                 ["y"] = 806164.43377942,
                                                 ["x"] = -265358.74041577,
                                             }, -- end of [37]
-                                            [31] = 
+                                            [39] = 
                                             {
-                                                ["y"] = 806179.52138235,
-                                                ["x"] = -265333.23478828,
-                                            }, -- end of [31]
+                                                ["y"] = 806162.65414202,
+                                                ["x"] = -265368.56740253,
+                                            }, -- end of [39]
                                             [35] = 
                                             {
                                                 ["y"] = 806167.97749634,
@@ -6492,11 +6511,11 @@ mission =
                                                 ["y"] = 807061.84456839,
                                                 ["x"] = -265062.25656317,
                                             }, -- end of [23]
-                                            [39] = 
+                                            [31] = 
                                             {
-                                                ["y"] = 806162.65414202,
-                                                ["x"] = -265368.56740253,
-                                            }, -- end of [39]
+                                                ["y"] = 806179.52138235,
+                                                ["x"] = -265333.23478828,
+                                            }, -- end of [31]
                                         }, -- end of [1]
                                         [2] = 
                                         {
@@ -6837,11 +6856,11 @@ mission =
                                                 ["y"] = 806163.34806233,
                                                 ["x"] = -265410.42120062,
                                             }, -- end of [52]
-                                            [31] = 
+                                            [51] = 
                                             {
-                                                ["y"] = 807393.55797078,
-                                                ["x"] = -264960.28529235,
-                                            }, -- end of [31]
+                                                ["y"] = 806162.59292259,
+                                                ["x"] = -265370.56043418,
+                                            }, -- end of [51]
                                             [47] = 
                                             {
                                                 ["y"] = 806167.15513373,
@@ -6857,11 +6876,11 @@ mission =
                                                 ["y"] = 806194.22283166,
                                                 ["x"] = -265322.9674344,
                                             }, -- end of [39]
-                                            [35] = 
+                                            [43] = 
                                             {
-                                                ["y"] = 807306.19042988,
-                                                ["x"] = -264996.9703286,
-                                            }, -- end of [35]
+                                                ["y"] = 806178.08948481,
+                                                ["x"] = -265334.62208601,
+                                            }, -- end of [43]
                                             [37] = 
                                             {
                                                 ["y"] = 807040.93122129,
@@ -6872,11 +6891,11 @@ mission =
                                                 ["y"] = 806171.81231223,
                                                 ["x"] = -265342.38222347,
                                             }, -- end of [45]
-                                            [43] = 
+                                            [35] = 
                                             {
-                                                ["y"] = 806178.08948481,
-                                                ["x"] = -265334.62208601,
-                                            }, -- end of [43]
+                                                ["y"] = 807306.19042988,
+                                                ["x"] = -264996.9703286,
+                                            }, -- end of [35]
                                             [1] = 
                                             {
                                                 ["y"] = 810442.75757797,
@@ -6892,11 +6911,11 @@ mission =
                                                 ["y"] = 808848.77475577,
                                                 ["x"] = -263985.40539459,
                                             }, -- end of [23]
-                                            [51] = 
+                                            [31] = 
                                             {
-                                                ["y"] = 806162.59292259,
-                                                ["x"] = -265370.56043418,
-                                            }, -- end of [51]
+                                                ["y"] = 807393.55797078,
+                                                ["x"] = -264960.28529235,
+                                            }, -- end of [31]
                                         }, -- end of [1]
                                         [2] = 
                                         {
@@ -7075,10 +7094,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = true,
                                                             ["id"] = "WrappedAction",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["params"] = 
                                                             {
                                                                 ["action"] = 
@@ -7208,10 +7227,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = true,
                                                             ["id"] = "WrappedAction",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["params"] = 
                                                             {
                                                                 ["action"] = 
@@ -7341,10 +7360,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = true,
                                                             ["id"] = "WrappedAction",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["params"] = 
                                                             {
                                                                 ["action"] = 
@@ -7474,10 +7493,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = true,
                                                             ["id"] = "WrappedAction",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["params"] = 
                                                             {
                                                                 ["action"] = 
@@ -8638,10 +8657,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["key"] = "CAS",
                                                             ["id"] = "EngageTargets",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["auto"] = true,
                                                             ["params"] = 
                                                             {
@@ -8681,10 +8700,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["auto"] = false,
                                                             ["id"] = "Orbit",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["params"] = 
                                                             {
                                                                 ["altitude"] = 910,
@@ -8891,10 +8910,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["key"] = "CAS",
                                                             ["id"] = "EngageTargets",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = true,
                                                             ["params"] = 
                                                             {
@@ -8934,10 +8953,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["auto"] = false,
                                                             ["id"] = "Orbit",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["params"] = 
                                                             {
                                                                 ["altitude"] = 910,
@@ -9091,10 +9110,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["key"] = "CAS",
                                                             ["id"] = "EngageTargets",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = true,
                                                             ["params"] = 
                                                             {
@@ -9134,10 +9153,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["auto"] = false,
                                                             ["id"] = "Orbit",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["params"] = 
                                                             {
                                                                 ["altitude"] = 910,
@@ -9299,10 +9318,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["key"] = "CAS",
                                                             ["id"] = "EngageTargets",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["auto"] = true,
                                                             ["params"] = 
                                                             {
@@ -9317,10 +9336,10 @@ mission =
                                                         }, -- end of [1]
                                                         [2] = 
                                                         {
-                                                            ["number"] = 2,
+                                                            ["enabled"] = true,
                                                             ["auto"] = false,
                                                             ["id"] = "WrappedAction",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 2,
                                                             ["params"] = 
                                                             {
                                                                 ["action"] = 
@@ -9471,10 +9490,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["key"] = "CAP",
                                                             ["id"] = "EngageTargets",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["auto"] = true,
                                                             ["params"] = 
                                                             {
@@ -9487,10 +9506,10 @@ mission =
                                                         }, -- end of [1]
                                                         [2] = 
                                                         {
-                                                            ["number"] = 2,
+                                                            ["enabled"] = true,
                                                             ["auto"] = false,
                                                             ["id"] = "WrappedAction",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 2,
                                                             ["params"] = 
                                                             {
                                                                 ["action"] = 
@@ -9641,10 +9660,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["auto"] = false,
                                                             ["id"] = "WrappedAction",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["params"] = 
                                                             {
                                                                 ["action"] = 
@@ -9795,10 +9814,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["key"] = "CAP",
                                                             ["id"] = "EngageTargets",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = true,
                                                             ["params"] = 
                                                             {
@@ -9811,10 +9830,10 @@ mission =
                                                         }, -- end of [1]
                                                         [2] = 
                                                         {
-                                                            ["number"] = 2,
+                                                            ["enabled"] = true,
                                                             ["auto"] = false,
                                                             ["id"] = "WrappedAction",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 2,
                                                             ["params"] = 
                                                             {
                                                                 ["action"] = 
@@ -10001,7 +10020,6 @@ mission =
             ["rules"] = 
             {
             }, -- end of ["rules"]
-            ["comment"] = "Load Moose",
             ["eventlist"] = "",
             ["predicate"] = "triggerStart",
             ["actions"] = 
@@ -10017,21 +10035,22 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
+            ["comment"] = "Load Moose",
         }, -- end of [1]
         [2] = 
         {
             ["rules"] = 
             {
             }, -- end of ["rules"]
+            ["comment"] = "Moose Trace",
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
                 {
-                    ["KeyDict_text"] = "DictKey_ActionText_19",
-                    ["text"] = "DictKey_ActionText_19",
                     ["predicate"] = "a_do_script",
+                    ["text"] = "DictKey_ActionText_19",
+                    ["KeyDict_text"] = "DictKey_ActionText_19",
                     ["ai_task"] = 
                     {
                         [1] = "",
@@ -10039,14 +10058,13 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["comment"] = "Moose Trace",
+            ["predicate"] = "triggerStart",
         }, -- end of [2]
         [3] = 
         {
             ["rules"] = 
             {
             }, -- end of ["rules"]
-            ["comment"] = "Load Mission",
             ["eventlist"] = "",
             ["predicate"] = "triggerStart",
             ["actions"] = 
@@ -10062,9 +10080,10 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
+            ["comment"] = "Load Mission",
         }, -- end of [3]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 127438,
+    ["currentKey"] = 129521,
     ["start_time"] = 27000,
     ["forcedOptions"] = 
     {
@@ -10072,9 +10091,9 @@ mission =
         ["radio"] = false,
         ["tips"] = false,
         ["optionsView"] = "optview_all",
-        ["easyCommunication"] = true,
-        ["immortal"] = false,
         ["weapons"] = false,
+        ["immortal"] = false,
+        ["easyCommunication"] = true,
         ["externalViews"] = true,
         ["labels"] = false,
     }, -- end of ["forcedOptions"]
@@ -11545,15 +11564,15 @@ mission =
             ["id"] = "AN_ALE_40V_FAILURE_CONTAINER_RIGHT_WING",
             ["mm"] = 0,
         }, -- end of ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_WING"]
-        ["GUN_LEFT_CENTER_OPEN_CIRCUIT"] = 
+        ["TACAN_FAILURE_RECEIVER"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_LEFT_CENTER_OPEN_CIRCUIT",
+            ["id"] = "TACAN_FAILURE_RECEIVER",
             ["mm"] = 0,
-        }, -- end of ["GUN_LEFT_CENTER_OPEN_CIRCUIT"]
+        }, -- end of ["TACAN_FAILURE_RECEIVER"]
         ["TailReductor_LowOilPressure"] = 
         {
             ["hh"] = 0,
@@ -11637,15 +11656,14 @@ mission =
             ["id"] = "BOMBS_DAMAGE_ELINKAGE_LEFT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_DAMAGE_ELINKAGE_LEFT"]
-        ["TURNIND_INCORRECT_SENS_DEFECTIVE"] = 
+        ["ecf"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TURNIND_INCORRECT_SENS_DEFECTIVE",
             ["mm"] = 0,
-        }, -- end of ["TURNIND_INCORRECT_SENS_DEFECTIVE"]
+        }, -- end of ["ecf"]
         ["hydro_left"] = 
         {
             ["hh"] = 0,
@@ -11682,15 +11700,15 @@ mission =
             ["id"] = "MAGNETO_2",
             ["mm"] = 0,
         }, -- end of ["MAGNETO_2"]
-        ["COOLANT_RADIATOR_SENSOR"] = 
+        ["COPILOT_GYRO_TOTAL_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "COOLANT_RADIATOR_SENSOR",
+            ["id"] = "COPILOT_GYRO_TOTAL_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["COOLANT_RADIATOR_SENSOR"]
+        }, -- end of ["COPILOT_GYRO_TOTAL_FAILURE"]
         ["SAR_1_95"] = 
         {
             ["hh"] = 0,
@@ -11764,16 +11782,15 @@ mission =
             ["id"] = "TAIL_GEAR_C_CABLE",
             ["mm"] = 0,
         }, -- end of ["TAIL_GEAR_C_CABLE"]
-        ["fuel_sys_swapping_pumps"] = 
+        ["GUN_FAIL_RIGHT_IN_GUN"] = 
         {
             ["hh"] = 0,
+            ["prob"] = 100,
             ["enable"] = false,
-            ["prob"] = 0,
-            ["id"] = "fuel_sys_swapping_pumps",
             ["mmint"] = 1,
-            ["hidden"] = true,
+            ["id"] = "GUN_FAIL_RIGHT_IN_GUN",
             ["mm"] = 0,
-        }, -- end of ["fuel_sys_swapping_pumps"]
+        }, -- end of ["GUN_FAIL_RIGHT_IN_GUN"]
         ["INSUF_FUEL_PRES"] = 
         {
             ["hh"] = 0,
@@ -11882,15 +11899,15 @@ mission =
             ["id"] = "IFFCC_FAILURE_GUN",
             ["mm"] = 0,
         }, -- end of ["IFFCC_FAILURE_GUN"]
-        ["es_damage_GeneratorRight"] = 
+        ["TURNIND_INCORRECT_SENS_DEFECTIVE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "es_damage_GeneratorRight",
+            ["id"] = "TURNIND_INCORRECT_SENS_DEFECTIVE",
             ["mm"] = 0,
-        }, -- end of ["es_damage_GeneratorRight"]
+        }, -- end of ["TURNIND_INCORRECT_SENS_DEFECTIVE"]
         ["COMPASS_ERRATIC_OPERATION"] = 
         {
             ["hh"] = 0,
@@ -11945,15 +11962,15 @@ mission =
             ["id"] = "hydro_main_irreversible_valve",
             ["mm"] = 0,
         }, -- end of ["hydro_main_irreversible_valve"]
-        ["FLEX_S_NO_GUN_SIGN"] = 
+        ["GUN_LEFT_OUT_BARREL_WORN"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "FLEX_S_NO_GUN_SIGN",
+            ["id"] = "GUN_LEFT_OUT_BARREL_WORN",
             ["mm"] = 0,
-        }, -- end of ["FLEX_S_NO_GUN_SIGN"]
+        }, -- end of ["GUN_LEFT_OUT_BARREL_WORN"]
         ["SUPERCHARGER_SOLENOID"] = 
         {
             ["hh"] = 0,
@@ -12045,15 +12062,15 @@ mission =
             ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["hydro_diaphragm"]
-        ["GUN_FAIL_RIGHT_IN_GUN"] = 
+        ["COOLANT_RADIATOR_SENSOR"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_FAIL_RIGHT_IN_GUN",
+            ["id"] = "COOLANT_RADIATOR_SENSOR",
             ["mm"] = 0,
-        }, -- end of ["GUN_FAIL_RIGHT_IN_GUN"]
+        }, -- end of ["COOLANT_RADIATOR_SENSOR"]
         ["CARBAIR_SHORT_CIRCUIT_LEADS"] = 
         {
             ["hh"] = 0,
@@ -12824,15 +12841,15 @@ mission =
             ["id"] = "TACAN_FAILURE_TRANSMITTER",
             ["mm"] = 0,
         }, -- end of ["TACAN_FAILURE_TRANSMITTER"]
-        ["TACH_POOR_CONNECTION"] = 
+        ["GUN_LEFT_CENTER_OPEN_CIRCUIT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TACH_POOR_CONNECTION",
+            ["id"] = "GUN_LEFT_CENTER_OPEN_CIRCUIT",
             ["mm"] = 0,
-        }, -- end of ["TACH_POOR_CONNECTION"]
+        }, -- end of ["GUN_LEFT_CENTER_OPEN_CIRCUIT"]
         ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"] = 
         {
             ["hh"] = 0,
@@ -12842,15 +12859,15 @@ mission =
             ["id"] = "AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR",
             ["mm"] = 0,
         }, -- end of ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"]
-        ["TACAN_FAILURE_RECEIVER"] = 
+        ["TACH_POOR_CONNECTION"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TACAN_FAILURE_RECEIVER",
+            ["id"] = "TACH_POOR_CONNECTION",
             ["mm"] = 0,
-        }, -- end of ["TACAN_FAILURE_RECEIVER"]
+        }, -- end of ["TACH_POOR_CONNECTION"]
         ["GUN_LEFT_IN_BARREL_WORN"] = 
         {
             ["hh"] = 0,
@@ -12934,15 +12951,16 @@ mission =
             ["id"] = "CTRL_TAIL_ROTOR_CONTROL_FAILURE",
             ["mm"] = 0,
         }, -- end of ["CTRL_TAIL_ROTOR_CONTROL_FAILURE"]
-        ["COPILOT_GYRO_TOTAL_FAILURE"] = 
+        ["fuel_sys_swapping_pumps"] = 
         {
             ["hh"] = 0,
-            ["prob"] = 100,
             ["enable"] = false,
+            ["prob"] = 0,
+            ["id"] = "fuel_sys_swapping_pumps",
             ["mmint"] = 1,
-            ["id"] = "COPILOT_GYRO_TOTAL_FAILURE",
+            ["hidden"] = true,
             ["mm"] = 0,
-        }, -- end of ["COPILOT_GYRO_TOTAL_FAILURE"]
+        }, -- end of ["fuel_sys_swapping_pumps"]
         ["FAULTY_ROCKET_RIGHT"] = 
         {
             ["hh"] = 0,
@@ -13088,14 +13106,15 @@ mission =
             ["id"] = "AN_ALR69V_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["AN_ALR69V_FAILURE_TOTAL"]
-        ["ecf"] = 
+        ["TransitionalReductor_ShaveInOil"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+            ["id"] = "TransitionalReductor_ShaveInOil",
             ["mm"] = 0,
-        }, -- end of ["ecf"]
+        }, -- end of ["TransitionalReductor_ShaveInOil"]
         ["ILS_FAILURE_ANT_GLIDESLOPE"] = 
         {
             ["hh"] = 0,
@@ -13141,15 +13160,15 @@ mission =
             ["id"] = "GMC_MAGN_COMP_FAILURE",
             ["mm"] = 0,
         }, -- end of ["GMC_MAGN_COMP_FAILURE"]
-        ["GUN_LEFT_OUT_BARREL_WORN"] = 
+        ["engine_surge_failure"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_LEFT_OUT_BARREL_WORN",
+            ["id"] = "engine_surge_failure",
             ["mm"] = 0,
-        }, -- end of ["GUN_LEFT_OUT_BARREL_WORN"]
+        }, -- end of ["engine_surge_failure"]
         ["RADAR_ALTIMETR_RIGHT_ANT_FAILURE"] = 
         {
             ["hh"] = 0,
@@ -13177,24 +13196,24 @@ mission =
             ["id"] = "BOMBS_ARMING_NO_VOLATAGE_RIGHT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_ARMING_NO_VOLATAGE_RIGHT"]
-        ["TransitionalReductor_ShaveInOil"] = 
+        ["es_damage_GeneratorRight"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TransitionalReductor_ShaveInOil",
+            ["id"] = "es_damage_GeneratorRight",
             ["mm"] = 0,
-        }, -- end of ["TransitionalReductor_ShaveInOil"]
-        ["engine_surge_failure"] = 
+        }, -- end of ["es_damage_GeneratorRight"]
+        ["FLEX_S_NO_GUN_SIGN"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "engine_surge_failure",
+            ["id"] = "FLEX_S_NO_GUN_SIGN",
             ["mm"] = 0,
-        }, -- end of ["engine_surge_failure"]
+        }, -- end of ["FLEX_S_NO_GUN_SIGN"]
         ["APU_Fire"] = 
         {
             ["hh"] = 0,
