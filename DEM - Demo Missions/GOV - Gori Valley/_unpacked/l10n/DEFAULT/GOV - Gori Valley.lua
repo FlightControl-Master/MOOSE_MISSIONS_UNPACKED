@@ -128,7 +128,7 @@ do -- NATO Air Patrol Support Mission
   local NATO_S1_Task = SET_GROUP:New():FilterCoalitions( "blue" ):FilterPrefixes( "S1 NATO Air Patrol" ):FilterStart()
   
   -- Define the Task dispatcher that will define the tasks based on the detected targets.
-  --NATO_S1_A2A = TASK_A2A_DISPATCHER:New( NATO_S1, NATO_S1_Task, NATO_S1_EWR_Areas )
+  NATO_S1_A2A = TASK_A2A_DISPATCHER:New( NATO_S1, NATO_S1_Task, NATO_S1_EWR_Areas )
 
 
   local NATO_AI_A2A_Support_East = { 
@@ -207,9 +207,9 @@ do -- NATO Mission 1
   local NATO_M1_Attack = SET_GROUP:New():FilterCoalitions( "blue" ):FilterPrefixes( "M1 NATO Attack" ):FilterStart()
   
   -- Define the Task dispatcher that will define the tasks based on the detected targets.
-  --###NATO_M1_TaskA2GDispatcher = TASK_A2G_DISPATCHER:New( NATO_M1, NATO_M1_Attack, NATO_M1_DetectionAreas )
+  NATO_M1_Task_A2G_Dispatcher = TASK_A2G_DISPATCHER:New( NATO_M1, NATO_M1_Attack, NATO_M1_DetectionAreas )
 
-  --###NATO_M1_Designate = DESIGNATE:New( NATO_HQ, NATO_M1_DetectionAreas, NATO_M1_Attack, NATO_M1 )
+  NATO_M1_Designate = DESIGNATE:New( NATO_HQ, NATO_M1_DetectionAreas, NATO_M1_Attack, NATO_M1 )
 
 
 end
@@ -345,7 +345,7 @@ do -- CCCP Air Patrol Support Functions
   local CCCP_S1_SupportGroups = SET_GROUP:New():FilterCoalitions("red"):FilterPrefixes( "S1 CCCP Air Defense" ):FilterStart()
   
   -- Define the Task dispatcher that will define the tasks based on the detected targets.
-  --CCCP_S1_A2A_Support = TASK_A2A_DISPATCHER:New( CCCP_S1, CCCP_S1_SupportGroups, CCCP_S1_EWR_Areas )
+  CCCP_S1_A2A_Task_Dispatcher = TASK_A2A_DISPATCHER:New( CCCP_S1, CCCP_S1_SupportGroups, CCCP_S1_EWR_Areas )
 
 
   CCCP_AI_A2A_Support_SU_27 = { 
@@ -489,7 +489,7 @@ do -- CCCP Transport Task Engineers
   -- @param Wrapper.Unit#UNIT TaskUnit The Unit (Client) that Deployed the cargo. You can use this to retrieve the PlayerName etc.
   -- @param Core.Cargo#CARGO Cargo The Cargo that got PickedUp by the TaskUnit. You can use this to check Cargo Status.
   -- @param Core.Zone#ZONE DeployZone The zone where the Cargo got Deployed or UnBoarded.
-  function CargoTransportTask:OnAfterCargoDeployed( From, Event, To, TaskUnit, Cargo, DeployZone )
+  function CCCP_M4_Cargo_Transport_Task:OnAfterCargoDeployed( From, Event, To, TaskUnit, Cargo, DeployZone )
   
     self:E( { From, Event, To, TaskUnit:GetName(), Cargo:GetName(), DeployZone:GetName() } )
   

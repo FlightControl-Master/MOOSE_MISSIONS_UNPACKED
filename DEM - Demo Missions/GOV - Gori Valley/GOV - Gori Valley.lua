@@ -489,7 +489,7 @@ do -- CCCP Transport Task Engineers
   -- @param Wrapper.Unit#UNIT TaskUnit The Unit (Client) that Deployed the cargo. You can use this to retrieve the PlayerName etc.
   -- @param Core.Cargo#CARGO Cargo The Cargo that got PickedUp by the TaskUnit. You can use this to check Cargo Status.
   -- @param Core.Zone#ZONE DeployZone The zone where the Cargo got Deployed or UnBoarded.
-  function CargoTransportTask:OnAfterCargoDeployed( From, Event, To, TaskUnit, Cargo, DeployZone )
+  function CCCP_M4_Cargo_Transport_Task:OnAfterCargoDeployed( From, Event, To, TaskUnit, Cargo, DeployZone )
   
     self:E( { From, Event, To, TaskUnit:GetName(), Cargo:GetName(), DeployZone:GetName() } )
   
