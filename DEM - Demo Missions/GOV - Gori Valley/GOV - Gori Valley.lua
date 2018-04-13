@@ -40,6 +40,7 @@ Spawn_RU_Troops =
     'RU Attack Gori 10'
   }
 
+
 Spawn_RU_Troops_Left = SPAWN
   :New( "RU Attack Gori Left" )
   :InitLimit( 15, 40 )
