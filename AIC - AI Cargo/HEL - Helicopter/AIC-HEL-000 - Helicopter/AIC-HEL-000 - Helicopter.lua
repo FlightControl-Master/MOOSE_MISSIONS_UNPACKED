@@ -12,7 +12,7 @@ for i = 1, 10 do
   local WorkersCargo = CARGO_GROUP:New( WorkerGroup, "Workers", string.format( "Infantry %d", i ), 1000, 35 )
 end
 
-local Helicopter = UNIT:FindByName( "Helicopter" )
+local Helicopter = GROUP:FindByName( "Helicopter" )
 
 CargoHelicopter = AI_CARGO_HELICOPTER:New( Helicopter, WorkerCargoSet )
 

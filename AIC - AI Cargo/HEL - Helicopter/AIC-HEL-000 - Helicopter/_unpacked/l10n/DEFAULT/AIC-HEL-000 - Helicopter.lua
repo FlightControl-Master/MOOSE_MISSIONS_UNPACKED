@@ -12,7 +12,7 @@ for i = 1, 10 do
   local WorkersCargo = CARGO_GROUP:New( WorkerGroup, "Workers", string.format( "Infantry %d", i ), 1000, 35 )
 end
 
-local Helicopter = UNIT:FindByName( "Helicopter" )
+local Helicopter = GROUP:FindByName( "Helicopter" )
 
 CargoHelicopter = AI_CARGO_HELICOPTER:New( Helicopter, WorkerCargoSet )
 
@@ -28,7 +28,7 @@ end
 
 
 function CargoHelicopter:onafterUnloaded( Helicopter, From, Event, To, Cargo )
-  CargoHelicopter:Pickup( PickupZone:GetCoordinate(), math.random( 50, 250 ) )
+  CargoHelicopter:Pickup( PickupZone:GetRandomCoordinate( 500, 200 ), math.random( 50, 250 ) )
 end
 
 

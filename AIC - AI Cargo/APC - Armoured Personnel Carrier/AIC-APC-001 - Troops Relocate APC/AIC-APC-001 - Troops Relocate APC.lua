@@ -6,21 +6,19 @@
 -- Demonstration of troops relocation when carrier is destroyed...
 -- Carrier will relocate to the rescue carrier.
 
-local InfantryGroup = GROUP:FindByName( "Infantry" )
+local InfantryCargoSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
 
-local InfantryCargo = CARGO_GROUP:New( InfantryGroup, "Engineers", "Infantry Engineers", 2000 )
+local CargoCarrier = GROUP:FindByName( "Carrier" )
 
-local CargoCarrier = UNIT:FindByName( "Carrier" )
-
-CargoTroops = AI_CARGO_APC:New( CargoCarrier, InfantryCargo, 500 )
+CargoTroops = AI_CARGO_APC:New( CargoCarrier, InfantryCargoSet, 500 )
 
 
 function CargoTroops:OnAfterDestroyed( CargoCarrier )
   CargoTroops:F( { Destroyed = CargoCarrier } )
   -- The coordinate is passed where the carrier is destroyed.
-  local NewCarrier = self:FindCarrier( CargoCarrier:GetCoordinate(), 1000 ) -- which returns one Carrier GROUP object or nil.
-  if NewCarrier then
-    self:SetCarrier( NewCarrier )
+  local NewCarrierGroup = self:FindCarrier( CargoCarrier:GetCoordinate(), 1000 ) -- which returns one Carrier GROUP object or nil.
+  if NewCarrierGroup then
+    self:SetCarrier( NewCarrierGroup )
   end
 end
 
