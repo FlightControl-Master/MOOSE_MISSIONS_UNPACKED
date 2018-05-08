@@ -5,11 +5,8 @@
 --
 
 local InfantryCargoSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
-
-local CargoCarrier = GROUP:FindByName( "Carrier" )
-
-Cargo_APC = AI_CARGO_APC:New( CargoCarrier, InfantryCargoSet, 350 )
-
+local APC = GROUP:FindByName( "APC" )
+Cargo_APC = AI_CARGO_APC:New( APC, InfantryCargoSet, 350 )
 Cargo_APC:__Pickup( 1, ZONE:New( "Pickup" ):GetCoordinate() )
 
 
@@ -22,10 +19,7 @@ Cargo_APC:__Pickup( 1, ZONE:New( "Pickup" ):GetCoordinate() )
 -- @param #string Event
 -- @param #string To
 function Cargo_APC:OnAfterLoaded( APC, From, Event, To )
-
   Cargo_APC:Deploy( ZONE:New( "Deploy" ):GetCoordinate() )
-  
-  
 end
 
 

@@ -6,8 +6,6 @@
 
 local InfantryCargoSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
 
-local CargoCarrier = GROUP:FindByName( "Carrier" )
-
 Cargo_APC = {}
 
 for i = 1, 4 do
