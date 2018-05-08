@@ -3,20 +3,16 @@
 -- Author: FlightControl
 -- Date Created: 26 Mar 2018
 --
+-- A demonstration of the AI_CARGO_APC class.
+-- This simple example transports Infantry.
+-- The CARGO_GROUP objects are declared within the mission script.
 
-local InfantryCargoSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart() 
+local Infantry1 = CARGO_GROUP:New( GROUP:FindByName( "Infantry1" ), "Infantry", "Infantry1", 500, 25 )
+local Infantry2 = CARGO_GROUP:New( GROUP:FindByName( "Infantry2" ), "Infantry", "Infantry2", 500, 25 )
+local Infantry3 = CARGO_GROUP:New( GROUP:FindByName( "Infantry3" ), "Infantry", "Infantry3", 500, 25 )
 
-local CargoCarrier = GROUP:FindByName( "Carrier" )
-
-CargoTroops = AI_CARGO_APC:New( CargoCarrier, InfantryCargoSet, 500 )
-
-
-function CargoTroops:OnAfterDestroyed( CargoCarrier )
-  CargoTroops:F( { Destroyed = CargoCarrier } )
-  -- The coordinate is passed where the carrier is destroyed.
-  local NewCarrier = self:FindCarrier( CargoCarrier:GetCoordinate(), 1000 ) -- which returns one Carrier GROUP object or nil.
-  if NewCarrier then
-    self:SetCarrier( NewCarrier )
-  end
-end
+local InfantryCargoSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+local APC = GROUP:FindByName( "APC" )
+AICargoAPC = AI_CARGO_APC:New( APC, InfantryCargoSet, 500 )
+AICargoAPC:__Pickup( 5 )
 
