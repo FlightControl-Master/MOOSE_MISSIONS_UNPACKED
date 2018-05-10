@@ -88,7 +88,7 @@ mission =
             }, -- end of ["func"]
         }, -- end of ["red"]
     }, -- end of ["result"]
-    ["maxDictId"] = 586,
+    ["maxDictId"] = 598,
     ["pictureFileNameN"] = 
     {
     }, -- end of ["pictureFileNameN"]
@@ -184,8 +184,8 @@ mission =
         {
             [1] = 
             {
-                ["y"] = 631225.59685715,
-                ["radius"] = 300,
+                ["y"] = 636478.23514286,
+                ["radius"] = 100,
                 ["zoneId"] = 332,
                 ["color"] = 
                 {
@@ -194,15 +194,15 @@ mission =
                     [3] = 1,
                     [4] = 0.15,
                 }, -- end of ["color"]
-                ["x"] = -322344.02314287,
+                ["x"] = -326370.32800001,
                 ["hidden"] = false,
-                ["name"] = "Deploy",
+                ["name"] = "Deploy A",
             }, -- end of [1]
             [2] = 
             {
-                ["y"] = 630640.72942856,
-                ["radius"] = 50,
-                ["zoneId"] = 498,
+                ["y"] = 637146.50485714,
+                ["radius"] = 100,
+                ["zoneId"] = 664,
                 ["color"] = 
                 {
                     [1] = 1,
@@ -210,17 +210,49 @@ mission =
                     [3] = 1,
                     [4] = 0.15,
                 }, -- end of ["color"]
-                ["x"] = -322393.65628573,
+                ["x"] = -317117.38971431,
                 ["hidden"] = false,
-                ["name"] = "Pickup",
+                ["name"] = "Deploy B",
             }, -- end of [2]
+            [3] = 
+            {
+                ["y"] = 629093.30685714,
+                ["radius"] = 100,
+                ["zoneId"] = 665,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["x"] = -319451.6497143,
+                ["hidden"] = false,
+                ["name"] = "Deploy C",
+            }, -- end of [3]
+            [4] = 
+            {
+                ["y"] = 631287.95657142,
+                ["radius"] = 100,
+                ["zoneId"] = 666,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["x"] = -327753.44085716,
+                ["hidden"] = false,
+                ["name"] = "Deploy D",
+            }, -- end of [4]
         }, -- end of ["zones"]
     }, -- end of ["triggers"]
     ["map"] = 
     {
-        ["centerY"] = 632144.34285714,
-        ["zoom"] = 13206,
-        ["centerX"] = -322349.96000002,
+        ["centerY"] = 642408.15714285,
+        ["zoom"] = 97232,
+        ["centerX"] = -322140.83657144,
     }, -- end of ["map"]
     ["coalitions"] = 
     {
@@ -400,7 +432,178 @@ mission =
                 }, -- end of [18]
                 [19] = 
                 {
+                    ["name"] = "USA",
                     ["id"] = 2,
+                    ["static"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 629044.83457143,
+                                            ["speed"] = 0,
+                                            ["x"] = -319430.56142859,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 69,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["shape_name"] = "tele_bash",
+                                        ["type"] = "TV tower",
+                                        ["unitId"] = 271,
+                                        ["rate"] = 100,
+                                        ["y"] = 629044.83457143,
+                                        ["x"] = -319430.56142859,
+                                        ["name"] = "DictKey_GroupName_587",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 629044.83457143,
+                                ["x"] = -319430.56142859,
+                                ["name"] = "DictKey_GroupName_587",
+                                ["dead"] = false,
+                            }, -- end of [1]
+                            [2] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 631307.83257142,
+                                            ["speed"] = 0,
+                                            ["x"] = -327753.15000001,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 70,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["shape_name"] = "tele_bash",
+                                        ["type"] = "TV tower",
+                                        ["unitId"] = 272,
+                                        ["rate"] = 100,
+                                        ["y"] = 631307.83257142,
+                                        ["x"] = -327753.15000001,
+                                        ["name"] = "DictKey_GroupName_590",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 631307.83257142,
+                                ["x"] = -327753.15000001,
+                                ["name"] = "DictKey_GroupName_590",
+                                ["dead"] = false,
+                            }, -- end of [2]
+                            [3] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 636546.69342857,
+                                            ["speed"] = 0,
+                                            ["x"] = -326365.27542859,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 71,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["shape_name"] = "tele_bash",
+                                        ["type"] = "TV tower",
+                                        ["unitId"] = 273,
+                                        ["rate"] = 100,
+                                        ["y"] = 636546.69342857,
+                                        ["x"] = -326365.27542859,
+                                        ["name"] = "DictKey_GroupName_593",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 636546.69342857,
+                                ["x"] = -326365.27542859,
+                                ["name"] = "DictKey_GroupName_593",
+                                ["dead"] = false,
+                            }, -- end of [3]
+                            [4] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 637207.70371428,
+                                            ["speed"] = 0,
+                                            ["x"] = -317116.60114287,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 72,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["shape_name"] = "tele_bash",
+                                        ["type"] = "TV tower",
+                                        ["unitId"] = 274,
+                                        ["rate"] = 100,
+                                        ["y"] = 637207.70371428,
+                                        ["x"] = -317116.60114287,
+                                        ["name"] = "DictKey_GroupName_596",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 637207.70371428,
+                                ["x"] = -317116.60114287,
+                                ["name"] = "DictKey_GroupName_596",
+                                ["dead"] = false,
+                            }, -- end of [4]
+                        }, -- end of ["group"]
+                    }, -- end of ["static"]
                     ["vehicle"] = 
                     {
                         ["group"] = 
@@ -3922,7 +4125,6 @@ mission =
                             }, -- end of [37]
                         }, -- end of ["group"]
                     }, -- end of ["vehicle"]
-                    ["name"] = "USA",
                 }, -- end of [19]
             }, -- end of ["country"]
         }, -- end of ["blue"]
@@ -4008,7 +4210,6 @@ mission =
             }, -- end of ["rules"]
             ["comment"] = "Load Moose",
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -4022,6 +4223,7 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
+            ["predicate"] = "triggerStart",
         }, -- end of [1]
         [2] = 
         {
@@ -4029,6 +4231,7 @@ mission =
             {
             }, -- end of ["rules"]
             ["eventlist"] = "",
+            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -4043,7 +4246,6 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["predicate"] = "triggerStart",
             ["comment"] = "Trace",
         }, -- end of [2]
         [3] = 
@@ -4053,7 +4255,6 @@ mission =
             }, -- end of ["rules"]
             ["comment"] = "Load Mission",
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -4067,9 +4268,10 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
+            ["predicate"] = "triggerStart",
         }, -- end of [3]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 22420,
+    ["currentKey"] = 22826,
     ["start_time"] = 43200,
     ["forcedOptions"] = 
     {
