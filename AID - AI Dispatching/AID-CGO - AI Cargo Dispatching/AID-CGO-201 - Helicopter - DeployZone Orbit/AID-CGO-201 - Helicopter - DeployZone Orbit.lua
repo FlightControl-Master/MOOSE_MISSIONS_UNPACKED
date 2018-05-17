@@ -10,3 +10,5 @@ local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
 
 AICargoDispatcherHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetDeployZones ) 
 AICargoDispatcherHelicopter:SetHomeZone( ZONE:FindByName( "Home" ) )
+AICargoDispatcherHelicopter:Start()
+
