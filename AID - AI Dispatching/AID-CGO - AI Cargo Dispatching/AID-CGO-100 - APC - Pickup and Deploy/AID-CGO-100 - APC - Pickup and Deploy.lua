@@ -9,3 +9,5 @@ local SetAPC = SET_GROUP:New():FilterPrefixes( "APC" ):FilterStart()
 local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
 
 AICargoDispatcherAPC = AI_CARGO_DISPATCHER_APC:New( SetAPC, SetCargoInfantry, SetDeployZones ) 
+AICargoDispatcherAPC:Start()
+

@@ -11,4 +11,7 @@ local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
 local ZoneGroup = GROUP:FindByName( "Deploy Group")
 local DeployZone = ZONE_GROUP:New( "Deploy Group", ZoneGroup, 200 )
 
+
 AICargoDispatcherAPC = AI_CARGO_DISPATCHER_APC:New( SetAPC, SetCargoInfantry, SetDeployZones ) 
+AICargoDispatcherAPC:Start()
+
