@@ -16,6 +16,22 @@ Score:SetScaleDestroyPenalty( 80 )
 Score:SetFratricide( 80 )
 Score:SetMessagesHit( false )
 
+
+--- Cargo Dispatching
+
+do
+
+  local SetCargoInfantry = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+  local SetHelicopter = SET_GROUP:New():FilterPrefixes( "US CH-47D@RAMP Troop Deployment" ):FilterStart()
+  local SetDeployZones = SET_ZONE:New():FilterPrefixes( "US Troops Landing Zone" ):FilterStart()
+  
+  NATO_AI_Cargo_Dispatcher_Helicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetDeployZones ) 
+  NATO_AI_Cargo_Dispatcher_Helicopter:SetPickupRadius( 50, 25 )
+  NATO_AI_Cargo_Dispatcher_Helicopter:SetDeployRadius( 1000, 500 )
+  NATO_AI_Cargo_Dispatcher_Helicopter:Start()
+
+end
+
 -- CCCP COALITION UNITS
 
 -- Russian helicopters engaging the battle field in Gori Valley
@@ -547,5 +563,6 @@ do -- CCCP Transport Task Engineers
 end
 
 MissileTrainer = MISSILETRAINER:New( 100, "Helps with missile tracking" )
+
 
 
