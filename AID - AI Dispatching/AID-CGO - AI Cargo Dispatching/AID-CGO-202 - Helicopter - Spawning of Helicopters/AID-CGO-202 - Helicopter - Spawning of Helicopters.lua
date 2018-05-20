@@ -1,7 +1,7 @@
 ---
--- Name: AID-CGO-200 - Helicopter - Pickup and Deploy
+-- Name: AID-CGO-202 - Helicopter - Spawning of Helicopters
 -- Author: FlightControl
--- Date Created: 10 May 2018
+-- Date Created: 19 May 2018
 --
 
 local SetCargoInfantry = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
@@ -9,3 +9,10 @@ local SetHelicopter = SET_GROUP:New():FilterPrefixes( "Helicopter" ):FilterStart
 local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
 
 AICargoDispatcherHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetDeployZones ) 
+AICargoDispatcherHelicopter:Start()
+
+HelicopterSpawn = SPAWN
+  :New( "Helicopter" )
+  :InitLimit( 4, 20 )
+  :InitLateActivated( true )
+  :SpawnScheduled( 20, 0.5 )
