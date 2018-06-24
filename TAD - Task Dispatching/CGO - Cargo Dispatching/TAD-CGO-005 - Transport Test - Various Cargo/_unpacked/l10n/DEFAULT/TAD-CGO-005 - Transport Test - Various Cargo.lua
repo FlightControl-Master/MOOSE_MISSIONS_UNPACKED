@@ -46,6 +46,6 @@ FuelCargo:ReportFlare( FLARECOLOR.Green )
 local MetalCargo = CARGO_CRATE:New( STATIC:FindByName( "Metal" ), "Workmaterials", "Metal", 500, 25 )
 MetalCargo:ReportFlare( FLARECOLOR.Yellow )
 
-TaskDispatcher:AddTransportTask( "Transport Team", CargoSet, "Transport the workers, engineers and the equipment near the Workplace." )
+local WorkplaceTask = TaskDispatcher:AddTransportTask( "Transport Team", CargoSet, "Transport the workers, engineers and the equipment near the Workplace." )
 
 

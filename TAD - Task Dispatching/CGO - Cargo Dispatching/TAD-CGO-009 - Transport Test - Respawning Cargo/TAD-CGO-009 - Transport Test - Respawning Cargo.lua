@@ -32,10 +32,8 @@ local CrateCargo = CARGO_CRATE:New( STATIC:FindByName( "Crate" ), "Workmaterials
 local EnginesCargo = CARGO_CRATE:New( STATIC:FindByName( "Engines" ), "Workmaterials", "Engines", 150, 50 ):RespawnOnDestroyed( true )
 local MetalCargo = CARGO_CRATE:New( STATIC:FindByName( "Metal" ), "Workmaterials", "Metal", 150, 50 ):RespawnOnDestroyed(true)
 
-TaskDispatcher:AddTransportTask( "Build a Workplace", CargoSetWorkmaterials, "Transport the workers, engineers and the equipment near the Workplace." )
-TaskDispatcher:SetTransportDeployZone( "Build a Workplace.001", ZONE:New( "Workplace" ) )
-
-WorkplaceTask = TaskDispatcher:GetTransportTask( "Build a Workplace.001" )
+local WorkplaceTask = TaskDispatcher:AddTransportTask( "Build a Workplace", CargoSetWorkmaterials, "Transport the workers, engineers and the equipment near the Workplace." )
+TaskDispatcher:SetTransportDeployZone( WorkplaceTask, ZONE:New( "Workplace" ) )
 
 Helos = { SPAWN:New( "Helicopters 1" ), SPAWN:New( "Helicopters 2" ), SPAWN:New( "Helicopters 3" ), SPAWN:New( "Helicopters 4" ), SPAWN:New( "Helicopters 5" ) }
 
@@ -54,10 +52,8 @@ local FuelCargo = CARGO_SLINGLOAD:New( STATIC:FindByName( "Fuel" ), "Liquids", "
 local GasCargo = CARGO_SLINGLOAD:New( STATIC:FindByName( "Gas" ), "Liquids", "Gas", 100, 35 ):RespawnOnDestroyed( true )
 local OilCargo = CARGO_SLINGLOAD:New( STATIC:FindByName( "Oil" ), "Liquids", "Oil", 100, 35 ):RespawnOnDestroyed( true )
 
-TaskDispatcher:AddTransportTask( "Transport liquids", CargoSetLiquids, "Transport the milk, gas, fuel, oil to the factory." )
-TaskDispatcher:SetTransportDeployZone( "Transport liquids.002", ZONE:New( "Factory" ) )
-
-FactoryTask = TaskDispatcher:GetTransportTask( "Transport liquids.002" )
+local FactoryTask = TaskDispatcher:AddTransportTask( "Transport liquids", CargoSetLiquids, "Transport the milk, gas, fuel, oil to the factory." )
+TaskDispatcher:SetTransportDeployZone( FactoryTask, ZONE:New( "Factory" ) )
 
 SAMSites = { SPAWN:New( "SAM Site 1" ), SPAWN:New( "SAM Site 2" ), SPAWN:New( "SAM Site 3" ), SPAWN:New( "SAM Site 4" ), SPAWN:New( "SAM Site 5" ) }
 
@@ -75,12 +71,8 @@ local KitchenstuffCargo = CARGO_CRATE:New( STATIC:FindByName( "Kitchenstuff" ), 
 local FoodCargo = CARGO_CRATE:New( STATIC:FindByName( "Food" ), "Food", "Food", 100, 35 )
 local MilkCargo = CARGO_SLINGLOAD:New( STATIC:FindByName( "Milk" ), "Food", "Milk", 100, 35 )
 
-TaskDispatcher:AddTransportTask( "Transport food", CargoSetFood, "Transport the workers and the food to the cantine." )
-TaskDispatcher:SetTransportDeployZone( "Transport food.003", ZONE:New( "Cantine" ) )
-
-FoodTask = TaskDispatcher:GetTransportTask( "Transport food.003" )
-
-FoodTask:F( { FoodTask = FoodTask:GetClassNameAndID() } )
+local FoodTask = TaskDispatcher:AddTransportTask( "Transport food", CargoSetFood, "Transport the workers and the food to the cantine." )
+TaskDispatcher:SetTransportDeployZone( FoodTask, ZONE:New( "Cantine" ) )
 
 Hungry = { SPAWN:New( "Hungry 1" ), SPAWN:New( "Hungry 2" ), SPAWN:New( "Hungry 3" ), SPAWN:New( "Hungry 4" ), SPAWN:New( "Hungry 5" ) }
 

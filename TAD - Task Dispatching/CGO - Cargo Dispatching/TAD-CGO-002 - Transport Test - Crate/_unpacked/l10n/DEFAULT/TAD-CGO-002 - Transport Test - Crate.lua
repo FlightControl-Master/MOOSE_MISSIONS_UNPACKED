@@ -36,6 +36,6 @@ local CrateStatic = STATIC:FindByName( "Crate" )
 -- The cargoset "CargoSet" will embed all defined cargo of type Crates into its set.
 local CrateCargo = CARGO_CRATE:New( CrateStatic, "Crates", "Important things", 1000, 25 )
 
-TaskDispatcher:AddTransportTask( "Transport Crates", CargoSet, "Transport the Crates near the Hangar." )
+local WorkplaceTask = TaskDispatcher:AddTransportTask( "Transport Crates", CargoSet, "Transport the Crates near the Hangar." )
 
 

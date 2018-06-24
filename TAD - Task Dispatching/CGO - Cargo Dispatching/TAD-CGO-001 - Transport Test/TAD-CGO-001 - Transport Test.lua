@@ -36,6 +36,6 @@ local FootballGroup = GROUP:FindByName( "Anderlecht#001" )
 -- The cargoset "EngineersCargoSet" will embed all defined cargo of type Engineers (prefix) into its set.
 local FootballPlayerGroup = CARGO_GROUP:New( FootballGroup, "Football Players", "FC Anderlecht", 500 )
 
-TaskDispatcher:AddTransportTask( "Transport Football Team", FootballPlayerSet, "Transport the Football Players and its equipment to the Stadium." )
+local WorkplaceTask = TaskDispatcher:AddTransportTask( "Transport Football Team", FootballPlayerSet, "Transport the Football Players and its equipment to the Stadium." )
 
 

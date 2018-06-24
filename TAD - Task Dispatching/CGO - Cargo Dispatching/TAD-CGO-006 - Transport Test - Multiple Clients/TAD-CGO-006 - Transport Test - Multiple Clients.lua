@@ -33,6 +33,6 @@ local EnginesCargo = CARGO_CRATE:New( STATIC:FindByName( "Engines" ), "Workmater
 local FuelCargo = CARGO_SLINGLOAD:New( STATIC:FindByName( "Fuel" ), "Workmaterials", "Fuel", 150, 50 )
 local MetalCargo = CARGO_CRATE:New( STATIC:FindByName( "Metal" ), "Workmaterials", "Metal", 150, 50 )
 
-TaskDispatcher:AddTransportTask( "Transport Team", CargoSet, "Transport the workers, engineers and the equipment near the Workplace." )
+local WorkplaceTask = TaskDispatcher:AddTransportTask( "Transport Team", CargoSet, "Transport the workers, engineers and the equipment near the Workplace." )
 
 

@@ -34,10 +34,8 @@ TaskDispatcher = TASK_CARGO_DISPATCHER:New( Mission, TransportGroups )
 -- This allows a truly dynamic setup.
 local CargoSetWorkmaterials = SET_CARGO:New():FilterTypes( "Workmaterials" ):FilterStart()
 
-TaskDispatcher:AddTransportTask( "Build a Workplace", CargoSetWorkmaterials, "Transport the workers, engineers and the equipment near the Workplace." )
-TaskDispatcher:SetTransportDeployZone( "Build a Workplace.001", ZONE:New( "Workplace" ) )
-
-WorkplaceTask = TaskDispatcher:GetTransportTask( "Build a Workplace.001" )
+local WorkplaceTask = TaskDispatcher:AddTransportTask( "Build a Workplace", CargoSetWorkmaterials, "Transport the workers, engineers and the equipment near the Workplace." )
+TaskDispatcher:SetTransportDeployZone( WorkplaceTask, ZONE:New( "Workplace" ) )
 
 Helos = { SPAWN:New( "Helicopters 1" ), SPAWN:New( "Helicopters 2" ), SPAWN:New( "Helicopters 3" ), SPAWN:New( "Helicopters 4" ), SPAWN:New( "Helicopters 5" ) }
 
@@ -57,10 +55,8 @@ end
 -- This allows a truly dynamic setup.
 local CargoSetLiquids = SET_CARGO:New():FilterTypes( "Liquids" ):FilterStart()
 
-TaskDispatcher:AddTransportTask( "Transport liquids", CargoSetLiquids, "Transport the milk, gas, fuel, oil to the factory." )
-TaskDispatcher:SetTransportDeployZone( "Transport liquids.002", ZONE:New( "Factory" ) )
-
-FactoryTask = TaskDispatcher:GetTransportTask( "Transport liquids.002" )
+local FactoryTask = TaskDispatcher:AddTransportTask( "Transport liquids", CargoSetLiquids, "Transport the milk, gas, fuel, oil to the factory." )
+TaskDispatcher:SetTransportDeployZone( FactoryTask, ZONE:New( "Factory" ) )
 
 SAMSites = { SPAWN:New( "SAM Site 1" ), SPAWN:New( "SAM Site 2" ), SPAWN:New( "SAM Site 3" ), SPAWN:New( "SAM Site 4" ), SPAWN:New( "SAM Site 5" ) }
 
@@ -77,12 +73,8 @@ end
 -- This allows a truly dynamic setup.
 local CargoSetFood = SET_CARGO:New():FilterTypes( "Food" ):FilterStart()
 
-TaskDispatcher:AddTransportTask( "Transport food", CargoSetFood, "Transport the workers and the food to the cantine." )
-TaskDispatcher:SetTransportDeployZone( "Transport food.003", ZONE:New( "Cantine" ) )
-
-FoodTask = TaskDispatcher:GetTransportTask( "Transport food.003" )
-
-FoodTask:F( { FoodTask = FoodTask:GetClassNameAndID() } )
+local FoodTask = TaskDispatcher:AddTransportTask( "Transport food", CargoSetFood, "Transport the workers and the food to the cantine." )
+TaskDispatcher:SetTransportDeployZone( FoodTask, ZONE:New( "Cantine" ) )
 
 Hungry = { SPAWN:New( "Hungry 1" ), SPAWN:New( "Hungry 2" ), SPAWN:New( "Hungry 3" ), SPAWN:New( "Hungry 4" ), SPAWN:New( "Hungry 5" ) }
 

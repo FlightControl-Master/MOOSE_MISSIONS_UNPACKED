@@ -45,6 +45,6 @@ local WorkerGroup = GROUP:FindByName( "Workers" )
 -- The cargoset "CargoSet" will embed all defined cargo of type Workmaterials (prefix) into its set.
 local WorkerCargoGroup = CARGO_GROUP:New( WorkerGroup, "Workmaterials", "Workers", 500 )
 
-TaskDispatcher:AddTransportTask( "Transport Team", CargoSet, "Transport the workers and the equipment near the Workplace." )
+local WorkplaceTask = TaskDispatcher:AddTransportTask( "Transport Team", CargoSet, "Transport the workers and the equipment near the Workplace." )
 
 
