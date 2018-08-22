@@ -15,3 +15,7 @@ DeployAirbasesSet:AddAirbasesByName( AIRBASE.Caucasus.Sochi_Adler )
 AICargoDispatcherAirplanes = AI_CARGO_DISPATCHER_AIRPLANE:New( AirplanesSet, CargoInfantrySet, PickupAirbasesSet, DeployAirbasesSet ) 
 AICargoDispatcherAirplanes:Start()
 
+for CargoName, Cargo in pairs( CargoInfantrySet:GetSet() ) do
+  AICargoDispatcherAirplanes:I( { Cargo = Cargo:GetName() } )
+end
+
