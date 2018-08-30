@@ -38,4 +38,3 @@ local CrateCargo = CARGO_CRATE:New( CrateStatic, "Crates", "Important things", 1
 
 local WorkplaceTask = TaskDispatcher:AddTransportTask( "Transport Crates", CargoSet, "Transport the Crates near the Hangar." )
 
-
