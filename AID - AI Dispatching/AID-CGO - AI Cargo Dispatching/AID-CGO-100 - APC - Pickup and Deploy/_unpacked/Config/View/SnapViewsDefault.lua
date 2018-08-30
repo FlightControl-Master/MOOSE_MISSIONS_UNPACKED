@@ -1,6 +1,10 @@
 --reformatted per-unit data to be mod system friendly 
 --this file is no longer should be edited for adding new flyable aircraft , DCS automatically check core database for this data(i.e. where you define your aircraft in aircraft table just define ViewSettings and SnapViews tables)
 -- result of ingame editing is saved to Saved Games/<USER>/DCS/Config/View/SnapViews.lua
+
+local A_10_VR_x = 0.126;
+local A_10_VR_y = 0.036;
+
 SnapViews = {}
 SnapViews["A-10A"] = {
 [1] = {-- player slot 1
@@ -118,6 +122,15 @@ SnapViews["A-10A"] = {
 		vAngle	 = -23.000000,
 		x_trans	 = 0.360000,
 		y_trans	 = -0.041337,
+		z_trans	 = 0.000000,
+		rollAngle = 0.000000,
+	},
+	[14] = {--default view VR
+		viewAngle = 75.000000,--FOV
+		hAngle	 = 0.000000,
+		vAngle	 = -23.000000,
+		x_trans	 = A_10_VR_x,
+		y_trans	 = A_10_VR_y,
 		z_trans	 = 0.000000,
 		rollAngle = 0.000000,
 	},
@@ -239,6 +252,15 @@ SnapViews["A-10C"] = {
 		vAngle	 = -23.000000,
 		x_trans	 = 0.360000,
 		y_trans	 = -0.041337,
+		z_trans	 = 0.000000,
+		rollAngle = 0.000000,
+	},
+	[14] = {--default view VR
+		viewAngle = 75.000000,--FOV
+		hAngle	 = 0.000000,
+		vAngle	 = -23.000000,
+		x_trans	 = A_10_VR_x,
+		y_trans	 = A_10_VR_y,
 		z_trans	 = 0.000000,
 		rollAngle = 0.000000,
 	},
@@ -1206,7 +1228,7 @@ SnapViews["Su-25"] = {
 		hAngle	 = 0.000000,
 		vAngle	 = -15.137112,
 		x_trans	 = 0.050000,
-		y_trans	 = -0.06,
+		y_trans	 = -0.019713,
 		z_trans	 = 0.000000,
 		rollAngle = 0.000000,
 	},

@@ -10,10 +10,11 @@ vAngleRearMin    				= -90 -- -8.0
 vAngleRearMax    				= 90.0
 
 dbg_shell    = "weapons.shells.PKT_7_62_T" -- 23mm shell
-dbg_shell    = "weapons.nurs.WGr21"
--- dbg_shell    = "weapons.shells.2A64_152" -- 152mm shell
+--dbg_shell    = "weapons.shells.2A42_30_AP"
+--dbg_shell    = "weapons.nurs.WGr21"
+--dbg_shell    = "weapons.shells.2A64_152" -- 152mm shell
 dbg_shell_v0 = -1 -- Muzzle speed m/s (-1 - speed from shall database)
-dbg_shell_fire_rate = 60
+dbg_shell_fire_rate = 120
 --reformatted per-unit data to be mod system friendly 
 --this file is no longer should be edited for adding new flyable aircraft , DCS automatically check core database (i.e. where you define your aircraft in aircraft table just define ViewSettings and SnapViews tables)
 
