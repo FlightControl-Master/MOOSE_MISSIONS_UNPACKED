@@ -6,12 +6,12 @@
 
 local CargoInfantrySet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
 local AirplanesSet = SET_GROUP:New():FilterPrefixes( "Airplane" ):FilterStart()
-local PickupAirbasesSet = SET_AIRBASE:New()
-local DeployAirbasesSet = SET_AIRBASE:New()
+local PickupZoneSet = SET_ZONE:New()
+local DeployZoneSet = SET_ZONE:New()
 
-PickupAirbasesSet:AddAirbasesByName( AIRBASE.Caucasus.Gudauta )
-DeployAirbasesSet:AddAirbasesByName( AIRBASE.Caucasus.Sochi_Adler )
+PickupZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Gudauta ) )
+DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Sochi_Adler ) )
 
-AICargoDispatcherAirplanes = AI_CARGO_DISPATCHER_AIRPLANE:New( AirplanesSet, CargoInfantrySet, PickupAirbasesSet, DeployAirbasesSet ) 
+AICargoDispatcherAirplanes = AI_CARGO_DISPATCHER_AIRPLANE:New( AirplanesSet, CargoInfantrySet, PickupZoneSet, DeployZoneSet ) 
 AICargoDispatcherAirplanes:Start()
 

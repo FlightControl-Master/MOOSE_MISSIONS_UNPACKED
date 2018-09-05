@@ -9,8 +9,9 @@ local SetCargoInfantry = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
 local SetHelicopter = SET_GROUP:New():FilterPrefixes( "Helicopter" ):FilterStart()
 local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
 
-AICargoDispatcherHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetDeployZones ) 
+AICargoDispatcherHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, nil, SetDeployZones ) 
 AICargoDispatcherHelicopter:SetHomeZone( ZONE:FindByName( "Home" ) )
+AICargoDispatcherHelicopter:Start()
 
 SetDeployZones:SetZoneProbability( "Deploy A", 0.1 )
 SetDeployZones:SetZoneProbability( "Deploy B", 0.1 )

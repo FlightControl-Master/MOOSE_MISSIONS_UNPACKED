@@ -16,6 +16,6 @@ local DeployZone = ZONE_GROUP:New( "Deploy Group", ZoneGroup, 200 )
 
 
 -- For the manpads to unload on time, a range of 8000 meters is appropriate.
-AICargoDispatcherAPC = AI_CARGO_DISPATCHER_APC:New( SetAPC, SetCargoInfantry, SetDeployZones, 8000 ) 
+AICargoDispatcherAPC = AI_CARGO_DISPATCHER_APC:New( SetAPC, SetCargoInfantry, nil, SetDeployZones, 8000 ) 
 AICargoDispatcherAPC:Start()
 
