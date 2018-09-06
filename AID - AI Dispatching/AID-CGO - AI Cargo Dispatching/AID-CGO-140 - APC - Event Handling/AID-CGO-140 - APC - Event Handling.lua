@@ -6,9 +6,10 @@
 
 local SetCargoInfantry = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
 local SetAPC = SET_GROUP:New():FilterPrefixes( "APC" ):FilterStart()
+local SetPickupZones = SET_ZONE:New():FilterPrefixes( "Pickup" ):FilterStart()
 local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
 
-AICargoDispatcherAPC = AI_CARGO_DISPATCHER_APC:New( SetAPC, SetCargoInfantry, nil, SetDeployZones ) 
+AICargoDispatcherAPC = AI_CARGO_DISPATCHER_APC:New( SetAPC, SetCargoInfantry, SetPickupZones, SetDeployZones ) 
 AICargoDispatcherAPC:SetHomeZone( ZONE:New("Home") )
 
 --- Pickup Handler OnAfter for AICargoDispatcherAPC.
