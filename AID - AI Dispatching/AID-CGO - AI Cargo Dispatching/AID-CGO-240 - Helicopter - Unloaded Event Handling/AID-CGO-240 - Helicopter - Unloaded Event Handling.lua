@@ -37,7 +37,7 @@ end
 --- Load Handler OnAfter for AICargoDispatcherHelicopter.
 -- Use this event handler to tailor the event when a CarrierGroup has initiated the loading or boarding of cargo within reporting or near range.
 -- You can use this event handler to post messages to players, or provide status updates etc.
--- @param #AICargoDispatcherAirplanes self
+-- @param #AICargoDispatcherHelicopter self
 -- @param #string From A string that contains the "*from state name*" when the event was fired.
 -- @param #string Event A string that contains the "*event name*" when the event was fired.
 -- @param #string To A string that contains the "*to state name*" when the event was fired.
@@ -50,7 +50,25 @@ function AICargoDispatcherHelicopter:OnAfterLoad( From, Event, To, CarrierGroup 
 end
 
 
+--- Loaded event handler OnAfter for AICargoDispatcherHelicopter.
+-- Use this event handler to tailor the event when a CarrierUnit of a CarrierGroup has loaded a cargo object.
+-- You can use this event handler to post messages to players, or provide status updates etc.
+-- Note that if more cargo objects were loading or boarding into the CarrierUnit, then this event can be triggered multiple times for each different Cargo/CarrierUnit.
+-- A CarrierUnit can be part of the larger CarrierGroup.
+-- @param #AICargoDispatcherHelicopter self
+-- @param #string From A string that contains the "*from state name*" when the event was triggered.
+-- @param #string Event A string that contains the "*event name*" when the event was triggered.
+-- @param #string To A string that contains the "*to state name*" when the event was triggered.
+-- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
+-- @param Cargo.Cargo#CARGO Cargo The cargo object.
+-- @param Wrapper.Unit#UNIT CarrierUnit The carrier unit that is executing the cargo loading operation.
+-- @param Core.Zone#ZONE_AIRBASE PickupZone (optional) The zone from where the cargo is picked up. Note that the zone is optional and may not be provided, but for AI_CARGO_DISPATCHER_AIRBASE there will always be a PickupZone, as the pickup location is an airbase zone.
+function AICargoDispatcherHelicopter:OnAfterLoaded( From, Event, To, CarrierGroup, Cargo, CarrierUnit, PickupZone )
 
+  -- Write here your own code.
+  MESSAGE:NewType( "Group " .. CarrierGroup:GetName().. " has loaded cargo " .. Cargo:GetName(), MESSAGE.Type.Information ):ToAll()
+
+end
 
 --- Deploy Handler OnAfter for AI_CARGO_DISPATCHER.
 -- Use this event handler to tailor the event when a CarrierGroup is routed to a deploy coordinate, to Unload all cargo objects in each CarrierUnit.
