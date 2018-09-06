@@ -132,5 +132,23 @@ function AICargoDispatcherHelicopter:OnAfterDeployed( From, Event, To, CarrierGr
 end
 
 
+--- Home event handler OnAfter for AICargoDispatcherHelicopter.
+-- Use this event handler to tailor the event when a CarrierGroup is returning to the HomeZone, after it has deployed all cargo objects from the CarrierGroup.
+-- You can use this event handler to post messages to players, or provide status updates etc.
+-- If there is no HomeZone is specified, the CarrierGroup will stay at the current location after having deployed all cargo.
+-- @param #AICargoDispatcherHelicopter self
+-- @param #string From A string that contains the "*from state name*" when the event was triggered.
+-- @param #string Event A string that contains the "*event name*" when the event was triggered.
+-- @param #string To A string that contains the "*to state name*" when the event was triggered.
+-- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
+-- @param Core.Point#COORDINATE Coordinate The home coordinate the Carrier will arrive and stop it's activities.
+-- @param #number Speed The velocity in meters per second on which the CarrierGroup is routed towards the home Coordinate.
+-- @param Core.Zone#ZONE HomeZone The zone wherein the carrier will return when all cargo has been transported. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
+function AICargoDispatcherHelicopter:OnAfterHome( From, Event, To, CarrierGroup, Coordinate, Speed, HomeZone )
+
+  MESSAGE:NewType( "Group " .. CarrierGroup:GetName() .. " deployed all cargo and going home to zone " .. HomeZone:GetName(), MESSAGE.Type.Detailed ):ToAll()
+
+end
+
 
 AICargoDispatcherHelicopter:Start()
