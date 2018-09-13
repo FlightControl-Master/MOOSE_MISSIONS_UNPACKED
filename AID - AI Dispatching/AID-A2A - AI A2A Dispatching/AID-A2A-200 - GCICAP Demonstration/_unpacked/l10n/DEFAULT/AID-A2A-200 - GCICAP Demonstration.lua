@@ -1,5 +1,5 @@
 ---
--- Name: AID-200 - AI_A2A - GCICAP Demonstration
+-- Name: AID-A2A-200 - GCICAP Demonstration
 -- Author: FlightControl
 -- Date Created: 05 July 2017
 
@@ -18,8 +18,6 @@ A2ADispatcher:SetBorderZone( CCCPBorderZone )
 
 
 
-A2ADispatcher:SetTacticalDisplay(false)
-
 A2ADispatcher:SetDefaultTakeoffFromParkingCold()
 A2ADispatcher:SetDefaultLandingAtEngineShutdown()
 A2ADispatcher:SetDefaultFuelThreshold( 0.20 )
@@ -28,6 +26,7 @@ A2ADispatcher:SetDisengageRadius( 100000 )
 A2ADispatcher:SetEngageRadius( 50000 )
 A2ADispatcher:SetGciRadius( 100000 )
 
+A2ADispatcher:Start()
 
 -------------------------------
 
@@ -44,7 +43,7 @@ local Frequency = 600
 
 BlueSpawn1 = SPAWN
   :New( "RT NATO 1" )
-  :InitLimit( 2, 10 )
+  :InitLimit( 2, 3 )
   :InitRandomizeTemplate( { "SQ NATO A-10C", "SQ NATO F-15C", "SQ NATO F-16A", "SQ NATO F/A-18", "SQ NATO F-16C" } )
   :InitRandomizeRoute( 0, 0, 30000 )
   --:InitDelayOn()
@@ -52,7 +51,7 @@ BlueSpawn1 = SPAWN
 
 BlueSpawn2 = SPAWN
   :New( "RT NATO 2" )
-  :InitLimit( 2, 10 )
+  :InitLimit( 2, 3 )
   :InitRandomizeTemplate( { "SQ NATO A-10C", "SQ NATO F-15C", "SQ NATO F-16A", "SQ NATO F/A-18", "SQ NATO F-16C" } )
   :InitRandomizeRoute( 0, 0, 30000 )
   --:InitDelayOn()
@@ -60,7 +59,7 @@ BlueSpawn2 = SPAWN
 
 BlueSpawn3 = SPAWN
   :New( "RT NATO 3" )
-  :InitLimit( 2, 10 )
+  :InitLimit( 2, 3 )
   :InitRandomizeTemplate( { "SQ NATO A-10C", "SQ NATO F-15C", "SQ NATO F-16A", "SQ NATO F/A-18", "SQ NATO F-16C" } )
   :InitRandomizeRoute( 0, 0, 30000 )
   --:InitDelayOn()
@@ -68,7 +67,7 @@ BlueSpawn3 = SPAWN
 
 BlueSpawn4 = SPAWN
   :New( "RT NATO 4" )
-  :InitLimit( 2, 10 )
+  :InitLimit( 2, 3 )
   :InitRandomizeTemplate( { "SQ NATO A-10C", "SQ NATO F-15C", "SQ NATO F-16A", "SQ NATO F/A-18", "SQ NATO F-16C" } )
   :InitRandomizeRoute( 0, 0, 30000 )
   --:InitDelayOn()

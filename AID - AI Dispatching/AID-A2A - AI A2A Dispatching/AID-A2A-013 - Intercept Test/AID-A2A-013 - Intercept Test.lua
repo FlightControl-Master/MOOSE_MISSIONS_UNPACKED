@@ -43,3 +43,5 @@ A2ADispatcher:SetSquadronGci( "Gelend", 800, 1200 )
 A2ADispatcher:SetSquadronTakeoffFromParkingCold( "Gelend" )
 A2ADispatcher:SetSquadronLandingAtEngineShutdown( "Gelend" )
 
+A2ADispatcher:Start()
+

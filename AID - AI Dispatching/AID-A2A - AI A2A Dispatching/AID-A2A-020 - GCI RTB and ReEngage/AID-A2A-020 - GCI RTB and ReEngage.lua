@@ -44,6 +44,8 @@ A2ADispatcher:SetSquadronGci( "May", 900, 1200 )
 A2ADispatcher:SetDefaultTakeoffInAir()
 A2ADispatcher:SetDefaultLandingNearAirbase()
 
+A2ADispatcher:Start()
+
 -- Blue attack simulation
 
 local Frequency = 300
