@@ -18,18 +18,40 @@ RecceDetection = DETECTION_AREAS
   :FilterCategories( { Unit.Category.AIRPLANE } )
   :InitDetectRWR(true)
 
+local Zones = {
+  ZONE:New( "Zone1" ),
+  ZONE:New( "Zone2" )
+}
+
+local Sams = {
+  GROUP:FindByName( "SAM1" ),
+  GROUP:FindByName( "SAM2" )
+}
+
 RecceDetection:Start()
 
---- OnAfter Transition Handler for Event Detect.
--- @param Functional.Detection#DETECTION_UNITS self
+--- OnAfter Transition Handler for Event DetectedItem.
+-- @param RecceDetection self
 -- @param #string From The From State string.
 -- @param #string Event The Event string.
 -- @param #string To The To State string.
-function RecceDetection:OnAfterDetect(From,Event,To)
+-- @param Functional.Detection#DETECTION_BASE.DetectedItem DetectedItem
+function RecceDetection:OnAfterDetectedItem(From,Event,To,DetectedItem)
 
   local DetectionReport = self:DetectedReportDetailed()
 
   HQ:MessageToAll( DetectionReport, 15, "Detection" )
+  
+  if DetectedItem.IsDetected then
+    local Coordinate = DetectedItem.Coordinate -- Core.Point#COORDINATE
+    for ZoneID, ZoneData in pairs( Zones ) do
+      local Zone = ZoneData -- Core.Zone#ZONE
+      if Zone:IsCoordinateInZone(Coordinate) then
+        Sams[ZoneID]:Activate()
+      end
+    end
+  end
+  
 end
 
 garbagecollect()
