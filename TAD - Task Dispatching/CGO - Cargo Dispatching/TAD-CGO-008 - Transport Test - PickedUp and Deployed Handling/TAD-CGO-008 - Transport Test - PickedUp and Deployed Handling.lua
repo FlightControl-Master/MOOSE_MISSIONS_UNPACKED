@@ -36,17 +36,6 @@ local MetalCargo = CARGO_CRATE:New( STATIC:FindByName( "Metal" ), "Workmaterials
 local WorkplaceTask = TaskDispatcher:AddTransportTask( "Build a Workplace", CargoSetWorkmaterials, "Transport the workers, engineers and the equipment near the Workplace." )
 TaskDispatcher:SetTransportDeployZone( WorkplaceTask, ZONE:New( "Workplace" ) )
 
-Helos = { SPAWN:New( "Helicopters 1" ), SPAWN:New( "Helicopters 2" ), SPAWN:New( "Helicopters 3" ), SPAWN:New( "Helicopters 4" ), SPAWN:New( "Helicopters 5" ) }
-
-EnemyHelos = { SPAWN:New( "Enemy Helicopters 1" ), SPAWN:New( "Enemy Helicopters 2" ), SPAWN:New( "Enemy Helicopters 3" ) }
-
-function WorkplaceTask:OnAfterCargoDeployed( From, Event, To, TaskUnit, Cargo, DeployZone )
-  Helos[ math.random(1,#Helos) ]:Spawn()
-  EnemyHelos[ math.random(1,#EnemyHelos) ]:Spawn()
-
-end
-
-
 
 local CargoSetLiquids = SET_CARGO:New():FilterTypes( "Liquids" ):FilterStart()
 local FuelCargo = CARGO_SLINGLOAD:New( STATIC:FindByName( "Fuel" ), "Liquids", "Fuel", 100, 35 )
@@ -56,13 +45,6 @@ local OilCargo = CARGO_SLINGLOAD:New( STATIC:FindByName( "Oil" ), "Liquids", "Oi
 local FactoryTask = TaskDispatcher:AddTransportTask( "Transport liquids", CargoSetLiquids, "Transport the milk, gas, fuel, oil to the factory." )
 TaskDispatcher:SetTransportDeployZone( FactoryTask, ZONE:New( "Factory" ) )
 
-SAMSites = { SPAWN:New( "SAM Site 1" ), SPAWN:New( "SAM Site 2" ), SPAWN:New( "SAM Site 3" ), SPAWN:New( "SAM Site 4" ), SPAWN:New( "SAM Site 5" ) }
-AirAttack = { SPAWN:New( "Russia Air Attack 1" ), SPAWN:New( "Russia Air Attack 2" ), SPAWN:New( "Russia Air Attack 3" ), SPAWN:New( "Russia Air Attack 4" ) }
-
-function FactoryTask:OnAfterCargoDeployed( From, Event, To, TaskUnit, Cargo, DeployZone )
-  SAMSites[ math.random(1,#SAMSites) ]:Spawn()
-  AirAttack[ math.random(1,#AirAttack) ]:Spawn()
-end
 
 local CargoSetFood = SET_CARGO:New():FilterTypes( "Food" ):FilterStart()
 local WorkerCargoGroupA = CARGO_GROUP:New( GROUP:FindByName( "Workers Team A" ), "Food", "Workers Team A", 250 )
@@ -74,11 +56,11 @@ local MilkCargo = CARGO_SLINGLOAD:New( STATIC:FindByName( "Milk" ), "Food", "Mil
 local FoodTask = TaskDispatcher:AddTransportTask( "Transport food", CargoSetFood, "Transport the workers and the food to the cantine." )
 TaskDispatcher:SetTransportDeployZone( FoodTask, ZONE:New( "Cantine" ) )
 
-FoodTask:F( { FoodTask = FoodTask:GetClassNameAndID() } )
+-- Here we tailor the CargoDeployed event of the TaskDispatcher.
 
-Hungry = { SPAWN:New( "Hungry 1" ), SPAWN:New( "Hungry 2" ), SPAWN:New( "Hungry 3" ), SPAWN:New( "Hungry 4" ), SPAWN:New( "Hungry 5" ) }
+function TaskDispatcher:OnAfterCargoDeployed( From, Event, To, Task, TaskPrefix, TaskUnit, Cargo, DeployZone )
 
-function FoodTask:OnAfterCargoDeployed( From, Event, To, TaskUnit, Cargo, DeployZone )
-  Hungry[ math.random(1,#Hungry) ]:Spawn()
+  MESSAGE:NewType( "Unit " .. TaskUnit:GetName().. " has deployed cargo " .. Cargo:GetName() .. " at zone " .. DeployZone:GetName() .. " for task " .. Task:GetName() .. ".", MESSAGE.Type.Information ):ToAll()
+  
 end
 

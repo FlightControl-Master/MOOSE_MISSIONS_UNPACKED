@@ -27,3 +27,8 @@ TaskDispatcher:StartCSARTasks(
   "Use the radio menu to let the command center assist you with the CSAR tasking."
 )
 
+function TaskDispatcher:OnAfterCargoDeployed( From, Event, To, Task, TaskPrefix, TaskUnit, Cargo, DeployZone )
+
+  MESSAGE:NewType( "Unit " .. TaskUnit:GetName().. " has deployed cargo " .. Cargo:GetName() .. " at zone " .. DeployZone:GetName() .. " for task " .. Task:GetName() .. ".", MESSAGE.Type.Information ):ToAll()
+  
+end

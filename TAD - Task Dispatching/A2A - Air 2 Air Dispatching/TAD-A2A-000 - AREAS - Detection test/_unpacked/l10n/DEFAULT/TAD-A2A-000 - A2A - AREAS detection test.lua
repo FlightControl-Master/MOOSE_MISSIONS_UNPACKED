@@ -1,5 +1,5 @@
 ---
--- Name: TAD-300 - A2A Task Dispatching DETECTION_AREAS
+-- Name: TAD-A2A-001 - A2A - AREAS detection test
 -- Author: FlightControl
 -- Date Created: 17 May 2017
 --
