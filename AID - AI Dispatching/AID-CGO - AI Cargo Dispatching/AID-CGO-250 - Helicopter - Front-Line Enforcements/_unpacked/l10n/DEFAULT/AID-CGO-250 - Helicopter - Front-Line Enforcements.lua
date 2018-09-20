@@ -1,17 +1,40 @@
 ---
--- Name: AID-CGO-240 - Helicopter - Unloaded Event Handling
+-- Name: AID-CGO-250 - Helicopter - Front-Line Enforcements
 -- Author: FlightControl
--- Date Created: 15 May 2018
+-- Date Created: 20 Sep 2018
 --
--- Demonstrates the way how the deploy locations can be set to a specific probability distribution.
+-- Demonstrates the way how front-line enforcements can be setup using helicopter transportations.
 
 local SetCargoInfantry = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
 local SetHelicopter = SET_GROUP:New():FilterPrefixes( "Helicopter" ):FilterStart()
 local SetPickupZones = SET_ZONE:New():FilterPrefixes( "Pickup" ):FilterStart()
-local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
+local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Defense" ):FilterStart()
 
 AICargoDispatcherHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetPickupZones, SetDeployZones ) 
 AICargoDispatcherHelicopter:SetHomeZone( ZONE:FindByName( "Home" ) )
+
+
+-- Here we setup the spawning of Infantry.
+SpawnCargoInfantry = SPAWN
+  :New( "Infantry" )
+  :InitLimit( 40, 60 )
+  :InitRandomizeZones( { ZONE_POLYGON:NewFromGroupName( "Pickup Location" ) } )
+  :OnSpawnGroup(
+    function( SpawnGroup )
+      -- This will automatically add also the CargoInfantry object to the SetCargoInfantry (in the background through the event system).
+      local CargoInfantry = CARGO_GROUP:New( SpawnGroup, "Infantry", SpawnGroup:GetName(), 150 )
+    end
+  )
+  :SpawnScheduled( 60, 0.5 )
+
+-- Now we create 4 zones based on GROUP objects within the battlefield, which form the front line defense points.
+local ZoneDefense1 = ZONE_GROUP:New( "Defense 1", GROUP:FindByName("Defense #001"), 1500 )
+local ZoneDefense2 = ZONE_GROUP:New( "Defense 2", GROUP:FindByName("Defense #002"), 1500 )
+local ZoneDefense3 = ZONE_GROUP:New( "Defense 3", GROUP:FindByName("Defense #003"), 1500 )
+local ZoneDefense4 = ZONE_GROUP:New( "Defense 4", GROUP:FindByName("Defense #004"), 1500 )
+
+
+-- Here we setup the spawning of Helicopters.
 
 
 
@@ -173,4 +196,11 @@ function AICargoDispatcherHelicopter:OnAfterHome( From, Event, To, CarrierGroup,
 end
 
 
-AICargoDispatcherHelicopter:Start()
+AICargoDispatcherHelicopter:SetPickupRadius( 30, 10 )
+AICargoDispatcherHelicopter:SetDeployRadius( 200, 100 )
+AICargoDispatcherHelicopter:SetPickupSpeed( 300, 200 )
+AICargoDispatcherHelicopter:SetDeploySpeed( 300, 200 )
+AICargoDispatcherHelicopter:SetPickupHeight( 100, 30 )
+AICargoDispatcherHelicopter:SetDeployHeight( 100, 30 )
+
+AICargoDispatcherHelicopter:ScheduleOnce( 10, AICargoDispatcherHelicopter.Start, AICargoDispatcherHelicopter )

@@ -88,7 +88,7 @@ mission =
             }, -- end of ["func"]
         }, -- end of ["red"]
     }, -- end of ["result"]
-    ["maxDictId"] = 651,
+    ["maxDictId"] = 660,
     ["pictureFileNameN"] = 
     {
     }, -- end of ["pictureFileNameN"]
@@ -187,9 +187,9 @@ mission =
     }, -- end of ["triggers"]
     ["map"] = 
     {
-        ["centerY"] = 631307.49882747,
-        ["zoom"] = 9780.4680522954,
-        ["centerX"] = -322155.68716437,
+        ["centerY"] = 640055.10773057,
+        ["zoom"] = 75856.797764521,
+        ["centerX"] = -313365.60814913,
     }, -- end of ["map"]
     ["coalitions"] = 
     {
@@ -2953,10 +2953,10 @@ mission =
                                                 }, -- end of ["params"]
                                             }, -- end of ["task"]
                                             ["type"] = "Turning Point",
-                                            ["ETA"] = 75.188374803049,
+                                            ["ETA"] = 828.00967412259,
                                             ["ETA_locked"] = false,
-                                            ["y"] = 635047.41371428,
-                                            ["x"] = -318700.15085715,
+                                            ["y"] = 648876.16964204,
+                                            ["x"] = -316063.94281247,
                                             ["name"] = "DictKey_WptName_626",
                                             ["formation_template"] = "",
                                             ["speed_locked"] = true,
@@ -3022,13 +3022,13 @@ mission =
                                         ["alt"] = 45,
                                         ["alt_type"] = "BARO",
                                         ["livery_id"] = "Russia Standard Army",
-                                        ["skill"] = "High",
+                                        ["skill"] = "Excellent",
                                         ["parking"] = "1",
                                         ["ropeLength"] = 15,
                                         ["speed"] = 41.666666666667,
                                         ["type"] = "Ka-50",
                                         ["unitId"] = 296,
-                                        ["psi"] = 2.1953665403072,
+                                        ["psi"] = 2.3250284003763,
                                         ["parking_id"] = "15",
                                         ["x"] = -284566.03125,
                                         ["name"] = "DictKey_UnitName_624",
@@ -3052,13 +3052,13 @@ mission =
                                         ["alt"] = 45,
                                         ["alt_type"] = "BARO",
                                         ["livery_id"] = "Russia Standard Army",
-                                        ["skill"] = "High",
+                                        ["skill"] = "Excellent",
                                         ["parking"] = "0",
                                         ["ropeLength"] = 15,
                                         ["speed"] = 41.666666666667,
                                         ["type"] = "Ka-50",
                                         ["unitId"] = 297,
-                                        ["psi"] = 2.1953665403072,
+                                        ["psi"] = 2.3250284003763,
                                         ["parking_id"] = "16",
                                         ["x"] = -284604.78125,
                                         ["name"] = "DictKey_UnitName_629",
@@ -3082,13 +3082,13 @@ mission =
                                         ["alt"] = 45,
                                         ["alt_type"] = "BARO",
                                         ["livery_id"] = "Russia Standard Army",
-                                        ["skill"] = "High",
+                                        ["skill"] = "Excellent",
                                         ["parking"] = "3",
                                         ["ropeLength"] = 15,
                                         ["speed"] = 41.666666666667,
                                         ["type"] = "Ka-50",
                                         ["unitId"] = 298,
-                                        ["psi"] = 2.1953665403072,
+                                        ["psi"] = 2.3250284003763,
                                         ["parking_id"] = "13",
                                         ["x"] = -284488.46875,
                                         ["name"] = "DictKey_UnitName_630",
@@ -3112,13 +3112,13 @@ mission =
                                         ["alt"] = 45,
                                         ["alt_type"] = "BARO",
                                         ["livery_id"] = "Russia Standard Army",
-                                        ["skill"] = "High",
+                                        ["skill"] = "Excellent",
                                         ["parking"] = "2",
                                         ["ropeLength"] = 15,
                                         ["speed"] = 41.666666666667,
                                         ["type"] = "Ka-50",
                                         ["unitId"] = 299,
-                                        ["psi"] = 2.1953665403072,
+                                        ["psi"] = 2.3250284003763,
                                         ["parking_id"] = "14",
                                         ["x"] = -284525.5,
                                         ["name"] = "DictKey_UnitName_631",
@@ -3145,6 +3145,291 @@ mission =
                                 ["start_time"] = 0,
                                 ["frequency"] = 124,
                             }, -- end of [1]
+                            [2] = 
+                            {
+                                ["modulation"] = 0,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["radioSet"] = false,
+                                ["task"] = "CAS",
+                                ["uncontrolled"] = false,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 45,
+                                            ["action"] = "From Parking Area",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 44.444444444444,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["number"] = 1,
+                                                            ["key"] = "CAS",
+                                                            ["id"] = "EngageTargets",
+                                                            ["enabled"] = true,
+                                                            ["auto"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["targetTypes"] = 
+                                                                {
+                                                                    [1] = "Helicopters",
+                                                                    [2] = "Ground Units",
+                                                                    [3] = "Light armed ships",
+                                                                }, -- end of ["targetTypes"]
+                                                                ["priority"] = 0,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                        [2] = 
+                                                        {
+                                                            ["number"] = 2,
+                                                            ["auto"] = true,
+                                                            ["id"] = "WrappedAction",
+                                                            ["enabled"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "EPLRS",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["value"] = true,
+                                                                        ["groupId"] = 1,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [2]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "TakeOffParking",
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["y"] = 685163.0625,
+                                            ["x"] = -284107.0625,
+                                            ["name"] = "DictKey_WptName_657",
+                                            ["formation_template"] = "",
+                                            ["airdromeId"] = 25,
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                        [2] = 
+                                        {
+                                            ["alt"] = 500,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 44.444444444444,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 1102.6398248521,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 647532.42065307,
+                                            ["x"] = -315500.43517193,
+                                            ["name"] = "DictKey_WptName_658",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [2]
+                                        [3] = 
+                                        {
+                                            ["alt"] = 500,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 44.444444444444,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 134.71362523952,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 631623.85896417,
+                                            ["x"] = -320575.11595503,
+                                            ["name"] = "DictKey_WptName_659",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [3]
+                                        [4] = 
+                                        {
+                                            ["alt"] = 500,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 44.444444444444,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 177.63418187859,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 629609.64039274,
+                                            ["x"] = -321851.30024074,
+                                            ["name"] = "DictKey_WptName_660",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [4]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 78,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["alt"] = 45,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "Russia Fictional",
+                                        ["skill"] = "Excellent",
+                                        ["parking"] = "4",
+                                        ["ropeLength"] = 15,
+                                        ["speed"] = 44.444444444444,
+                                        ["type"] = "SA342Minigun",
+                                        ["unitId"] = 314,
+                                        ["psi"] = 2.2660754949324,
+                                        ["parking_id"] = "57",
+                                        ["x"] = -284107.0625,
+                                        ["name"] = "DictKey_UnitName_653",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = 416.33,
+                                            ["flare"] = 32,
+                                            ["chaff"] = 0,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["y"] = 685163.0625,
+                                        ["heading"] = -2.1570158416456,
+                                        ["callsign"] = 104,
+                                        ["onboard_num"] = "050",
+                                    }, -- end of [1]
+                                    [2] = 
+                                    {
+                                        ["alt"] = 45,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "Russia Fictional",
+                                        ["skill"] = "Excellent",
+                                        ["parking"] = "7",
+                                        ["ropeLength"] = 15,
+                                        ["speed"] = 44.444444444444,
+                                        ["type"] = "SA342Minigun",
+                                        ["unitId"] = 315,
+                                        ["psi"] = 2.2660754949324,
+                                        ["parking_id"] = "58",
+                                        ["x"] = -283964.28125,
+                                        ["name"] = "DictKey_UnitName_654",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = 416.33,
+                                            ["flare"] = 32,
+                                            ["chaff"] = 0,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["y"] = 685176.3125,
+                                        ["heading"] = -2.1570158416456,
+                                        ["callsign"] = 105,
+                                        ["onboard_num"] = "051",
+                                    }, -- end of [2]
+                                    [3] = 
+                                    {
+                                        ["alt"] = 45,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "Russia Fictional",
+                                        ["skill"] = "Excellent",
+                                        ["parking"] = "5",
+                                        ["ropeLength"] = 15,
+                                        ["speed"] = 44.444444444444,
+                                        ["type"] = "SA342Minigun",
+                                        ["unitId"] = 316,
+                                        ["psi"] = 2.2660754949324,
+                                        ["parking_id"] = "55",
+                                        ["x"] = -284206.90625,
+                                        ["name"] = "DictKey_UnitName_655",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = 416.33,
+                                            ["flare"] = 32,
+                                            ["chaff"] = 0,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["y"] = 685057.3125,
+                                        ["heading"] = -2.1570158416456,
+                                        ["callsign"] = 106,
+                                        ["onboard_num"] = "052",
+                                    }, -- end of [3]
+                                    [4] = 
+                                    {
+                                        ["alt"] = 45,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "Russia Fictional",
+                                        ["skill"] = "Excellent",
+                                        ["parking"] = "6",
+                                        ["ropeLength"] = 15,
+                                        ["speed"] = 44.444444444444,
+                                        ["type"] = "SA342Minigun",
+                                        ["unitId"] = 317,
+                                        ["psi"] = 2.2660754949324,
+                                        ["parking_id"] = "56",
+                                        ["x"] = -283996.8125,
+                                        ["name"] = "DictKey_UnitName_656",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = 416.33,
+                                            ["flare"] = 32,
+                                            ["chaff"] = 0,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["y"] = 684974.1875,
+                                        ["heading"] = -2.1570158416456,
+                                        ["callsign"] = 107,
+                                        ["onboard_num"] = "053",
+                                    }, -- end of [4]
+                                }, -- end of ["units"]
+                                ["y"] = 685163.0625,
+                                ["x"] = -284107.0625,
+                                ["name"] = "DictKey_GroupName_652",
+                                ["communication"] = true,
+                                ["start_time"] = 0,
+                                ["frequency"] = 124,
+                            }, -- end of [2]
                         }, -- end of ["group"]
                     }, -- end of ["helicopter"]
                 }, -- end of [7]
@@ -3243,7 +3528,7 @@ mission =
             ["comment"] = "Load Mission",
         }, -- end of [3]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 27433,
+    ["currentKey"] = 28436,
     ["start_time"] = 43200,
     ["forcedOptions"] = 
     {

@@ -22,8 +22,9 @@ AICargoDispatcherAPC:SetHomeZone( ZONE:New("Home") )
 -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
 -- @param Core.Point#COORDINATE Coordinate The coordinate of the pickup location.
 -- @param #number Speed The velocity in meters per second on which the CarrierGroup is routed towards the pickup Coordinate.
--- @param Core.Zone#ZONE_AIRBASE PickupZone (optional) The zone from where the cargo is picked up. Note that the zone is optional and may not be provided, but for AI_CARGO_DISPATCHER_AIRBASE there will always be a PickupZone, as the pickup location is an airbase zone.
-function AICargoDispatcherAPC:OnAfterPickup( From, Event, To, CarrierGroup, Coordinate, Speed, PickupZone )
+-- @param #number Height Height in meters to move to the pickup coordinate.
+-- @param Core.Zone#ZONE PickupZone (optional) The zone from where the cargo is picked up. Note that the zone is optional and may not be provided, but for AI_CARGO_DISPATCHER_AIRBASE there will always be a PickupZone, as the pickup location is an airbase zone.
+function AICargoDispatcherAPC:OnAfterPickup( From, Event, To, CarrierGroup, Coordinate, Speed, Height, PickupZone )
 
   -- Write here your own code.
   MESSAGE:NewType( "Group " .. CarrierGroup:GetName().. " is picking up cargo at airbase " .. PickupZone:GetName(), MESSAGE.Type.Information ):ToAll()
@@ -77,8 +78,9 @@ end
 -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
 -- @param Core.Point#COORDINATE Coordinate The deploy coordinate.
 -- @param #number Speed The velocity in meters per second on which the CarrierGroup is routed towards the deploy Coordinate.
+-- @param #number Height Height in meters to move to the deploy coordinate.
 -- @param Core.Zone#ZONE DeployZone The zone wherein the cargo is deployed. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
-function AICargoDispatcherAPC:OnAfterDeploy( From, Event, To, CarrierGroup, Coordinate, Speed, DeployZone )
+function AICargoDispatcherAPC:OnAfterDeploy( From, Event, To, CarrierGroup, Coordinate, Speed, Height, DeployZone )
 
   MESSAGE:NewType( "Group " .. CarrierGroup:GetName().. " is starting deployment of all cargo in zone " .. DeployZone:GetName(), MESSAGE.Type.Information ):ToAll()
 
@@ -156,8 +158,9 @@ end
 -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
 -- @param Core.Point#COORDINATE Coordinate The home coordinate the Carrier will arrive and stop it's activities.
 -- @param #number Speed The velocity in meters per second on which the CarrierGroup is routed towards the home Coordinate.
+-- @param #number Height Height in meters to move to the home coordinate.
 -- @param Core.Zone#ZONE HomeZone The zone wherein the carrier will return when all cargo has been transported. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
-function AICargoDispatcherAPC:OnAfterHome( From, Event, To, CarrierGroup, Coordinate, Speed, HomeZone )
+function AICargoDispatcherAPC:OnAfterHome( From, Event, To, CarrierGroup, Coordinate, Speed, Height, HomeZone )
 
   MESSAGE:NewType( "Group " .. CarrierGroup:GetName() .. " deployed all cargo and going home to zone " .. HomeZone:GetName(), MESSAGE.Type.Detailed ):ToAll()
 

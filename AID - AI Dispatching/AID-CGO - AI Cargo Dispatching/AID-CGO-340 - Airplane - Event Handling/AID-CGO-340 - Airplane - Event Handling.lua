@@ -28,8 +28,9 @@ AICargoDispatcherAirplanes:SetHomeZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Kobul
 -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
 -- @param Core.Point#COORDINATE Coordinate The coordinate of the pickup location.
 -- @param #number Speed The velocity in meters per second on which the CarrierGroup is routed towards the pickup Coordinate.
+-- @param #number Height Height in meters to move to the pickup coordinate.
 -- @param Core.Zone#ZONE_AIRBASE PickupZone (optional) The zone from where the cargo is picked up. Note that the zone is optional and may not be provided, but for AI_CARGO_DISPATCHER_AIRBASE there will always be a PickupZone, as the pickup location is an airbase zone.
-function AICargoDispatcherAirplanes:OnAfterPickup( From, Event, To, CarrierGroup, Coordinate, Speed, PickupZone )
+function AICargoDispatcherAirplanes:OnAfterPickup( From, Event, To, CarrierGroup, Coordinate, Speed, Height, PickupZone )
 
   -- Write here your own code.
   MESSAGE:NewType( "Group " .. CarrierGroup:GetName().. " is picking up cargo at airbase " .. PickupZone:GetName(), MESSAGE.Type.Information ):ToAll()
@@ -83,8 +84,9 @@ end
 -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
 -- @param Core.Point#COORDINATE Coordinate The deploy coordinate.
 -- @param #number Speed The velocity in meters per second on which the CarrierGroup is routed towards the deploy Coordinate.
+-- @param #number Height Height in meters to move to the deploy coordinate.
 -- @param Core.Zone#ZONE DeployZone The zone wherein the cargo is deployed. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
-function AICargoDispatcherAirplanes:OnAfterDeploy( From, Event, To, CarrierGroup, Coordinate, Speed, DeployZone )
+function AICargoDispatcherAirplanes:OnAfterDeploy( From, Event, To, CarrierGroup, Coordinate, Speed, Height, DeployZone )
 
   -- Write here your own code.
   MESSAGE:NewType( "Group " .. CarrierGroup:GetName().. " is starting deployment of all cargo in zone " .. DeployZone:GetName(), MESSAGE.Type.Information ):ToAll()
