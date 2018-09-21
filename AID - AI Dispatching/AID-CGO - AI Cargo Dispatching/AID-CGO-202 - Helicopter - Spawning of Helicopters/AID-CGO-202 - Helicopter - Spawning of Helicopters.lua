@@ -15,4 +15,4 @@ HelicopterSpawn = SPAWN
   :New( "Helicopter" )
   :InitLimit( 4, 20 )
   :InitLateActivated( true )
-  :SpawnScheduled( 20, 0.5 )
+  :SpawnScheduled( 180, 0.5 )

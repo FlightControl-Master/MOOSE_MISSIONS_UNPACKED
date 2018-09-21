@@ -203,4 +203,4 @@ AICargoDispatcherHelicopter:SetDeploySpeed( 300, 200 )
 AICargoDispatcherHelicopter:SetPickupHeight( 100, 30 )
 AICargoDispatcherHelicopter:SetDeployHeight( 100, 30 )
 
-AICargoDispatcherHelicopter:ScheduleOnce( 10, AICargoDispatcherHelicopter.Start, AICargoDispatcherHelicopter )
+AICargoDispatcherHelicopter:__Start( 10 )
