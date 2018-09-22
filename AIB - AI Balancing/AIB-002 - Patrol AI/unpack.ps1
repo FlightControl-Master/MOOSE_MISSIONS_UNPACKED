@@ -1,4 +1,5 @@
-$dir = (Get-Location).Path 
+$dir = split-path -parent $MyInvocation.MyCommand.Definition
+cd $dir
 $file = Split-Path $dir -leaf
 Remove-Item .\_unpacked -Force -Recurse
 md "_unpacked"
