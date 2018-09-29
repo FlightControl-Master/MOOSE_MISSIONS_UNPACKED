@@ -1,5 +1,5 @@
 ---
--- Name: SPA-121 - Air Ops - Scheduled Spawns with Repeat on Landing with Limit
+-- Name: SPA-120 - Air Ops - Scheduled Spawns with Repeat on Landing with Limit
 -- Author: FlightControl
 -- Date Created: 05 Feb 2017
 --
@@ -14,27 +14,21 @@
 -- 1. Observe the spawning of the airplane and helicopter
 -- 2. There should not be more airplanes alive than there are set by InitLimit.
 -- 3. Upon landing, the planes should respawn.
--- 4. The KA-50 should respawn itself directly when landed. 
--- 5. The A-10C should respawn itself when the air unit has parked at the ramp.
+-- 5. The plane should respawn itself when the air unit has parked at the ramp or has landed.
 
 
 do
 
   -- Declare SPAWN objects
-  Spawn_KA_50 = SPAWN:New("KA-50"):InitLimit( 1, 10 )
-  Spawn_A_10C = SPAWN:New("A-10C"):InitLimit( 1, 10 )
+  Spawn_Plane = SPAWN:New("Plane"):InitLimit( 1, 10 )
   
   -- Choose repeat functionality
   
-  -- Repeat on landing
-  Spawn_KA_50:InitRepeatOnLanding()
-  
-  -- Repeat on enging shutdown (when landed on the airport)
-  Spawn_A_10C:InitRepeatOnEngineShutDown()
+  -- Repeat on ... (when landed on the airport)
+  Spawn_Plane:InitRepeatOnEngineShutDown()
   
   -- Now SPAWN the GROUPs
-  Spawn_KA_50:SpawnScheduled(30,0)
-  Spawn_A_10C:SpawnScheduled(30,0)
+  Spawn_Plane:SpawnScheduled(30,0)
   
   -- Now run the mission and observe the behaviour.
 
