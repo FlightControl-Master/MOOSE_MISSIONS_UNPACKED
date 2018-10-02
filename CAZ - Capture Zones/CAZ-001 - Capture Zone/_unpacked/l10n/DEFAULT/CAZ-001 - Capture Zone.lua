@@ -101,8 +101,10 @@ function ZoneCaptureCoalition:OnEnterCaptured()
   
   self:__Guard( 30 )
 end
-  
+
 ZoneCaptureCoalition:__Guard( 1 )
+  
+ZoneCaptureCoalition:Start( 30, 30 )
   
 
 
