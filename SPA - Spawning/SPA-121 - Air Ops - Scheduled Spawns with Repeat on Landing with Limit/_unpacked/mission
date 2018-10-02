@@ -1,5 +1,14 @@
 mission = 
 {
+    ["requiredModules"] = 
+    {
+    }, -- end of ["requiredModules"]
+    ["date"] = 
+    {
+        ["Day"] = 1,
+        ["Year"] = 2011,
+        ["Month"] = 6,
+    }, -- end of ["date"]
     ["trig"] = 
     {
         ["actions"] = 
@@ -39,13 +48,6 @@ mission =
         {
         }, -- end of ["funcStartup"]
     }, -- end of ["trig"]
-    ["date"] = 
-    {
-        ["Day"] = 1,
-        ["Year"] = 2011,
-        ["Month"] = 6,
-    }, -- end of ["date"]
-    ["maxDictId"] = 88,
     ["result"] = 
     {
         ["offline"] = 
@@ -86,6 +88,10 @@ mission =
             }, -- end of ["func"]
         }, -- end of ["red"]
     }, -- end of ["result"]
+    ["maxDictId"] = 88,
+    ["pictureFileNameN"] = 
+    {
+    }, -- end of ["pictureFileNameN"]
     ["groundControl"] = 
     {
         ["isPilotControlVehicles"] = false,
@@ -93,32 +99,33 @@ mission =
         {
             ["artillery_commander"] = 
             {
+                ["neutrals"] = 0,
                 ["blue"] = 0,
                 ["red"] = 0,
             }, -- end of ["artillery_commander"]
             ["instructor"] = 
             {
+                ["neutrals"] = 0,
                 ["blue"] = 0,
                 ["red"] = 0,
             }, -- end of ["instructor"]
             ["observer"] = 
             {
+                ["neutrals"] = 0,
                 ["blue"] = 0,
                 ["red"] = 0,
             }, -- end of ["observer"]
             ["forward_observer"] = 
             {
+                ["neutrals"] = 0,
                 ["blue"] = 0,
                 ["red"] = 0,
             }, -- end of ["forward_observer"]
         }, -- end of ["roles"]
     }, -- end of ["groundControl"]
-    ["triggers"] = 
+    ["goals"] = 
     {
-        ["zones"] = 
-        {
-        }, -- end of ["zones"]
-    }, -- end of ["triggers"]
+    }, -- end of ["goals"]
     ["weather"] = 
     {
         ["atmosphere_type"] = 1,
@@ -141,6 +148,11 @@ mission =
             }, -- end of ["atGround"]
         }, -- end of ["wind"]
         ["enable_fog"] = false,
+        ["fog"] = 
+        {
+            ["thickness"] = 0,
+            ["visibility"] = 25,
+        }, -- end of ["fog"]
         ["season"] = 
         {
             ["temperature"] = 20,
@@ -151,17 +163,13 @@ mission =
         {
         }, -- end of ["cyclones"]
         ["name"] = "Winter, clean sky",
-        ["fog"] = 
-        {
-            ["thickness"] = 0,
-            ["visibility"] = 25,
-            ["density"] = 7,
-        }, -- end of ["fog"]
-        ["groundTurbulence"] = 0,
+        ["dust_density"] = 0,
         ["visibility"] = 
         {
             ["distance"] = 80000,
         }, -- end of ["visibility"]
+        ["groundTurbulence"] = 0,
+        ["enable_dust"] = false,
         ["clouds"] = 
         {
             ["thickness"] = 200,
@@ -171,14 +179,17 @@ mission =
         }, -- end of ["clouds"]
     }, -- end of ["weather"]
     ["theatre"] = "Caucasus",
-    ["needModules"] = 
+    ["triggers"] = 
     {
-    }, -- end of ["needModules"]
+        ["zones"] = 
+        {
+        }, -- end of ["zones"]
+    }, -- end of ["triggers"]
     ["map"] = 
     {
-        ["centerY"] = 663100,
-        ["zoom"] = 500000,
-        ["centerX"] = -317513.57142857,
+        ["centerY"] = 629808.44111384,
+        ["zoom"] = 75047.3176485,
+        ["centerX"] = -351905.21338737,
     }, -- end of ["map"]
     ["coalitions"] = 
     {
@@ -248,76 +259,6 @@ mission =
     ["pictureFileNameB"] = 
     {
     }, -- end of ["pictureFileNameB"]
-    ["trigrules"] = 
-    {
-        [1] = 
-        {
-            ["rules"] = 
-            {
-            }, -- end of ["rules"]
-            ["comment"] = "Load Moose",
-            ["eventlist"] = "",
-            ["actions"] = 
-            {
-                [1] = 
-                {
-                    ["file"] = "ResKey_Action_88",
-                    ["predicate"] = "a_do_script_file",
-                    ["ai_task"] = 
-                    {
-                        [1] = "",
-                        [2] = "",
-                    }, -- end of ["ai_task"]
-                }, -- end of [1]
-            }, -- end of ["actions"]
-            ["predicate"] = "triggerOnce",
-        }, -- end of [1]
-        [2] = 
-        {
-            ["rules"] = 
-            {
-            }, -- end of ["rules"]
-            ["comment"] = "Trace",
-            ["eventlist"] = "",
-            ["predicate"] = "triggerOnce",
-            ["actions"] = 
-            {
-                [1] = 
-                {
-                    ["predicate"] = "a_do_script",
-                    ["text"] = "DictKey_ActionText_87",
-                    ["KeyDict_text"] = "DictKey_ActionText_87",
-                    ["ai_task"] = 
-                    {
-                        [1] = "",
-                        [2] = "",
-                    }, -- end of ["ai_task"]
-                }, -- end of [1]
-            }, -- end of ["actions"]
-        }, -- end of [2]
-        [3] = 
-        {
-            ["rules"] = 
-            {
-            }, -- end of ["rules"]
-            ["comment"] = "Load Mission",
-            ["eventlist"] = "",
-            ["predicate"] = "triggerOnce",
-            ["actions"] = 
-            {
-                [1] = 
-                {
-                    ["file"] = "ResKey_Action_30",
-                    ["predicate"] = "a_do_script_file",
-                    ["ai_task"] = 
-                    {
-                        [1] = "",
-                        [2] = "",
-                    }, -- end of ["ai_task"]
-                }, -- end of [1]
-            }, -- end of ["actions"]
-        }, -- end of [3]
-    }, -- end of ["trigrules"]
     ["coalition"] = 
     {
         ["blue"] = 
@@ -492,7 +433,7 @@ mission =
                                         ["speed"] = 138.88888888889,
                                         ["type"] = "A-10C",
                                         ["unitId"] = 10,
-                                        ["psi"] = 0.89816173798153,
+                                        ["psi"] = 0.89816173798136,
                                         ["parking_id"] = "09",
                                         ["x"] = -356151.25,
                                         ["name"] = "DictKey_UnitName_81",
@@ -508,7 +449,7 @@ mission =
                                             ["gun"] = 100,
                                         }, -- end of ["payload"]
                                         ["y"] = 618352.625,
-                                        ["heading"] = 0,
+                                        ["heading"] = -0.89816173798136,
                                         ["callsign"] = 
                                         {
                                             [1] = 1,
@@ -675,7 +616,7 @@ mission =
                                         }, -- end of ["AddPropAircraft"]
                                         ["type"] = "C-101EB",
                                         ["unitId"] = 7,
-                                        ["psi"] = 1.0399659602707,
+                                        ["psi"] = 1.0399659602712,
                                         ["parking_id"] = "04",
                                         ["x"] = -356010.375,
                                         ["name"] = "DictKey_UnitName_66",
@@ -690,7 +631,7 @@ mission =
                                             ["gun"] = 100,
                                         }, -- end of ["payload"]
                                         ["y"] = 618177.5625,
-                                        ["heading"] = 0,
+                                        ["heading"] = -1.0399659602712,
                                         ["callsign"] = 
                                         {
                                             [1] = 2,
@@ -853,7 +794,7 @@ mission =
                                         ["speed"] = 41.666666666667,
                                         ["type"] = "Ka-50",
                                         ["unitId"] = 9,
-                                        ["psi"] = 0.85102853955979,
+                                        ["psi"] = 0.85102853956,
                                         ["parking_id"] = "06",
                                         ["x"] = -356091.65625,
                                         ["name"] = "DictKey_UnitName_76",
@@ -868,7 +809,7 @@ mission =
                                             ["gun"] = 100,
                                         }, -- end of ["payload"]
                                         ["y"] = 618219.125,
-                                        ["heading"] = 0,
+                                        ["heading"] = -0.85102853956,
                                         ["callsign"] = 
                                         {
                                             [1] = 1,
@@ -1042,13 +983,15 @@ mission =
                                         ["speed"] = 41.666666666667,
                                         ["AddPropAircraft"] = 
                                         {
-                                            ["CargoHalfdoor"] = true,
-                                            ["AdditionalArmor"] = true,
                                             ["ExhaustScreen"] = true,
+                                            ["CargoHalfdoor"] = true,
+                                            ["GunnersAISkill"] = 90,
+                                            ["AdditionalArmor"] = true,
+                                            ["NS430allow"] = true,
                                         }, -- end of ["AddPropAircraft"]
                                         ["type"] = "Mi-8MT",
                                         ["unitId"] = 8,
-                                        ["psi"] = 1.0588891164774,
+                                        ["psi"] = 1.0588891164775,
                                         ["parking_id"] = "08",
                                         ["x"] = -356140.09375,
                                         ["name"] = "DictKey_UnitName_71",
@@ -1063,7 +1006,7 @@ mission =
                                             ["gun"] = 100,
                                         }, -- end of ["payload"]
                                         ["y"] = 618271.0625,
-                                        ["heading"] = 0,
+                                        ["heading"] = -1.0588891164775,
                                         ["callsign"] = 
                                         {
                                             [1] = 2,
@@ -1224,11 +1167,78 @@ mission =
         }, -- end of ["red"]
     }, -- end of ["coalition"]
     ["sortie"] = "DictKey_sortie_4",
-    ["version"] = 13,
-    ["goals"] = 
+    ["version"] = 15,
+    ["trigrules"] = 
     {
-    }, -- end of ["goals"]
-    ["currentKey"] = 2388,
+        [1] = 
+        {
+            ["rules"] = 
+            {
+            }, -- end of ["rules"]
+            ["comment"] = "Load Moose",
+            ["eventlist"] = "",
+            ["actions"] = 
+            {
+                [1] = 
+                {
+                    ["file"] = "ResKey_Action_88",
+                    ["predicate"] = "a_do_script_file",
+                    ["ai_task"] = 
+                    {
+                        [1] = "",
+                        [2] = "",
+                    }, -- end of ["ai_task"]
+                }, -- end of [1]
+            }, -- end of ["actions"]
+            ["predicate"] = "triggerOnce",
+        }, -- end of [1]
+        [2] = 
+        {
+            ["rules"] = 
+            {
+            }, -- end of ["rules"]
+            ["comment"] = "Trace",
+            ["eventlist"] = "",
+            ["predicate"] = "triggerOnce",
+            ["actions"] = 
+            {
+                [1] = 
+                {
+                    ["predicate"] = "a_do_script",
+                    ["text"] = "DictKey_ActionText_87",
+                    ["KeyDict_text"] = "DictKey_ActionText_87",
+                    ["ai_task"] = 
+                    {
+                        [1] = "",
+                        [2] = "",
+                    }, -- end of ["ai_task"]
+                }, -- end of [1]
+            }, -- end of ["actions"]
+        }, -- end of [2]
+        [3] = 
+        {
+            ["rules"] = 
+            {
+            }, -- end of ["rules"]
+            ["comment"] = "Load Mission",
+            ["eventlist"] = "",
+            ["predicate"] = "triggerOnce",
+            ["actions"] = 
+            {
+                [1] = 
+                {
+                    ["file"] = "ResKey_Action_30",
+                    ["predicate"] = "a_do_script_file",
+                    ["ai_task"] = 
+                    {
+                        [1] = "",
+                        [2] = "",
+                    }, -- end of ["ai_task"]
+                }, -- end of [1]
+            }, -- end of ["actions"]
+        }, -- end of [3]
+    }, -- end of ["trigrules"]
+    ["currentKey"] = 2524,
     ["start_time"] = 43200,
     ["forcedOptions"] = 
     {
@@ -1541,24 +1551,24 @@ mission =
             ["id"] = "CADC_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["CADC_FAILURE_TOTAL"]
-        ["COOLANT_POOR_CONNTECT"] = 
+        ["es_damage_MainGenerator"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "COOLANT_POOR_CONNTECT",
+            ["id"] = "es_damage_MainGenerator",
             ["mm"] = 0,
-        }, -- end of ["COOLANT_POOR_CONNTECT"]
-        ["TURNIND_POINTER_FAILS_DEFECTIVE"] = 
+        }, -- end of ["es_damage_MainGenerator"]
+        ["FAULTY_ROCKET_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TURNIND_POINTER_FAILS_DEFECTIVE",
+            ["id"] = "FAULTY_ROCKET_LEFT",
             ["mm"] = 0,
-        }, -- end of ["TURNIND_POINTER_FAILS_DEFECTIVE"]
+        }, -- end of ["FAULTY_ROCKET_LEFT"]
         ["GUN_FAIL_RIGHT_OUT_GUN"] = 
         {
             ["hh"] = 0,
@@ -1694,15 +1704,15 @@ mission =
             ["id"] = "PITOT_HEAT_ELEMENT",
             ["mm"] = 0,
         }, -- end of ["PITOT_HEAT_ELEMENT"]
-        ["ILS_FAILURE_ANT_LOCALIZER"] = 
+        ["FUEL_VALVE_LEAK"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "ILS_FAILURE_ANT_LOCALIZER",
+            ["id"] = "FUEL_VALVE_LEAK",
             ["mm"] = 0,
-        }, -- end of ["ILS_FAILURE_ANT_LOCALIZER"]
+        }, -- end of ["FUEL_VALVE_LEAK"]
         ["AN_ALE_40V_FAILURE_CONTAINER_LEFT_GEAR"] = 
         {
             ["hh"] = 0,
@@ -1783,15 +1793,15 @@ mission =
             ["id"] = "asc_p",
             ["mm"] = 0,
         }, -- end of ["asc_p"]
-        ["sas_pitch_left"] = 
+        ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "sas_pitch_left",
+            ["id"] = "BOMBS_ARMING_BROKEN_SOLENOID_LEFT",
             ["mm"] = 0,
-        }, -- end of ["sas_pitch_left"]
+        }, -- end of ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"]
         ["GUN_LEFT_IN_AMMUN_FAULT"] = 
         {
             ["hh"] = 0,
@@ -1846,15 +1856,15 @@ mission =
             ["id"] = "GUN_RIGHT_OUT_OPEN_CIRCUIT",
             ["mm"] = 0,
         }, -- end of ["GUN_RIGHT_OUT_OPEN_CIRCUIT"]
-        ["VHF_SHORTED_CTL_BOX"] = 
+        ["ROOF_AIRSPEED_INDICATOR_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "VHF_SHORTED_CTL_BOX",
+            ["id"] = "ROOF_AIRSPEED_INDICATOR_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["VHF_SHORTED_CTL_BOX"]
+        }, -- end of ["ROOF_AIRSPEED_INDICATOR_FAILURE"]
         ["CLOCK_FAILURE"] = 
         {
             ["hh"] = 0,
@@ -1909,24 +1919,24 @@ mission =
             ["id"] = "PILOT_KILLED_FAILURE",
             ["mm"] = 0,
         }, -- end of ["PILOT_KILLED_FAILURE"]
-        ["GUN_LEFT_CENTER_MOUNT_LOOSE"] = 
+        ["BOMBS_ARMING_BROKEN_WIRING_RIGHT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_LEFT_CENTER_MOUNT_LOOSE",
+            ["id"] = "BOMBS_ARMING_BROKEN_WIRING_RIGHT",
             ["mm"] = 0,
-        }, -- end of ["GUN_LEFT_CENTER_MOUNT_LOOSE"]
-        ["VHF_VT_BURNED_OUT"] = 
+        }, -- end of ["BOMBS_ARMING_BROKEN_WIRING_RIGHT"]
+        ["GUN_LEFT_OUT_AMMUN_FAULT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "VHF_VT_BURNED_OUT",
+            ["id"] = "GUN_LEFT_OUT_AMMUN_FAULT",
             ["mm"] = 0,
-        }, -- end of ["VHF_VT_BURNED_OUT"]
+        }, -- end of ["GUN_LEFT_OUT_AMMUN_FAULT"]
         ["COMPASS_ERRATIC_OPERATION"] = 
         {
             ["hh"] = 0,
@@ -1963,15 +1973,15 @@ mission =
             ["id"] = "GUN_LEFT_CENTER_BARREL_WORN",
             ["mm"] = 0,
         }, -- end of ["GUN_LEFT_CENTER_BARREL_WORN"]
-        ["abris_software"] = 
+        ["TURNIND_POINTER_VIBRATES"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "abris_software",
+            ["id"] = "TURNIND_POINTER_VIBRATES",
             ["mm"] = 0,
-        }, -- end of ["abris_software"]
+        }, -- end of ["TURNIND_POINTER_VIBRATES"]
         ["GUN_FAIL_LEFT_OUT_GUN"] = 
         {
             ["hh"] = 0,
@@ -1999,15 +2009,15 @@ mission =
             ["id"] = "ROCKETS_INTERVALOMETER_WIRING",
             ["mm"] = 0,
         }, -- end of ["ROCKETS_INTERVALOMETER_WIRING"]
-        ["GUN_RIGHT_OUT_AMMUN_FAULT"] = 
+        ["MainReductor_LowOilPressure"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_RIGHT_OUT_AMMUN_FAULT",
+            ["id"] = "MainReductor_LowOilPressure",
             ["mm"] = 0,
-        }, -- end of ["GUN_RIGHT_OUT_AMMUN_FAULT"]
+        }, -- end of ["MainReductor_LowOilPressure"]
         ["GUN_RIGHT_IN_AMMUN_FAULT"] = 
         {
             ["hh"] = 0,
@@ -2053,15 +2063,15 @@ mission =
             ["id"] = "GUN_RIGHT_CENTER_BARREL_WORN",
             ["mm"] = 0,
         }, -- end of ["GUN_RIGHT_CENTER_BARREL_WORN"]
-        ["asc"] = 
+        ["INSUF_FUEL_PRES"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "asc",
+            ["id"] = "INSUF_FUEL_PRES",
             ["mm"] = 0,
-        }, -- end of ["asc"]
+        }, -- end of ["INSUF_FUEL_PRES"]
         ["COMPASS_NO_TORQUE"] = 
         {
             ["hh"] = 0,
@@ -2592,15 +2602,15 @@ mission =
             ["id"] = "AN_ALE_40V_FAILURE_CONTAINER_RIGHT_WING",
             ["mm"] = 0,
         }, -- end of ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_WING"]
-        ["TACAN_FAILURE_RECEIVER"] = 
+        ["GUN_LEFT_CENTER_OPEN_CIRCUIT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TACAN_FAILURE_RECEIVER",
+            ["id"] = "GUN_LEFT_CENTER_OPEN_CIRCUIT",
             ["mm"] = 0,
-        }, -- end of ["TACAN_FAILURE_RECEIVER"]
+        }, -- end of ["GUN_LEFT_CENTER_OPEN_CIRCUIT"]
         ["GUN_RIGHT_IN_MOUNT_LOOSE"] = 
         {
             ["hh"] = 0,
@@ -2610,15 +2620,15 @@ mission =
             ["id"] = "GUN_RIGHT_IN_MOUNT_LOOSE",
             ["mm"] = 0,
         }, -- end of ["GUN_RIGHT_IN_MOUNT_LOOSE"]
-        ["hydro_right"] = 
+        ["LEFT_MFCD_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "hydro_right",
+            ["id"] = "LEFT_MFCD_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["hydro_right"]
+        }, -- end of ["LEFT_MFCD_FAILURE"]
         ["sas_yaw_right"] = 
         {
             ["hh"] = 0,
@@ -2718,15 +2728,15 @@ mission =
             ["id"] = "CDU_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["CDU_FAILURE_TOTAL"]
-        ["STARTER_SOLENOID"] = 
+        ["AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "STARTER_SOLENOID",
+            ["id"] = "AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT",
             ["mm"] = 0,
-        }, -- end of ["STARTER_SOLENOID"]
+        }, -- end of ["AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT"]
         ["TAIL_GEAR_C_CABLE"] = 
         {
             ["hh"] = 0,
@@ -2808,15 +2818,15 @@ mission =
             ["id"] = "es_damage_GeneratorLeft",
             ["mm"] = 0,
         }, -- end of ["es_damage_GeneratorLeft"]
-        ["SUPERCHARGER_SOLENOID"] = 
+        ["ILS_FAILURE_ANT_GLIDESLOPE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "SUPERCHARGER_SOLENOID",
+            ["id"] = "ILS_FAILURE_ANT_GLIDESLOPE",
             ["mm"] = 0,
-        }, -- end of ["SUPERCHARGER_SOLENOID"]
+        }, -- end of ["ILS_FAILURE_ANT_GLIDESLOPE"]
         ["engine_chip"] = 
         {
             ["hh"] = 0,
@@ -2826,15 +2836,15 @@ mission =
             ["id"] = "engine_chip",
             ["mm"] = 0,
         }, -- end of ["engine_chip"]
-        ["GMC_TOTAL_FAILURE"] = 
+        ["GUN_LEFT_CENTER_AMMUN_FAULT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GMC_TOTAL_FAILURE",
+            ["id"] = "GUN_LEFT_CENTER_AMMUN_FAULT",
             ["mm"] = 0,
-        }, -- end of ["GMC_TOTAL_FAILURE"]
+        }, -- end of ["GUN_LEFT_CENTER_AMMUN_FAULT"]
         ["CADC_FAILURE_MACH"] = 
         {
             ["hh"] = 0,
@@ -2889,15 +2899,15 @@ mission =
             ["id"] = "laser_failure",
             ["mm"] = 0,
         }, -- end of ["laser_failure"]
-        ["IFFCC_FAILURE_GUN"] = 
+        ["GUN_RIGHT_OUT_AMMUN_FAULT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "IFFCC_FAILURE_GUN",
+            ["id"] = "GUN_RIGHT_OUT_AMMUN_FAULT",
             ["mm"] = 0,
-        }, -- end of ["IFFCC_FAILURE_GUN"]
+        }, -- end of ["GUN_RIGHT_OUT_AMMUN_FAULT"]
         ["AN_ALR69V_FAILURE_SENSOR_TAIL_LEFT"] = 
         {
             ["hh"] = 0,
@@ -2907,78 +2917,24 @@ mission =
             ["id"] = "AN_ALR69V_FAILURE_SENSOR_TAIL_LEFT",
             ["mm"] = 0,
         }, -- end of ["AN_ALR69V_FAILURE_SENSOR_TAIL_LEFT"]
-        ["BOMBS_DAMAGE_ELINKAGE_RIGHT"] = 
+        ["abris_software"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "BOMBS_DAMAGE_ELINKAGE_RIGHT",
+            ["id"] = "abris_software",
             ["mm"] = 0,
-        }, -- end of ["BOMBS_DAMAGE_ELINKAGE_RIGHT"]
-        ["TURNIND_INCORRECT_SENS_VAC_HIGH"] = 
+        }, -- end of ["abris_software"]
+        ["VHF_VT_BURNED_OUT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TURNIND_INCORRECT_SENS_VAC_HIGH",
+            ["id"] = "VHF_VT_BURNED_OUT",
             ["mm"] = 0,
-        }, -- end of ["TURNIND_INCORRECT_SENS_VAC_HIGH"]
-        ["ROOF_AIRSPEED_INDICATOR_FAILURE"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "ROOF_AIRSPEED_INDICATOR_FAILURE",
-            ["mm"] = 0,
-        }, -- end of ["ROOF_AIRSPEED_INDICATOR_FAILURE"]
-        ["Failure_RightEngine"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "Failure_RightEngine",
-            ["mm"] = 0,
-        }, -- end of ["Failure_RightEngine"]
-        ["BATTERY_OVERHEAT"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "BATTERY_OVERHEAT",
-            ["mm"] = 0,
-        }, -- end of ["BATTERY_OVERHEAT"]
-        ["NOSE_AIRSPEED_INDICATOR_FAILURE"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "NOSE_AIRSPEED_INDICATOR_FAILURE",
-            ["mm"] = 0,
-        }, -- end of ["NOSE_AIRSPEED_INDICATOR_FAILURE"]
-        ["BOMBS_NO_VOLATAGE_BOTH"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "BOMBS_NO_VOLATAGE_BOTH",
-            ["mm"] = 0,
-        }, -- end of ["BOMBS_NO_VOLATAGE_BOTH"]
-        ["RIGHT_WING_TANK_LEAK"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "RIGHT_WING_TANK_LEAK",
-            ["mm"] = 0,
-        }, -- end of ["RIGHT_WING_TANK_LEAK"]
+        }, -- end of ["VHF_VT_BURNED_OUT"]
         ["COOLANT_RADIATOR_WIRING"] = 
         {
             ["hh"] = 0,
@@ -2988,51 +2944,96 @@ mission =
             ["id"] = "COOLANT_RADIATOR_WIRING",
             ["mm"] = 0,
         }, -- end of ["COOLANT_RADIATOR_WIRING"]
-        ["es_damage_GeneratorRight"] = 
+        ["TAIL_GEAR_D_LOCK"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "es_damage_GeneratorRight",
+            ["id"] = "TAIL_GEAR_D_LOCK",
             ["mm"] = 0,
-        }, -- end of ["es_damage_GeneratorRight"]
-        ["ILS_FAILURE_ANT_GLIDESLOPE"] = 
+        }, -- end of ["TAIL_GEAR_D_LOCK"]
+        ["CARBAIR_SHORT_CIRCUIT_LEADS"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "ILS_FAILURE_ANT_GLIDESLOPE",
+            ["id"] = "CARBAIR_SHORT_CIRCUIT_LEADS",
             ["mm"] = 0,
-        }, -- end of ["ILS_FAILURE_ANT_GLIDESLOPE"]
-        ["RIGHT_GUNNER_KILLED_FAILURE"] = 
+        }, -- end of ["CARBAIR_SHORT_CIRCUIT_LEADS"]
+        ["NOSE_AIRSPEED_INDICATOR_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "RIGHT_GUNNER_KILLED_FAILURE",
+            ["id"] = "NOSE_AIRSPEED_INDICATOR_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["RIGHT_GUNNER_KILLED_FAILURE"]
-        ["FUEL_VALVE_LEAK"] = 
+        }, -- end of ["NOSE_AIRSPEED_INDICATOR_FAILURE"]
+        ["Failure_RightEngine"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "FUEL_VALVE_LEAK",
+            ["id"] = "Failure_RightEngine",
             ["mm"] = 0,
-        }, -- end of ["FUEL_VALVE_LEAK"]
-        ["AAR_47_FAILURE_SENSOR_BOTTOM"] = 
+        }, -- end of ["Failure_RightEngine"]
+        ["sas_pitch_left"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "AAR_47_FAILURE_SENSOR_BOTTOM",
+            ["id"] = "sas_pitch_left",
             ["mm"] = 0,
-        }, -- end of ["AAR_47_FAILURE_SENSOR_BOTTOM"]
+        }, -- end of ["sas_pitch_left"]
+        ["COPILOT_KILLED_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "COPILOT_KILLED_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["COPILOT_KILLED_FAILURE"]
+        ["BOMBS_DAMAGE_ELINKAGE_RIGHT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "BOMBS_DAMAGE_ELINKAGE_RIGHT",
+            ["mm"] = 0,
+        }, -- end of ["BOMBS_DAMAGE_ELINKAGE_RIGHT"]
+        ["ARN_83_TOTAL_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ARN_83_TOTAL_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["ARN_83_TOTAL_FAILURE"]
+        ["ILS_FAILURE_ANT_LOCALIZER"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ILS_FAILURE_ANT_LOCALIZER",
+            ["mm"] = 0,
+        }, -- end of ["ILS_FAILURE_ANT_LOCALIZER"]
+        ["CADC_FAILURE_IAS"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "CADC_FAILURE_IAS",
+            ["mm"] = 0,
+        }, -- end of ["CADC_FAILURE_IAS"]
         ["BOMBS_ARMING_NO_VOLATAGE_LEFT"] = 
         {
             ["hh"] = 0,
@@ -3042,6 +3043,15 @@ mission =
             ["id"] = "BOMBS_ARMING_NO_VOLATAGE_LEFT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_ARMING_NO_VOLATAGE_LEFT"]
+        ["INT_HYDRO_LEAK"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "INT_HYDRO_LEAK",
+            ["mm"] = 0,
+        }, -- end of ["INT_HYDRO_LEAK"]
         ["TACH_BREAK_CIRCUIT"] = 
         {
             ["hh"] = 0,
@@ -3060,15 +3070,15 @@ mission =
             ["id"] = "hydro_main_irreversible_valve",
             ["mm"] = 0,
         }, -- end of ["hydro_main_irreversible_valve"]
-        ["TAIL_GEAR_D_LOCK"] = 
+        ["COOLANT_DEFECTIVE_IND"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TAIL_GEAR_D_LOCK",
+            ["id"] = "COOLANT_DEFECTIVE_IND",
             ["mm"] = 0,
-        }, -- end of ["TAIL_GEAR_D_LOCK"]
+        }, -- end of ["COOLANT_DEFECTIVE_IND"]
         ["hud"] = 
         {
             ["hh"] = 0,
@@ -3078,15 +3088,15 @@ mission =
             ["id"] = "hud",
             ["mm"] = 0,
         }, -- end of ["hud"]
-        ["AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT"] = 
+        ["BOMBS_NO_VOLATAGE_BOTH"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT",
+            ["id"] = "BOMBS_NO_VOLATAGE_BOTH",
             ["mm"] = 0,
-        }, -- end of ["AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT"]
+        }, -- end of ["BOMBS_NO_VOLATAGE_BOTH"]
         ["hydro_left"] = 
         {
             ["hh"] = 0,
@@ -3114,51 +3124,51 @@ mission =
             ["id"] = "fuel_sys_left_transfer_pump",
             ["mm"] = 0,
         }, -- end of ["fuel_sys_left_transfer_pump"]
-        ["TACH_BREAK_IN_INDICATOR"] = 
+        ["STARTER_SOLENOID"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TACH_BREAK_IN_INDICATOR",
+            ["id"] = "STARTER_SOLENOID",
             ["mm"] = 0,
-        }, -- end of ["TACH_BREAK_IN_INDICATOR"]
-        ["GUN_FAIL_RIGHT_IN_GUN"] = 
+        }, -- end of ["STARTER_SOLENOID"]
+        ["TURNIND_POINTER_FAILS_DEFECTIVE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_FAIL_RIGHT_IN_GUN",
+            ["id"] = "TURNIND_POINTER_FAILS_DEFECTIVE",
             ["mm"] = 0,
-        }, -- end of ["GUN_FAIL_RIGHT_IN_GUN"]
-        ["FAULTY_ROCKET_LEFT"] = 
+        }, -- end of ["TURNIND_POINTER_FAILS_DEFECTIVE"]
+        ["COOLANT_POOR_CONNTECT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "FAULTY_ROCKET_LEFT",
+            ["id"] = "COOLANT_POOR_CONNTECT",
             ["mm"] = 0,
-        }, -- end of ["FAULTY_ROCKET_LEFT"]
-        ["INSUF_FUEL_PRES"] = 
+        }, -- end of ["COOLANT_POOR_CONNTECT"]
+        ["BOMBS_DAMAGE_ELINKAGE_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "INSUF_FUEL_PRES",
+            ["id"] = "BOMBS_DAMAGE_ELINKAGE_LEFT",
             ["mm"] = 0,
-        }, -- end of ["INSUF_FUEL_PRES"]
-        ["LEFT_MFCD_FAILURE"] = 
+        }, -- end of ["BOMBS_DAMAGE_ELINKAGE_LEFT"]
+        ["TGP_FAILURE_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "LEFT_MFCD_FAILURE",
+            ["id"] = "TGP_FAILURE_LEFT",
             ["mm"] = 0,
-        }, -- end of ["LEFT_MFCD_FAILURE"]
+        }, -- end of ["TGP_FAILURE_LEFT"]
         ["es_damage_StarterGenerator"] = 
         {
             ["hh"] = 0,
@@ -3186,33 +3196,33 @@ mission =
             ["id"] = "ILS_FAILURE_ANT_MARKER",
             ["mm"] = 0,
         }, -- end of ["ILS_FAILURE_ANT_MARKER"]
-        ["TGP_FAILURE_LEFT"] = 
+        ["es_damage_SpareInverter"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TGP_FAILURE_LEFT",
+            ["id"] = "es_damage_SpareInverter",
             ["mm"] = 0,
-        }, -- end of ["TGP_FAILURE_LEFT"]
-        ["VHF_CRYSTAL"] = 
+        }, -- end of ["es_damage_SpareInverter"]
+        ["GUN_LEFT_CENTER_MOUNT_LOOSE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "VHF_CRYSTAL",
+            ["id"] = "GUN_LEFT_CENTER_MOUNT_LOOSE",
             ["mm"] = 0,
-        }, -- end of ["VHF_CRYSTAL"]
-        ["CADC_FAILURE_DYNAMIC"] = 
+        }, -- end of ["GUN_LEFT_CENTER_MOUNT_LOOSE"]
+        ["TACH_POOR_CONNECTION"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "CADC_FAILURE_DYNAMIC",
+            ["id"] = "TACH_POOR_CONNECTION",
             ["mm"] = 0,
-        }, -- end of ["CADC_FAILURE_DYNAMIC"]
+        }, -- end of ["TACH_POOR_CONNECTION"]
         ["sas_pitch_right"] = 
         {
             ["hh"] = 0,
@@ -3231,33 +3241,33 @@ mission =
             ["id"] = "fs_damage_engine_pump",
             ["mm"] = 0,
         }, -- end of ["fs_damage_engine_pump"]
-        ["TURNIND_POINTER_VIBRATES"] = 
+        ["ARN_83_ADF_DAMAGE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TURNIND_POINTER_VIBRATES",
+            ["id"] = "ARN_83_ADF_DAMAGE",
             ["mm"] = 0,
-        }, -- end of ["TURNIND_POINTER_VIBRATES"]
-        ["GUN_LEFT_CENTER_OPEN_CIRCUIT"] = 
+        }, -- end of ["ARN_83_ADF_DAMAGE"]
+        ["TACAN_FAILURE_RECEIVER"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_LEFT_CENTER_OPEN_CIRCUIT",
+            ["id"] = "TACAN_FAILURE_RECEIVER",
             ["mm"] = 0,
-        }, -- end of ["GUN_LEFT_CENTER_OPEN_CIRCUIT"]
-        ["CADC_FAILURE_IAS"] = 
+        }, -- end of ["TACAN_FAILURE_RECEIVER"]
+        ["VHF_AM_RADIO_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "CADC_FAILURE_IAS",
+            ["id"] = "VHF_AM_RADIO_FAILURE_TOTAL",
             ["mm"] = 0,
-        }, -- end of ["CADC_FAILURE_IAS"]
+        }, -- end of ["VHF_AM_RADIO_FAILURE_TOTAL"]
         ["main_reductor_chip"] = 
         {
             ["hh"] = 0,
@@ -3267,33 +3277,33 @@ mission =
             ["id"] = "main_reductor_chip",
             ["mm"] = 0,
         }, -- end of ["main_reductor_chip"]
-        ["VHF_SQUELCH_RELAY"] = 
+        ["VHF_CRYSTAL"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "VHF_SQUELCH_RELAY",
+            ["id"] = "VHF_CRYSTAL",
             ["mm"] = 0,
-        }, -- end of ["VHF_SQUELCH_RELAY"]
-        ["GUN_LEFT_CENTER_AMMUN_FAULT"] = 
+        }, -- end of ["VHF_CRYSTAL"]
+        ["SUPERCHARGER_SOLENOID"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_LEFT_CENTER_AMMUN_FAULT",
+            ["id"] = "SUPERCHARGER_SOLENOID",
             ["mm"] = 0,
-        }, -- end of ["GUN_LEFT_CENTER_AMMUN_FAULT"]
-        ["TACH_POOR_CONNECTION"] = 
+        }, -- end of ["SUPERCHARGER_SOLENOID"]
+        ["TACH_BREAK_IN_INDICATOR"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TACH_POOR_CONNECTION",
+            ["id"] = "TACH_BREAK_IN_INDICATOR",
             ["mm"] = 0,
-        }, -- end of ["TACH_POOR_CONNECTION"]
+        }, -- end of ["TACH_BREAK_IN_INDICATOR"]
         ["F2_TOP_CYLINDER"] = 
         {
             ["hh"] = 0,
@@ -3321,15 +3331,15 @@ mission =
             ["id"] = "MANIFOLD_LINE_LEAK",
             ["mm"] = 0,
         }, -- end of ["MANIFOLD_LINE_LEAK"]
-        ["BOMBS_ARMING_BROKEN_WIRING_RIGHT"] = 
+        ["TGP_FAILURE_RIGHT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "BOMBS_ARMING_BROKEN_WIRING_RIGHT",
+            ["id"] = "TGP_FAILURE_RIGHT",
             ["mm"] = 0,
-        }, -- end of ["BOMBS_ARMING_BROKEN_WIRING_RIGHT"]
+        }, -- end of ["TGP_FAILURE_RIGHT"]
         ["CADC_FAILURE_PRESSURE_ALT"] = 
         {
             ["hh"] = 0,
@@ -3348,24 +3358,24 @@ mission =
             ["id"] = "K14_NO_POWER_SUPPLY",
             ["mm"] = 0,
         }, -- end of ["K14_NO_POWER_SUPPLY"]
-        ["ecm"] = 
+        ["TURNIND_INCORRECT_SENS_VAC_HIGH"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "ecm",
+            ["id"] = "TURNIND_INCORRECT_SENS_VAC_HIGH",
             ["mm"] = 0,
-        }, -- end of ["ecm"]
-        ["PUMP_FAILS"] = 
+        }, -- end of ["TURNIND_INCORRECT_SENS_VAC_HIGH"]
+        ["asc"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "PUMP_FAILS",
+            ["id"] = "asc",
             ["mm"] = 0,
-        }, -- end of ["PUMP_FAILS"]
+        }, -- end of ["asc"]
         ["BOMBS_DAMAGE_LINKAGE_RIGHT"] = 
         {
             ["hh"] = 0,
@@ -3384,15 +3394,15 @@ mission =
             ["id"] = "BOMBS_NO_VOLATAGE_AT_RACK_LEFT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_NO_VOLATAGE_AT_RACK_LEFT"]
-        ["l_conv"] = 
+        ["engine_surge_failure"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "l_conv",
+            ["id"] = "engine_surge_failure",
             ["mm"] = 0,
-        }, -- end of ["l_conv"]
+        }, -- end of ["engine_surge_failure"]
         ["l_gen"] = 
         {
             ["hh"] = 0,
@@ -3429,14 +3439,15 @@ mission =
             ["id"] = "IFFCC_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["IFFCC_FAILURE_TOTAL"]
-        ["ecf"] = 
+        ["VHF_SHORTED_CTL_BOX"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+            ["id"] = "VHF_SHORTED_CTL_BOX",
             ["mm"] = 0,
-        }, -- end of ["ecf"]
+        }, -- end of ["VHF_SHORTED_CTL_BOX"]
         ["BAT_SOLENOID_WIRING"] = 
         {
             ["hh"] = 0,
@@ -3446,15 +3457,15 @@ mission =
             ["id"] = "BAT_SOLENOID_WIRING",
             ["mm"] = 0,
         }, -- end of ["BAT_SOLENOID_WIRING"]
-        ["INT_HYDRO_LEAK"] = 
+        ["PUMP_FAILS"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "INT_HYDRO_LEAK",
+            ["id"] = "PUMP_FAILS",
             ["mm"] = 0,
-        }, -- end of ["INT_HYDRO_LEAK"]
+        }, -- end of ["PUMP_FAILS"]
         ["GUN_LEFT_OUT_OPEN_CIRCUIT"] = 
         {
             ["hh"] = 0,
@@ -3464,15 +3475,15 @@ mission =
             ["id"] = "GUN_LEFT_OUT_OPEN_CIRCUIT",
             ["mm"] = 0,
         }, -- end of ["GUN_LEFT_OUT_OPEN_CIRCUIT"]
-        ["ARN_83_ADF_DAMAGE"] = 
+        ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "ARN_83_ADF_DAMAGE",
+            ["id"] = "AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR",
             ["mm"] = 0,
-        }, -- end of ["ARN_83_ADF_DAMAGE"]
+        }, -- end of ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"]
         ["CARBAIR_OPEN_CIRCUIT_BLB"] = 
         {
             ["hh"] = 0,
@@ -3580,15 +3591,15 @@ mission =
             ["id"] = "COOLANT_RADIATOR_MOTOR",
             ["mm"] = 0,
         }, -- end of ["COOLANT_RADIATOR_MOTOR"]
-        ["es_damage_SpareInverter"] = 
+        ["l_conv"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "es_damage_SpareInverter",
+            ["id"] = "l_conv",
             ["mm"] = 0,
-        }, -- end of ["es_damage_SpareInverter"]
+        }, -- end of ["l_conv"]
         ["AAR_47_FAILURE_SENSOR_TAIL"] = 
         {
             ["hh"] = 0,
@@ -3598,15 +3609,15 @@ mission =
             ["id"] = "AAR_47_FAILURE_SENSOR_TAIL",
             ["mm"] = 0,
         }, -- end of ["AAR_47_FAILURE_SENSOR_TAIL"]
-        ["MainReductor_LowOilPressure"] = 
+        ["RIGHT_WING_TANK_LEAK"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "MainReductor_LowOilPressure",
+            ["id"] = "RIGHT_WING_TANK_LEAK",
             ["mm"] = 0,
-        }, -- end of ["MainReductor_LowOilPressure"]
+        }, -- end of ["RIGHT_WING_TANK_LEAK"]
         ["TACAN_FAILURE_TRANSMITTER"] = 
         {
             ["hh"] = 0,
@@ -3616,24 +3627,24 @@ mission =
             ["id"] = "TACAN_FAILURE_TRANSMITTER",
             ["mm"] = 0,
         }, -- end of ["TACAN_FAILURE_TRANSMITTER"]
-        ["COOLANT_DEFECTIVE_IND"] = 
+        ["ecm"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "COOLANT_DEFECTIVE_IND",
+            ["id"] = "ecm",
             ["mm"] = 0,
-        }, -- end of ["COOLANT_DEFECTIVE_IND"]
-        ["COPILOT_KILLED_FAILURE"] = 
+        }, -- end of ["ecm"]
+        ["GUN_FAIL_RIGHT_IN_GUN"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "COPILOT_KILLED_FAILURE",
+            ["id"] = "GUN_FAIL_RIGHT_IN_GUN",
             ["mm"] = 0,
-        }, -- end of ["COPILOT_KILLED_FAILURE"]
+        }, -- end of ["GUN_FAIL_RIGHT_IN_GUN"]
         ["HORIZON_BAR_NOT_SETTLE"] = 
         {
             ["hh"] = 0,
@@ -3661,15 +3672,15 @@ mission =
             ["id"] = "r_gen",
             ["mm"] = 0,
         }, -- end of ["r_gen"]
-        ["ARN_83_TOTAL_FAILURE"] = 
+        ["COOLANT_RADIATOR_SENSOR"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "ARN_83_TOTAL_FAILURE",
+            ["id"] = "COOLANT_RADIATOR_SENSOR",
             ["mm"] = 0,
-        }, -- end of ["ARN_83_TOTAL_FAILURE"]
+        }, -- end of ["COOLANT_RADIATOR_SENSOR"]
         ["AAR_47_FAILURE_SENSOR_RIGHT"] = 
         {
             ["hh"] = 0,
@@ -3715,15 +3726,15 @@ mission =
             ["id"] = "SAR_2_101",
             ["mm"] = 0,
         }, -- end of ["SAR_2_101"]
-        ["COOLANT_RADIATOR_SENSOR"] = 
+        ["es_damage_GeneratorRight"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "COOLANT_RADIATOR_SENSOR",
+            ["id"] = "es_damage_GeneratorRight",
             ["mm"] = 0,
-        }, -- end of ["COOLANT_RADIATOR_SENSOR"]
+        }, -- end of ["es_damage_GeneratorRight"]
         ["BOOSTER_COIL"] = 
         {
             ["hh"] = 0,
@@ -3778,15 +3789,15 @@ mission =
             ["id"] = "PUMP_SEPARATOR_CLOGGED",
             ["mm"] = 0,
         }, -- end of ["PUMP_SEPARATOR_CLOGGED"]
-        ["es_damage_MainGenerator"] = 
+        ["hydro_right"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "es_damage_MainGenerator",
+            ["id"] = "hydro_right",
             ["mm"] = 0,
-        }, -- end of ["es_damage_MainGenerator"]
+        }, -- end of ["hydro_right"]
         ["BOMBS_RUST_RIGHT"] = 
         {
             ["hh"] = 0,
@@ -3805,15 +3816,15 @@ mission =
             ["id"] = "CLOGGED_FUEL_STRAINER",
             ["mm"] = 0,
         }, -- end of ["CLOGGED_FUEL_STRAINER"]
-        ["BOMBS_DAMAGE_ELINKAGE_LEFT"] = 
+        ["GMC_TOTAL_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "BOMBS_DAMAGE_ELINKAGE_LEFT",
+            ["id"] = "GMC_TOTAL_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["BOMBS_DAMAGE_ELINKAGE_LEFT"]
+        }, -- end of ["GMC_TOTAL_FAILURE"]
         ["r_engine"] = 
         {
             ["hh"] = 0,
@@ -3859,15 +3870,15 @@ mission =
             ["id"] = "D2_RIGHT_CYLINDER",
             ["mm"] = 0,
         }, -- end of ["D2_RIGHT_CYLINDER"]
-        ["VHF_AM_RADIO_FAILURE_TOTAL"] = 
+        ["RIGHT_GUNNER_KILLED_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "VHF_AM_RADIO_FAILURE_TOTAL",
+            ["id"] = "RIGHT_GUNNER_KILLED_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["VHF_AM_RADIO_FAILURE_TOTAL"]
+        }, -- end of ["RIGHT_GUNNER_KILLED_FAILURE"]
         ["AN_ALR69V_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
@@ -3877,6 +3888,15 @@ mission =
             ["id"] = "AN_ALR69V_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["AN_ALR69V_FAILURE_TOTAL"]
+        ["VHF_SQUELCH_RELAY"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "VHF_SQUELCH_RELAY",
+            ["mm"] = 0,
+        }, -- end of ["VHF_SQUELCH_RELAY"]
         ["COOLANT_SHORT_CIRCUIT"] = 
         {
             ["hh"] = 0,
@@ -3886,24 +3906,15 @@ mission =
             ["id"] = "COOLANT_SHORT_CIRCUIT",
             ["mm"] = 0,
         }, -- end of ["COOLANT_SHORT_CIRCUIT"]
-        ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"] = 
+        ["IFFCC_FAILURE_GUN"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "BOMBS_ARMING_BROKEN_SOLENOID_LEFT",
+            ["id"] = "IFFCC_FAILURE_GUN",
             ["mm"] = 0,
-        }, -- end of ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"]
-        ["CARBAIR_SHORT_CIRCUIT_LEADS"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "CARBAIR_SHORT_CIRCUIT_LEADS",
-            ["mm"] = 0,
-        }, -- end of ["CARBAIR_SHORT_CIRCUIT_LEADS"]
+        }, -- end of ["IFFCC_FAILURE_GUN"]
         ["l_engine"] = 
         {
             ["hh"] = 0,
@@ -3913,42 +3924,41 @@ mission =
             ["id"] = "l_engine",
             ["mm"] = 0,
         }, -- end of ["l_engine"]
-        ["TGP_FAILURE_RIGHT"] = 
+        ["BATTERY_OVERHEAT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TGP_FAILURE_RIGHT",
+            ["id"] = "BATTERY_OVERHEAT",
             ["mm"] = 0,
-        }, -- end of ["TGP_FAILURE_RIGHT"]
-        ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"] = 
+        }, -- end of ["BATTERY_OVERHEAT"]
+        ["AAR_47_FAILURE_SENSOR_BOTTOM"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR",
+            ["id"] = "AAR_47_FAILURE_SENSOR_BOTTOM",
             ["mm"] = 0,
-        }, -- end of ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"]
-        ["engine_surge_failure"] = 
+        }, -- end of ["AAR_47_FAILURE_SENSOR_BOTTOM"]
+        ["ecf"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "engine_surge_failure",
             ["mm"] = 0,
-        }, -- end of ["engine_surge_failure"]
-        ["GUN_LEFT_OUT_AMMUN_FAULT"] = 
+        }, -- end of ["ecf"]
+        ["CADC_FAILURE_DYNAMIC"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_LEFT_OUT_AMMUN_FAULT",
+            ["id"] = "CADC_FAILURE_DYNAMIC",
             ["mm"] = 0,
-        }, -- end of ["GUN_LEFT_OUT_AMMUN_FAULT"]
+        }, -- end of ["CADC_FAILURE_DYNAMIC"]
         ["JADRO_1A_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,

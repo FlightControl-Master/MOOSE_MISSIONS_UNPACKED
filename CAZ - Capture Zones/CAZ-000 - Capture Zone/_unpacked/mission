@@ -88,7 +88,11 @@ mission =
             }, -- end of ["func"]
         }, -- end of ["red"]
     }, -- end of ["result"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
     ["maxDictId"] = 444,
+=======
+    ["maxDictId"] = 447,
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
     ["pictureFileNameN"] = 
     {
     }, -- end of ["pictureFileNameN"]
@@ -148,6 +152,7 @@ mission =
             }, -- end of ["at2000"]
         }, -- end of ["wind"]
         ["enable_fog"] = false,
+        ["dust_density"] = 0,
         ["season"] = 
         {
             ["temperature"] = 20,
@@ -162,8 +167,8 @@ mission =
         {
             ["thickness"] = 0,
             ["visibility"] = 25,
-            ["density"] = 7,
         }, -- end of ["fog"]
+        ["enable_dust"] = false,
         ["groundTurbulence"] = 0,
         ["visibility"] = 
         {
@@ -202,9 +207,9 @@ mission =
     }, -- end of ["triggers"]
     ["map"] = 
     {
-        ["centerY"] = 294227.06807143,
-        ["zoom"] = 4286,
-        ["centerX"] = -7316.1328258928,
+        ["centerY"] = 294078.13022045,
+        ["zoom"] = 2530.84014,
+        ["centerX"] = -7393.6105968557,
     }, -- end of ["map"]
     ["coalitions"] = 
     {
@@ -344,6 +349,10 @@ mission =
                             [1] = 
                             {
                                 ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["task"] = "Ground Nothing",
                                 ["taskSelected"] = true,
                                 ["route"] = 
                                 {
@@ -412,9 +421,6 @@ mission =
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
                                 ["groupId"] = 24,
-                                ["tasks"] = 
-                                {
-                                }, -- end of ["tasks"]
                                 ["hidden"] = false,
                                 ["units"] = 
                                 {
@@ -430,19 +436,22 @@ mission =
                                         ["y"] = 293783.26207143,
                                         ["x"] = -7451.5805401785,
                                         ["name"] = "DictKey_UnitName_435",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 2.6354471705114,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["y"] = 293783.26207143,
                                 ["x"] = -7451.5805401785,
                                 ["name"] = "DictKey_GroupName_434",
                                 ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
                             }, -- end of [1]
                             [2] = 
                             {
                                 ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["task"] = "Ground Nothing",
                                 ["taskSelected"] = true,
                                 ["route"] = 
                                 {
@@ -492,9 +501,6 @@ mission =
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
                                 ["groupId"] = 25,
-                                ["tasks"] = 
-                                {
-                                }, -- end of ["tasks"]
                                 ["hidden"] = false,
                                 ["units"] = 
                                 {
@@ -510,16 +516,83 @@ mission =
                                         ["y"] = 293921.79007143,
                                         ["x"] = -7399.1645401785,
                                         ["name"] = "DictKey_UnitName_439",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 0.92092587738283,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["y"] = 293921.79007143,
                                 ["x"] = -7399.1645401785,
                                 ["name"] = "DictKey_GroupName_438",
                                 ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
                             }, -- end of [2]
+                            [3] = 
+                            {
+                                ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["route"] = 
+                                {
+                                    ["spans"] = 
+                                    {
+                                    }, -- end of ["spans"]
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 20,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = 293799.01470787,
+                                            ["x"] = -7579.0850242586,
+                                            ["name"] = "DictKey_WptName_447",
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 5.5555555555556,
+                                            ["action"] = "Off Road",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 27,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "AAV7",
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["unitId"] = 51,
+                                        ["skill"] = "Average",
+                                        ["y"] = 293799.01470787,
+                                        ["x"] = -7579.0850242586,
+                                        ["name"] = "DictKey_UnitName_446",
+                                        ["heading"] = 0,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 293799.01470787,
+                                ["x"] = -7579.0850242586,
+                                ["name"] = "DictKey_GroupName_445",
+                                ["start_time"] = 0,
+                            }, -- end of [3]
                         }, -- end of ["group"]
                     }, -- end of ["vehicle"]
                     ["name"] = "USA",
@@ -643,6 +716,10 @@ mission =
                             [1] = 
                             {
                                 ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["task"] = "Ground Nothing",
                                 ["taskSelected"] = true,
                                 ["route"] = 
                                 {
@@ -692,9 +769,6 @@ mission =
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
                                 ["groupId"] = 26,
-                                ["tasks"] = 
-                                {
-                                }, -- end of ["tasks"]
                                 ["hidden"] = false,
                                 ["units"] = 
                                 {
@@ -710,15 +784,14 @@ mission =
                                         ["y"] = 297291.10464286,
                                         ["x"] = -6028.9428258928,
                                         ["name"] = "DictKey_UnitName_443",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 0.92092587738283,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [1]
                                 }, -- end of ["units"]
                                 ["y"] = 297291.10464286,
                                 ["x"] = -6028.9428258928,
                                 ["name"] = "DictKey_GroupName_442",
                                 ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
                             }, -- end of [1]
                         }, -- end of ["group"]
                     }, -- end of ["vehicle"]
@@ -777,7 +850,11 @@ mission =
         }, -- end of ["red"]
     }, -- end of ["coalition"]
     ["sortie"] = "DictKey_sortie_4",
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
     ["version"] = 14,
+=======
+    ["version"] = 15,
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
     ["trigrules"] = 
     {
         [1] = 
@@ -786,7 +863,6 @@ mission =
             {
             }, -- end of ["rules"]
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -800,6 +876,10 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
+=======
+            ["predicate"] = "triggerStart",
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
             ["comment"] = "Load Moose",
         }, -- end of [1]
         [2] = 
@@ -808,7 +888,6 @@ mission =
             {
             }, -- end of ["rules"]
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -823,6 +902,10 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
+=======
+            ["predicate"] = "triggerStart",
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
             ["comment"] = "Trace",
         }, -- end of [2]
         [3] = 
@@ -831,7 +914,6 @@ mission =
             {
             }, -- end of ["rules"]
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -845,10 +927,18 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["comment"] = "Load Mission",
         }, -- end of [3]
     }, -- end of ["trigrules"]
     ["currentKey"] = 14560,
+=======
+            ["predicate"] = "triggerStart",
+            ["comment"] = "Load Mission",
+        }, -- end of [3]
+    }, -- end of ["trigrules"]
+    ["currentKey"] = 14699,
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
     ["start_time"] = 43200,
     ["forcedOptions"] = 
     {
@@ -985,10 +1075,11 @@ mission =
         ["SAR_hover_flight_glide"] = 
         {
             ["hh"] = 0,
+            ["enable"] = false,
             ["prob"] = 100,
             ["id"] = "SAR_hover_flight_glide",
             ["mmint"] = 1,
-            ["enable"] = false,
+            ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["SAR_hover_flight_glide"]
         ["HORIZON_BAR_NOT_SETTLE"] = 
@@ -1027,15 +1118,19 @@ mission =
             ["id"] = "GUN_RIGHT_MG151_OPEN_CIRCUIT",
             ["mm"] = 0,
         }, -- end of ["GUN_RIGHT_MG151_OPEN_CIRCUIT"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["OXYGEN"] = 
+=======
+        ["AAR_47_FAILURE_SENSOR_RIGHT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "OXYGEN",
+            ["id"] = "AAR_47_FAILURE_SENSOR_RIGHT",
             ["mm"] = 0,
-        }, -- end of ["OXYGEN"]
+        }, -- end of ["AAR_47_FAILURE_SENSOR_RIGHT"]
         ["R_GEAR_DLK_FAULT"] = 
         {
             ["hh"] = 0,
@@ -1048,10 +1143,11 @@ mission =
         ["fuel_sys_300left"] = 
         {
             ["hh"] = 0,
+            ["enable"] = false,
             ["prob"] = 100,
             ["id"] = "fuel_sys_300left",
             ["mmint"] = 1,
-            ["enable"] = false,
+            ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["fuel_sys_300left"]
         ["BOOSTER_COIL"] = 
@@ -1180,15 +1276,25 @@ mission =
             ["id"] = "es_damage_RadarInverter",
             ["mm"] = 0,
         }, -- end of ["es_damage_RadarInverter"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["REAR_TANK_LEAK"] = 
+=======
+        ["TAIL_GEAR_U_LOCK"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "REAR_TANK_LEAK",
             ["mm"] = 0,
         }, -- end of ["REAR_TANK_LEAK"]
+=======
+            ["id"] = "TAIL_GEAR_U_LOCK",
+            ["mm"] = 0,
+        }, -- end of ["TAIL_GEAR_U_LOCK"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["GUN_LEFT_MG131_OPEN_CIRCUIT"] = 
         {
             ["hh"] = 0,
@@ -1252,15 +1358,15 @@ mission =
             ["id"] = "BOMBS_ARMING_NO_VOLATAGE_LEFT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_ARMING_NO_VOLATAGE_LEFT"]
-        ["PITOT_HEAT_ELEMENT"] = 
+        ["ELEC_UC_LAMP_LHD_BULB_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "PITOT_HEAT_ELEMENT",
+            ["id"] = "ELEC_UC_LAMP_LHD_BULB_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["PITOT_HEAT_ELEMENT"]
+        }, -- end of ["ELEC_UC_LAMP_LHD_BULB_FAILURE"]
         ["TAPEREC"] = 
         {
             ["hh"] = 0,
@@ -1291,10 +1397,11 @@ mission =
         ["PPF_LE_TEMPER_LIM_OFF"] = 
         {
             ["hh"] = 0,
+            ["enable"] = false,
             ["prob"] = 100,
             ["id"] = "PPF_LE_TEMPER_LIM_OFF",
             ["mmint"] = 1,
-            ["enable"] = false,
+            ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["PPF_LE_TEMPER_LIM_OFF"]
         ["TVDISPLAY"] = 
@@ -1396,15 +1503,15 @@ mission =
             ["id"] = "EEC_Failure_LeftEngine",
             ["mm"] = 0,
         }, -- end of ["EEC_Failure_LeftEngine"]
-        ["ROOF_AIRSPEED_INDICATOR_FAILURE"] = 
+        ["ecm"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "ROOF_AIRSPEED_INDICATOR_FAILURE",
+            ["id"] = "ecm",
             ["mm"] = 0,
-        }, -- end of ["ROOF_AIRSPEED_INDICATOR_FAILURE"]
+        }, -- end of ["ecm"]
         ["TGP_FAILURE_RIGHT"] = 
         {
             ["hh"] = 0,
@@ -1495,15 +1602,15 @@ mission =
             ["id"] = "asc_a",
             ["mm"] = 0,
         }, -- end of ["asc_a"]
-        ["FUEL_MW50_TANK_DRAIN_VALVE_SEVERED"] = 
+        ["COMPRESSOR"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "FUEL_MW50_TANK_DRAIN_VALVE_SEVERED",
+            ["id"] = "COMPRESSOR",
             ["mm"] = 0,
-        }, -- end of ["FUEL_MW50_TANK_DRAIN_VALVE_SEVERED"]
+        }, -- end of ["COMPRESSOR"]
         ["AIRSPEED_INDICATOR_FAILURE"] = 
         {
             ["hh"] = 0,
@@ -1513,24 +1620,24 @@ mission =
             ["id"] = "AIRSPEED_INDICATOR_FAILURE",
             ["mm"] = 0,
         }, -- end of ["AIRSPEED_INDICATOR_FAILURE"]
-        ["abris_software"] = 
+        ["TURNIND_POINTER_VIBRATES"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "abris_software",
+            ["id"] = "TURNIND_POINTER_VIBRATES",
             ["mm"] = 0,
-        }, -- end of ["abris_software"]
-        ["GUN_FAIL_LEFT_OUT_GUN"] = 
+        }, -- end of ["TURNIND_POINTER_VIBRATES"]
+        ["ef_surge"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_FAIL_LEFT_OUT_GUN",
+            ["id"] = "ef_surge",
             ["mm"] = 0,
-        }, -- end of ["GUN_FAIL_LEFT_OUT_GUN"]
+        }, -- end of ["ef_surge"]
         ["ROCKETS_INTERVALOMETER_WIRING"] = 
         {
             ["hh"] = 0,
@@ -1648,15 +1755,15 @@ mission =
             ["id"] = "RADAR_ALTIMETR_RIGHT_ANT_FAILURE",
             ["mm"] = 0,
         }, -- end of ["RADAR_ALTIMETR_RIGHT_ANT_FAILURE"]
-        ["ef_vibration"] = 
+        ["CTRL_ELEVATOR_ROD_MINOR_DAMAGE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "ef_vibration",
+            ["id"] = "CTRL_ELEVATOR_ROD_MINOR_DAMAGE",
             ["mm"] = 0,
-        }, -- end of ["ef_vibration"]
+        }, -- end of ["CTRL_ELEVATOR_ROD_MINOR_DAMAGE"]
         ["STARTER_BURNOUT"] = 
         {
             ["hh"] = 0,
@@ -1759,10 +1866,11 @@ mission =
         ["fuel_sys_swapping_pumps"] = 
         {
             ["hh"] = 0,
+            ["enable"] = false,
             ["prob"] = 100,
             ["id"] = "fuel_sys_swapping_pumps",
             ["mmint"] = 1,
-            ["enable"] = false,
+            ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["fuel_sys_swapping_pumps"]
         ["PITOT_HEAT_WIRING"] = 
@@ -2010,10 +2118,11 @@ mission =
         ["es_damage_DMR"] = 
         {
             ["hh"] = 0,
+            ["enable"] = false,
             ["prob"] = 100,
             ["id"] = "es_damage_DMR",
             ["mmint"] = 1,
-            ["enable"] = false,
+            ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["es_damage_DMR"]
         ["GENERATOR_FAULT"] = 
@@ -2079,15 +2188,25 @@ mission =
             ["id"] = "MAGNETO_1",
             ["mm"] = 0,
         }, -- end of ["MAGNETO_1"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["COOLANT_RADIATOR_SENSOR"] = 
+=======
+        ["BOMBS_NO_VOLATAGE_AT_RACK_RIGHT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "COOLANT_RADIATOR_SENSOR",
             ["mm"] = 0,
         }, -- end of ["COOLANT_RADIATOR_SENSOR"]
+=======
+            ["id"] = "BOMBS_NO_VOLATAGE_AT_RACK_RIGHT",
+            ["mm"] = 0,
+        }, -- end of ["BOMBS_NO_VOLATAGE_AT_RACK_RIGHT"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["GUN_RIGHT_OUT_MOUNT_LOOSE"] = 
         {
             ["hh"] = 0,
@@ -2205,15 +2324,15 @@ mission =
             ["id"] = "R_GEAR_UPL_JAMMED",
             ["mm"] = 0,
         }, -- end of ["R_GEAR_UPL_JAMMED"]
-        ["hydro_left"] = 
+        ["r_conv"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "hydro_left",
+            ["id"] = "r_conv",
             ["mm"] = 0,
-        }, -- end of ["hydro_left"]
+        }, -- end of ["r_conv"]
         ["FUELTANK2"] = 
         {
             ["hh"] = 0,
@@ -2259,15 +2378,15 @@ mission =
             ["id"] = "CDU_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["CDU_FAILURE_TOTAL"]
-        ["INT_HYDRO_LEAK"] = 
+        ["AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "INT_HYDRO_LEAK",
+            ["id"] = "AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT",
             ["mm"] = 0,
-        }, -- end of ["INT_HYDRO_LEAK"]
+        }, -- end of ["AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT"]
         ["STARTER_WIRING"] = 
         {
             ["hh"] = 0,
@@ -2286,15 +2405,15 @@ mission =
             ["id"] = "HUD_FAILURE",
             ["mm"] = 0,
         }, -- end of ["HUD_FAILURE"]
-        ["mfd"] = 
+        ["ELEVONSERVINNERRIGHT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "mfd",
+            ["id"] = "ELEVONSERVINNERRIGHT",
             ["mm"] = 0,
-        }, -- end of ["mfd"]
+        }, -- end of ["ELEVONSERVINNERRIGHT"]
         ["CARBAIR_GND_LEAD"] = 
         {
             ["hh"] = 0,
@@ -2367,15 +2486,15 @@ mission =
             ["id"] = "GMC_TOTAL_FAILURE",
             ["mm"] = 0,
         }, -- end of ["GMC_TOTAL_FAILURE"]
-        ["CADC_FAILURE_MACH"] = 
+        ["GUN_LEFT_MG151_OPEN_CIRCUIT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "CADC_FAILURE_MACH",
+            ["id"] = "GUN_LEFT_MG151_OPEN_CIRCUIT",
             ["mm"] = 0,
-        }, -- end of ["CADC_FAILURE_MACH"]
+        }, -- end of ["GUN_LEFT_MG151_OPEN_CIRCUIT"]
         ["ROCKETS_DEFECTIVE_WIRING"] = 
         {
             ["hh"] = 0,
@@ -2397,10 +2516,11 @@ mission =
         ["hydro_diaphragm"] = 
         {
             ["hh"] = 0,
+            ["enable"] = false,
             ["prob"] = 100,
             ["id"] = "hydro_diaphragm",
             ["mmint"] = 1,
-            ["enable"] = false,
+            ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["hydro_diaphragm"]
         ["FR22ANTENNA"] = 
@@ -2685,10 +2805,11 @@ mission =
         ["SAR_2_95"] = 
         {
             ["hh"] = 0,
+            ["id"] = "SAR_2_95",
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "SAR_2_95",
+            ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["SAR_2_95"]
         ["GTS"] = 
@@ -2739,10 +2860,11 @@ mission =
         ["Vibration_LeftEngine"] = 
         {
             ["hh"] = 0,
+            ["enable"] = false,
             ["prob"] = 100,
             ["id"] = "Vibration_LeftEngine",
             ["mmint"] = 1,
-            ["enable"] = false,
+            ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["Vibration_LeftEngine"]
         ["r_engine"] = 
@@ -2964,10 +3086,11 @@ mission =
         ["PPF_RE_TEMPER_LIM_OFF"] = 
         {
             ["hh"] = 0,
+            ["enable"] = false,
             ["prob"] = 100,
             ["id"] = "PPF_RE_TEMPER_LIM_OFF",
             ["mmint"] = 1,
-            ["enable"] = false,
+            ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["PPF_RE_TEMPER_LIM_OFF"]
         ["CADC_FAILURE_TEMPERATURE"] = 
@@ -3096,15 +3219,15 @@ mission =
             ["id"] = "MAIN_R_GEAR_D_LOCK",
             ["mm"] = 0,
         }, -- end of ["MAIN_R_GEAR_D_LOCK"]
-        ["GUN_LEFT_MG151_BARREL_WORN"] = 
+        ["RKL_41_ADF_DAMAGE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_LEFT_MG151_BARREL_WORN",
+            ["id"] = "RKL_41_ADF_DAMAGE",
             ["mm"] = 0,
-        }, -- end of ["GUN_LEFT_MG151_BARREL_WORN"]
+        }, -- end of ["RKL_41_ADF_DAMAGE"]
         ["GMC_GYRO_FAILURE"] = 
         {
             ["hh"] = 0,
@@ -3168,15 +3291,15 @@ mission =
             ["id"] = "COOLANT_POOR_CONNTECT",
             ["mm"] = 0,
         }, -- end of ["COOLANT_POOR_CONNTECT"]
-        ["TURNIND_POINTER_FAILS_DEFECTIVE"] = 
+        ["RWR_FAILURE_SENSOR_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TURNIND_POINTER_FAILS_DEFECTIVE",
+            ["id"] = "RWR_FAILURE_SENSOR_LEFT",
             ["mm"] = 0,
-        }, -- end of ["TURNIND_POINTER_FAILS_DEFECTIVE"]
+        }, -- end of ["RWR_FAILURE_SENSOR_LEFT"]
         ["GUN_FAIL_RIGHT_OUT_GUN"] = 
         {
             ["hh"] = 0,
@@ -3276,15 +3399,15 @@ mission =
             ["id"] = "FUEL_MAIN_FUEL_PUMP_DEGRADED",
             ["mm"] = 0,
         }, -- end of ["FUEL_MAIN_FUEL_PUMP_DEGRADED"]
-        ["sas_yaw_left"] = 
+        ["RADARALTANT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "sas_yaw_left",
+            ["id"] = "RADARALTANT",
             ["mm"] = 0,
-        }, -- end of ["sas_yaw_left"]
+        }, -- end of ["RADARALTANT"]
         ["DEFECTIVE_MECHANISM"] = 
         {
             ["hh"] = 0,
@@ -3294,15 +3417,15 @@ mission =
             ["id"] = "DEFECTIVE_MECHANISM",
             ["mm"] = 0,
         }, -- end of ["DEFECTIVE_MECHANISM"]
-        ["pp_damage_MainMaxFreq"] = 
+        ["AC_BUS_PO7501_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "pp_damage_MainMaxFreq",
+            ["id"] = "AC_BUS_PO7501_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["pp_damage_MainMaxFreq"]
+        }, -- end of ["AC_BUS_PO7501_FAILURE"]
         ["OIL_T_IND_FAULT"] = 
         {
             ["hh"] = 0,
@@ -3324,21 +3447,22 @@ mission =
         ["RPMFault_RightEngine"] = 
         {
             ["hh"] = 0,
+            ["enable"] = false,
             ["prob"] = 100,
             ["id"] = "RPMFault_RightEngine",
             ["mmint"] = 1,
-            ["enable"] = false,
+            ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["RPMFault_RightEngine"]
-        ["CTRL_AILERON_ROD_DESTROYED"] = 
+        ["Surge_RightEngine"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "CTRL_AILERON_ROD_DESTROYED",
+            ["id"] = "Surge_RightEngine",
             ["mm"] = 0,
-        }, -- end of ["CTRL_AILERON_ROD_DESTROYED"]
+        }, -- end of ["Surge_RightEngine"]
         ["RightEngine_Fire"] = 
         {
             ["hh"] = 0,
@@ -3384,15 +3508,15 @@ mission =
             ["id"] = "pp_damage_OilSeparator",
             ["mm"] = 0,
         }, -- end of ["pp_damage_OilSeparator"]
-        ["es_damage_VU3"] = 
+        ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
-            ["id"] = "es_damage_VU3",
-            ["mmint"] = 1,
             ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "BOMBS_ARMING_BROKEN_SOLENOID_LEFT",
             ["mm"] = 0,
-        }, -- end of ["es_damage_VU3"]
+        }, -- end of ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"]
         ["GUN_LEFT_IN_AMMUN_FAULT"] = 
         {
             ["hh"] = 0,
@@ -3420,15 +3544,15 @@ mission =
             ["id"] = "COMPASS_POINTER_PULLS",
             ["mm"] = 0,
         }, -- end of ["COMPASS_POINTER_PULLS"]
-        ["Failure_RightEngine"] = 
+        ["GUN_RIGHT_OUT_OPEN_CIRCUIT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "Failure_RightEngine",
+            ["id"] = "GUN_RIGHT_OUT_OPEN_CIRCUIT",
             ["mm"] = 0,
-        }, -- end of ["Failure_RightEngine"]
+        }, -- end of ["GUN_RIGHT_OUT_OPEN_CIRCUIT"]
         ["VHF_SHORTED_CTL_BOX"] = 
         {
             ["hh"] = 0,
@@ -3492,33 +3616,44 @@ mission =
             ["id"] = "BOMBS_ARMING_BROKEN_WIRING_RIGHT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_ARMING_BROKEN_WIRING_RIGHT"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["ELEC_BOOSTER_FUEL_PUMP_1_FAILURE"] = 
+=======
+        ["GUN_LEFT_OUT_AMMUN_FAULT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "ELEC_BOOSTER_FUEL_PUMP_1_FAILURE",
             ["mm"] = 0,
         }, -- end of ["ELEC_BOOSTER_FUEL_PUMP_1_FAILURE"]
         ["COMPASS_ERRATIC_OPERATION"] = 
+=======
+            ["id"] = "GUN_LEFT_OUT_AMMUN_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_LEFT_OUT_AMMUN_FAULT"]
+        ["COPILOT_KILLED_FAILURE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "COMPASS_ERRATIC_OPERATION",
+            ["id"] = "COPILOT_KILLED_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["COMPASS_ERRATIC_OPERATION"]
-        ["RADARDISPL"] = 
+        }, -- end of ["COPILOT_KILLED_FAILURE"]
+        ["GUN_LEFT_CENTER_BARREL_WORN"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "RADARDISPL",
+            ["id"] = "GUN_LEFT_CENTER_BARREL_WORN",
             ["mm"] = 0,
-        }, -- end of ["RADARDISPL"]
+        }, -- end of ["GUN_LEFT_CENTER_BARREL_WORN"]
         ["ELEVONSERVOUTERRIGHT"] = 
         {
             ["hh"] = 0,
@@ -3600,15 +3735,25 @@ mission =
             ["id"] = "ARN_83_ADF_DAMAGE",
             ["mm"] = 0,
         }, -- end of ["ARN_83_ADF_DAMAGE"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["INSUF_FUEL_PRES"] = 
+=======
+        ["RIGHT_WING_TANK_LEAK"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "INSUF_FUEL_PRES",
             ["mm"] = 0,
         }, -- end of ["INSUF_FUEL_PRES"]
+=======
+            ["id"] = "RIGHT_WING_TANK_LEAK",
+            ["mm"] = 0,
+        }, -- end of ["RIGHT_WING_TANK_LEAK"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["ACCSENSOR"] = 
         {
             ["hh"] = 0,
@@ -3699,15 +3844,15 @@ mission =
             ["id"] = "TURNIND_INCORRECT_SENS_VAC_LOW",
             ["mm"] = 0,
         }, -- end of ["TURNIND_INCORRECT_SENS_VAC_LOW"]
-        ["RWRANTREAR"] = 
+        ["Failure_LeftEngine"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "RWRANTREAR",
+            ["id"] = "Failure_LeftEngine",
             ["mm"] = 0,
-        }, -- end of ["RWRANTREAR"]
+        }, -- end of ["Failure_LeftEngine"]
         ["RUDDER"] = 
         {
             ["hh"] = 0,
@@ -3735,15 +3880,16 @@ mission =
             ["id"] = "ILS_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["ILS_FAILURE_TOTAL"]
-        ["fuel_sys_transfer_pumps"] = 
+        ["Vibration_RightEngine"] = 
         {
             ["hh"] = 0,
-            ["prob"] = 100,
             ["enable"] = false,
+            ["prob"] = 100,
+            ["id"] = "Vibration_RightEngine",
             ["mmint"] = 1,
-            ["id"] = "fuel_sys_transfer_pumps",
+            ["hidden"] = true,
             ["mm"] = 0,
-        }, -- end of ["fuel_sys_transfer_pumps"]
+        }, -- end of ["Vibration_RightEngine"]
         ["as_damage_Depressurization"] = 
         {
             ["hh"] = 0,
@@ -3771,15 +3917,15 @@ mission =
             ["id"] = "HYDR2PUMP",
             ["mm"] = 0,
         }, -- end of ["HYDR2PUMP"]
-        ["TURNIND_POINTER_NOT_SET_ZERO"] = 
+        ["es_damage_Starter"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TURNIND_POINTER_NOT_SET_ZERO",
+            ["id"] = "es_damage_Starter",
             ["mm"] = 0,
-        }, -- end of ["TURNIND_POINTER_NOT_SET_ZERO"]
+        }, -- end of ["es_damage_Starter"]
         ["RIGHT_MFCD_FAILURE"] = 
         {
             ["hh"] = 0,
@@ -3852,15 +3998,15 @@ mission =
             ["id"] = "UHF_RADIO_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["UHF_RADIO_FAILURE_TOTAL"]
-        ["GUN_RIGHT_CENTER_AMMUN_FAULT"] = 
+        ["COPILOT_GYRO_TOTAL_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_RIGHT_CENTER_AMMUN_FAULT",
+            ["id"] = "COPILOT_GYRO_TOTAL_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["GUN_RIGHT_CENTER_AMMUN_FAULT"]
+        }, -- end of ["COPILOT_GYRO_TOTAL_FAILURE"]
         ["LEFT_GUNNER_KILLED_FAILURE"] = 
         {
             ["hh"] = 0,
@@ -3870,24 +4016,35 @@ mission =
             ["id"] = "LEFT_GUNNER_KILLED_FAILURE",
             ["mm"] = 0,
         }, -- end of ["LEFT_GUNNER_KILLED_FAILURE"]
-        ["fuel_sys_right_transfer_pump"] = 
+        ["EZ42_NO_POWER_SUPPLY"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "fuel_sys_right_transfer_pump",
+            ["id"] = "EZ42_NO_POWER_SUPPLY",
             ["mm"] = 0,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         }, -- end of ["fuel_sys_right_transfer_pump"]
         ["EGTSENSOR"] = 
+=======
+        }, -- end of ["EZ42_NO_POWER_SUPPLY"]
+        ["ssf_full_pressure_fail"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "EGTSENSOR",
             ["mm"] = 0,
         }, -- end of ["EGTSENSOR"]
+=======
+            ["id"] = "ssf_full_pressure_fail",
+            ["mm"] = 0,
+        }, -- end of ["ssf_full_pressure_fail"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["VHF_VT207_DEFECTIVE"] = 
         {
             ["hh"] = 0,
@@ -3915,15 +4072,25 @@ mission =
             ["id"] = "GUN_LEFT_MG131_AMMUN_FAULT",
             ["mm"] = 0,
         }, -- end of ["GUN_LEFT_MG131_AMMUN_FAULT"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["RWRUNIT"] = 
+=======
+        ["LANDING_LIGHTS_FAILURE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "RWRUNIT",
             ["mm"] = 0,
         }, -- end of ["RWRUNIT"]
+=======
+            ["id"] = "LANDING_LIGHTS_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["LANDING_LIGHTS_FAILURE"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["KPP_FAILURE_PARTIAL"] = 
         {
             ["hh"] = 0,
@@ -3942,15 +4109,25 @@ mission =
             ["id"] = "INS_TOTAL_FAIL",
             ["mm"] = 0,
         }, -- end of ["INS_TOTAL_FAIL"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["hydro_auxiliary"] = 
+=======
+        ["AIRBRAKE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["id"] = "hydro_auxiliary",
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["enable"] = false,
             ["mm"] = 0,
         }, -- end of ["hydro_auxiliary"]
+=======
+            ["id"] = "AIRBRAKE",
+            ["mm"] = 0,
+        }, -- end of ["AIRBRAKE"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["RightEngine_LowOilPressure"] = 
         {
             ["hh"] = 0,
@@ -3960,15 +4137,25 @@ mission =
             ["id"] = "RightEngine_LowOilPressure",
             ["mm"] = 0,
         }, -- end of ["RightEngine_LowOilPressure"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["EZ42_FIXED_LAMP_DEFECTIVE"] = 
+=======
+        ["pp_damage_Ignition"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "EZ42_FIXED_LAMP_DEFECTIVE",
             ["mm"] = 0,
         }, -- end of ["EZ42_FIXED_LAMP_DEFECTIVE"]
+=======
+            ["id"] = "pp_damage_Ignition",
+            ["mm"] = 0,
+        }, -- end of ["pp_damage_Ignition"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["radar"] = 
         {
             ["hh"] = 0,
@@ -3987,33 +4174,57 @@ mission =
             ["id"] = "SOPLO_FAILURE_PARTIAL",
             ["mm"] = 0,
         }, -- end of ["SOPLO_FAILURE_PARTIAL"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["BOMBS_NO_VOLATAGE_AT_RACK_RIGHT"] = 
+=======
+        ["CADC_FAILURE_MACH"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "BOMBS_NO_VOLATAGE_AT_RACK_RIGHT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_NO_VOLATAGE_AT_RACK_RIGHT"]
         ["es_damage_SpareInverter"] = 
+=======
+            ["id"] = "CADC_FAILURE_MACH",
+            ["mm"] = 0,
+        }, -- end of ["CADC_FAILURE_MACH"]
+        ["ENG0_JAMMED"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "es_damage_SpareInverter",
             ["mm"] = 0,
         }, -- end of ["es_damage_SpareInverter"]
         ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"] = 
+=======
+            ["id"] = "ENG0_JAMMED",
+            ["mm"] = 0,
+        }, -- end of ["ENG0_JAMMED"]
+        ["AFN2_DAMAGE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "BOMBS_ARMING_BROKEN_SOLENOID_LEFT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"]
+=======
+            ["id"] = "AFN2_DAMAGE",
+            ["mm"] = 0,
+        }, -- end of ["AFN2_DAMAGE"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["COOLANT_UNPRES"] = 
         {
             ["hh"] = 0,
@@ -4032,24 +4243,41 @@ mission =
             ["id"] = "ARN_82_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["ARN_82_FAILURE_TOTAL"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["ENG0_MAGNETO1"] = 
+=======
+        ["mfd"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "ENG0_MAGNETO1",
             ["mm"] = 0,
         }, -- end of ["ENG0_MAGNETO1"]
         ["OIL_RADIATOR_SENSOR"] = 
+=======
+            ["id"] = "mfd",
+            ["mm"] = 0,
+        }, -- end of ["mfd"]
+        ["RIGHT_FLAP_FAULT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "OIL_RADIATOR_SENSOR",
             ["mm"] = 0,
         }, -- end of ["OIL_RADIATOR_SENSOR"]
+=======
+            ["id"] = "RIGHT_FLAP_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["RIGHT_FLAP_FAULT"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["TURNIND_INCORRECT_SENS_DEFECTIVE"] = 
         {
             ["hh"] = 0,
@@ -4059,24 +4287,39 @@ mission =
             ["id"] = "TURNIND_INCORRECT_SENS_DEFECTIVE",
             ["mm"] = 0,
         }, -- end of ["TURNIND_INCORRECT_SENS_DEFECTIVE"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["eos"] = 
+=======
+        ["BAT_SOLENOID_WIRING"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "eos",
+            ["id"] = "BAT_SOLENOID_WIRING",
             ["mm"] = 0,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         }, -- end of ["eos"]
         ["RIGHT_FLAP_FAULT"] = 
+=======
+        }, -- end of ["BAT_SOLENOID_WIRING"]
+        ["FWD_TANK_PUMP_FAULT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "RIGHT_FLAP_FAULT",
             ["mm"] = 0,
         }, -- end of ["RIGHT_FLAP_FAULT"]
+=======
+            ["id"] = "FWD_TANK_PUMP_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["FWD_TANK_PUMP_FAULT"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["HYDR2ACC"] = 
         {
             ["hh"] = 0,
@@ -4086,24 +4329,41 @@ mission =
             ["id"] = "HYDR2ACC",
             ["mm"] = 0,
         }, -- end of ["HYDR2ACC"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["fs_forward_RH_leakage"] = 
+=======
+        ["A11_CLOCK_FAILURE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "fs_forward_RH_leakage",
             ["mm"] = 0,
         }, -- end of ["fs_forward_RH_leakage"]
         ["LEFT_MFCD_FAILURE"] = 
+=======
+            ["id"] = "A11_CLOCK_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["A11_CLOCK_FAILURE"]
+        ["EPRSENSOR"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "LEFT_MFCD_FAILURE",
             ["mm"] = 0,
         }, -- end of ["LEFT_MFCD_FAILURE"]
+=======
+            ["id"] = "EPRSENSOR",
+            ["mm"] = 0,
+        }, -- end of ["EPRSENSOR"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["HYD_PUMP_2_FAIL_100"] = 
         {
             ["hh"] = 0,
@@ -4113,33 +4373,57 @@ mission =
             ["id"] = "HYD_PUMP_2_FAIL_100",
             ["mm"] = 0,
         }, -- end of ["HYD_PUMP_2_FAIL_100"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["TransitionalReductor_LowOilPressure"] = 
+=======
+        ["GSH23_CHARGED_FAILURE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["id"] = "TransitionalReductor_LowOilPressure",
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["enable"] = false,
             ["mm"] = 0,
         }, -- end of ["TransitionalReductor_LowOilPressure"]
         ["VHF_VT_BURNED_OUT"] = 
+=======
+            ["id"] = "GSH23_CHARGED_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["GSH23_CHARGED_FAILURE"]
+        ["ef_fire"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "VHF_VT_BURNED_OUT",
             ["mm"] = 0,
         }, -- end of ["VHF_VT_BURNED_OUT"]
         ["CTRL_RUDDER_ROD_MINOR_DAMAGE"] = 
+=======
+            ["id"] = "ef_fire",
+            ["mm"] = 0,
+        }, -- end of ["ef_fire"]
+        ["FUEL_DROPTANK_LINE_SEVERED"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "CTRL_RUDDER_ROD_MINOR_DAMAGE",
             ["mm"] = 0,
         }, -- end of ["CTRL_RUDDER_ROD_MINOR_DAMAGE"]
+=======
+            ["id"] = "FUEL_DROPTANK_LINE_SEVERED",
+            ["mm"] = 0,
+        }, -- end of ["FUEL_DROPTANK_LINE_SEVERED"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["PITOT_HEAT_FAULT"] = 
         {
             ["hh"] = 0,
@@ -4149,33 +4433,58 @@ mission =
             ["id"] = "PITOT_HEAT_FAULT",
             ["mm"] = 0,
         }, -- end of ["PITOT_HEAT_FAULT"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["FUELTANK3L"] = 
+=======
+        ["SAR_1_95"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
+            ["id"] = "SAR_1_95",
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "FUELTANK3L",
             ["mm"] = 0,
         }, -- end of ["FUELTANK3L"]
         ["BAT_SOLENOID_WIRING"] = 
+=======
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["SAR_1_95"]
+        ["FLEX_S_NO_POWER_SUPPLY"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "BAT_SOLENOID_WIRING",
             ["mm"] = 0,
         }, -- end of ["BAT_SOLENOID_WIRING"]
         ["GUN_LEFT_OUT_BARREL_WORN"] = 
+=======
+            ["id"] = "FLEX_S_NO_POWER_SUPPLY",
+            ["mm"] = 0,
+        }, -- end of ["FLEX_S_NO_POWER_SUPPLY"]
+        ["CANARDFLAPRIGHT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "GUN_LEFT_OUT_BARREL_WORN",
             ["mm"] = 0,
         }, -- end of ["GUN_LEFT_OUT_BARREL_WORN"]
+=======
+            ["id"] = "CANARDFLAPRIGHT",
+            ["mm"] = 0,
+        }, -- end of ["CANARDFLAPRIGHT"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["RADAR_ALTIMETR_LEFT_ANT_FAILURE"] = 
         {
             ["hh"] = 0,
@@ -4194,16 +4503,21 @@ mission =
             ["id"] = "hydro",
             ["mm"] = 0,
         }, -- end of ["hydro"]
-        ["AGD1_GYRO_TOTAL_FAILURE"] = 
+        ["BAT_SOLENOID_DEFECTIVE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "AGD1_GYRO_TOTAL_FAILURE",
+            ["id"] = "BAT_SOLENOID_DEFECTIVE",
             ["mm"] = 0,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         }, -- end of ["AGD1_GYRO_TOTAL_FAILURE"]
         ["ELEVONSERVINNERRIGHT"] = 
+=======
+        }, -- end of ["BAT_SOLENOID_DEFECTIVE"]
+        ["BCKPITOT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
@@ -4211,16 +4525,27 @@ mission =
             ["mmint"] = 1,
             ["id"] = "ELEVONSERVINNERRIGHT",
             ["mm"] = 0,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         }, -- end of ["ELEVONSERVINNERRIGHT"]
         ["TailRotorControlFailure"] = 
+=======
+        }, -- end of ["BCKPITOT"]
+        ["LEFT_MFCD_FAILURE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "TailRotorControlFailure",
             ["mm"] = 0,
         }, -- end of ["TailRotorControlFailure"]
+=======
+            ["id"] = "LEFT_MFCD_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["LEFT_MFCD_FAILURE"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["BOMBS_DAMAGE_ELINKAGE"] = 
         {
             ["hh"] = 0,
@@ -4239,16 +4564,27 @@ mission =
             ["id"] = "LeftEngine_Fire",
             ["mm"] = 0,
         }, -- end of ["LeftEngine_Fire"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["COPILOT_GYRO_TOTAL_FAILURE"] = 
+=======
+        ["GUN_LEFT_OUT_BARREL_WORN"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "COPILOT_GYRO_TOTAL_FAILURE",
             ["mm"] = 0,
         }, -- end of ["COPILOT_GYRO_TOTAL_FAILURE"]
         ["ELEC_BATTERY_OVERHEAT"] = 
+=======
+            ["id"] = "GUN_LEFT_OUT_BARREL_WORN",
+            ["mm"] = 0,
+        }, -- end of ["GUN_LEFT_OUT_BARREL_WORN"]
+        ["SUPERCHARGER_LIGHT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
@@ -4266,33 +4602,57 @@ mission =
             ["id"] = "L_GEAR_UPL_FAULT",
             ["mm"] = 0,
         }, -- end of ["L_GEAR_UPL_FAULT"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["CANARDFLAPRIGHT"] = 
+=======
+        ["GUN_LEFT_CENTER_MOUNT_LOOSE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "CANARDFLAPRIGHT",
             ["mm"] = 0,
         }, -- end of ["CANARDFLAPRIGHT"]
         ["GUN_LEFT_CENTER_MOUNT_LOOSE"] = 
+=======
+            ["id"] = "GUN_LEFT_CENTER_MOUNT_LOOSE",
+            ["mm"] = 0,
+        }, -- end of ["GUN_LEFT_CENTER_MOUNT_LOOSE"]
+        ["eos"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "GUN_LEFT_CENTER_MOUNT_LOOSE",
             ["mm"] = 0,
         }, -- end of ["GUN_LEFT_CENTER_MOUNT_LOOSE"]
         ["GSH23_CHARGED_FAILURE"] = 
+=======
+            ["id"] = "eos",
+            ["mm"] = 0,
+        }, -- end of ["eos"]
+        ["BCKGYRO"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "GSH23_CHARGED_FAILURE",
             ["mm"] = 0,
         }, -- end of ["GSH23_CHARGED_FAILURE"]
+=======
+            ["id"] = "BCKGYRO",
+            ["mm"] = 0,
+        }, -- end of ["BCKGYRO"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["TACH_RESISTANCE_ADJ"] = 
         {
             ["hh"] = 0,
@@ -4302,24 +4662,41 @@ mission =
             ["id"] = "TACH_RESISTANCE_ADJ",
             ["mm"] = 0,
         }, -- end of ["TACH_RESISTANCE_ADJ"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["STARTER_RELAY_FAULT"] = 
+=======
+        ["GUN_RIGHT_CENTER_AMMUN_FAULT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "STARTER_RELAY_FAULT",
             ["mm"] = 0,
         }, -- end of ["STARTER_RELAY_FAULT"]
         ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"] = 
+=======
+            ["id"] = "GUN_RIGHT_CENTER_AMMUN_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_RIGHT_CENTER_AMMUN_FAULT"]
+        ["OXYGEN"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR",
             ["mm"] = 0,
         }, -- end of ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"]
+=======
+            ["id"] = "OXYGEN",
+            ["mm"] = 0,
+        }, -- end of ["OXYGEN"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["BURNER"] = 
         {
             ["hh"] = 0,
@@ -4329,15 +4706,25 @@ mission =
             ["id"] = "BURNER",
             ["mm"] = 0,
         }, -- end of ["BURNER"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["ENG0_JAMMED"] = 
+=======
+        ["BOMBS_ARMING_BROKEN_WIRING"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "ENG0_JAMMED",
             ["mm"] = 0,
         }, -- end of ["ENG0_JAMMED"]
+=======
+            ["id"] = "BOMBS_ARMING_BROKEN_WIRING",
+            ["mm"] = 0,
+        }, -- end of ["BOMBS_ARMING_BROKEN_WIRING"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["TailReductor_ShaveInOil"] = 
         {
             ["hh"] = 0,
@@ -4347,15 +4734,25 @@ mission =
             ["id"] = "TailReductor_ShaveInOil",
             ["mm"] = 0,
         }, -- end of ["TailReductor_ShaveInOil"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["BCKGYRO"] = 
+=======
+        ["FUEL_MW50_TANK_DRAIN_VALVE_SEVERED"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "BCKGYRO",
             ["mm"] = 0,
         }, -- end of ["BCKGYRO"]
+=======
+            ["id"] = "FUEL_MW50_TANK_DRAIN_VALVE_SEVERED",
+            ["mm"] = 0,
+        }, -- end of ["FUEL_MW50_TANK_DRAIN_VALVE_SEVERED"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["fire_sys_fireko50"] = 
         {
             ["hh"] = 0,
@@ -4365,24 +4762,41 @@ mission =
             ["id"] = "fire_sys_fireko50",
             ["mm"] = 0,
         }, -- end of ["fire_sys_fireko50"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["GMC_MAGN_COMP_FAILURE"] = 
+=======
+        ["HYD_PUMP_3_FAIL_100"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "GMC_MAGN_COMP_FAILURE",
             ["mm"] = 0,
         }, -- end of ["GMC_MAGN_COMP_FAILURE"]
         ["CTRL_ELEVATOR_ROD_MINOR_DAMAGE"] = 
+=======
+            ["id"] = "HYD_PUMP_3_FAIL_100",
+            ["mm"] = 0,
+        }, -- end of ["HYD_PUMP_3_FAIL_100"]
+        ["CTRL_ELEVATOR_TRIM_FAILURE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "CTRL_ELEVATOR_ROD_MINOR_DAMAGE",
             ["mm"] = 0,
         }, -- end of ["CTRL_ELEVATOR_ROD_MINOR_DAMAGE"]
+=======
+            ["id"] = "CTRL_ELEVATOR_TRIM_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["CTRL_ELEVATOR_TRIM_FAILURE"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["R_GEAR_UPL_FAULT"] = 
         {
             ["hh"] = 0,
@@ -4404,30 +4818,48 @@ mission =
         ["es_damage_VU2"] = 
         {
             ["hh"] = 0,
+            ["enable"] = false,
             ["prob"] = 100,
             ["id"] = "es_damage_VU2",
             ["mmint"] = 1,
-            ["enable"] = false,
+            ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["es_damage_VU2"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["SAR_1_95"] = 
+=======
+        ["HYDRRESERVPUMP"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "SAR_1_95",
             ["mm"] = 0,
         }, -- end of ["SAR_1_95"]
         ["ENG0_MAGNETO0"] = 
+=======
+            ["id"] = "HYDRRESERVPUMP",
+            ["mm"] = 0,
+        }, -- end of ["HYDRRESERVPUMP"]
+        ["CTRL_RUDDER_ROD_MINOR_DAMAGE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "ENG0_MAGNETO0",
             ["mm"] = 0,
         }, -- end of ["ENG0_MAGNETO0"]
+=======
+            ["id"] = "CTRL_RUDDER_ROD_MINOR_DAMAGE",
+            ["mm"] = 0,
+        }, -- end of ["CTRL_RUDDER_ROD_MINOR_DAMAGE"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["CARBAIR_SHORT_CIRCUIT"] = 
         {
             ["hh"] = 0,
@@ -4464,15 +4896,25 @@ mission =
             ["id"] = "GUN_LEFT_IN_BARREL_WORN",
             ["mm"] = 0,
         }, -- end of ["GUN_LEFT_IN_BARREL_WORN"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["GUN_RIGHT_IN_AMMUN_FAULT"] = 
+=======
+        ["ROOF_AIRSPEED_INDICATOR_FAILURE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "GUN_RIGHT_IN_AMMUN_FAULT",
             ["mm"] = 0,
         }, -- end of ["GUN_RIGHT_IN_AMMUN_FAULT"]
+=======
+            ["id"] = "ROOF_AIRSPEED_INDICATOR_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["ROOF_AIRSPEED_INDICATOR_FAILURE"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["TACAN_FAILURE_RECEIVER"] = 
         {
             ["hh"] = 0,
@@ -4485,21 +4927,32 @@ mission =
         ["TailReductor_LowOilPressure"] = 
         {
             ["hh"] = 0,
+            ["enable"] = false,
             ["prob"] = 100,
             ["id"] = "TailReductor_LowOilPressure",
             ["mmint"] = 1,
-            ["enable"] = false,
+            ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["TailReductor_LowOilPressure"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["CTRL_ELEVATOR_TRIM_FAILURE"] = 
+=======
+        ["es_damage_SpareInverter"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "CTRL_ELEVATOR_TRIM_FAILURE",
             ["mm"] = 0,
         }, -- end of ["CTRL_ELEVATOR_TRIM_FAILURE"]
+=======
+            ["id"] = "es_damage_SpareInverter",
+            ["mm"] = 0,
+        }, -- end of ["es_damage_SpareInverter"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["GUN_RIGHT_IN_MOUNT_LOOSE"] = 
         {
             ["hh"] = 0,
@@ -4518,24 +4971,41 @@ mission =
             ["id"] = "HAW",
             ["mm"] = 0,
         }, -- end of ["HAW"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["TURNIND_POINTER_VIBRATES"] = 
+=======
+        ["R_GEAR_BRAKE_FAULT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "TURNIND_POINTER_VIBRATES",
             ["mm"] = 0,
         }, -- end of ["TURNIND_POINTER_VIBRATES"]
         ["R_GEAR_BRAKE_FAULT"] = 
+=======
+            ["id"] = "R_GEAR_BRAKE_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["R_GEAR_BRAKE_FAULT"]
+        ["asc"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "R_GEAR_BRAKE_FAULT",
             ["mm"] = 0,
         }, -- end of ["R_GEAR_BRAKE_FAULT"]
+=======
+            ["id"] = "asc",
+            ["mm"] = 0,
+        }, -- end of ["asc"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["pp_damage_MainStabFactor"] = 
         {
             ["hh"] = 0,
@@ -4554,15 +5024,25 @@ mission =
             ["id"] = "hydro_right",
             ["mm"] = 0,
         }, -- end of ["hydro_right"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["GUN_LEFT_OUT_AMMUN_FAULT"] = 
+=======
+        ["fire_sys_fire_LE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "GUN_LEFT_OUT_AMMUN_FAULT",
             ["mm"] = 0,
         }, -- end of ["GUN_LEFT_OUT_AMMUN_FAULT"]
+=======
+            ["id"] = "fire_sys_fire_LE",
+            ["mm"] = 0,
+        }, -- end of ["fire_sys_fire_LE"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["RUDDERSERV"] = 
         {
             ["hh"] = 0,
@@ -4572,15 +5052,25 @@ mission =
             ["id"] = "RUDDERSERV",
             ["mm"] = 0,
         }, -- end of ["RUDDERSERV"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["RIGHT_WING_TANK_LEAK"] = 
+=======
+        ["ELEVONSERVINNERLEFT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "RIGHT_WING_TANK_LEAK",
             ["mm"] = 0,
         }, -- end of ["RIGHT_WING_TANK_LEAK"]
+=======
+            ["id"] = "ELEVONSERVINNERLEFT",
+            ["mm"] = 0,
+        }, -- end of ["ELEVONSERVINNERLEFT"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["TRIMMER_DRIVE_FAULT"] = 
         {
             ["hh"] = 0,
@@ -4599,15 +5089,15 @@ mission =
             ["id"] = "DOORS_TVC_BROKEN",
             ["mm"] = 0,
         }, -- end of ["DOORS_TVC_BROKEN"]
-        ["ef_surge"] = 
+        ["INSUF_FUEL_PRES"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "ef_surge",
+            ["id"] = "INSUF_FUEL_PRES",
             ["mm"] = 0,
-        }, -- end of ["ef_surge"]
+        }, -- end of ["INSUF_FUEL_PRES"]
         ["SADL_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
@@ -4626,15 +5116,25 @@ mission =
             ["id"] = "fs_damage_left_cell_boost_pump",
             ["mm"] = 0,
         }, -- end of ["fs_damage_left_cell_boost_pump"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["BAT_SOLENOID_FAULT"] = 
+=======
+        ["fs_aft_LH_leakage"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "BAT_SOLENOID_FAULT",
             ["mm"] = 0,
         }, -- end of ["BAT_SOLENOID_FAULT"]
+=======
+            ["id"] = "fs_aft_LH_leakage",
+            ["mm"] = 0,
+        }, -- end of ["fs_aft_LH_leakage"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["BOMBS_DAMAGE_ELINKAGE_LEFT"] = 
         {
             ["hh"] = 0,
@@ -4653,15 +5153,25 @@ mission =
             ["id"] = "HYDR1ACC",
             ["mm"] = 0,
         }, -- end of ["HYDR1ACC"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["COMPRESSOR"] = 
+=======
+        ["GUN_LEFT_CENTER_OPEN_CIRCUIT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "COMPRESSOR",
             ["mm"] = 0,
         }, -- end of ["COMPRESSOR"]
+=======
+            ["id"] = "GUN_LEFT_CENTER_OPEN_CIRCUIT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_LEFT_CENTER_OPEN_CIRCUIT"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["ENGINE_JAM"] = 
         {
             ["hh"] = 0,
@@ -4689,15 +5199,25 @@ mission =
             ["id"] = "MAGNETO_2",
             ["mm"] = 0,
         }, -- end of ["MAGNETO_2"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["ecm"] = 
+=======
+        ["CTRL_AILERON_ROD_DESTROYED"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "ecm",
             ["mm"] = 0,
         }, -- end of ["ecm"]
+=======
+            ["id"] = "CTRL_AILERON_ROD_DESTROYED",
+            ["mm"] = 0,
+        }, -- end of ["CTRL_AILERON_ROD_DESTROYED"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["IFF"] = 
         {
             ["hh"] = 0,
@@ -4716,42 +5236,67 @@ mission =
             ["id"] = "RWR_FAILURE_SENSOR_RIGHT",
             ["mm"] = 0,
         }, -- end of ["RWR_FAILURE_SENSOR_RIGHT"]
-        ["DOPPLER_UNIT"] = 
+        ["TEMPSENSOR"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "DOPPLER_UNIT",
+            ["id"] = "TEMPSENSOR",
             ["mm"] = 0,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         }, -- end of ["DOPPLER_UNIT"]
         ["LEFT_CYLINDER"] = 
+=======
+        }, -- end of ["TEMPSENSOR"]
+        ["CADC_FAILURE_STATIC"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "LEFT_CYLINDER",
             ["mm"] = 0,
         }, -- end of ["LEFT_CYLINDER"]
         ["LeftEngine_LowOilPressure"] = 
+=======
+            ["id"] = "CADC_FAILURE_STATIC",
+            ["mm"] = 0,
+        }, -- end of ["CADC_FAILURE_STATIC"]
+        ["ELEC_BOOSTER_FUEL_PUMP_1_FAILURE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "LeftEngine_LowOilPressure",
             ["mm"] = 0,
         }, -- end of ["LeftEngine_LowOilPressure"]
         ["GUN_RIGHT_OUT_OPEN_CIRCUIT"] = 
+=======
+            ["id"] = "ELEC_BOOSTER_FUEL_PUMP_1_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_BOOSTER_FUEL_PUMP_1_FAILURE"]
+        ["COMPASS_ERRATIC_OPERATION"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "GUN_RIGHT_OUT_OPEN_CIRCUIT",
             ["mm"] = 0,
         }, -- end of ["GUN_RIGHT_OUT_OPEN_CIRCUIT"]
+=======
+            ["id"] = "COMPASS_ERRATIC_OPERATION",
+            ["mm"] = 0,
+        }, -- end of ["COMPASS_ERRATIC_OPERATION"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["STARTER_SOLENOID"] = 
         {
             ["hh"] = 0,
@@ -4770,15 +5315,25 @@ mission =
             ["id"] = "TAIL_GEAR_C_CABLE",
             ["mm"] = 0,
         }, -- end of ["TAIL_GEAR_C_CABLE"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["GUN_LEFT_OUT_OPEN_CIRCUIT"] = 
+=======
+        ["PITOT_HEAT_ELEMENT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "GUN_LEFT_OUT_OPEN_CIRCUIT",
             ["mm"] = 0,
         }, -- end of ["GUN_LEFT_OUT_OPEN_CIRCUIT"]
+=======
+            ["id"] = "PITOT_HEAT_ELEMENT",
+            ["mm"] = 0,
+        }, -- end of ["PITOT_HEAT_ELEMENT"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["ELEC_UC_LAMP_CU_BULB_FAILURE"] = 
         {
             ["hh"] = 0,
@@ -4788,15 +5343,25 @@ mission =
             ["id"] = "ELEC_UC_LAMP_CU_BULB_FAILURE",
             ["mm"] = 0,
         }, -- end of ["ELEC_UC_LAMP_CU_BULB_FAILURE"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["COOLANT_SHORT_CIRCUIT"] = 
+=======
+        ["EZ42_MOTOR_DEFECTIVE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "COOLANT_SHORT_CIRCUIT",
             ["mm"] = 0,
         }, -- end of ["COOLANT_SHORT_CIRCUIT"]
+=======
+            ["id"] = "EZ42_MOTOR_DEFECTIVE",
+            ["mm"] = 0,
+        }, -- end of ["EZ42_MOTOR_DEFECTIVE"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["engine_driveshaft_failure"] = 
         {
             ["hh"] = 0,
@@ -4833,15 +5398,25 @@ mission =
             ["id"] = "GUN_RIGHT_MG131_AMMUN_FAULT",
             ["mm"] = 0,
         }, -- end of ["GUN_RIGHT_MG131_AMMUN_FAULT"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["FDU"] = 
+=======
+        ["ELEC_BATTERY_OVERHEAT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "FDU",
             ["mm"] = 0,
         }, -- end of ["FDU"]
+=======
+            ["id"] = "ELEC_BATTERY_OVERHEAT",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_BATTERY_OVERHEAT"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["ELEC_FUEL_PUMP_P2_FAILURE"] = 
         {
             ["hh"] = 0,
@@ -4859,26 +5434,45 @@ mission =
             ["mmint"] = 1,
             ["id"] = "BCKPITOT",
             ["mm"] = 0,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         }, -- end of ["BCKPITOT"]
         ["fs_aft_LH_leakage"] = 
+=======
+        }, -- end of ["STARTER_RELAY_FAULT"]
+        ["pp_damage_MainMaxFreq"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "fs_aft_LH_leakage",
             ["mm"] = 0,
         }, -- end of ["fs_aft_LH_leakage"]
         ["RWR_FAILURE_SENSOR_LEFT"] = 
+=======
+            ["id"] = "pp_damage_MainMaxFreq",
+            ["mm"] = 0,
+        }, -- end of ["pp_damage_MainMaxFreq"]
+        ["AGD1_GYRO_TOTAL_FAILURE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "RWR_FAILURE_SENSOR_LEFT",
             ["mm"] = 0,
         }, -- end of ["RWR_FAILURE_SENSOR_LEFT"]
         ["IFFCC_FAILURE_GUN"] = 
+=======
+            ["id"] = "AGD1_GYRO_TOTAL_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["AGD1_GYRO_TOTAL_FAILURE"]
+        ["GMC_MAGN_COMP_FAILURE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
@@ -4896,24 +5490,41 @@ mission =
             ["id"] = "fire_sys_fire_RE",
             ["mm"] = 0,
         }, -- end of ["fire_sys_fire_RE"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["APU_Fire"] = 
+=======
+        ["sas_yaw_left"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "APU_Fire",
             ["mm"] = 0,
         }, -- end of ["APU_Fire"]
         ["es_damage_InverterPT500C"] = 
+=======
+            ["id"] = "sas_yaw_left",
+            ["mm"] = 0,
+        }, -- end of ["sas_yaw_left"]
+        ["LEFT_CYLINDER"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "es_damage_InverterPT500C",
             ["mm"] = 0,
         }, -- end of ["es_damage_InverterPT500C"]
+=======
+            ["id"] = "LEFT_CYLINDER",
+            ["mm"] = 0,
+        }, -- end of ["LEFT_CYLINDER"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["ENG0_GOVERNOR_REGULATOR_MALFUNCTION"] = 
         {
             ["hh"] = 0,
@@ -4932,33 +5543,57 @@ mission =
             ["id"] = "ENG0_STARTER_CLUTCH_FAILURE",
             ["mm"] = 0,
         }, -- end of ["ENG0_STARTER_CLUTCH_FAILURE"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["l_conv"] = 
+=======
+        ["HYDR1PUMP"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "l_conv",
             ["mm"] = 0,
         }, -- end of ["l_conv"]
         ["ELEC_UC_LAMP_LHD_BULB_FAILURE"] = 
+=======
+            ["id"] = "HYDR1PUMP",
+            ["mm"] = 0,
+        }, -- end of ["HYDR1PUMP"]
+        ["ENG0_MAGNETO1"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "ELEC_UC_LAMP_LHD_BULB_FAILURE",
             ["mm"] = 0,
         }, -- end of ["ELEC_UC_LAMP_LHD_BULB_FAILURE"]
         ["ILS_FAILURE_ANT_LOCALIZER"] = 
+=======
+            ["id"] = "ENG0_MAGNETO1",
+            ["mm"] = 0,
+        }, -- end of ["ENG0_MAGNETO1"]
+        ["PUMP_RELIEF_VALVE_SCREEN_CLOGGED"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "ILS_FAILURE_ANT_LOCALIZER",
             ["mm"] = 0,
         }, -- end of ["ILS_FAILURE_ANT_LOCALIZER"]
+=======
+            ["id"] = "PUMP_RELIEF_VALVE_SCREEN_CLOGGED",
+            ["mm"] = 0,
+        }, -- end of ["PUMP_RELIEF_VALVE_SCREEN_CLOGGED"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["ELEC_PITOT_HEAT_ELEMENT"] = 
         {
             ["hh"] = 0,
@@ -4968,15 +5603,25 @@ mission =
             ["id"] = "ELEC_PITOT_HEAT_ELEMENT",
             ["mm"] = 0,
         }, -- end of ["ELEC_PITOT_HEAT_ELEMENT"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["ELEVONSERVINNERLEFT"] = 
+=======
+        ["RADARDISPL"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "ELEVONSERVINNERLEFT",
             ["mm"] = 0,
         }, -- end of ["ELEVONSERVINNERLEFT"]
+=======
+            ["id"] = "RADARDISPL",
+            ["mm"] = 0,
+        }, -- end of ["RADARDISPL"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["pp_damage_MainMaxNormFreq"] = 
         {
             ["hh"] = 0,
@@ -5004,33 +5649,58 @@ mission =
             ["id"] = "CTRL_LANDING_FLAPS_MECHANICAL_FAILURE",
             ["mm"] = 0,
         }, -- end of ["CTRL_LANDING_FLAPS_MECHANICAL_FAILURE"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["AC_BUS_PO7501_FAILURE"] = 
+=======
+        ["fuel_sys_right_transfer_pump"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "AC_BUS_PO7501_FAILURE",
             ["mm"] = 0,
         }, -- end of ["AC_BUS_PO7501_FAILURE"]
         ["RWRANTRIGHT"] = 
+=======
+            ["id"] = "fuel_sys_right_transfer_pump",
+            ["mm"] = 0,
+        }, -- end of ["fuel_sys_right_transfer_pump"]
+        ["EZ42_FIXED_LAMP_DEFECTIVE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "RWRANTRIGHT",
             ["mm"] = 0,
         }, -- end of ["RWRANTRIGHT"]
         ["CTRL_ELEVATOR_ROD_MAJOR_DAMAGE"] = 
+=======
+            ["id"] = "EZ42_FIXED_LAMP_DEFECTIVE",
+            ["mm"] = 0,
+        }, -- end of ["EZ42_FIXED_LAMP_DEFECTIVE"]
+        ["hydro_auxiliary"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
-            ["prob"] = 100,
             ["enable"] = false,
+            ["prob"] = 100,
+            ["id"] = "hydro_auxiliary",
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "CTRL_ELEVATOR_ROD_MAJOR_DAMAGE",
             ["mm"] = 0,
         }, -- end of ["CTRL_ELEVATOR_ROD_MAJOR_DAMAGE"]
+=======
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["hydro_auxiliary"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["FUEL_MAIN_TANK_MAJOR_LEAK"] = 
         {
             ["hh"] = 0,
@@ -5040,16 +5710,27 @@ mission =
             ["id"] = "FUEL_MAIN_TANK_MAJOR_LEAK",
             ["mm"] = 0,
         }, -- end of ["FUEL_MAIN_TANK_MAJOR_LEAK"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["INST_VARIOMETR_DEPRESSURIZATION"] = 
+=======
+        ["es_damage_MainGenerator"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "INST_VARIOMETR_DEPRESSURIZATION",
             ["mm"] = 0,
         }, -- end of ["INST_VARIOMETR_DEPRESSURIZATION"]
         ["es_damage_VU1"] = 
+=======
+            ["id"] = "es_damage_MainGenerator",
+            ["mm"] = 0,
+        }, -- end of ["es_damage_MainGenerator"]
+        ["CICU_FAILURE_TOTAL"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
@@ -5067,33 +5748,57 @@ mission =
             ["id"] = "hs_damage_MainHydro",
             ["mm"] = 0,
         }, -- end of ["hs_damage_MainHydro"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["BOMBS_DAMAGE_LINKAGE_LEFT"] = 
+=======
+        ["asc_p"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "BOMBS_DAMAGE_LINKAGE_LEFT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_DAMAGE_LINKAGE_LEFT"]
         ["Failure_LeftEngine"] = 
+=======
+            ["id"] = "asc_p",
+            ["mm"] = 0,
+        }, -- end of ["asc_p"]
+        ["CADC_FAILURE_TAS"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "Failure_LeftEngine",
             ["mm"] = 0,
         }, -- end of ["Failure_LeftEngine"]
         ["GUN_LEFT_MG151_OPEN_CIRCUIT"] = 
+=======
+            ["id"] = "CADC_FAILURE_TAS",
+            ["mm"] = 0,
+        }, -- end of ["CADC_FAILURE_TAS"]
+        ["EEC_Failure_RightEngine"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "GUN_LEFT_MG151_OPEN_CIRCUIT",
             ["mm"] = 0,
         }, -- end of ["GUN_LEFT_MG151_OPEN_CIRCUIT"]
+=======
+            ["id"] = "EEC_Failure_RightEngine",
+            ["mm"] = 0,
+        }, -- end of ["EEC_Failure_RightEngine"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["RADARASS"] = 
         {
             ["hh"] = 0,
@@ -5130,15 +5835,25 @@ mission =
             ["id"] = "ELEVONSERVOUTERLEFT",
             ["mm"] = 0,
         }, -- end of ["ELEVONSERVOUTERLEFT"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["GUN_LEFT_CENTER_AMMUN_FAULT"] = 
+=======
+        ["BOMBS_DAMAGE_LINKAGE_LEFT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "GUN_LEFT_CENTER_AMMUN_FAULT",
             ["mm"] = 0,
         }, -- end of ["GUN_LEFT_CENTER_AMMUN_FAULT"]
+=======
+            ["id"] = "BOMBS_DAMAGE_LINKAGE_LEFT",
+            ["mm"] = 0,
+        }, -- end of ["BOMBS_DAMAGE_LINKAGE_LEFT"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["fs_aft_central_leakage"] = 
         {
             ["hh"] = 0,
@@ -5157,34 +5872,59 @@ mission =
             ["id"] = "BATTERY_OVERHEAT",
             ["mm"] = 0,
         }, -- end of ["BATTERY_OVERHEAT"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["EEC_Failure_RightEngine"] = 
+=======
+        ["LeftEngine_LowOilPressure"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "EEC_Failure_RightEngine",
             ["mm"] = 0,
         }, -- end of ["EEC_Failure_RightEngine"]
         ["COPILOT_KILLED_FAILURE"] = 
+=======
+            ["id"] = "LeftEngine_LowOilPressure",
+            ["mm"] = 0,
+        }, -- end of ["LeftEngine_LowOilPressure"]
+        ["RWRANTREAR"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "COPILOT_KILLED_FAILURE",
             ["mm"] = 0,
         }, -- end of ["COPILOT_KILLED_FAILURE"]
         ["r_gen"] = 
+=======
+            ["id"] = "RWRANTREAR",
+            ["mm"] = 0,
+        }, -- end of ["RWRANTREAR"]
+        ["GUN_LEFT_MG151_BARREL_WORN"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "r_gen",
             ["mm"] = 0,
         }, -- end of ["r_gen"]
         ["EXT_TANK_LEAK"] = 
+=======
+            ["id"] = "GUN_LEFT_MG151_BARREL_WORN",
+            ["mm"] = 0,
+        }, -- end of ["GUN_LEFT_MG151_BARREL_WORN"]
+        ["GUN_FAIL_LEFT_CENTER_GUN"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
@@ -5192,26 +5932,43 @@ mission =
             ["mmint"] = 1,
             ["id"] = "EXT_TANK_LEAK",
             ["mm"] = 0,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         }, -- end of ["EXT_TANK_LEAK"]
         ["VHF_CRYSTAL"] = 
+=======
+        }, -- end of ["GUN_FAIL_LEFT_CENTER_GUN"]
+        ["VHF_SQUELCH_RELAY"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "VHF_CRYSTAL",
+            ["id"] = "VHF_SQUELCH_RELAY",
             ["mm"] = 0,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         }, -- end of ["VHF_CRYSTAL"]
         ["LeftEngine_ShaveInOil"] = 
+=======
+        }, -- end of ["VHF_SQUELCH_RELAY"]
+        ["ELEC_UC_LAMP_RHD_BULB_FAILURE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "LeftEngine_ShaveInOil",
             ["mm"] = 0,
         }, -- end of ["LeftEngine_ShaveInOil"]
         ["VHF_AM_RADIO_FAILURE_TOTAL"] = 
+=======
+            ["id"] = "ELEC_UC_LAMP_RHD_BULB_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_UC_LAMP_RHD_BULB_FAILURE"]
+        ["INST_VARIOMETR_DEPRESSURIZATION"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
@@ -5219,16 +5976,27 @@ mission =
             ["mmint"] = 1,
             ["id"] = "VHF_AM_RADIO_FAILURE_TOTAL",
             ["mm"] = 0,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         }, -- end of ["VHF_AM_RADIO_FAILURE_TOTAL"]
         ["GUN_FAIL_RIGHT_CENTER_GUN"] = 
+=======
+        }, -- end of ["INST_VARIOMETR_DEPRESSURIZATION"]
+        ["LeftEngine_ShaveInOil"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "GUN_FAIL_RIGHT_CENTER_GUN",
             ["mm"] = 0,
         }, -- end of ["GUN_FAIL_RIGHT_CENTER_GUN"]
+=======
+            ["id"] = "LeftEngine_ShaveInOil",
+            ["mm"] = 0,
+        }, -- end of ["LeftEngine_ShaveInOil"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["DC_BUS_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
@@ -5238,15 +6006,25 @@ mission =
             ["id"] = "DC_BUS_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["DC_BUS_FAILURE_TOTAL"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["LANDING_LIGHTS_FAILURE"] = 
+=======
+        ["GUN_FAIL_RIGHT_CENTER_GUN"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "LANDING_LIGHTS_FAILURE",
             ["mm"] = 0,
         }, -- end of ["LANDING_LIGHTS_FAILURE"]
+=======
+            ["id"] = "GUN_FAIL_RIGHT_CENTER_GUN",
+            ["mm"] = 0,
+        }, -- end of ["GUN_FAIL_RIGHT_CENTER_GUN"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["TACH_BREAK_CIRCUIT"] = 
         {
             ["hh"] = 0,
@@ -5265,15 +6043,15 @@ mission =
             ["id"] = "AC_BUS_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["AC_BUS_FAILURE_TOTAL"]
-        ["CADC_FAILURE_DYNAMIC"] = 
+        ["TAIL_GEAR_D_LOCK"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "CADC_FAILURE_DYNAMIC",
+            ["id"] = "TAIL_GEAR_D_LOCK",
             ["mm"] = 0,
-        }, -- end of ["CADC_FAILURE_DYNAMIC"]
+        }, -- end of ["TAIL_GEAR_D_LOCK"]
         ["hud"] = 
         {
             ["hh"] = 0,
@@ -5283,15 +6061,25 @@ mission =
             ["id"] = "hud",
             ["mm"] = 0,
         }, -- end of ["hud"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["EPRSENSOR"] = 
+=======
+        ["COOLANT_LEAK"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "EPRSENSOR",
             ["mm"] = 0,
         }, -- end of ["EPRSENSOR"]
+=======
+            ["id"] = "COOLANT_LEAK",
+            ["mm"] = 0,
+        }, -- end of ["COOLANT_LEAK"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["PITOT_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
@@ -5301,15 +6089,25 @@ mission =
             ["id"] = "PITOT_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["PITOT_FAILURE_TOTAL"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["asc_y"] = 
+=======
+        ["ELEC_UMFORMER_FAILURE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "asc_y",
             ["mm"] = 0,
         }, -- end of ["asc_y"]
+=======
+            ["id"] = "ELEC_UMFORMER_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_UMFORMER_FAILURE"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["fuel_sys_left_transfer_pump"] = 
         {
             ["hh"] = 0,
@@ -5319,15 +6117,19 @@ mission =
             ["id"] = "fuel_sys_left_transfer_pump",
             ["mm"] = 0,
         }, -- end of ["fuel_sys_left_transfer_pump"]
-        ["ELEC_UMFORMER_FAILURE"] = 
+        ["EGTSENSOR"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "ELEC_UMFORMER_FAILURE",
+            ["id"] = "EGTSENSOR",
             ["mm"] = 0,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         }, -- end of ["ELEC_UMFORMER_FAILURE"]
+=======
+        }, -- end of ["EGTSENSOR"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["FLEX_S_BKP_LAMP_DEFECTIVE"] = 
         {
             ["hh"] = 0,
@@ -5337,33 +6139,57 @@ mission =
             ["id"] = "FLEX_S_BKP_LAMP_DEFECTIVE",
             ["mm"] = 0,
         }, -- end of ["FLEX_S_BKP_LAMP_DEFECTIVE"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["FR24RADIO"] = 
+=======
+        ["TACAN_FAILURE_TOTAL"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "FR24RADIO",
             ["mm"] = 0,
         }, -- end of ["FR24RADIO"]
         ["TACAN_FAILURE_TOTAL"] = 
+=======
+            ["id"] = "TACAN_FAILURE_TOTAL",
+            ["mm"] = 0,
+        }, -- end of ["TACAN_FAILURE_TOTAL"]
+        ["SUPERCHARGER_WIRE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "TACAN_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["TACAN_FAILURE_TOTAL"]
         ["TILS"] = 
+=======
+            ["id"] = "SUPERCHARGER_WIRE",
+            ["mm"] = 0,
+        }, -- end of ["SUPERCHARGER_WIRE"]
+        ["FR24RADIO"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "TILS",
             ["mm"] = 0,
         }, -- end of ["TILS"]
+=======
+            ["id"] = "FR24RADIO",
+            ["mm"] = 0,
+        }, -- end of ["FR24RADIO"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["es_damage_StarterGenerator"] = 
         {
             ["hh"] = 0,
@@ -5382,33 +6208,57 @@ mission =
             ["id"] = "es_damage_Battery",
             ["mm"] = 0,
         }, -- end of ["es_damage_Battery"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["ENG_ALT_1_FAIL"] = 
+=======
+        ["RADAR_ALT_TOTAL_FAILURE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "ENG_ALT_1_FAIL",
             ["mm"] = 0,
         }, -- end of ["ENG_ALT_1_FAIL"]
         ["ELEC_UC_LAMP_RHD_BULB_FAILURE"] = 
+=======
+            ["id"] = "RADAR_ALT_TOTAL_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["RADAR_ALT_TOTAL_FAILURE"]
+        ["r_gen"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "ELEC_UC_LAMP_RHD_BULB_FAILURE",
             ["mm"] = 0,
         }, -- end of ["ELEC_UC_LAMP_RHD_BULB_FAILURE"]
         ["AAR_47_FAILURE_SENSOR_RIGHT"] = 
+=======
+            ["id"] = "r_gen",
+            ["mm"] = 0,
+        }, -- end of ["r_gen"]
+        ["ENG_ALT_1_FAIL"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "AAR_47_FAILURE_SENSOR_RIGHT",
             ["mm"] = 0,
         }, -- end of ["AAR_47_FAILURE_SENSOR_RIGHT"]
+=======
+            ["id"] = "ENG_ALT_1_FAIL",
+            ["mm"] = 0,
+        }, -- end of ["ENG_ALT_1_FAIL"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["hydro_common"] = 
         {
             ["hh"] = 0,
@@ -5436,15 +6286,25 @@ mission =
             ["id"] = "RPMSENSOR",
             ["mm"] = 0,
         }, -- end of ["RPMSENSOR"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["RKL_41_ADF_DAMAGE"] = 
+=======
+        ["GUN_RIGHT_CENTER_MOUNT_LOOSE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "RKL_41_ADF_DAMAGE",
             ["mm"] = 0,
         }, -- end of ["RKL_41_ADF_DAMAGE"]
+=======
+            ["id"] = "GUN_RIGHT_CENTER_MOUNT_LOOSE",
+            ["mm"] = 0,
+        }, -- end of ["GUN_RIGHT_CENTER_MOUNT_LOOSE"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["CMDISP"] = 
         {
             ["hh"] = 0,
@@ -5462,32 +6322,45 @@ mission =
             ["mmint"] = 1,
             ["id"] = "CADC_FAILURE_IAS",
             ["mm"] = 0,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         }, -- end of ["CADC_FAILURE_IAS"]
         ["CADC_FAILURE_STATIC"] = 
+=======
+        }, -- end of ["VHF_AM_RADIO_FAILURE_TOTAL"]
+        ["ILS_FAILURE_ANT_LOCALIZER"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "CADC_FAILURE_STATIC",
             ["mm"] = 0,
         }, -- end of ["CADC_FAILURE_STATIC"]
         ["VHF_SQUELCH_RELAY"] = 
+=======
+            ["id"] = "ILS_FAILURE_ANT_LOCALIZER",
+            ["mm"] = 0,
+        }, -- end of ["ILS_FAILURE_ANT_LOCALIZER"]
+        ["VHF_CRYSTAL"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "VHF_SQUELCH_RELAY",
+            ["id"] = "VHF_CRYSTAL",
             ["mm"] = 0,
-        }, -- end of ["VHF_SQUELCH_RELAY"]
+        }, -- end of ["VHF_CRYSTAL"]
         ["RPMFault_LeftEngine"] = 
         {
             ["hh"] = 0,
+            ["enable"] = false,
             ["prob"] = 100,
             ["id"] = "RPMFault_LeftEngine",
             ["mmint"] = 1,
-            ["enable"] = false,
+            ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["RPMFault_LeftEngine"]
         ["engine_droop_failure"] = 
@@ -5508,24 +6381,35 @@ mission =
             ["id"] = "F2_TOP_CYLINDER",
             ["mm"] = 0,
         }, -- end of ["F2_TOP_CYLINDER"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["ssf_full_pressure_fail"] = 
+=======
+        ["INT_HYDRO_LEAK"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "ssf_full_pressure_fail",
             ["mm"] = 0,
         }, -- end of ["ssf_full_pressure_fail"]
         ["TAIL_GEAR_D_LOCK"] = 
+=======
+            ["id"] = "INT_HYDRO_LEAK",
+            ["mm"] = 0,
+        }, -- end of ["INT_HYDRO_LEAK"]
+        ["CADC_FAILURE_DYNAMIC"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TAIL_GEAR_D_LOCK",
+            ["id"] = "CADC_FAILURE_DYNAMIC",
             ["mm"] = 0,
-        }, -- end of ["TAIL_GEAR_D_LOCK"]
+        }, -- end of ["CADC_FAILURE_DYNAMIC"]
         ["INST_SPEEDOMETER_DEPRESSURIZATION"] = 
         {
             ["hh"] = 0,
@@ -5597,16 +6481,27 @@ mission =
             ["mmint"] = 1,
             ["id"] = "TAIL_GEAR_U_LOCK",
             ["mm"] = 0,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         }, -- end of ["TAIL_GEAR_U_LOCK"]
         ["RADARALTANT"] = 
+=======
+        }, -- end of ["CADC_FAILURE_IAS"]
+        ["COOLANT_SHORT_CIRCUIT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "RADARALTANT",
             ["mm"] = 0,
         }, -- end of ["RADARALTANT"]
+=======
+            ["id"] = "COOLANT_SHORT_CIRCUIT",
+            ["mm"] = 0,
+        }, -- end of ["COOLANT_SHORT_CIRCUIT"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["MANIFOLD_LINE_LEAK"] = 
         {
             ["hh"] = 0,
@@ -5634,66 +6529,113 @@ mission =
             ["id"] = "IFFCC_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["IFFCC_FAILURE_TOTAL"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["FLEX_S_NO_POWER_SUPPLY"] = 
+=======
+        ["RightEngine_ShaveInOil"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+            ["id"] = "RightEngine_ShaveInOil",
+            ["mm"] = 0,
+        }, -- end of ["RightEngine_ShaveInOil"]
+        ["Failure_RightEngine"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "FLEX_S_NO_POWER_SUPPLY",
             ["mm"] = 0,
         }, -- end of ["FLEX_S_NO_POWER_SUPPLY"]
         ["Surge_RightEngine"] = 
+=======
+            ["id"] = "Failure_RightEngine",
+            ["mm"] = 0,
+        }, -- end of ["Failure_RightEngine"]
+        ["GUN_RIGHT_MG131_BARREL_WORN"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "Surge_RightEngine",
             ["mm"] = 0,
         }, -- end of ["Surge_RightEngine"]
         ["RADARALTUNIT"] = 
+=======
+            ["id"] = "GUN_RIGHT_MG131_BARREL_WORN",
+            ["mm"] = 0,
+        }, -- end of ["GUN_RIGHT_MG131_BARREL_WORN"]
+        ["es_damage_InverterPT500C"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "RADARALTUNIT",
             ["mm"] = 0,
         }, -- end of ["RADARALTUNIT"]
         ["GUN_RIGHT_MG131_BARREL_WORN"] = 
+=======
+            ["id"] = "es_damage_InverterPT500C",
+            ["mm"] = 0,
+        }, -- end of ["es_damage_InverterPT500C"]
+        ["AAR_47_FAILURE_SENSOR_BOTTOM"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_RIGHT_MG131_BARREL_WORN",
+            ["id"] = "AAR_47_FAILURE_SENSOR_BOTTOM",
             ["mm"] = 0,
-        }, -- end of ["GUN_RIGHT_MG131_BARREL_WORN"]
-        ["asc_p"] = 
+        }, -- end of ["AAR_47_FAILURE_SENSOR_BOTTOM"]
+        ["TURNIND_POINTER_FAILS_DEFECTIVE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "asc_p",
+            ["id"] = "TURNIND_POINTER_FAILS_DEFECTIVE",
             ["mm"] = 0,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         }, -- end of ["asc_p"]
         ["BAT_SOLENOID_DEFECTIVE"] = 
+=======
+        }, -- end of ["TURNIND_POINTER_FAILS_DEFECTIVE"]
+        ["VHF_VT_BURNED_OUT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "BAT_SOLENOID_DEFECTIVE",
             ["mm"] = 0,
         }, -- end of ["BAT_SOLENOID_DEFECTIVE"]
         ["PUMP_RELIEF_VALVE_SCREEN_CLOGGED"] = 
+=======
+            ["id"] = "VHF_VT_BURNED_OUT",
+            ["mm"] = 0,
+        }, -- end of ["VHF_VT_BURNED_OUT"]
+        ["ELEC_BOOSTER_FUEL_PUMP_0_FAILURE"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "PUMP_RELIEF_VALVE_SCREEN_CLOGGED",
             ["mm"] = 0,
         }, -- end of ["PUMP_RELIEF_VALVE_SCREEN_CLOGGED"]
@@ -5706,6 +6648,11 @@ mission =
             ["id"] = "GUN_LEFT_CENTER_OPEN_CIRCUIT",
             ["mm"] = 0,
         }, -- end of ["GUN_LEFT_CENTER_OPEN_CIRCUIT"]
+=======
+            ["id"] = "ELEC_BOOSTER_FUEL_PUMP_0_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_BOOSTER_FUEL_PUMP_0_FAILURE"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["AN_ALR69V_FAILURE_SENSOR_NOSE_LEFT"] = 
         {
             ["hh"] = 0,
@@ -5715,15 +6662,25 @@ mission =
             ["id"] = "AN_ALR69V_FAILURE_SENSOR_NOSE_LEFT",
             ["mm"] = 0,
         }, -- end of ["AN_ALR69V_FAILURE_SENSOR_NOSE_LEFT"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["mlws"] = 
+=======
+        ["fs_damage_engine_pump"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "mlws",
             ["mm"] = 0,
         }, -- end of ["mlws"]
+=======
+            ["id"] = "fs_damage_engine_pump",
+            ["mm"] = 0,
+        }, -- end of ["fs_damage_engine_pump"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["BOMBS_ARMING_NO_VOLATAGE_BOTH"] = 
         {
             ["hh"] = 0,
@@ -5733,33 +6690,57 @@ mission =
             ["id"] = "BOMBS_ARMING_NO_VOLATAGE_BOTH",
             ["mm"] = 0,
         }, -- end of ["BOMBS_ARMING_NO_VOLATAGE_BOTH"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["es_damage_Generator"] = 
+=======
+        ["abris_software"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "es_damage_Generator",
             ["mm"] = 0,
         }, -- end of ["es_damage_Generator"]
         ["AAR_47_FAILURE_SENSOR_BOTTOM"] = 
+=======
+            ["id"] = "abris_software",
+            ["mm"] = 0,
+        }, -- end of ["abris_software"]
+        ["GUN_FAIL_LEFT_OUT_GUN"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "AAR_47_FAILURE_SENSOR_BOTTOM",
             ["mm"] = 0,
         }, -- end of ["AAR_47_FAILURE_SENSOR_BOTTOM"]
         ["fs_damage_engine_pump"] = 
+=======
+            ["id"] = "GUN_FAIL_LEFT_OUT_GUN",
+            ["mm"] = 0,
+        }, -- end of ["GUN_FAIL_LEFT_OUT_GUN"]
+        ["SAR_1_101"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "fs_damage_engine_pump",
             ["mm"] = 0,
         }, -- end of ["fs_damage_engine_pump"]
+=======
+            ["id"] = "SAR_1_101",
+            ["mm"] = 0,
+        }, -- end of ["SAR_1_101"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["GUN_RIGHT_MG131_OPEN_CIRCUIT"] = 
         {
             ["hh"] = 0,
@@ -5769,15 +6750,25 @@ mission =
             ["id"] = "GUN_RIGHT_MG131_OPEN_CIRCUIT",
             ["mm"] = 0,
         }, -- end of ["GUN_RIGHT_MG131_OPEN_CIRCUIT"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["GUN_LEFT_CENTER_BARREL_WORN"] = 
+=======
+        ["GUN_RIGHT_IN_AMMUN_FAULT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "GUN_LEFT_CENTER_BARREL_WORN",
             ["mm"] = 0,
         }, -- end of ["GUN_LEFT_CENTER_BARREL_WORN"]
+=======
+            ["id"] = "GUN_RIGHT_IN_AMMUN_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_RIGHT_IN_AMMUN_FAULT"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["COOLANT_RADIATOR_MOTOR"] = 
         {
             ["hh"] = 0,
@@ -5787,15 +6778,15 @@ mission =
             ["id"] = "COOLANT_RADIATOR_MOTOR",
             ["mm"] = 0,
         }, -- end of ["COOLANT_RADIATOR_MOTOR"]
-        ["SAR_1_101"] = 
+        ["ENG0_MAGNETO0"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "SAR_1_101",
+            ["id"] = "ENG0_MAGNETO0",
             ["mm"] = 0,
-        }, -- end of ["SAR_1_101"]
+        }, -- end of ["ENG0_MAGNETO0"]
         ["AAR_47_FAILURE_SENSOR_TAIL"] = 
         {
             ["hh"] = 0,
@@ -5805,15 +6796,25 @@ mission =
             ["id"] = "AAR_47_FAILURE_SENSOR_TAIL",
             ["mm"] = 0,
         }, -- end of ["AAR_47_FAILURE_SENSOR_TAIL"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["EZ42_NO_POWER_SUPPLY"] = 
+=======
+        ["ef_vibration"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "EZ42_NO_POWER_SUPPLY",
             ["mm"] = 0,
         }, -- end of ["EZ42_NO_POWER_SUPPLY"]
+=======
+            ["id"] = "ef_vibration",
+            ["mm"] = 0,
+        }, -- end of ["ef_vibration"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["TACAN_FAILURE_TRANSMITTER"] = 
         {
             ["hh"] = 0,
@@ -5823,15 +6824,25 @@ mission =
             ["id"] = "TACAN_FAILURE_TRANSMITTER",
             ["mm"] = 0,
         }, -- end of ["TACAN_FAILURE_TRANSMITTER"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["asc"] = 
+=======
+        ["TailRotorControlFailure"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "asc",
             ["mm"] = 0,
         }, -- end of ["asc"]
+=======
+            ["id"] = "TailRotorControlFailure",
+            ["mm"] = 0,
+        }, -- end of ["TailRotorControlFailure"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["GUN_RIGHT_MG151_BARREL_WORN"] = 
         {
             ["hh"] = 0,
@@ -5841,15 +6852,25 @@ mission =
             ["id"] = "GUN_RIGHT_MG151_BARREL_WORN",
             ["mm"] = 0,
         }, -- end of ["GUN_RIGHT_MG151_BARREL_WORN"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["fire_sys_fire_LE"] = 
+=======
+        ["IFFCC_FAILURE_GUN"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "fire_sys_fire_LE",
             ["mm"] = 0,
         }, -- end of ["fire_sys_fire_LE"]
+=======
+            ["id"] = "IFFCC_FAILURE_GUN",
+            ["mm"] = 0,
+        }, -- end of ["IFFCC_FAILURE_GUN"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["BOMBS_DAMAGE_LINKAGE_RIGHT"] = 
         {
             ["hh"] = 0,
@@ -5862,30 +6883,48 @@ mission =
         ["SAR_fast"] = 
         {
             ["hh"] = 0,
+            ["enable"] = false,
             ["prob"] = 100,
             ["id"] = "SAR_fast",
             ["mmint"] = 1,
-            ["enable"] = false,
+            ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["SAR_fast"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["HORIZON_FAULT"] = 
+=======
+        ["TURNIND_POINTER_NOT_SET_ZERO"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "HORIZON_FAULT",
             ["mm"] = 0,
         }, -- end of ["HORIZON_FAULT"]
         ["EZ42_MOTOR_DEFECTIVE"] = 
+=======
+            ["id"] = "TURNIND_POINTER_NOT_SET_ZERO",
+            ["mm"] = 0,
+        }, -- end of ["TURNIND_POINTER_NOT_SET_ZERO"]
+        ["es_damage_Generator"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "EZ42_MOTOR_DEFECTIVE",
             ["mm"] = 0,
         }, -- end of ["EZ42_MOTOR_DEFECTIVE"]
+=======
+            ["id"] = "es_damage_Generator",
+            ["mm"] = 0,
+        }, -- end of ["es_damage_Generator"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["ROCKETS_INTERVALOMETER_SEQ"] = 
         {
             ["hh"] = 0,
@@ -5895,24 +6934,40 @@ mission =
             ["id"] = "ROCKETS_INTERVALOMETER_SEQ",
             ["mm"] = 0,
         }, -- end of ["ROCKETS_INTERVALOMETER_SEQ"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["es_damage_Starter"] = 
+=======
+        ["fuel_sys_transfer_pumps"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "es_damage_Starter",
             ["mm"] = 0,
         }, -- end of ["es_damage_Starter"]
         ["HYD_PUMP_3_FAIL_100"] = 
+=======
+            ["id"] = "fuel_sys_transfer_pumps",
+            ["mm"] = 0,
+        }, -- end of ["fuel_sys_transfer_pumps"]
+        ["ecf"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "HYD_PUMP_3_FAIL_100",
             ["mm"] = 0,
         }, -- end of ["HYD_PUMP_3_FAIL_100"]
+=======
+            ["mm"] = 0,
+        }, -- end of ["ecf"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["SAR_2_101"] = 
         {
             ["hh"] = 0,
@@ -5926,20 +6981,30 @@ mission =
         {
             ["hh"] = 0,
             ["prob"] = 100,
-            ["id"] = "CTRL_TAIL_ROTOR_CONTROL_FAILURE",
-            ["mmint"] = 1,
             ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "CTRL_TAIL_ROTOR_CONTROL_FAILURE",
             ["mm"] = 0,
         }, -- end of ["CTRL_TAIL_ROTOR_CONTROL_FAILURE"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["GUN_LEFT_IN_OPEN_CIRCUIT"] = 
+=======
+        ["APU_Fire"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "GUN_LEFT_IN_OPEN_CIRCUIT",
             ["mm"] = 0,
         }, -- end of ["GUN_LEFT_IN_OPEN_CIRCUIT"]
+=======
+            ["id"] = "APU_Fire",
+            ["mm"] = 0,
+        }, -- end of ["APU_Fire"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["FAULTY_ROCKET_RIGHT"] = 
         {
             ["hh"] = 0,
@@ -5949,15 +7014,25 @@ mission =
             ["id"] = "FAULTY_ROCKET_RIGHT",
             ["mm"] = 0,
         }, -- end of ["FAULTY_ROCKET_RIGHT"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["RightEngine_ShaveInOil"] = 
+=======
+        ["RADARALTUNIT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "RightEngine_ShaveInOil",
             ["mm"] = 0,
         }, -- end of ["RightEngine_ShaveInOil"]
+=======
+            ["id"] = "RADARALTUNIT",
+            ["mm"] = 0,
+        }, -- end of ["RADARALTUNIT"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["VHF_TOTAL_DAMAGE"] = 
         {
             ["hh"] = 0,
@@ -5976,24 +7051,41 @@ mission =
             ["id"] = "OIL_DILUTION_SOLENOID",
             ["mm"] = 0,
         }, -- end of ["OIL_DILUTION_SOLENOID"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["Vibration_RightEngine"] = 
+=======
+        ["GUN_LEFT_OUT_OPEN_CIRCUIT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["id"] = "Vibration_RightEngine",
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["enable"] = false,
             ["mm"] = 0,
         }, -- end of ["Vibration_RightEngine"]
         ["TEMPSENSOR"] = 
+=======
+            ["id"] = "GUN_LEFT_OUT_OPEN_CIRCUIT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_LEFT_OUT_OPEN_CIRCUIT"]
+        ["DOPPLER_UNIT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "TEMPSENSOR",
             ["mm"] = 0,
         }, -- end of ["TEMPSENSOR"]
+=======
+            ["id"] = "DOPPLER_UNIT",
+            ["mm"] = 0,
+        }, -- end of ["DOPPLER_UNIT"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["BOMBS_RUST_RIGHT"] = 
         {
             ["hh"] = 0,
@@ -6012,24 +7104,42 @@ mission =
             ["id"] = "CLOGGED_FUEL_STRAINER",
             ["mm"] = 0,
         }, -- end of ["CLOGGED_FUEL_STRAINER"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["SUPERCHARGER_LIGHT"] = 
+=======
+        ["COOLANT_RADIATOR_SENSOR"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "SUPERCHARGER_LIGHT",
             ["mm"] = 0,
         }, -- end of ["SUPERCHARGER_LIGHT"]
         ["FUEL_DROPTANK_LINE_SEVERED"] = 
+=======
+            ["id"] = "COOLANT_RADIATOR_SENSOR",
+            ["mm"] = 0,
+        }, -- end of ["COOLANT_RADIATOR_SENSOR"]
+        ["TransitionalReductor_LowOilPressure"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
-            ["prob"] = 100,
             ["enable"] = false,
+            ["prob"] = 100,
+            ["id"] = "TransitionalReductor_LowOilPressure",
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "FUEL_DROPTANK_LINE_SEVERED",
             ["mm"] = 0,
         }, -- end of ["FUEL_DROPTANK_LINE_SEVERED"]
+=======
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["TransitionalReductor_LowOilPressure"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["AOASENSOR"] = 
         {
             ["hh"] = 0,
@@ -6048,22 +7158,33 @@ mission =
             ["id"] = "hydro_main_irreversible_valve",
             ["mm"] = 0,
         }, -- end of ["hydro_main_irreversible_valve"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["HYDRRESERVPUMP"] = 
+=======
+        ["es_damage_VU1"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
-            ["prob"] = 100,
             ["enable"] = false,
+            ["prob"] = 100,
+            ["id"] = "es_damage_VU1",
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "HYDRRESERVPUMP",
             ["mm"] = 0,
         }, -- end of ["HYDRRESERVPUMP"]
+=======
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["es_damage_VU1"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["fuel_sys_feed_tank_pump"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
-            ["id"] = "fuel_sys_feed_tank_pump",
-            ["mmint"] = 1,
             ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "fuel_sys_feed_tank_pump",
             ["mm"] = 0,
         }, -- end of ["fuel_sys_feed_tank_pump"]
         ["GMC1AE_GYRO_FAILURE"] = 
@@ -6075,60 +7196,105 @@ mission =
             ["id"] = "GMC1AE_GYRO_FAILURE",
             ["mm"] = 0,
         }, -- end of ["GMC1AE_GYRO_FAILURE"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["r_conv"] = 
+=======
+        ["hydro_left"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "r_conv",
             ["mm"] = 0,
         }, -- end of ["r_conv"]
         ["AIRBRAKE"] = 
+=======
+            ["id"] = "hydro_left",
+            ["mm"] = 0,
+        }, -- end of ["hydro_left"]
+        ["l_conv"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "AIRBRAKE",
             ["mm"] = 0,
         }, -- end of ["AIRBRAKE"]
         ["AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT"] = 
+=======
+            ["id"] = "l_conv",
+            ["mm"] = 0,
+        }, -- end of ["l_conv"]
+        ["OIL_RADIATOR_SENSOR"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT",
             ["mm"] = 0,
         }, -- end of ["AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT"]
         ["ef_fire"] = 
+=======
+            ["id"] = "OIL_RADIATOR_SENSOR",
+            ["mm"] = 0,
+        }, -- end of ["OIL_RADIATOR_SENSOR"]
+        ["fs_forward_RH_leakage"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "ef_fire",
             ["mm"] = 0,
         }, -- end of ["ef_fire"]
         ["AFN2_DAMAGE"] = 
+=======
+            ["id"] = "fs_forward_RH_leakage",
+            ["mm"] = 0,
+        }, -- end of ["fs_forward_RH_leakage"]
+        ["SUPERCHARGER_SOLENOID"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "AFN2_DAMAGE",
             ["mm"] = 0,
         }, -- end of ["AFN2_DAMAGE"]
         ["BOMBS_ARMING_BROKEN_WIRING"] = 
+=======
+            ["id"] = "SUPERCHARGER_SOLENOID",
+            ["mm"] = 0,
+        }, -- end of ["SUPERCHARGER_SOLENOID"]
+        ["GUN_LEFT_CENTER_AMMUN_FAULT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "BOMBS_ARMING_BROKEN_WIRING",
             ["mm"] = 0,
         }, -- end of ["BOMBS_ARMING_BROKEN_WIRING"]
+=======
+            ["id"] = "GUN_LEFT_CENTER_AMMUN_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_LEFT_CENTER_AMMUN_FAULT"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["ef_shutdown"] = 
         {
             ["hh"] = 0,
@@ -6138,15 +7304,25 @@ mission =
             ["id"] = "ef_shutdown",
             ["mm"] = 0,
         }, -- end of ["ef_shutdown"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["SUPERCHARGER_SOLENOID"] = 
+=======
+        ["FUELTANK3L"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "SUPERCHARGER_SOLENOID",
             ["mm"] = 0,
         }, -- end of ["SUPERCHARGER_SOLENOID"]
+=======
+            ["id"] = "FUELTANK3L",
+            ["mm"] = 0,
+        }, -- end of ["FUELTANK3L"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         ["ELEC_DASHBOARD_HARNESS_CUT"] = 
         {
             ["hh"] = 0,
@@ -6174,32 +7350,57 @@ mission =
             ["id"] = "BOMBS_ARMING_NO_VOLATAGE_RIGHT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_ARMING_NO_VOLATAGE_RIGHT"]
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
         ["A11_CLOCK_FAILURE"] = 
+=======
+        ["es_damage_VU3"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
-            ["prob"] = 100,
             ["enable"] = false,
+            ["prob"] = 100,
+            ["id"] = "es_damage_VU3",
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "A11_CLOCK_FAILURE",
             ["mm"] = 0,
         }, -- end of ["A11_CLOCK_FAILURE"]
         ["COOLANT_DEFECTIVE_IND"] = 
+=======
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["es_damage_VU3"]
+        ["RWRUNIT"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "COOLANT_DEFECTIVE_IND",
             ["mm"] = 0,
         }, -- end of ["COOLANT_DEFECTIVE_IND"]
         ["ILS_FAILURE_ANT_MARKER"] = 
+=======
+            ["id"] = "RWRUNIT",
+            ["mm"] = 0,
+        }, -- end of ["RWRUNIT"]
+        ["mlws"] = 
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
+<<<<<<< HEAD:CAZ - Capture Zones/CAZ-000 - Capture Zone/_unpacked/mission
             ["id"] = "ILS_FAILURE_ANT_MARKER",
             ["mm"] = 0,
         }, -- end of ["ILS_FAILURE_ANT_MARKER"]
+=======
+            ["id"] = "mlws",
+            ["mm"] = 0,
+        }, -- end of ["mlws"]
+>>>>>>> develop:CAZ - Capture Zones/CAZ-001 - Capture Zone/_unpacked/mission
     }, -- end of ["failures"]
 } -- end of mission

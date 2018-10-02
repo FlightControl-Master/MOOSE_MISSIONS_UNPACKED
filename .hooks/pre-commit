@@ -63,15 +63,22 @@ else
             echo "- '$mission_base' unpacked."
             cd "$mission_dir"
             
-            # Create pack_miz.bat
-            printf "cd \"_unpacked\"\r\n" > pack_miz.bat
-            printf "7z a -r -y -tzip \"..\\$mission_base\" *" >> pack_miz.bat
+            # Create pack.ps1
+            printf "$dir = split-path -parent $MyInvocation.MyCommand.Definition" > pack.ps1
+            printf "cd $dir" > pack.ps1
+            printf "$file = Split-Path $dir -leaf" > pack.ps1
+            printf "cd \"_unpacked\"" > pack.ps1
+            printf ". 7z a -r -y -tzip \"..\$file.miz\" *" > pack.ps1
+            printf "cd .." > pack.ps1
             
             # create unpack_miz.bat
-            printf "del /S /Q \"_unpacked\"\r\n" > unpack_miz.bat
-            printf "md \"_unpacked\"\r\n" >> unpack_miz.bat
-            printf "cd \"_unpacked\"\r\n" >> unpack_miz.bat
-            printf "7z x -r -y \"..\\$mission_base\" *" >> unpack_miz.bat
+            printf "$dir = split-path -parent $MyInvocation.MyCommand.Definition" > unpack.ps1
+            printf "cd $dir" > unpack.ps1
+            printf "$file = Split-Path $dir -leaf" > unpack.ps1 
+            printf "Remove-Item .\_unpacked -Force -Recurse" > unpack.ps1 
+            printf "md \"_unpacked\"" > unpack.ps1 
+            printf "cd \"_unpacked\"" > unpack.ps1 
+            printf ". 7z x -r -y \"..\$file.miz\" *" > unpack.ps1 
             
             cd "$git_root"
             git add "$mission_dir/pack_miz.bat"

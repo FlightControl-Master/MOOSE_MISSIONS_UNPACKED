@@ -1,9 +1,0 @@
-settings=
-{
-	["TAAFAltitude"]=8000,
-	["FLIRIntegration"]=1,
-	["CalibrationMethod"]=1,
-	["GainControl"]=1,
-	["LSSCode"]=1622,
-	["LCode"]=1622,
-}
