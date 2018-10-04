@@ -64,37 +64,37 @@ else
             cd "$mission_dir"
             
             # Create pack.ps1
-            printf "$dir = split-path -parent $MyInvocation.MyCommand.Definition" > pack.ps1
-            printf "cd $dir" > pack.ps1
-            printf "$file = Split-Path $dir -leaf" > pack.ps1
-            printf "cd \"_unpacked\"" > pack.ps1
-            printf ". 7z a -r -y -tzip \"..\$file.miz\" *" > pack.ps1
-            printf "cd .." > pack.ps1
+            printf '$dir = split-path -parent $MyInvocation.MyCommand.Definition \n' > pack.ps1
+            printf 'cd $dir \n' >> pack.ps1
+            printf '$file = Split-Path $dir -leaf \n' >> pack.ps1
+            printf 'cd \"_unpacked\" \n' >> pack.ps1
+            printf '. 7z a -r -y -tzip "..\$file.miz" * \n' >> pack.ps1
+            printf 'cd ..\n' >> pack.ps1
             
             # create unpack_miz.bat
-            printf "$dir = split-path -parent $MyInvocation.MyCommand.Definition" > unpack.ps1
-            printf "cd $dir" > unpack.ps1
-            printf "$file = Split-Path $dir -leaf" > unpack.ps1 
-            printf "Remove-Item .\_unpacked -Force -Recurse" > unpack.ps1 
-            printf "md \"_unpacked\"" > unpack.ps1 
-            printf "cd \"_unpacked\"" > unpack.ps1 
-            printf ". 7z x -r -y \"..\$file.miz\" *" > unpack.ps1 
+            printf '$dir = split-path -parent $MyInvocation.MyCommand.Definition \n' > unpack.ps1
+            printf 'cd $dir \n' >> unpack.ps1
+            printf '$file = Split-Path $dir -leaf \n' >> unpack.ps1 
+            printf 'Remove-Item .\_unpacked -Force -Recurse \n' >> unpack.ps1 
+            printf 'md \"_unpacked\" \n' >> unpack.ps1 
+            printf 'cd \"_unpacked\" \n' >> unpack.ps1 
+            printf '. 7z x -r -y "..\$file.miz" * \n' >> unpack.ps1 
             
             cd "$git_root"
-            git add "$mission_dir/pack_miz.bat"
-            git add "$mission_dir/unpack_miz.bat"
+            git add "$mission_dir/pack.ps1"
+            git add "$mission_dir/unpack.ps1"
           else
-            echo "! Couldn't unzip '$mission_base'."
+            echo "! Could not unzip '$mission_base'."
             rm -rf "$mission_unpacked"
             exit 1
           fi
           cd "$git_root"
         else
-          echo "! Couldn't change directory to '$mission_unpacked'."
+          echo "! Could not change directory to '$mission_unpacked'."
           exit 1
         fi
       else
-        echo "! Couldn't create directory '$mission_unpacked'."
+        echo "! Could not create directory '$mission_unpacked'."
         exit 1
       fi
     else
