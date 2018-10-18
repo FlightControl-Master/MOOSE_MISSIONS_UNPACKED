@@ -35,5 +35,9 @@ AICargoDispatcherAPC = AI_CARGO_DISPATCHER_APC:New( SetAPC, CargoInfantrySet, Pi
 -- This will work too, so the combat range can be provided, but must be 0.
 --AICargoDispatcherAPC = AI_CARGO_DISPATCHER_APC:New( SetAPC, SetCargoInfantry, nil, SetDeployZones, 0 ) 
 
+-- Now also make the carriers spawn in.
+CarrierSpawn = SPAWN:New( "APC" ):InitLimit( 10, 10 ):InitRandomizePosition( true, 200, 50 ):SpawnScheduled( 10, 0 )
+
+
 AICargoDispatcherAPC:Start()
 
