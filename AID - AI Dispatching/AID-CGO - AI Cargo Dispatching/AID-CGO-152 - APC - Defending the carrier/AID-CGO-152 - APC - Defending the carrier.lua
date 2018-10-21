@@ -22,3 +22,7 @@ AICargoDispatcherAPC = AI_CARGO_DISPATCHER_APC:New( SetAPC, SetCargoInfantry, ni
 
 AICargoDispatcherAPC:Start()
 
+Sound = USERSOUND:New( "Sounds/BOS05ej9982.ogg" )
+
+Sound:ToAll()
+
