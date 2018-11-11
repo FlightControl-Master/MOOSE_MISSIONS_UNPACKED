@@ -38,30 +38,31 @@ A2ADispatcher:SetSquadronOverhead( "Mineralnye", 1.2 )
 A2ADispatcher:SetSquadronGrouping( "Mineralnye", 1 )
 
 -- Setup the Takeoff methods
-A2ADispatcher:SetSquadronTakeoff( "Mineralnye", AI_A2A_DISPATCHER.Takeoff.Air )
+A2ADispatcher:SetSquadronTakeoff( "Mineralnye", AI_A2A_DISPATCHER.Takeoff.Hot )
 
 -- Setup the Landing methods
-A2ADispatcher:SetSquadronLandingAtRunway( "Mineralnye" )
+A2ADispatcher:SetSquadronLandingAtEngineShutdown( "Mineralnye" )
 
+
+-- Setup the visibility before start.
+A2ADispatcher:SetSquadronVisible( "Mineralnye" )
 
 -- CAP Squadron execution.
---CAPZoneEast = ZONE_POLYGON:New( "CAP Zone East", GROUP:FindByName( "CAP Zone East" ) )
---A2ADispatcher:SetSquadronCap( "Mineralnye", CAPZoneEast, 4000, 10000, 500, 600, 800, 900 )
---A2ADispatcher:SetSquadronCapInterval( "Mineralnye", 2, 30, 60, 1 )
+CAPZoneEast = ZONE_POLYGON:New( "CAP Zone East", GROUP:FindByName( "CAP Zone East" ) )
+A2ADispatcher:SetSquadronCap( "Mineralnye", CAPZoneEast, 4000, 10000, 500, 600, 800, 900 )
+A2ADispatcher:SetSquadronCapInterval( "Mineralnye", 1, 30, 60, 1 )
+A2ADispatcher:SetSquadronFuelThreshold( "Mineralnye", 0.20 )
 
 -- GCI Squadron execution.
-A2ADispatcher:SetSquadronGci( "Mineralnye", 900, 1200 )
-
-CleanUp = CLEANUP_AIRBASE:New( { AIRBASE.Caucasus.Novorossiysk } )
-
+--A2ADispatcher:SetSquadronGci( "Mineralnye", 900, 1200 )
 
 -- Blue attack simulation
 local Frequency = 60
 
-BlueSpawn1 = SPAWN
-  :New( "RT NATO 1" )
-  :InitLimit( 2, 10 )
-  :InitRandomizeTemplate( { "SQ NATO A-10C", "SQ NATO F-15C", "SQ NATO F-16A", "SQ NATO F/A-18", "SQ NATO F-16C" } )
-  :InitRandomizeRoute( 0, 0, 30000 )
-  --:InitDelayOn()
-  :SpawnScheduled( Frequency, 0.4 )
+--BlueSpawn1 = SPAWN
+--  :New( "RT NATO 1" )
+--  :InitLimit( 2, 10 )
+--  :InitRandomizeTemplate( { "SQ NATO A-10C", "SQ NATO F-15C", "SQ NATO F-16A", "SQ NATO F/A-18", "SQ NATO F-16C" } )
+--  :InitRandomizeRoute( 0, 0, 30000 )
+--  --:InitDelayOn()
+--  :SpawnScheduled( Frequency, 0.4 )

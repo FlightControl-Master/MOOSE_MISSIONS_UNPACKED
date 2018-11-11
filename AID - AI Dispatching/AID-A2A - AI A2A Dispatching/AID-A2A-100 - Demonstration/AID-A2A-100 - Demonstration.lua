@@ -26,30 +26,30 @@ A2ADispatcher:SetBorderZone( CCCPBorderZone )
 
 -- Initialize the dispatcher, setting up a radius of 100km where any airborne friendly 
 -- without an assignment within 100km radius from a detected target, will engage that target.
-A2ADispatcher:SetEngageRadius( 80000 )
+A2ADispatcher:SetEngageRadius( 120000 )
 
 -- Setup the squadrons.
-A2ADispatcher:SetSquadron( "Mineralnye", AIRBASE.Caucasus.Mineralnye_Vody, { "SQ CCCP SU-27" }, 20 )
+A2ADispatcher:SetSquadron( "Mineralnye", AIRBASE.Caucasus.Mineralnye_Vody, { "SQ CCCP SU-27", "SQ CCCP SU-33", "SQ CCCP MIG-23MLD", "SQ CCCP MIG-25PD" }, 16 )
 A2ADispatcher:SetSquadron( "Maykop", AIRBASE.Caucasus.Maykop_Khanskaya, { "SQ CCCP MIG-31" }, 20 )
-A2ADispatcher:SetSquadron( "Mozdok", AIRBASE.Caucasus.Mozdok, { "SQ CCCP MIG-31" }, 20 )
-A2ADispatcher:SetSquadron( "Sochi", AIRBASE.Caucasus.Sochi_Adler, { "SQ CCCP SU-27" }, 20 )
-A2ADispatcher:SetSquadron( "Novo", AIRBASE.Caucasus.Novorossiysk, { "SQ CCCP SU-27" }, 20 )
+A2ADispatcher:SetSquadron( "Mozdok", AIRBASE.Caucasus.Mozdok, { "SQ CCCP MIG-31" }, 16 )
+A2ADispatcher:SetSquadron( "Sochi", AIRBASE.Caucasus.Sochi_Adler, { "SQ CCCP SU-27", "SQ CCCP SU-33", "SQ CCCP MIG-23MLD", "SQ CCCP MIG-25PD", "SQ CCCP SU-34", "SQ CCCP MIG-31", "SQ CCCP MIG-29S" }, 40 )
+A2ADispatcher:SetSquadron( "Novo", AIRBASE.Caucasus.Novorossiysk, { "SQ CCCP SU-27" }, 16 )
 
 -- Setup the overhead
 A2ADispatcher:SetSquadronOverhead( "Mineralnye", 1.2 )
 A2ADispatcher:SetSquadronOverhead( "Maykop", 1 )
 A2ADispatcher:SetSquadronOverhead( "Mozdok", 1 )
-A2ADispatcher:SetSquadronOverhead( "Sochi", 1 )
+A2ADispatcher:SetSquadronOverhead( "Sochi", 2 )
 A2ADispatcher:SetSquadronOverhead( "Novo", 1.5 )
 
 -- Setup the Grouping
-A2ADispatcher:SetSquadronGrouping( "Mineralnye", 1 )
+A2ADispatcher:SetSquadronGrouping( "Mineralnye", 4 )
 A2ADispatcher:SetSquadronGrouping( "Sochi", 2 )
 A2ADispatcher:SetSquadronGrouping( "Novo", 3 )
 
 -- Setup the Takeoff methods
-A2ADispatcher:SetSquadronTakeoff( "Mineralnye", AI_A2A_DISPATCHER.Takeoff.Air )
-A2ADispatcher:SetSquadronTakeoffInAir( "Sochi" )
+A2ADispatcher:SetSquadronTakeoff( "Mineralnye", AI_A2A_DISPATCHER.Takeoff.Hot )
+A2ADispatcher:SetSquadronTakeoffFromParkingHot( "Sochi" )
 A2ADispatcher:SetSquadronTakeoffFromRunway( "Mozdok" )
 A2ADispatcher:SetSquadronTakeoffFromParkingCold( "Maykop" )
 A2ADispatcher:SetSquadronTakeoffFromParkingHot( "Novo" )
@@ -65,7 +65,7 @@ A2ADispatcher:SetSquadronLanding( "Novo", AI_A2A_DISPATCHER.Landing.AtRunway )
 -- CAP Squadron execution.
 CAPZoneEast = ZONE_POLYGON:New( "CAP Zone East", GROUP:FindByName( "CAP Zone East" ) )
 A2ADispatcher:SetSquadronCap( "Mineralnye", CAPZoneEast, 4000, 10000, 500, 600, 800, 900 )
-A2ADispatcher:SetSquadronCapInterval( "Mineralnye", 2, 30, 60, 1 )
+A2ADispatcher:SetSquadronCapInterval( "Mineralnye", 6, 30, 60, 1 )
 
 CAPZoneWest = ZONE_POLYGON:New( "CAP Zone West", GROUP:FindByName( "CAP Zone West" ) )
 A2ADispatcher:SetSquadronCap( "Sochi", CAPZoneWest, 4000, 8000, 600, 800, 800, 1200, "BARO" )
@@ -80,7 +80,15 @@ A2ADispatcher:SetSquadronGci( "Mozdok", 900, 1200 )
 A2ADispatcher:SetSquadronGci( "Novo", 900, 2100 )
 A2ADispatcher:SetSquadronGci( "Maykop", 900, 1200 )
 
-CleanUp = CLEANUP_AIRBASE:New( { AIRBASE.Caucasus.Novorossiysk } )
+-- Set the squadrons visible before startup.
+A2ADispatcher:SetSquadronVisible( "Mineralnye" )
+A2ADispatcher:SetSquadronVisible( "Sochi" )
+A2ADispatcher:SetSquadronVisible( "Mozdok" )
+A2ADispatcher:SetSquadronVisible( "Maykop" )
+--A2ADispatcher:SetSquadronVisible( "Novo" )
+
+
+--CleanUp = CLEANUP_AIRBASE:New( { AIRBASE.Caucasus.Novorossiysk } )
 
 
 -- Blue attack simulation
