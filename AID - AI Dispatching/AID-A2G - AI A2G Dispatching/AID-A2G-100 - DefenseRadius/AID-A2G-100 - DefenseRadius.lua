@@ -8,10 +8,17 @@
 
 -- Define a SET_GROUP object that builds a collection of groups that define the recce network.
 -- Here we build the network with all the groups that have a name starting with CCCP Recce.
-DetectionSetGroup = SET_GROUP:New()
-DetectionSetGroup:FilterPrefixes( { "CCCP Recce" } )
-DetectionSetGroup:FilterStart()
+DetectionSetGroup = SET_GROUP:New() -- Defene a set of group objects, caled DetectionSetGroup.
 
+DetectionSetGroup:FilterPrefixes( { "CCCP Recce" } ) -- The DetectionSetGroup will search for groups that start with the name "CCCP Recce".
+
+-- This command will start the dynamic filtering, so when groups spawn in or are destroyed, 
+-- which have a group name starting with "CCCP Recce", then these will be automatically added or removed from the set.
+DetectionSetGroup:FilterStart() 
+
+-- This command defines the reconnaissance network.
+-- It will group any detected ground enemy targets within a radius of 1km.
+-- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
 Detection = DETECTION_AREAS:New( DetectionSetGroup, 1000 )
 
 -- Setup the A2A dispatcher, and initialize it.
