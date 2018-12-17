@@ -25,7 +25,9 @@ A2GDispatcher:SetTacticalDisplay( true )
 
 -- Setup the squadrons.
 
+local CASPatrolZone = ZONE:New( "CASPatrolZone" )
 A2GDispatcher:SetSquadron( "Sq34", "FARP CAS", { "Defender" }, 10 )
-A2GDispatcher:SetSquadronCas( "Sq34", 120, 250 )
+A2GDispatcher:SetSquadronCasPatrol( "Sq34", CASPatrolZone, 200, 500, 70, 100, 250, 300 )
+A2GDispatcher:SetSquadronCasPatrolInterval( "Sq34", 2, 30, 60 )
 A2GDispatcher:SetSquadronTakeoffFromParkingHot( "Sq34" )
 A2GDispatcher:SetSquadronOverhead( "Sq34", 0.25 )
