@@ -25,17 +25,24 @@ A2GDispatcher:SetTacticalDisplay( true )
 
 -- Setup the squadrons.
 
-A2GDispatcher:SetSquadron( "Maykop SEAD", "SEAD", { "CCCP KA-50" }, 10 )
+A2GDispatcher:SetSquadron( "Maykop SEAD", AIRBASE.Caucasus.Maykop_Khanskaya, { "CCCP KA-50" }, 10 )
 A2GDispatcher:SetSquadronSead( "Maykop SEAD", 120, 250 )
 A2GDispatcher:SetSquadronTakeoffFromParkingHot( "Maykop SEAD" )
 A2GDispatcher:SetSquadronOverhead( "Maykop SEAD", 0.25 )
 
---A2GDispatcher:SetSquadron( "Maykop CAS", "CAS", { "CCCP KA-50" }, 10 )
---A2GDispatcher:SetSquadronCas( "Maykop CAS", 120, 250 )
---A2GDispatcher:SetSquadronTakeoffFromParkingHot( "Maykop CAS" )
---A2GDispatcher:SetSquadronOverhead( "Maykop CAS", 0.25 )
---
---A2GDispatcher:SetSquadron( "Maykop BAI", "BAI", { "CCCP KA-50" }, 10 )
---A2GDispatcher:SetSquadronBai( "Maykop BAI", 120, 250 )
---A2GDispatcher:SetSquadronTakeoffFromParkingHot( "Maykop BAI" )
---A2GDispatcher:SetSquadronOverhead( "Maykop BAI", 0.25 )
+A2GDispatcher:SetSquadron( "Maykop CAS", "CAS", { "CCCP KA-50" }, 10 )
+A2GDispatcher:SetSquadronCas( "Maykop CAS", 120, 250 )
+A2GDispatcher:SetSquadronTakeoffFromParkingHot( "Maykop CAS" )
+A2GDispatcher:SetSquadronOverhead( "Maykop CAS", 0.25 )
+
+A2GDispatcher:SetSquadron( "Maykop BAI", "BAI", { "CCCP KA-50" }, 10 )
+A2GDispatcher:SetSquadronBai( "Maykop BAI", 120, 250 )
+A2GDispatcher:SetSquadronTakeoffFromParkingHot( "Maykop BAI" )
+A2GDispatcher:SetSquadronOverhead( "Maykop BAI", 0.25 )
+
+-- We set for each squadron a takeoff interval, as each helicopter will launch from a FARP.
+-- This to prevent helicopters to clutter.
+-- Each helicopter group is taking off the FARP in hot start.
+A2GDispatcher:SetSquadronTakeoffInterval( "Maykop SEAD", 60 )
+A2GDispatcher:SetSquadronTakeoffInterval( "Maykop CAS", 60 )
+A2GDispatcher:SetSquadronTakeoffInterval( "Maykop BAI", 60 )

@@ -35,9 +35,16 @@ A2GDispatcher:SetTacticalDisplay( true )
 
 local PatrolZone = ZONE:New( "PatrolZone" )
 
--- Setup the squadrons.
+-- Setup the SEAD squadrons.
 A2GDispatcher:SetSquadron( "Maykop SEAD", AIRBASE.Caucasus.Maykop_Khanskaya, { "CCCP SU-25T SEAD" }, 10 )
 A2GDispatcher:SetSquadronSeadPatrol( "Maykop SEAD", PatrolZone, 1000, 2500, 400, 600, 1100, 1500 )
-A2GDispatcher:SetSquadronSeadPatrolInterval( "Maykop SEAD", 4, 30, 60, 1 )
+A2GDispatcher:SetSquadronSeadPatrolInterval( "Maykop SEAD", 1, 30, 60, 1 )
 A2GDispatcher:SetSquadronTakeoffInAir( "Maykop SEAD" )
 A2GDispatcher:SetSquadronOverhead( "Maykop SEAD", 0.25 )
+
+-- Setup the CAS squadrons.
+A2GDispatcher:SetSquadron( "Maykop CAS", AIRBASE.Caucasus.Maykop_Khanskaya, { "CCCP SU-25T CAS" }, 10 )
+A2GDispatcher:SetSquadronCasPatrol( "Maykop CAS", PatrolZone, 1000, 2500, 400, 600, 1100, 1500 )
+A2GDispatcher:SetSquadronCasPatrolInterval( "Maykop CAS", 1, 30, 60, 1 )
+A2GDispatcher:SetSquadronTakeoffInAir( "Maykop CAS" )
+A2GDispatcher:SetSquadronOverhead( "Maykop CAS", 0.25 )
