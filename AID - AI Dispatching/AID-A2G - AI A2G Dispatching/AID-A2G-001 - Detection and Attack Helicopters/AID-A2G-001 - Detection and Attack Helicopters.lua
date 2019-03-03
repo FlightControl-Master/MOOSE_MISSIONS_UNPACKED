@@ -9,7 +9,7 @@ DetectionSetGroup = SET_GROUP:New()
 DetectionSetGroup:FilterPrefixes( { "CCCP Recce" } )
 DetectionSetGroup:FilterStart()
 
-Detection = DETECTION_AREAS:New( DetectionSetGroup, 1000 )
+Detection = DETECTION_AREAS:New( DetectionSetGroup, 5000 )
 
 -- Setup the A2A dispatcher, and initialize it.
 A2GDispatcher = AI_A2G_DISPATCHER:New( Detection )
@@ -17,18 +17,18 @@ A2GDispatcher = AI_A2G_DISPATCHER:New( Detection )
 -- Add defense coordinates.
 A2GDispatcher:AddDefenseCoordinate( "HQ", GROUP:FindByName( "HQ" ):GetCoordinate() )
 
-A2GDispatcher:SetDefenseReactivityMedium()
+A2GDispatcher:SetDefenseReactivityHigh()
 
-A2GDispatcher:SetDefenseRadius( 100000 )
+A2GDispatcher:SetDefenseRadius( 200000 )
 
 A2GDispatcher:SetTacticalDisplay( true )
 
 -- Setup the squadrons.
 
-A2GDispatcher:SetSquadron( "Maykop SEAD", AIRBASE.Caucasus.Maykop_Khanskaya, { "CCCP KA-50" }, 10 )
+A2GDispatcher:SetSquadron( "Maykop SEAD", AIRBASE.Caucasus.Maykop_Khanskaya, { "CCCP SU-25T" }, 10 )
 A2GDispatcher:SetSquadronSead( "Maykop SEAD", 120, 250 )
 A2GDispatcher:SetSquadronTakeoffFromParkingHot( "Maykop SEAD" )
-A2GDispatcher:SetSquadronOverhead( "Maykop SEAD", 0.25 )
+A2GDispatcher:SetSquadronOverhead( "Maykop SEAD", 0.2 )
 
 A2GDispatcher:SetSquadron( "Maykop CAS", "CAS", { "CCCP KA-50" }, 10 )
 A2GDispatcher:SetSquadronCas( "Maykop CAS", 120, 250 )
