@@ -3,6 +3,9 @@
 -- Author: FlightControl
 -- Date Created: 02 Nov 2018
 
+
+CC = COMMANDCENTER:New( GROUP:FindByName( "HQ" ), "HQ" )
+
 -- Define a SET_GROUP object that builds a collection of groups that define the recce network.
 -- Here we build the network with all the groups that have a name starting with CCCP Recce.
 DetectionSetGroup = SET_GROUP:New()
@@ -13,6 +16,7 @@ Detection = DETECTION_AREAS:New( DetectionSetGroup, 1000 )
 
 -- Setup the A2A dispatcher, and initialize it.
 A2GDispatcher = AI_A2G_DISPATCHER:New( Detection )
+A2GDispatcher:SetCommandCenter( CC )
 
 -- Add defense coordinates.
 A2GDispatcher:AddDefenseCoordinate( "HQ", GROUP:FindByName( "HQ" ):GetCoordinate() )
