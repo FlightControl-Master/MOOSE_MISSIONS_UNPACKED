@@ -187,9 +187,9 @@ mission =
     }, -- end of ["triggers"]
     ["map"] = 
     {
-        ["centerY"] = 447745.84642893,
-        ["zoom"] = 124646.25763525,
-        ["centerX"] = -152712.54588845,
+        ["centerY"] = 446506.31707832,
+        ["zoom"] = 53119.565493576,
+        ["centerX"] = -155137.59537828,
     }, -- end of ["map"]
     ["coalitions"] = 
     {
@@ -5157,6 +5157,7 @@ mission =
             }, -- end of ["rules"]
             ["comment"] = "Load MOOSE",
             ["eventlist"] = "",
+            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -5170,7 +5171,6 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["predicate"] = "triggerStart",
         }, -- end of [1]
         [2] = 
         {
@@ -5179,6 +5179,7 @@ mission =
             }, -- end of ["rules"]
             ["comment"] = "Trace",
             ["eventlist"] = "",
+            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -5194,7 +5195,6 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["predicate"] = "triggerStart",
         }, -- end of [2]
         [3] = 
         {
@@ -5203,6 +5203,7 @@ mission =
             }, -- end of ["rules"]
             ["comment"] = "Load Mission",
             ["eventlist"] = "",
+            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -5216,10 +5217,9 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["predicate"] = "triggerStart",
         }, -- end of [3]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 13283,
+    ["currentKey"] = 13707,
     ["start_time"] = 43200,
     ["forcedOptions"] = 
     {

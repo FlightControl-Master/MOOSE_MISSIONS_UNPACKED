@@ -1,4 +1,3 @@
-
 local FollowGroupSet = SET_GROUP:New():FilterCategories( { "plane", "ship" } ):FilterCoalitions( "red" ):FilterPrefixes( { "Escort", "Ship Defense" } ):FilterStart()
 
 local LeaderUnit = UNIT:FindByName( "Leader" )
