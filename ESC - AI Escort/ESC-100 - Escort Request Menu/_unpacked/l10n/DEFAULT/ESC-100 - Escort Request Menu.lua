@@ -67,15 +67,21 @@ function EventHandlerPlayer:OnEventBirth( EventData )
           local OneEscortAlive = false
           EscortGroupSet:ForEachGroupAlive( 
             function( EscortGroup )
-              SpawnNewEscorts( EventUnit, EscortGroup )
+              OneEscortAlive = true
             end
           )
+          
+          if OneEscortAlive == false then
+            SpawnNewEscorts( EventUnit )
+          end
+        
         else
           SpawnNewEscorts( EventUnit )
+          
         end
 
-        Escort[ID].Escort:FormationTrail( 50, 100, 50)
-        Escort[ID].Escort:__Start( 5 )
+      Escort[ID].Escort:FormationTrail( 50, 100, 50)
+      Escort[ID].Escort:__Start( 5 )
        
       end, EventUnit
       )
@@ -95,7 +101,6 @@ function EventHandlerPlayer:OnEventPlayerLeaveUnit( EventData )
   
     local ID = EventUnit:GetID()
     local EscortGroupSet = Escort[ID].Set -- Core.Set#SET_GROUP
-    local EscortGroup = Escort[ID].Escort -- Core.Set#SET_GROUP
     EscortGroupSet:ForEachGroupAlive( 
       function( EscortGroup )
         EscortGroup:Destroy()
@@ -103,11 +108,6 @@ function EventHandlerPlayer:OnEventPlayerLeaveUnit( EventData )
     )
 
     EscortGroupSet:Clear()
-    EscortGroup = nil
-    
-    if EventGroup.MenuRequestEscort then
-     EventGroup.MenuRequestEscort:Remove()
-    end
     
   end
 end
