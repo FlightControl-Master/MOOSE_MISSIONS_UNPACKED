@@ -1,16 +1,20 @@
 -- At startup of the overall mission, we spawn 10 possible escort planes in "Uncontrolled" state.
 
-EscortSpawn = SPAWN
-  :NewWithAlias( "Red A2G Escort Template", "Red A2G Escort AI" )
-  :InitUnControlled( true )
+EscortSpawnA2A = SPAWN
+  :NewWithAlias( "Red A2A Escort Template", "Red A2A Escort AI" )
+  :InitLimit( 10, 10 )
   
-for ID = 1, 10 do
-  EscortSpawn:SpawnAtAirbase( AIRBASE:FindByName( AIRBASE.Caucasus.Sochi_Adler ), SPAWN.Takeoff.Cold )
-end
+  
+EscortSpawnA2G = SPAWN
+  :NewWithAlias( "Red A2G Escort Template", "Red A2G Escort AI" )
+  :InitLimit( 10, 10 )
+  
+  
+EscortSpawnA2A:ParkAtAirbase( AIRBASE:FindByName( AIRBASE.Caucasus.Sochi_Adler ), AIRBASE.TerminalType.OpenBig )
+EscortSpawnA2A:SetSpawnIndex()
 
-EscortSpawn:InitUnControlled( false )
-EscortSpawn:SetSpawnIndex() -- Reset the spawning. So new planes will be respawned from the beginning.
-
+EscortSpawnA2G:ParkAtAirbase( AIRBASE:FindByName( AIRBASE.Caucasus.Sochi_Adler ), AIRBASE.TerminalType.OpenBig )
+EscortSpawnA2G:SetSpawnIndex()
 
 --- @type EscortTable
 -- @field Core.Set#SET_GROUP Set
@@ -23,22 +27,55 @@ EscortClients = SET_CLIENT:New():FilterPrefixes( "Red A2G Pilot" ):FilterStart()
 
 
 
-function SpawnNewEscorts( EscortUnit )
-  env.info("new escort")
+function SpawnNewEscortsA2A( EscortUnit )
+  env.info("new escort A2A")
   local ID = EscortUnit:GetID()
+  local EscortGroup = EscortUnit:GetGroup()
+
   Escort[ID] = Escort[ID] or {} 
-  Escort[ID].Set = SET_GROUP:New():FilterCoalitions( "red" ):FilterPrefixes( "Red A2G Escort AI" ):FilterCrashes():FilterDeads()
+  local EscortSet = SET_GROUP:New():FilterCoalitions( "red" ):FilterPrefixes( "Red A2A Escort AI" ):FilterCrashes():FilterDeads()
   
-  -- Spawn a new escort
-  local EscortGroup = EscortSpawn:SpawnAtAirbase( AIRBASE:FindByName( AIRBASE.Caucasus.Sochi_Adler ), SPAWN.Takeoff.Cold )
-  Escort[ID].Set:AddGroup( EscortGroup )
+  -- Spawn new escorts
+  local EscortGroup = EscortSpawnA2A:SpawnAtAirbase( AIRBASE:FindByName( AIRBASE.Caucasus.Sochi_Adler ), SPAWN.Takeoff.Cold )
+  EscortSet:AddGroup( EscortGroup )
+
+  local EscortGroup = EscortSpawnA2A:SpawnAtAirbase( AIRBASE:FindByName( AIRBASE.Caucasus.Sochi_Adler ), SPAWN.Takeoff.Cold )
+  EscortSet:AddGroup( EscortGroup )
   
   -- Now setup the AI_ESCORT to make the new spawned escort follow the EscortUnit.
-  Escort[ID].Escort = AI_ESCORT:New( EscortUnit, Escort[ID].Set, "Escort A2G", "Briefing" ) 
-  local EscortObject = Escort[ID].Escort -- AI.AI_Escort#AI_ESCORT
+  Escort[ID]["A2A"] = AI_ESCORT:New( EscortUnit, EscortSet, "Escort A2A", "Briefing" ) 
+  local EscortObject = Escort[ID]["A2A"] -- AI.AI_Escort#AI_ESCORT
   EscortObject:Menus()
+  EscortObject:FormationTrail( 50, 50, 0 )
+  EscortObject:__Start( 5 )
+  
+  EscortGroup.MenuRequestEscortA2A:Remove()
 end
 
+function SpawnNewEscortsA2G( EscortUnit )
+  env.info("new escort A2G")
+  local ID = EscortUnit:GetID()
+  local EscortGroup = EscortUnit:GetGroup()
+  
+  Escort[ID] = Escort[ID] or {} 
+  local EscortSet = SET_GROUP:New():FilterCoalitions( "red" ):FilterPrefixes( "Red A2G Escort AI" ):FilterCrashes():FilterDeads()
+  
+  -- Spawn new escorts
+  local EscortGroup = EscortSpawnA2G:SpawnAtAirbase( AIRBASE:FindByName( AIRBASE.Caucasus.Sochi_Adler ), SPAWN.Takeoff.Cold )
+  EscortSet:AddGroup( EscortGroup )
+
+  local EscortGroup = EscortSpawnA2G:SpawnAtAirbase( AIRBASE:FindByName( AIRBASE.Caucasus.Sochi_Adler ), SPAWN.Takeoff.Cold )
+  EscortSet:AddGroup( EscortGroup )
+  
+  -- Now setup the AI_ESCORT to make the new spawned escort follow the EscortUnit.
+  Escort[ID]["A2G"] = AI_ESCORT:New( EscortUnit, EscortSet, "Escort A2G", "Briefing" ) 
+  local EscortObject = Escort[ID]["A2G"] -- AI.AI_Escort#AI_ESCORT
+  EscortObject:Menus()
+  EscortObject:FormationTrail( 50, 50, 0 )
+  EscortObject:__Start( 5 )
+  
+  EscortGroup.MenuRequestEscortA2G:Remove()
+end
 -- We setup a process where a new spawn of a client plane will trigger a menu option 
 -- to request an escort from the pool of escorts.
 
@@ -56,27 +93,17 @@ function EventHandlerPlayer:OnEventBirth( EventData )
   
   if EscortClients:FindClient( EventUnit:GetName() ) then
   
-    EventGroup.MenuRequestEscort = MENU_GROUP_COMMAND:New( EventGroup, "Request A2G Escort", nil, 
+    EventGroup.MenuRequestEscortA2A = MENU_GROUP_COMMAND:New( EventGroup, "Request A2A Escort", nil, 
       function( EventUnit )
-        env.info("call")
-        local ID = EventUnit:GetID()
-        if Escort[ID] then
-          
-          -- There is already an escort group set spawned previously. Let's check if the escorts are still alive.
-          local EscortGroupSet = Escort[ID].Set
-          local OneEscortAlive = false
-          EscortGroupSet:ForEachGroupAlive( 
-            function( EscortGroup )
-              SpawnNewEscorts( EventUnit, EscortGroup )
-            end
-          )
-        else
-          SpawnNewEscorts( EventUnit )
-        end
+        env.info(" A2Acall")
+        SpawnNewEscortsA2A( EventUnit )
+      end, EventUnit
+      )
 
-        Escort[ID].Escort:FormationTrail( 50, 100, 50)
-        Escort[ID].Escort:__Start( 5 )
-       
+    EventGroup.MenuRequestEscortA2G = MENU_GROUP_COMMAND:New( EventGroup, "Request A2G Escort", nil, 
+      function( EventUnit )
+        env.info(" A2Gcall")
+        SpawnNewEscortsA2G( EventUnit )
       end, EventUnit
       )
   end
@@ -94,19 +121,14 @@ function EventHandlerPlayer:OnEventPlayerLeaveUnit( EventData )
   if EscortClients:FindClient( EventUnit:GetName() ) then
   
     local ID = EventUnit:GetID()
-    local EscortGroupSet = Escort[ID].Set -- Core.Set#SET_GROUP
-    local EscortGroup = Escort[ID].Escort -- Core.Set#SET_GROUP
-    EscortGroupSet:ForEachGroupAlive( 
-      function( EscortGroup )
-        EscortGroup:Destroy()
-      end
-    )
-
-    EscortGroupSet:Clear()
-    EscortGroup = nil
+    local EscortA2A = Escort[ID]["A2A"]-- Core.Set#SET_GROUP
+    EscortA2A = nil
     
-    if EventGroup.MenuRequestEscort then
-     EventGroup.MenuRequestEscort:Remove()
+    if EventGroup.MenuRequestEscortA2A then
+     EventGroup.MenuRequestEscortA2A:Remove()
+    end
+    if EventGroup.MenuRequestEscortA2G then
+     EventGroup.MenuRequestEscortA2G:Remove()
     end
     
   end
