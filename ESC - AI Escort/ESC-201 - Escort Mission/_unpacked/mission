@@ -8,7 +8,7 @@ mission =
     {
         ["Year"] = 2011,
         ["Day"] = 1,
-        ["Month"] = 6,
+        ["Month"] = 3,
     }, -- end of ["date"]
     ["trig"] = 
     {
@@ -137,22 +137,26 @@ mission =
                 ["speed"] = 0,
                 ["dir"] = 0,
             }, -- end of ["at8000"]
-            ["at2000"] = 
-            {
-                ["speed"] = 0,
-                ["dir"] = 0,
-            }, -- end of ["at2000"]
             ["atGround"] = 
             {
                 ["speed"] = 0,
                 ["dir"] = 0,
             }, -- end of ["atGround"]
+            ["at2000"] = 
+            {
+                ["speed"] = 0,
+                ["dir"] = 0,
+            }, -- end of ["at2000"]
         }, -- end of ["wind"]
         ["enable_fog"] = false,
-        ["dust_density"] = 0,
+        ["fog"] = 
+        {
+            ["thickness"] = 0,
+            ["visibility"] = 25,
+        }, -- end of ["fog"]
         ["season"] = 
         {
-            ["temperature"] = 20,
+            ["temperature"] = 14,
         }, -- end of ["season"]
         ["type_weather"] = 0,
         ["qnh"] = 760,
@@ -160,23 +164,19 @@ mission =
         {
         }, -- end of ["cyclones"]
         ["name"] = "Winter, clean sky",
-        ["fog"] = 
-        {
-            ["thickness"] = 0,
-            ["visibility"] = 25,
-        }, -- end of ["fog"]
-        ["enable_dust"] = false,
-        ["groundTurbulence"] = 0,
+        ["dust_density"] = 0,
         ["visibility"] = 
         {
             ["distance"] = 80000,
         }, -- end of ["visibility"]
+        ["groundTurbulence"] = 0,
+        ["enable_dust"] = false,
         ["clouds"] = 
         {
-            ["thickness"] = 200,
-            ["density"] = 0,
-            ["base"] = 300,
-            ["iprecptns"] = 0,
+            ["thickness"] = 1020,
+            ["density"] = 8,
+            ["base"] = 1000,
+            ["iprecptns"] = 1,
         }, -- end of ["clouds"]
     }, -- end of ["weather"]
     ["theatre"] = "Caucasus",
@@ -188,12 +188,32 @@ mission =
     }, -- end of ["triggers"]
     ["map"] = 
     {
-        ["centerY"] = 515621.39823548,
-        ["zoom"] = 44984.949551749,
-        ["centerX"] = -194953.39115176,
+        ["centerY"] = 522006.08683768,
+        ["zoom"] = 160370.23467357,
+        ["centerX"] = -203603.71899873,
     }, -- end of ["map"]
     ["coalitions"] = 
     {
+        ["neutrals"] = 
+        {
+            [1] = 23,
+            [2] = 25,
+            [3] = 29,
+            [4] = 30,
+            [5] = 31,
+            [6] = 32,
+            [7] = 33,
+            [8] = 17,
+            [9] = 35,
+            [10] = 36,
+            [11] = 39,
+            [12] = 41,
+            [13] = 42,
+            [14] = 44,
+            [15] = 46,
+            [16] = 22,
+            [17] = 7,
+        }, -- end of ["neutrals"]
         ["blue"] = 
         {
             [1] = 21,
@@ -216,26 +236,6 @@ mission =
             [18] = 4,
             [19] = 2,
         }, -- end of ["blue"]
-        ["neutrals"] = 
-        {
-            [1] = 23,
-            [2] = 25,
-            [3] = 29,
-            [4] = 30,
-            [5] = 31,
-            [6] = 32,
-            [7] = 33,
-            [8] = 17,
-            [9] = 35,
-            [10] = 36,
-            [11] = 39,
-            [12] = 41,
-            [13] = 42,
-            [14] = 44,
-            [15] = 46,
-            [16] = 22,
-            [17] = 7,
-        }, -- end of ["neutrals"]
         ["red"] = 
         {
             [1] = 18,
@@ -384,10 +384,10 @@ mission =
                                         {
                                             ["LeftEngineResource"] = 90,
                                             ["RightEngineResource"] = 90,
-                                            ["NetCrewControlPriority"] = 1,
+                                            ["GunnersAISkill"] = 90,
                                             ["ExhaustScreen"] = true,
                                             ["CargoHalfdoor"] = true,
-                                            ["GunnersAISkill"] = 90,
+                                            ["NetCrewControlPriority"] = 1,
                                             ["AdditionalArmor"] = true,
                                             ["NS430allow"] = true,
                                         }, -- end of ["AddPropAircraft"]
@@ -416,8 +416,8 @@ mission =
                                                     [13] = 123,
                                                     [7] = 141,
                                                     [14] = 131,
-                                                    [15] = 134,
                                                     [19] = 124,
+                                                    [15] = 134,
                                                 }, -- end of ["channels"]
                                             }, -- end of [1]
                                             [2] = 
@@ -817,10 +817,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = false,
                                                             ["id"] = "WrappedAction",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["params"] = 
                                                             {
                                                                 ["action"] = 
@@ -846,7 +846,7 @@ mission =
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "Soldier M249",
+                                        ["type"] = "Soldier M4",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
@@ -972,10 +972,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["auto"] = false,
                                                             ["id"] = "EngageTargetsInZone",
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["params"] = 
                                                             {
                                                                 ["targetTypes"] = 
@@ -1016,10 +1016,10 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = false,
                                                             ["id"] = "EngageTargetsInZone",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["params"] = 
                                                             {
                                                                 ["targetTypes"] = 
@@ -1331,8 +1331,8 @@ mission =
                                             ["ETA"] = 0,
                                             ["alt_type"] = "BARO",
                                             ["formation_template"] = "",
-                                            ["y"] = 470153.6302018,
-                                            ["x"] = -169673.24746664,
+                                            ["y"] = 470491.94338089,
+                                            ["x"] = -169729.03350527,
                                             ["name"] = "DictKey_WptName_776",
                                             ["ETA_locked"] = true,
                                             ["speed"] = 5.5555555555556,
@@ -1364,8 +1364,8 @@ mission =
                                         }, -- end of ["transportable"]
                                         ["unitId"] = 68,
                                         ["skill"] = "Good",
-                                        ["y"] = 470153.6302018,
-                                        ["x"] = -169673.24746664,
+                                        ["y"] = 470491.94338089,
+                                        ["x"] = -169729.03350527,
                                         ["name"] = "DictKey_UnitName_775",
                                         ["heading"] = 0,
                                         ["playerCanDrive"] = false,
@@ -1377,11 +1377,12 @@ mission =
                                             [1] = "DRG_Class_86",
                                             [4] = "German_tank_wagon",
                                             [5] = "German_tank_wagon",
+                                            [7] = "ES44AH",
                                         }, -- end of ["wagons"]
                                     }, -- end of [1]
                                 }, -- end of ["units"]
-                                ["y"] = 470153.6302018,
-                                ["x"] = -169673.24746664,
+                                ["y"] = 470491.94338089,
+                                ["x"] = -169729.03350527,
                                 ["name"] = "DictKey_GroupName_774",
                                 ["start_time"] = 0,
                             }, -- end of [3]
@@ -1420,8 +1421,8 @@ mission =
             ["rules"] = 
             {
             }, -- end of ["rules"]
+            ["comment"] = "Load MOOSE",
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -1435,23 +1436,23 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["comment"] = "Load MOOSE",
+            ["predicate"] = "triggerStart",
         }, -- end of [1]
         [2] = 
         {
             ["rules"] = 
             {
             }, -- end of ["rules"]
+            ["comment"] = "Trace",
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
                 {
-                    ["file"] = "",
-                    ["KeyDict_text"] = "DictKey_ActionText_25",
                     ["text"] = "DictKey_ActionText_25",
                     ["predicate"] = "a_do_script",
+                    ["file"] = "",
+                    ["KeyDict_text"] = "DictKey_ActionText_25",
                     ["ai_task"] = 
                     {
                         [1] = "",
@@ -1459,15 +1460,15 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["comment"] = "Trace",
+            ["predicate"] = "triggerStart",
         }, -- end of [2]
         [3] = 
         {
             ["rules"] = 
             {
             }, -- end of ["rules"]
+            ["comment"] = "Load Mission",
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -1481,11 +1482,11 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["comment"] = "Load Mission",
+            ["predicate"] = "triggerStart",
         }, -- end of [3]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 22238,
-    ["start_time"] = 43200,
+    ["currentKey"] = 22541,
+    ["start_time"] = 28800,
     ["forcedOptions"] = 
     {
     }, -- end of ["forcedOptions"]
