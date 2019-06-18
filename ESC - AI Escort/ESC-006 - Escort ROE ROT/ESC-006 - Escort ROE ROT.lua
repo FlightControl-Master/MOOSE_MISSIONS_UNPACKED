@@ -7,5 +7,5 @@ local Escort = AI_ESCORT:New( LeaderUnit, FollowGroupSet, "Escort Test", "Use th
 Escort:ModeMission()
 
 Escort:MenusHelicopter()
-Escort:Start()
+Escort:__Start( 5 )
 
