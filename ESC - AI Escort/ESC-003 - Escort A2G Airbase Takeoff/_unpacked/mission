@@ -187,9 +187,9 @@ mission =
     }, -- end of ["triggers"]
     ["map"] = 
     {
-        ["centerY"] = 485358.33703885,
-        ["zoom"] = 405332.580466,
-        ["centerX"] = -153704.34606836,
+        ["centerY"] = 493542.05007464,
+        ["zoom"] = 551450.48780359,
+        ["centerX"] = -175195.86371509,
     }, -- end of ["map"]
     ["coalitions"] = 
     {
@@ -652,10 +652,10 @@ mission =
                                         ["heading"] = -1.0336253696423,
                                         ["callsign"] = 
                                         {
-                                            [1] = 1,
+                                            [1] = 8,
                                             [2] = 1,
                                             [3] = 1,
-                                            ["name"] = "Enfield11",
+                                            ["name"] = "Pontiac11",
                                         }, -- end of ["callsign"]
                                         ["onboard_num"] = "010",
                                     }, -- end of [1]
@@ -824,10 +824,10 @@ mission =
                                         ["heading"] = -1.0263658987382,
                                         ["callsign"] = 
                                         {
-                                            [1] = 2,
+                                            [1] = 5,
                                             [2] = 1,
                                             [3] = 1,
-                                            ["name"] = "Springfield11",
+                                            ["name"] = "Dodge11",
                                         }, -- end of ["callsign"]
                                         ["onboard_num"] = "010",
                                     }, -- end of [1]
@@ -996,10 +996,10 @@ mission =
                                         ["heading"] = -1.0258268646242,
                                         ["callsign"] = 
                                         {
-                                            [1] = 2,
+                                            [1] = 3,
                                             [2] = 1,
                                             [3] = 1,
-                                            ["name"] = "Springfield11",
+                                            ["name"] = "Uzi11",
                                         }, -- end of ["callsign"]
                                         ["onboard_num"] = "010",
                                     }, -- end of [1]
@@ -1110,7 +1110,7 @@ mission =
                                         ["speed"] = 138.88888888889,
                                         ["type"] = "Su-25",
                                         ["unitId"] = 110,
-                                        ["psi"] = 1.0255419570878,
+                                        ["psi"] = 1.0255419570879,
                                         ["parking_id"] = "04",
                                         ["x"] = -197812.95632596,
                                         ["name"] = "DictKey_UnitName_930",
@@ -1168,10 +1168,10 @@ mission =
                                         ["heading"] = -1.0255419570878,
                                         ["callsign"] = 
                                         {
-                                            [1] = 2,
+                                            [1] = 4,
                                             [2] = 1,
                                             [3] = 1,
-                                            ["name"] = "Springfield11",
+                                            ["name"] = "Colt11",
                                         }, -- end of ["callsign"]
                                         ["onboard_num"] = "010",
                                     }, -- end of [1]
@@ -1340,10 +1340,10 @@ mission =
                                         ["heading"] = -1.0257523215853,
                                         ["callsign"] = 
                                         {
-                                            [1] = 2,
+                                            [1] = 6,
                                             [2] = 1,
                                             [3] = 1,
-                                            ["name"] = "Springfield11",
+                                            ["name"] = "Ford11",
                                         }, -- end of ["callsign"]
                                         ["onboard_num"] = "010",
                                     }, -- end of [1]
@@ -2993,7 +2993,6 @@ mission =
             }, -- end of ["rules"]
             ["comment"] = "Load MOOSE",
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -3007,6 +3006,7 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
+            ["predicate"] = "triggerStart",
         }, -- end of [1]
         [2] = 
         {
@@ -3015,7 +3015,6 @@ mission =
             }, -- end of ["rules"]
             ["comment"] = "Trace",
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -3031,6 +3030,7 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
+            ["predicate"] = "triggerStart",
         }, -- end of [2]
         [3] = 
         {
@@ -3039,7 +3039,6 @@ mission =
             }, -- end of ["rules"]
             ["comment"] = "Load Mission",
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -3053,9 +3052,10 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
+            ["predicate"] = "triggerStart",
         }, -- end of [3]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 14870,
+    ["currentKey"] = 15096,
     ["start_time"] = 36000,
     ["forcedOptions"] = 
     {
