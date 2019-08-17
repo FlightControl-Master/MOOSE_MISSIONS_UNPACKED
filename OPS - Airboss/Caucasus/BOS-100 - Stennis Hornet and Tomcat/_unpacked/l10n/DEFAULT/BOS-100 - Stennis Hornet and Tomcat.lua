@@ -14,14 +14,14 @@ tanker:SetTakeoffAir()
 tanker:SetRadio(250)
 tanker:SetModex(511)
 tanker:SetTACAN(1, "TKR")
-tanker:Start()
+tanker:__Start(1)
 
 -- E-2D AWACS spawning on Stennis.
 local awacs=RECOVERYTANKER:New("USS Stennis", "E-2D Wizard Group")
 awacs:SetAWACS()
 awacs:SetRadio(260)
 awacs:SetAltitude(20000)
-awacs:SetCallsign(CALLSIGN.AWACS.Wizard)
+awacs:SetCallsign(CALLSIGN.AWACS.Darkstar)
 awacs:SetRacetrackDistances(30, 15)
 awacs:SetModex(611)
 awacs:SetTACAN(2, "WIZ")
@@ -32,7 +32,6 @@ rescuehelo=RESCUEHELO:New("USS Stennis", "Rescue Helo")
 rescuehelo:SetHomeBase(AIRBASE:FindByName("Lake Erie"))
 rescuehelo:SetModex(42)
 rescuehelo:__Start(1)
-
   
 -- Create AIRBOSS object.
 local AirbossStennis=AIRBOSS:New("USS Stennis")
@@ -44,10 +43,6 @@ local window1=AirbossStennis:AddRecoveryWindow( "9:00", "10:00", 1, nil, true, 2
 local window2=AirbossStennis:AddRecoveryWindow("15:00", "16:00", 2,  15, true, 23)
 -- Case III with +30 degrees holding offset from 2100 to 2200.
 local window3=AirbossStennis:AddRecoveryWindow("21:00", "22:00", 3,  30, true, 21)
-
--- Radio relay units.
-AirbossStennis:SetRadioRelayLSO(tanker:GetUnitName())
-AirbossStennis:SetRadioRelayMarshal("Huey Radio Relay")
 
 -- Set folder of airboss sound files within miz file.
 AirbossStennis:SetSoundfilesFolder("Airboss Soundfiles/")
@@ -79,6 +74,29 @@ AirbossStennis:SetAWACS(awacs)
 -- Start airboss class.
 AirbossStennis:Start()
 
+-- Use recovery tanker as radio relay for LSO.
+function tanker:OnAfterStart(From,Event,To)
+  AirbossStennis:SetRadioRelayLSO(self:GetUnitName())
+end
+
+-- Use rescue helo as radio relay for Marshal.
+function rescuehelo:OnAfterStart(From,Event,To)
+  AirbossStennis:SetRadioRelayMarshal(self:GetUnitName())
+end
+
+-- Report LSO grade to dcs.log file.
+function AirbossStennis:OnAfterLSOgrade(From,Event,To,playerData,grade)
+  local PlayerData=playerData --Ops.Airboss#AIRBOSS.PlayerData
+  local Grade=grade --Ops.Airboss#AIRBOSS.LSOgrade
+  
+  local score=Grade.points
+  local name=PlayerData.name
+
+  env.info(string.format("Player %s scored %.1f", name, score))
+
+end
+
+
 ---------------------------
 --- Generate AI Traffic ---
 ---------------------------
@@ -103,4 +121,15 @@ for _,spawntime in pairs(spawntimes) do
     SCHEDULER:New(nil, E2D.Spawn,  {E2D},  _time)
     SCHEDULER:New(nil, S3B.Spawn,  {S3B},  _time)
   end
-end  
+end
+
+
+
+local function checkmem()
+  local time=timer.getTime()
+  local clock=UTILS.SecondsToClock(time)
+  local mem=collectgarbage("count")
+  env.info(string.format("T=%s  Memory usage %d kByte = %.2f MByte", clock, mem, mem/1024))
+end
+
+SCHEDULER:New(nil, checkmem, {}, 60, 5*60)
