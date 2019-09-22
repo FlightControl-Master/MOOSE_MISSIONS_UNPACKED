@@ -29,13 +29,13 @@ A2ADispatcher:SetTacticalDisplay( true )
 
 A2ADispatcher:SetSquadron( "Kras1", AIRBASE.Caucasus.Krasnodar_Pashkovsky, { "SQ CCCP SU-27" }, 20 )
 CAPZoneWest = ZONE_POLYGON:New( "CAP Zone West", GROUP:FindByName( "CAP Zone West" ) )
-A2ADispatcher:SetSquadronCap( "Kras1", CAPZoneWest, 4000, 8000, 600, 800, 800, 1200, "BARO" )
+A2ADispatcher:SetSquadronCap( "Kras1", 800, 1200, 4000, 8000, CAPZoneWest, 600, 800, 4000, 8000, "BARO" )
 A2ADispatcher:SetSquadronCapInterval( "Kras1", 4, 30, 120, 1 )
 
 A2ADispatcher:SetSquadron( "May", AIRBASE.Caucasus.Maykop_Khanskaya, { "SQ CCCP SU-27" }, 20 )
 CAPZoneWest = ZONE_POLYGON:New( "CAP Zone West", GROUP:FindByName( "CAP Zone West" ) )
-A2ADispatcher:SetSquadronCap( "May", CAPZoneWest, 4000, 8000, 600, 800, 800, 1200, "BARO" )
-A2ADispatcher:SetSquadronCapInterval( "May", 4, 30, 120, 1 )
+A2ADispatcher:SetSquadronCapV2( "May", 800, 1200, 400, 500, "RADIO", CAPZoneWest, 600, 800, 4000, 8000, "BARO" )
+A2ADispatcher:SetSquadronCapInterval( "May", 1, 30, 120, 1 )
 
 A2ADispatcher:SetDefaultTakeoffInAir()
 A2ADispatcher:SetDefaultLandingNearAirbase()

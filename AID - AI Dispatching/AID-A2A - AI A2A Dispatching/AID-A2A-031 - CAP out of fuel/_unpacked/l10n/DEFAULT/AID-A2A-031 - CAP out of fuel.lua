@@ -1,5 +1,5 @@
 ---
--- Name: AID-031 - AI_A2A - CAP out of fuel
+-- Name: AID-A2A-031 - CAP out of fuel
 -- Author: FlightControl
 -- Date Created: 30 Aug 2017
 
@@ -25,10 +25,10 @@ CAPZoneWest = ZONE_POLYGON:New( "CAP Zone West", GROUP:FindByName( "CAP Zone Wes
 A2ADispatcher:SetSquadronCap( "Kras1", CAPZoneWest, 4000, 8000, 600, 800, 800, 1200, "BARO" )
 A2ADispatcher:SetSquadronCapInterval( "Kras1", 1, 30, 120, 1 )
 
---A2ADispatcher:SetSquadron( "May", AIRBASE.Caucasus.Maykop_Khanskaya, { "SQ CCCP SU-27" }, 20 )
---CAPZoneWest = ZONE_POLYGON:New( "CAP Zone West", GROUP:FindByName( "CAP Zone West" ) )
---A2ADispatcher:SetSquadronCap( "May", CAPZoneWest, 4000, 8000, 600, 800, 800, 1200, "BARO" )
---A2ADispatcher:SetSquadronCapInterval( "May", 1, 30, 120, 1 )
+A2ADispatcher:SetSquadron( "May", AIRBASE.Caucasus.Maykop_Khanskaya, { "SQ CCCP SU-27" }, 20 )
+CAPZoneWest = ZONE_POLYGON:New( "CAP Zone West", GROUP:FindByName( "CAP Zone West" ) )
+A2ADispatcher:SetSquadronCapV2( "May", 1000, 1200, 30, 30, "RADIO", CAPZoneWest, 600, 800, 4000, 8000, "BARO" )
+A2ADispatcher:SetSquadronCapInterval( "May", 1, 30, 120, 1 )
 
 A2ADispatcher:SetDefaultTakeoffInAir()
 A2ADispatcher:SetDefaultLandingNearAirbase()
