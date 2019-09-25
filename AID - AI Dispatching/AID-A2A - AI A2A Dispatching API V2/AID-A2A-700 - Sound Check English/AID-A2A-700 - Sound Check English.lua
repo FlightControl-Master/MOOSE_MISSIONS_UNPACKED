@@ -17,7 +17,6 @@ local Detection = DETECTION_AREAS:New( DetectionSetGroup, 30000 )
 -- Setup the A2A dispatcher, and initialize it.
 A2ADispatcher = AI_A2A_DISPATCHER:New( Detection )
 A2ADispatcher:SetCommandCenter( HQ_CC )
-A2ADispatcher:SetRadioFrequency( 127.5 )
 
 -- Enable the tactical display panel.
 A2ADispatcher:SetTacticalDisplay( false )
@@ -84,6 +83,16 @@ A2ADispatcher:SetSquadronLanding( "Novo", AI_A2A_DISPATCHER.Landing.AtRunway )
 A2ADispatcher:SetSquadronGci2( "Mozdok", 900, 1200, 100, 100, "RADIO" )
 A2ADispatcher:SetSquadronGci2( "Novo", 900, 2100, 100, 100, "RADIO" )
 A2ADispatcher:SetSquadronGci2( "Maykop", 900, 1200, 200, 200, "RADIO" )
+
+-- Set the language of the squadrons to Russian.
+A2ADispatcher:SetSquadronLanguage( "Mozdok", "RU" )
+A2ADispatcher:SetSquadronLanguage( "Novo", "RU" )
+A2ADispatcher:SetSquadronLanguage( "Maykop", "RU" )
+
+A2ADispatcher:SetSquadronRadioFrequency( "Mozdok", 127.5 )
+A2ADispatcher:SetSquadronRadioFrequency( "Novo", 127.5 )
+A2ADispatcher:SetSquadronRadioFrequency( "Maykop", 127.5 )
+
 
 -- Set the squadrons visible before startup.
 --A2ADispatcher:SetSquadronVisible( "Mineralnye" )

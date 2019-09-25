@@ -88,7 +88,7 @@ mission =
             }, -- end of ["func"]
         }, -- end of ["red"]
     }, -- end of ["result"]
-    ["maxDictId"] = 810,
+    ["maxDictId"] = 817,
     ["pictureFileNameN"] = 
     {
     }, -- end of ["pictureFileNameN"]
@@ -219,9 +219,9 @@ mission =
     }, -- end of ["triggers"]
     ["map"] = 
     {
-        ["centerY"] = 475294.68166706,
-        ["zoom"] = 116150.80013972,
-        ["centerX"] = -15574.349224501,
+        ["centerY"] = 389385.9284004,
+        ["zoom"] = 4415.2237508125,
+        ["centerX"] = 8190.8037966531,
     }, -- end of ["map"]
     ["coalitions"] = 
     {
@@ -363,7 +363,7 @@ mission =
                                 ["tasks"] = 
                                 {
                                 }, -- end of ["tasks"]
-                                ["radioSet"] = false,
+                                ["radioSet"] = true,
                                 ["task"] = "CAS",
                                 ["uncontrolled"] = false,
                                 ["route"] = 
@@ -509,7 +509,7 @@ mission =
                                 ["name"] = "DictKey_GroupName_807",
                                 ["communication"] = true,
                                 ["start_time"] = 0,
-                                ["frequency"] = 124,
+                                ["frequency"] = 126,
                             }, -- end of [1]
                             [2] = 
                             {
@@ -836,6 +836,158 @@ mission =
                                 ["start_time"] = 0,
                                 ["frequency"] = 124,
                             }, -- end of [3]
+                            [4] = 
+                            {
+                                ["modulation"] = 0,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["radioSet"] = true,
+                                ["task"] = "Transport",
+                                ["uncontrolled"] = false,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 180,
+                                            ["action"] = "From Parking Area Hot",
+                                            ["alt_type"] = "BARO",
+                                            ["properties"] = 
+                                            {
+                                                ["addopt"] = 
+                                                {
+                                                }, -- end of ["addopt"]
+                                            }, -- end of ["properties"]
+                                            ["speed"] = 44.444444444444,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "TakeOffParkingHot",
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["y"] = 458333.46875,
+                                            ["x"] = -26732.99609375,
+                                            ["name"] = "DictKey_WptName_817",
+                                            ["formation_template"] = "",
+                                            ["airdromeId"] = 16,
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 79,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["alt"] = 180,
+                                        ["hardpoint_racks"] = true,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "USA_AFG",
+                                        ["skill"] = "Client",
+                                        ["parking"] = "7",
+                                        ["ropeLength"] = 15,
+                                        ["speed"] = 44.444444444444,
+                                        ["AddPropAircraft"] = 
+                                        {
+                                            ["LeftEngineResource"] = 90,
+                                            ["RightEngineResource"] = 90,
+                                            ["GunnersAISkill"] = 90,
+                                            ["ExhaustScreen"] = true,
+                                            ["CargoHalfdoor"] = true,
+                                            ["NetCrewControlPriority"] = 1,
+                                            ["AdditionalArmor"] = true,
+                                            ["NS430allow"] = true,
+                                        }, -- end of ["AddPropAircraft"]
+                                        ["type"] = "Mi-8MT",
+                                        ["Radio"] = 
+                                        {
+                                            [1] = 
+                                            {
+                                                ["channels"] = 
+                                                {
+                                                    [1] = 128,
+                                                    [2] = 135,
+                                                    [4] = 127,
+                                                    [8] = 128,
+                                                    [16] = 132,
+                                                    [17] = 138,
+                                                    [9] = 126,
+                                                    [18] = 122,
+                                                    [5] = 125,
+                                                    [10] = 133,
+                                                    [20] = 137,
+                                                    [11] = 130,
+                                                    [3] = 136,
+                                                    [6] = 121,
+                                                    [12] = 129,
+                                                    [13] = 123,
+                                                    [7] = 141,
+                                                    [14] = 131,
+                                                    [19] = 124,
+                                                    [15] = 134,
+                                                }, -- end of ["channels"]
+                                            }, -- end of [1]
+                                            [2] = 
+                                            {
+                                                ["channels"] = 
+                                                {
+                                                    [7] = 40,
+                                                    [1] = 21.5,
+                                                    [2] = 25.7,
+                                                    [4] = 28,
+                                                    [8] = 50,
+                                                    [9] = 55.5,
+                                                    [5] = 30,
+                                                    [10] = 59.9,
+                                                    [3] = 27,
+                                                    [6] = 32,
+                                                }, -- end of ["channels"]
+                                            }, -- end of [2]
+                                        }, -- end of ["Radio"]
+                                        ["unitId"] = 139,
+                                        ["psi"] = 0,
+                                        ["parking_id"] = "25",
+                                        ["x"] = -26732.99609375,
+                                        ["name"] = "DictKey_UnitName_816",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = "1929",
+                                            ["flare"] = 128,
+                                            ["chaff"] = 0,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["y"] = 458333.46875,
+                                        ["heading"] = 0,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 1,
+                                            [2] = 1,
+                                            [3] = 1,
+                                            ["name"] = "Enfield11",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "052",
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 458333.46875,
+                                ["x"] = -26732.99609375,
+                                ["name"] = "DictKey_GroupName_815",
+                                ["communication"] = true,
+                                ["start_time"] = 0,
+                                ["frequency"] = 128,
+                            }, -- end of [4]
                         }, -- end of ["group"]
                     }, -- end of ["helicopter"]
                     ["name"] = "USA",
@@ -6031,6 +6183,125 @@ mission =
                             }, -- end of [9]
                         }, -- end of ["group"]
                     }, -- end of ["vehicle"]
+                    ["plane"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["modulation"] = 0,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["radioSet"] = false,
+                                ["task"] = "CAS",
+                                ["uncontrolled"] = false,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 34,
+                                            ["action"] = "From Parking Area Hot",
+                                            ["alt_type"] = "BARO",
+                                            ["properties"] = 
+                                            {
+                                                ["addopt"] = 
+                                                {
+                                                }, -- end of ["addopt"]
+                                            }, -- end of ["properties"]
+                                            ["speed"] = 138.88888888889,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["number"] = 1,
+                                                            ["key"] = "CAS",
+                                                            ["id"] = "EngageTargets",
+                                                            ["enabled"] = true,
+                                                            ["auto"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["targetTypes"] = 
+                                                                {
+                                                                    [1] = "Helicopters",
+                                                                    [2] = "Ground Units",
+                                                                    [3] = "Light armed ships",
+                                                                }, -- end of ["targetTypes"]
+                                                                ["priority"] = 0,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "TakeOffParkingHot",
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["y"] = 388559.3125,
+                                            ["x"] = 8648.1572265625,
+                                            ["name"] = "DictKey_WptName_813",
+                                            ["formation_template"] = "",
+                                            ["airdromeId"] = 19,
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 78,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["alt"] = 34,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "104th FS Maryland ANG, Baltimore (MD)",
+                                        ["skill"] = "Client",
+                                        ["parking"] = "5",
+                                        ["speed"] = 138.88888888889,
+                                        ["type"] = "A-10A",
+                                        ["unitId"] = 138,
+                                        ["psi"] = 0,
+                                        ["parking_id"] = "14",
+                                        ["x"] = 8648.1572265625,
+                                        ["name"] = "DictKey_UnitName_812",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = 5029,
+                                            ["flare"] = 120,
+                                            ["ammo_type"] = 1,
+                                            ["chaff"] = 240,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["y"] = 388559.3125,
+                                        ["heading"] = 2.0509713563984,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 4,
+                                            [2] = 1,
+                                            [3] = 1,
+                                            ["name"] = "Colt11",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "010",
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 388559.3125,
+                                ["x"] = 8648.1572265625,
+                                ["name"] = "DictKey_GroupName_811",
+                                ["communication"] = true,
+                                ["start_time"] = 0,
+                                ["frequency"] = 124,
+                            }, -- end of [1]
+                        }, -- end of ["group"]
+                    }, -- end of ["plane"]
                     ["static"] = 
                     {
                         ["group"] = 
@@ -9943,7 +10214,7 @@ mission =
             ["comment"] = "Mission",
         }, -- end of [3]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 45089,
+    ["currentKey"] = 45747,
     ["start_time"] = 68400,
     ["forcedOptions"] = 
     {
