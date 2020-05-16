@@ -20,7 +20,7 @@
 do
 
   -- Declare SPAWN objects
-  Spawn_Plane = SPAWN:New("Plane"):InitLimit( 1, 10 )
+  Spawn_Plane = SPAWN:New("Plane"):InitLimit( 2, 0 )
   
   -- Choose repeat functionality
   

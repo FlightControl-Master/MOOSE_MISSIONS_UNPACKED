@@ -16,6 +16,6 @@
 
 -- Tests Gudauta
 -- -------------
-Spawn_Vehicle_1 = SPAWN:New( "Spawn Vehicle 1" ):InitLimit( 5, 10 ):SpawnScheduled( 5, .5 )
+Spawn_Vehicle_1 = SPAWN:New( "Spawn Vehicle 1" ):InitLimit( 5, 0 ):SpawnScheduled( 5, .5 )
 
 

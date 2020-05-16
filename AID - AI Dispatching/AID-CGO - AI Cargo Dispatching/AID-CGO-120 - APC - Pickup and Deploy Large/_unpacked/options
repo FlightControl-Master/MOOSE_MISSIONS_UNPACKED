@@ -20,34 +20,37 @@ options =
     }, -- end of ["miscellaneous"]
     ["difficulty"] = 
     {
-        ["padlock"] = true,
         ["geffect"] = "realistic",
+        ["padlock"] = true,
+        ["compassTape"] = true,
+        ["aircraftMode"] = true,
+        ["easyCommunication"] = true,
         ["easyRadar"] = false,
-        ["cockpitStatusBarAllowed"] = false,
+        ["map"] = true,
         ["miniHUD"] = false,
-        ["permitCrash"] = true,
+        ["controlsIndicator"] = true,
         ["birds"] = 0,
         ["optionsView"] = "optview_all",
-        ["setGlobal"] = true,
+        ["permitCrash"] = true,
         ["immortal"] = false,
-        ["avionicsLanguage"] = "native",
+        ["cockpitStatusBarAllowed"] = false,
         ["cockpitVisualRM"] = false,
-        ["map"] = true,
+        ["easyFlight"] = false,
         ["reports"] = true,
         ["hideStick"] = false,
         ["radio"] = false,
-        ["easyFlight"] = false,
-        ["tips"] = true,
-        ["spectatorExternalViews"] = true,
         ["userMarks"] = true,
         ["units"] = "metric",
+        ["avionicsLanguage"] = "native",
+        ["spectatorExternalViews"] = true,
+        ["tips"] = true,
         ["userSnapView"] = true,
         ["RBDAI"] = true,
         ["externalViews"] = true,
         ["iconsTheme"] = "nato",
         ["fuel"] = false,
         ["weapons"] = false,
-        ["easyCommunication"] = true,
+        ["setGlobal"] = true,
         ["labels"] = true,
     }, -- end of ["difficulty"]
     ["VR"] = 
@@ -65,7 +68,7 @@ options =
     {
         ["rainDroplets"] = 1,
         ["preloadRadius"] = 60000,
-        ["heatBlr"] = 1,
+        ["heatBlr"] = 2,
         ["anisotropy"] = 3,
         ["water"] = 2,
         ["motionBlur"] = 0,
@@ -87,7 +90,7 @@ options =
         ["disableAero"] = false,
         ["DOF"] = 0,
         ["clouds"] = 1,
-        ["flatTerrainShadows"] = 1,
+        ["flatTerrainShadows"] = 0,
         ["width"] = 1920,
         ["textures"] = 2,
         ["effects"] = 3,
@@ -113,10 +116,6 @@ options =
             ["gunCamera"] = 0,
             ["aiHelper"] = false,
         }, -- end of ["MiG-15bis"]
-        ["Hawk"] = 
-        {
-            ["CPLocalList"] = "1. High",
-        }, -- end of ["Hawk"]
         ["L-39C"] = 
         {
             ["sarpp"] = 1,
@@ -151,15 +150,20 @@ options =
         ["P-51D"] = 
         {
             ["assistance"] = 100,
-            ["CPLocalList"] = "default",
             ["autoRudder"] = false,
         }, -- end of ["P-51D"]
+        ["TF-51D"] = 
+        {
+            ["assistance"] = 100,
+            ["CPLocalList"] = "default",
+            ["autoRudder"] = false,
+        }, -- end of ["TF-51D"]
         ["MiG-21Bis"] = 
         {
             ["Pitot"] = false,
             ["Engine"] = false,
             ["Shake"] = 100,
-            ["CPLocalList"] = "Default",
+            ["CPLocalList"] = "default",
             ["Reticle"] = false,
             ["Freeze"] = false,
         }, -- end of ["MiG-21Bis"]
@@ -171,12 +175,6 @@ options =
             ["NoseWheelSteeringSimpleBehaviourF86"] = true,
             ["gunCamera"] = 0,
         }, -- end of ["F-86F"]
-        ["TF-51D"] = 
-        {
-            ["assistance"] = 100,
-            ["CPLocalList"] = "default",
-            ["autoRudder"] = false,
-        }, -- end of ["TF-51D"]
         ["CA"] = 
         {
             ["kompass_options"] = 1,
@@ -194,6 +192,11 @@ options =
             ["weapTooltips"] = true,
             ["UHTrimmingMethod"] = 0,
         }, -- end of ["UH-1H"]
+        ["CaptoGlove"] = 
+        {
+            ["enable"] = false,
+            ["armBending"] = 60,
+        }, -- end of ["CaptoGlove"]
         ["Mi-8MTV2"] = 
         {
             ["Mi8TrimmingMethod"] = 0,
@@ -245,7 +248,7 @@ options =
         ["GBreathEffect"] = true,
         ["volume"] = 100,
         ["headphones_on_external_views"] = true,
-        ["music"] = 100,
+        ["music"] = 0,
         ["subtitles"] = true,
         ["gui"] = 100,
     }, -- end of ["sound"]
