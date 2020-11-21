@@ -1,6 +1,8 @@
 -- This code pulls the Coordinates for JDAM use, and using the Menu format loads them in game using message system.
 -- Mission created by Saint185
 -- 2020-11-21
+
+
 _SETTINGS:SetPlayerMenuOff()
 
 
