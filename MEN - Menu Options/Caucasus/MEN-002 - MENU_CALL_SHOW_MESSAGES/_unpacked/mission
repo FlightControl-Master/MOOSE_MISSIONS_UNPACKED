@@ -1,0 +1,3689 @@
+mission = 
+{
+    ["requiredModules"] = 
+    {
+    }, -- end of ["requiredModules"]
+    ["date"] = 
+    {
+        ["Year"] = 2016,
+        ["Day"] = 21,
+        ["Month"] = 10,
+    }, -- end of ["date"]
+    ["trig"] = 
+    {
+        ["actions"] = 
+        {
+            [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_84\"));",
+            [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_128\"));",
+        }, -- end of ["actions"]
+        ["events"] = 
+        {
+        }, -- end of ["events"]
+        ["custom"] = 
+        {
+        }, -- end of ["custom"]
+        ["func"] = 
+        {
+        }, -- end of ["func"]
+        ["flag"] = 
+        {
+            [1] = true,
+            [2] = true,
+        }, -- end of ["flag"]
+        ["conditions"] = 
+        {
+            [1] = "return(true)",
+            [2] = "return(true)",
+        }, -- end of ["conditions"]
+        ["customStartup"] = 
+        {
+        }, -- end of ["customStartup"]
+        ["funcStartup"] = 
+        {
+            [1] = "if mission.trig.conditions[1]() then mission.trig.actions[1]() end",
+            [2] = "if mission.trig.conditions[2]() then mission.trig.actions[2]() end",
+        }, -- end of ["funcStartup"]
+    }, -- end of ["trig"]
+    ["result"] = 
+    {
+        ["offline"] = 
+        {
+            ["conditions"] = 
+            {
+            }, -- end of ["conditions"]
+            ["actions"] = 
+            {
+            }, -- end of ["actions"]
+            ["func"] = 
+            {
+            }, -- end of ["func"]
+        }, -- end of ["offline"]
+        ["total"] = 0,
+        ["blue"] = 
+        {
+            ["conditions"] = 
+            {
+            }, -- end of ["conditions"]
+            ["actions"] = 
+            {
+            }, -- end of ["actions"]
+            ["func"] = 
+            {
+            }, -- end of ["func"]
+        }, -- end of ["blue"]
+        ["red"] = 
+        {
+            ["conditions"] = 
+            {
+            }, -- end of ["conditions"]
+            ["actions"] = 
+            {
+            }, -- end of ["actions"]
+            ["func"] = 
+            {
+            }, -- end of ["func"]
+        }, -- end of ["red"]
+    }, -- end of ["result"]
+    ["maxDictId"] = 136,
+    ["pictureFileNameN"] = 
+    {
+    }, -- end of ["pictureFileNameN"]
+    ["groundControl"] = 
+    {
+        ["isPilotControlVehicles"] = true,
+        ["roles"] = 
+        {
+            ["artillery_commander"] = 
+            {
+                ["neutrals"] = 0,
+                ["blue"] = 1,
+                ["red"] = 0,
+            }, -- end of ["artillery_commander"]
+            ["instructor"] = 
+            {
+                ["neutrals"] = 0,
+                ["blue"] = 0,
+                ["red"] = 0,
+            }, -- end of ["instructor"]
+            ["observer"] = 
+            {
+                ["neutrals"] = 0,
+                ["blue"] = 0,
+                ["red"] = 0,
+            }, -- end of ["observer"]
+            ["forward_observer"] = 
+            {
+                ["neutrals"] = 0,
+                ["blue"] = 1,
+                ["red"] = 0,
+            }, -- end of ["forward_observer"]
+        }, -- end of ["roles"]
+    }, -- end of ["groundControl"]
+    ["goals"] = 
+    {
+    }, -- end of ["goals"]
+    ["weather"] = 
+    {
+        ["name_ru"] = "Осень. Дождь",
+        ["wind"] = 
+        {
+            ["at8000"] = 
+            {
+                ["speed"] = 4,
+                ["dir"] = 221,
+            }, -- end of ["at8000"]
+            ["atGround"] = 
+            {
+                ["speed"] = 4,
+                ["dir"] = 221,
+            }, -- end of ["atGround"]
+            ["at2000"] = 
+            {
+                ["speed"] = 7,
+                ["dir"] = 167,
+            }, -- end of ["at2000"]
+        }, -- end of ["wind"]
+        ["enable_fog"] = true,
+        ["season"] = 
+        {
+            ["temperature"] = 23,
+        }, -- end of ["season"]
+        ["qnh"] = 750,
+        ["cyclones"] = 
+        {
+            [1] = 
+            {
+                ["pressure_spread"] = 894818.73836109,
+                ["centerZ"] = 280005.00894652,
+                ["ellipticity"] = 1.1950336815574,
+                ["rotation"] = 0.23887791280236,
+                ["pressure_excess"] = -1183,
+                ["centerX"] = -108221.61311531,
+            }, -- end of [1]
+        }, -- end of ["cyclones"]
+        ["name_de"] = "Herbst, Regen",
+        ["dust_density"] = 0,
+        ["enable_dust"] = false,
+        ["clouds"] = 
+        {
+            ["thickness"] = 920,
+            ["density"] = 7,
+            ["base"] = 3400,
+            ["iprecptns"] = 1,
+        }, -- end of ["clouds"]
+        ["atmosphere_type"] = 0,
+        ["groundTurbulence"] = 7,
+        ["name_fr"] = "Automne, averses",
+        ["type_weather"] = 0,
+        ["name"] = "Autumn, Rainy day",
+        ["fog"] = 
+        {
+            ["thickness"] = 630,
+            ["visibility"] = 1190,
+        }, -- end of ["fog"]
+        ["visibility"] = 
+        {
+            ["distance"] = 80000,
+        }, -- end of ["visibility"]
+        ["name_es"] = "Otoño. Lluvia",
+        ["name_cn"] = "秋季 雨天",
+    }, -- end of ["weather"]
+    ["theatre"] = "Caucasus",
+    ["triggers"] = 
+    {
+        ["zones"] = 
+        {
+            [1] = 
+            {
+                ["y"] = 647454.375,
+                ["radius"] = 29.2608,
+                ["zoneId"] = 332,
+                ["x"] = -281437.46875,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "948536622",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "HardenedHanger31",
+            }, -- end of [1]
+            [2] = 
+            {
+                ["y"] = 647558.8125,
+                ["radius"] = 28.5625,
+                ["zoneId"] = 498,
+                ["x"] = -281386.84375,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "948536621",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "HardenedHanger32",
+            }, -- end of [2]
+            [3] = 
+            {
+                ["y"] = 647403.1875,
+                ["radius"] = 30,
+                ["zoneId"] = 499,
+                ["x"] = -281395,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "948536623",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "HardenedHanger33",
+            }, -- end of [3]
+            [4] = 
+            {
+                ["y"] = 647459.25,
+                ["radius"] = 24.4375,
+                ["zoneId"] = 500,
+                ["x"] = -281290.3125,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "948536624",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "HardenedHanger34",
+            }, -- end of [4]
+            [5] = 
+            {
+                ["y"] = 647435,
+                ["radius"] = 28.5625,
+                ["zoneId"] = 503,
+                ["x"] = -281245.84375,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "948536625",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "HardenedHanger39",
+            }, -- end of [5]
+            [6] = 
+            {
+                ["y"] = 647252.0625,
+                ["radius"] = 25,
+                ["zoneId"] = 504,
+                ["x"] = -281330.0625,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "948536628",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "HardenedHanger38",
+            }, -- end of [6]
+            [7] = 
+            {
+                ["y"] = 647266.3125,
+                ["radius"] = 30,
+                ["zoneId"] = 505,
+                ["x"] = -281393.75,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "948536629",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "HardenedHanger69",
+            }, -- end of [7]
+            [8] = 
+            {
+                ["y"] = 647356.75,
+                ["radius"] = 29.8125,
+                ["zoneId"] = 506,
+                ["x"] = -281378.21875,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "948536627",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "HardenedHanger36",
+            }, -- end of [8]
+            [9] = 
+            {
+                ["y"] = 647392.9375,
+                ["radius"] = 29.8125,
+                ["zoneId"] = 507,
+                ["x"] = -281346.18885764,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "948536626",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "HardenedHanger35",
+            }, -- end of [9]
+            [10] = 
+            {
+                ["y"] = 647507.72030529,
+                ["radius"] = 24.384,
+                ["zoneId"] = 508,
+                ["x"] = -281336.01333618,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "HardenedHanger68",
+            }, -- end of [10]
+            [11] = 
+            {
+                ["y"] = 651027.1875,
+                ["radius"] = 50.5,
+                ["zoneId"] = 875,
+                ["x"] = -278234.13867188,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72487042",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "TrainBridge001",
+            }, -- end of [11]
+            [12] = 
+            {
+                ["y"] = 650829.828125,
+                ["radius"] = 50.515625,
+                ["zoneId"] = 876,
+                ["x"] = -278201.74511719,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72486987",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "TrainBridge003",
+            }, -- end of [12]
+            [13] = 
+            {
+                ["y"] = 650928.5078125,
+                ["radius"] = 50.5078125,
+                ["zoneId"] = 877,
+                ["x"] = -278217.94238281,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72487018",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge002-1",
+            }, -- end of [13]
+            [14] = 
+            {
+                ["y"] = 651161.5234375,
+                ["radius"] = 69.6484375,
+                ["zoneId"] = 878,
+                ["x"] = -278170.05078125,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72487080",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge003",
+            }, -- end of [14]
+            [15] = 
+            {
+                ["y"] = 651027.1875,
+                ["radius"] = 69.6875,
+                ["zoneId"] = 879,
+                ["x"] = -278130.625,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72487041",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge002",
+            }, -- end of [15]
+            [16] = 
+            {
+                ["y"] = 650892.8515625,
+                ["radius"] = 69.7265625,
+                ["zoneId"] = 880,
+                ["x"] = -278091.19921875,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72487006",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge001",
+            }, -- end of [16]
+            [17] = 
+            {
+                ["y"] = 619112.375,
+                ["radius"] = 63.125,
+                ["zoneId"] = 882,
+                ["x"] = -290330,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72450448",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge32",
+            }, -- end of [17]
+            [18] = 
+            {
+                ["y"] = 619188.875,
+                ["radius"] = 63.0625,
+                ["zoneId"] = 883,
+                ["x"] = -290212.75,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72450465",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge33",
+            }, -- end of [18]
+            [19] = 
+            {
+                ["y"] = 619140.03125,
+                ["radius"] = 45.171875,
+                ["zoneId"] = 884,
+                ["x"] = -290165.734375,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72450458",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "TrainBridge34",
+            }, -- end of [19]
+            [20] = 
+            {
+                ["y"] = 619083.296875,
+                ["radius"] = 45.166015625,
+                ["zoneId"] = 885,
+                ["x"] = -290248.08398438,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72450444",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "TrainBridge35",
+            }, -- end of [20]
+            [21] = 
+            {
+                ["y"] = 619026.5625,
+                ["radius"] = 45.16015625,
+                ["zoneId"] = 886,
+                ["x"] = -290330.43359375,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72450427",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "TrainBridge36",
+            }, -- end of [21]
+            [22] = 
+            {
+                ["y"] = 619585.6328125,
+                ["radius"] = 63.171875,
+                ["zoneId"] = 888,
+                ["x"] = -290689.265625,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72450499",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge37",
+            }, -- end of [22]
+            [23] = 
+            {
+                ["y"] = 619661.9921875,
+                ["radius"] = 63.080078125,
+                ["zoneId"] = 889,
+                ["x"] = -290571.91992188,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72450500",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge38",
+            }, -- end of [23]
+            [24] = 
+            {
+                ["y"] = 671987.6434213,
+                ["radius"] = 50.302734375,
+                ["zoneId"] = 891,
+                ["x"] = -292722.10351563,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72712968",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "TrainBridge32",
+            }, -- end of [24]
+            [25] = 
+            {
+                ["y"] = 671985.1875,
+                ["radius"] = 50.306640625,
+                ["zoneId"] = 892,
+                ["x"] = -292822.03710938,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72712964",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "TrainBridge33",
+            }, -- end of [25]
+            [26] = 
+            {
+                ["y"] = 671981.56445313,
+                ["radius"] = 50.310546875,
+                ["zoneId"] = 893,
+                ["x"] = -292921.97070313,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72712963",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "TrainBridge31",
+            }, -- end of [26]
+            [27] = 
+            {
+                ["y"] = 672266.87695313,
+                ["radius"] = 70.3828125,
+                ["zoneId"] = 894,
+                ["x"] = -292658.8359375,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72713030",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge36",
+            }, -- end of [27]
+            [28] = 
+            {
+                ["y"] = 672238.12304688,
+                ["radius"] = 70.4921875,
+                ["zoneId"] = 895,
+                ["x"] = -292795.8515625,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72713026",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge35",
+            }, -- end of [28]
+            [29] = 
+            {
+                ["y"] = 702893.90625,
+                ["radius"] = 64.53125,
+                ["zoneId"] = 896,
+                ["x"] = -285269.1875,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72810934",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge004",
+            }, -- end of [29]
+            [30] = 
+            {
+                ["y"] = 703014.46484375,
+                ["radius"] = 64.40234375,
+                ["zoneId"] = 897,
+                ["x"] = -285340.36523438,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72810897",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge005",
+            }, -- end of [30]
+            [31] = 
+            {
+                ["y"] = 703255.578125,
+                ["radius"] = 64.453125,
+                ["zoneId"] = 898,
+                ["x"] = -285482.71875,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72910208",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge007",
+            }, -- end of [31]
+            [32] = 
+            {
+                ["y"] = 703135.01953125,
+                ["radius"] = 64.39453125,
+                ["zoneId"] = 899,
+                ["x"] = -285411.54101563,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72810857",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge006",
+            }, -- end of [32]
+            [33] = 
+            {
+                ["y"] = 704785.0078125,
+                ["radius"] = 66.88671875,
+                ["zoneId"] = 900,
+                ["x"] = -282606.98828125,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72911065",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge010",
+            }, -- end of [33]
+            [34] = 
+            {
+                ["y"] = 704844.5,
+                ["radius"] = 66.96875,
+                ["zoneId"] = 901,
+                ["x"] = -282733.71875,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72911054",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge009",
+            }, -- end of [34]
+            [35] = 
+            {
+                ["y"] = 704903.9921875,
+                ["radius"] = 66.98828125,
+                ["zoneId"] = 902,
+                ["x"] = -282860.44921875,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "72911046",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Bridge008",
+            }, -- end of [35]
+            [36] = 
+            {
+                ["y"] = 646323.0625,
+                ["radius"] = 10.9375,
+                ["zoneId"] = 1068,
+                ["x"] = -281379.90625,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                    [1] = 
+                    {
+                        ["key"] = "ROLE",
+                        ["value"] = "",
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["key"] = "VALUE",
+                        ["value"] = "",
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["key"] = "OBJECT ID",
+                        ["value"] = "137792153",
+                    }, -- end of [3]
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "ControlTower",
+            }, -- end of [36]
+        }, -- end of ["zones"]
+    }, -- end of ["triggers"]
+    ["map"] = 
+    {
+        ["centerY"] = 599278.81068629,
+        ["zoom"] = 191646.3362257,
+        ["centerX"] = -359163.88711768,
+    }, -- end of ["map"]
+    ["coalitions"] = 
+    {
+        ["neutrals"] = 
+        {
+            [1] = 70,
+            [2] = 65,
+            [3] = 64,
+            [4] = 63,
+            [5] = 76,
+            [6] = 29,
+            [7] = 62,
+            [8] = 78,
+            [9] = 61,
+            [10] = 33,
+            [11] = 60,
+            [12] = 17,
+            [13] = 34,
+            [14] = 35,
+            [15] = 69,
+            [16] = 36,
+            [17] = 59,
+            [18] = 37,
+            [19] = 71,
+            [20] = 79,
+            [21] = 58,
+            [22] = 57,
+            [23] = 56,
+            [24] = 55,
+            [25] = 38,
+            [26] = 73,
+            [27] = 39,
+            [28] = 54,
+            [29] = 77,
+            [30] = 72,
+            [31] = 42,
+            [32] = 75,
+            [33] = 45,
+            [34] = 53,
+            [35] = 22,
+            [36] = 52,
+            [37] = 66,
+            [38] = 51,
+            [39] = 74,
+            [40] = 82,
+            [41] = 7,
+            [42] = 68,
+            [43] = 50,
+            [44] = 49,
+            [45] = 48,
+            [46] = 67,
+        }, -- end of ["neutrals"]
+        ["blue"] = 
+        {
+            [1] = 21,
+            [2] = 23,
+            [3] = 11,
+            [4] = 25,
+            [5] = 8,
+            [6] = 80,
+            [7] = 28,
+            [8] = 26,
+            [9] = 13,
+            [10] = 30,
+            [11] = 5,
+            [12] = 16,
+            [13] = 6,
+            [14] = 31,
+            [15] = 32,
+            [16] = 15,
+            [17] = 20,
+            [18] = 12,
+            [19] = 40,
+            [20] = 41,
+            [21] = 44,
+            [22] = 9,
+            [23] = 46,
+            [24] = 10,
+            [25] = 3,
+            [26] = 4,
+            [27] = 1,
+            [28] = 2,
+        }, -- end of ["blue"]
+        ["red"] = 
+        {
+            [1] = 18,
+            [2] = 24,
+            [3] = 27,
+            [4] = 81,
+            [5] = 0,
+            [6] = 43,
+            [7] = 19,
+            [8] = 47,
+        }, -- end of ["red"]
+    }, -- end of ["coalitions"]
+    ["descriptionText"] = "DictKey_descriptionText_1",
+    ["pictureFileNameR"] = 
+    {
+    }, -- end of ["pictureFileNameR"]
+    ["descriptionNeutralsTask"] = "DictKey_descriptionNeutralsTask_4",
+    ["descriptionBlueTask"] = "DictKey_descriptionBlueTask_3",
+    ["descriptionRedTask"] = "DictKey_descriptionRedTask_2",
+    ["pictureFileNameB"] = 
+    {
+    }, -- end of ["pictureFileNameB"]
+    ["coalition"] = 
+    {
+        ["neutrals"] = 
+        {
+            ["bullseye"] = 
+            {
+                ["y"] = 0,
+                ["x"] = 0,
+            }, -- end of ["bullseye"]
+            ["nav_points"] = 
+            {
+            }, -- end of ["nav_points"]
+            ["name"] = "neutrals",
+            ["country"] = 
+            {
+            }, -- end of ["country"]
+        }, -- end of ["neutrals"]
+        ["blue"] = 
+        {
+            ["bullseye"] = 
+            {
+                ["y"] = 509051.75022919,
+                ["x"] = -294287.51245656,
+            }, -- end of ["bullseye"]
+            ["nav_points"] = 
+            {
+                [1] = 
+                {
+                    ["y"] = 576903.37055979,
+                    ["x"] = -281494.11336007,
+                    ["comment"] = "",
+                    ["callsignStr"] = "ADDER",
+                    ["id"] = 166,
+                    ["properties"] = 
+                    {
+                        ["vnav"] = 1,
+                        ["scale"] = 0,
+                        ["vangle"] = 0,
+                        ["angle"] = 0,
+                        ["steer"] = 2,
+                    }, -- end of ["properties"]
+                    ["callsign"] = 8,
+                }, -- end of [1]
+            }, -- end of ["nav_points"]
+            ["name"] = "blue",
+            ["country"] = 
+            {
+                [1] = 
+                {
+                    ["name"] = "USA",
+                    ["ship"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = 349264.76620031,
+                                            ["x"] = -281579.19651334,
+                                            ["name"] = "DictKey_WptName_42",
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["number"] = 1,
+                                                            ["auto"] = true,
+                                                            ["id"] = "WrappedAction",
+                                                            ["enabled"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "ActivateBeacon",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["type"] = 4,
+                                                                        ["frequency"] = 1088000000,
+                                                                        ["callsign"] = "TKR",
+                                                                        ["channel"] = 1,
+                                                                        ["modeChannel"] = "X",
+                                                                        ["bearing"] = true,
+                                                                        ["system"] = 4,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 12,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Excellent",
+                                        ["type"] = "VINSON",
+                                        ["unitId"] = 12,
+                                        ["y"] = 349264.76620031,
+                                        ["x"] = -281579.19651334,
+                                        ["name"] = "DictKey_UnitName_41",
+                                        ["heading"] = 1.832595714594,
+                                        ["modulation"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                    [2] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Excellent",
+                                        ["type"] = "TICONDEROG",
+                                        ["unitId"] = 13,
+                                        ["y"] = 349081.03800096,
+                                        ["x"] = -282336.4659109,
+                                        ["name"] = "DictKey_UnitName_43",
+                                        ["heading"] = 1.7976891295542,
+                                        ["modulation"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [2]
+                                    [3] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Excellent",
+                                        ["type"] = "USS_Arleigh_Burke_IIa",
+                                        ["unitId"] = 14,
+                                        ["y"] = 349991.7447778,
+                                        ["x"] = -281049.54123479,
+                                        ["name"] = "DictKey_UnitName_44",
+                                        ["heading"] = 1.6580627893946,
+                                        ["modulation"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [3]
+                                }, -- end of ["units"]
+                                ["y"] = 349264.76620031,
+                                ["x"] = -281579.19651334,
+                                ["name"] = "DictKey_GroupName_40",
+                                ["start_time"] = 0,
+                            }, -- end of [1]
+                        }, -- end of ["group"]
+                    }, -- end of ["ship"]
+                    ["id"] = 2,
+                    ["static"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 646750.4171386,
+                                            ["speed"] = 0,
+                                            ["x"] = -282848.53952937,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 14,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["shape_name"] = "H-Flag_W",
+                                        ["type"] = "White_Flag",
+                                        ["unitId"] = 16,
+                                        ["y"] = 646750.4171386,
+                                        ["x"] = -282848.53952937,
+                                        ["name"] = "DictKey_GroupName_95",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 646750.4171386,
+                                ["x"] = -282848.53952937,
+                                ["name"] = "DictKey_GroupName_95",
+                                ["dead"] = false,
+                            }, -- end of [1]
+                        }, -- end of ["group"]
+                    }, -- end of ["static"]
+                    ["plane"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["modulation"] = 0,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["radioSet"] = false,
+                                ["task"] = "Pinpoint Strike",
+                                ["uncontrolled"] = false,
+                                ["taskSelected"] = true,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 9144,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 244.60331968311,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["number"] = 1,
+                                                            ["auto"] = true,
+                                                            ["id"] = "WrappedAction",
+                                                            ["enabled"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "EPLRS",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["value"] = true,
+                                                                        ["groupId"] = 1,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["y"] = 354824.79453259,
+                                            ["x"] = -281378.04938749,
+                                            ["name"] = "DictKey_WptName_47",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                        [2] = 
+                                        {
+                                            ["alt"] = 9144,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 244.60331968311,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["number"] = 1,
+                                                            ["auto"] = false,
+                                                            ["id"] = "WrappedAction",
+                                                            ["enabled"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "Option",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["value"] = 0,
+                                                                        ["name"] = 0,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 495.83693871903,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 476104.36900463,
+                                            ["x"] = -282336.44787336,
+                                            ["name"] = "DictKey_WptName_48",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [2]
+                                        [3] = 
+                                        {
+                                            ["alt"] = 9144,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 244.60331968311,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["enabled"] = true,
+                                                            ["auto"] = false,
+                                                            ["id"] = "Bombing",
+                                                            ["number"] = 1,
+                                                            ["params"] = 
+                                                            {
+                                                                ["direction"] = 0,
+                                                                ["attackQtyLimit"] = false,
+                                                                ["attackQty"] = 1,
+                                                                ["expend"] = "Auto",
+                                                                ["y"] = 646998.36947961,
+                                                                ["directionEnabled"] = false,
+                                                                ["groupAttack"] = false,
+                                                                ["altitude"] = 9144,
+                                                                ["altitudeEnabled"] = false,
+                                                                ["weaponType"] = 14,
+                                                                ["x"] = -281656.41134217,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                        [2] = 
+                                                        {
+                                                            ["enabled"] = true,
+                                                            ["auto"] = false,
+                                                            ["id"] = "Bombing",
+                                                            ["number"] = 2,
+                                                            ["params"] = 
+                                                            {
+                                                                ["direction"] = 0,
+                                                                ["attackQtyLimit"] = false,
+                                                                ["attackQty"] = 1,
+                                                                ["expend"] = "Auto",
+                                                                ["y"] = 649424.75604871,
+                                                                ["directionEnabled"] = false,
+                                                                ["groupAttack"] = false,
+                                                                ["altitude"] = 9144,
+                                                                ["altitudeEnabled"] = false,
+                                                                ["weaponType"] = 14,
+                                                                ["x"] = -287524.06476076,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [2]
+                                                        [3] = 
+                                                        {
+                                                            ["enabled"] = true,
+                                                            ["auto"] = false,
+                                                            ["id"] = "Bombing",
+                                                            ["number"] = 3,
+                                                            ["params"] = 
+                                                            {
+                                                                ["direction"] = 0,
+                                                                ["attackQtyLimit"] = false,
+                                                                ["attackQty"] = 1,
+                                                                ["expend"] = "Auto",
+                                                                ["y"] = 648116.01712979,
+                                                                ["directionEnabled"] = false,
+                                                                ["groupAttack"] = false,
+                                                                ["altitude"] = 9144,
+                                                                ["altitudeEnabled"] = false,
+                                                                ["weaponType"] = 14,
+                                                                ["x"] = -278508.54488264,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [3]
+                                                        [4] = 
+                                                        {
+                                                            ["enabled"] = true,
+                                                            ["auto"] = false,
+                                                            ["id"] = "Bombing",
+                                                            ["number"] = 4,
+                                                            ["params"] = 
+                                                            {
+                                                                ["direction"] = 0,
+                                                                ["attackQtyLimit"] = false,
+                                                                ["attackQty"] = 1,
+                                                                ["expend"] = "Auto",
+                                                                ["y"] = 650679.28364406,
+                                                                ["directionEnabled"] = false,
+                                                                ["groupAttack"] = false,
+                                                                ["altitude"] = 9144,
+                                                                ["altitudeEnabled"] = false,
+                                                                ["weaponType"] = 14,
+                                                                ["x"] = -280197.26520593,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [4]
+                                                        [5] = 
+                                                        {
+                                                            ["number"] = 5,
+                                                            ["auto"] = false,
+                                                            ["id"] = "Bombing",
+                                                            ["enabled"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["groupAttack"] = false,
+                                                                ["attackQtyLimit"] = false,
+                                                                ["attackQty"] = 1,
+                                                                ["expend"] = "Auto",
+                                                                ["altitude"] = 9144,
+                                                                ["directionEnabled"] = false,
+                                                                ["x"] = -281574.05300494,
+                                                                ["y"] = 646273.68184923,
+                                                                ["altitudeEnabled"] = false,
+                                                                ["weaponType"] = 14,
+                                                                ["direction"] = 0,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [5]
+                                                        [6] = 
+                                                        {
+                                                            ["number"] = 6,
+                                                            ["auto"] = false,
+                                                            ["id"] = "Bombing",
+                                                            ["enabled"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["groupAttack"] = false,
+                                                                ["attackQtyLimit"] = false,
+                                                                ["attackQty"] = 1,
+                                                                ["expend"] = "Auto",
+                                                                ["altitude"] = 9144,
+                                                                ["directionEnabled"] = false,
+                                                                ["x"] = -278539.220985,
+                                                                ["y"] = 648458.35999582,
+                                                                ["altitudeEnabled"] = false,
+                                                                ["weaponType"] = 14,
+                                                                ["direction"] = 0,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [6]
+                                                        [7] = 
+                                                        {
+                                                            ["enabled"] = true,
+                                                            ["auto"] = false,
+                                                            ["id"] = "Bombing",
+                                                            ["number"] = 7,
+                                                            ["params"] = 
+                                                            {
+                                                                ["groupAttack"] = false,
+                                                                ["attackQtyLimit"] = false,
+                                                                ["attackQty"] = 1,
+                                                                ["expend"] = "Auto",
+                                                                ["y"] = 649375.68794194,
+                                                                ["directionEnabled"] = false,
+                                                                ["direction"] = 0,
+                                                                ["altitude"] = 9144,
+                                                                ["altitudeEnabled"] = false,
+                                                                ["weaponType"] = 14,
+                                                                ["x"] = -287394.65133045,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [7]
+                                                        [8] = 
+                                                        {
+                                                            ["enabled"] = true,
+                                                            ["auto"] = false,
+                                                            ["id"] = "Bombing",
+                                                            ["number"] = 8,
+                                                            ["params"] = 
+                                                            {
+                                                                ["groupAttack"] = false,
+                                                                ["attackQtyLimit"] = false,
+                                                                ["attackQty"] = 1,
+                                                                ["expend"] = "Auto",
+                                                                ["y"] = 651260.70049541,
+                                                                ["directionEnabled"] = false,
+                                                                ["direction"] = 0,
+                                                                ["altitude"] = 9144,
+                                                                ["altitudeEnabled"] = false,
+                                                                ["weaponType"] = 14,
+                                                                ["x"] = -280032.51105949,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [8]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 968.58252923765,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 591737.03030625,
+                                            ["x"] = -281579.19651334,
+                                            ["name"] = "DictKey_WptName_49",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [3]
+                                        [4] = 
+                                        {
+                                            ["alt"] = 9144,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 244.60331968311,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 1194.084970863,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 646895.64081986,
+                                            ["x"] = -281516.7889251,
+                                            ["name"] = "DictKey_WptName_50",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [4]
+                                        [5] = 
+                                        {
+                                            ["alt"] = 9144,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 244.60331968311,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 1336.5807728473,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 620127.51393754,
+                                            ["x"] = -259112.51484191,
+                                            ["name"] = "DictKey_WptName_51",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [5]
+                                        [6] = 
+                                        {
+                                            ["alt"] = 9144,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 244.60331968311,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 1867.5395282429,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 472246.9096178,
+                                            ["x"] = -283565.91724109,
+                                            ["name"] = "DictKey_WptName_52",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [6]
+                                        [7] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["action"] = "Landing",
+                                            ["alt_type"] = "BARO",
+                                            ["linkUnit"] = 12,
+                                            ["helipadId"] = 12,
+                                            ["speed"] = 138.88888888889,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Land",
+                                            ["ETA"] = 2370.3871176214,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 349264.76620031,
+                                            ["x"] = -281579.19651334,
+                                            ["name"] = "DictKey_WptName_53",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [7]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 13,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["alt"] = 9144,
+                                        ["hardpoint_racks"] = true,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "vfa-37",
+                                        ["skill"] = "Player",
+                                        ["speed"] = 244.60331968311,
+                                        ["AddPropAircraft"] = 
+                                        {
+                                            ["OuterBoard"] = 0,
+                                            ["InnerBoard"] = 0,
+                                            ["HelmetMountedDevice"] = 1,
+                                        }, -- end of ["AddPropAircraft"]
+                                        ["type"] = "FA-18C_hornet",
+                                        ["Radio"] = 
+                                        {
+                                            [1] = 
+                                            {
+                                                ["modulations"] = 
+                                                {
+                                                    [1] = 0,
+                                                    [2] = 0,
+                                                    [4] = 0,
+                                                    [8] = 0,
+                                                    [16] = 0,
+                                                    [17] = 0,
+                                                    [9] = 0,
+                                                    [18] = 0,
+                                                    [5] = 0,
+                                                    [10] = 0,
+                                                    [20] = 0,
+                                                    [11] = 0,
+                                                    [3] = 0,
+                                                    [6] = 0,
+                                                    [12] = 0,
+                                                    [13] = 0,
+                                                    [7] = 0,
+                                                    [14] = 0,
+                                                    [19] = 0,
+                                                    [15] = 0,
+                                                }, -- end of ["modulations"]
+                                                ["channels"] = 
+                                                {
+                                                    [1] = 305,
+                                                    [2] = 264,
+                                                    [4] = 256,
+                                                    [8] = 257,
+                                                    [16] = 261,
+                                                    [17] = 267,
+                                                    [9] = 255,
+                                                    [18] = 251,
+                                                    [5] = 254,
+                                                    [10] = 262,
+                                                    [20] = 266,
+                                                    [11] = 259,
+                                                    [3] = 265,
+                                                    [6] = 250,
+                                                    [12] = 268,
+                                                    [13] = 269,
+                                                    [7] = 270,
+                                                    [14] = 260,
+                                                    [19] = 253,
+                                                    [15] = 263,
+                                                }, -- end of ["channels"]
+                                            }, -- end of [1]
+                                            [2] = 
+                                            {
+                                                ["modulations"] = 
+                                                {
+                                                    [1] = 0,
+                                                    [2] = 0,
+                                                    [4] = 0,
+                                                    [8] = 0,
+                                                    [16] = 0,
+                                                    [17] = 0,
+                                                    [9] = 0,
+                                                    [18] = 0,
+                                                    [5] = 0,
+                                                    [10] = 0,
+                                                    [20] = 0,
+                                                    [11] = 0,
+                                                    [3] = 0,
+                                                    [6] = 0,
+                                                    [12] = 0,
+                                                    [13] = 0,
+                                                    [7] = 0,
+                                                    [14] = 0,
+                                                    [19] = 0,
+                                                    [15] = 0,
+                                                }, -- end of ["modulations"]
+                                                ["channels"] = 
+                                                {
+                                                    [1] = 305,
+                                                    [2] = 264,
+                                                    [4] = 256,
+                                                    [8] = 257,
+                                                    [16] = 261,
+                                                    [17] = 267,
+                                                    [9] = 255,
+                                                    [18] = 251,
+                                                    [5] = 254,
+                                                    [10] = 262,
+                                                    [20] = 266,
+                                                    [11] = 259,
+                                                    [3] = 265,
+                                                    [6] = 250,
+                                                    [12] = 268,
+                                                    [13] = 269,
+                                                    [7] = 270,
+                                                    [14] = 260,
+                                                    [19] = 253,
+                                                    [15] = 263,
+                                                }, -- end of ["channels"]
+                                            }, -- end of [2]
+                                        }, -- end of ["Radio"]
+                                        ["unitId"] = 15,
+                                        ["psi"] = -1.5786985522178,
+                                        ["dataCartridge"] = 
+                                        {
+                                            ["GroupsPoints"] = 
+                                            {
+                                                ["Initial Point"] = 
+                                                {
+                                                }, -- end of ["Initial Point"]
+                                                ["Sequence 2 Red"] = 
+                                                {
+                                                }, -- end of ["Sequence 2 Red"]
+                                                ["PB"] = 
+                                                {
+                                                }, -- end of ["PB"]
+                                                ["Sequence 1 Blue"] = 
+                                                {
+                                                }, -- end of ["Sequence 1 Blue"]
+                                                ["Start Location"] = 
+                                                {
+                                                }, -- end of ["Start Location"]
+                                                ["A/A Waypoint"] = 
+                                                {
+                                                }, -- end of ["A/A Waypoint"]
+                                                ["PP"] = 
+                                                {
+                                                }, -- end of ["PP"]
+                                                ["Sequence 3 Yellow"] = 
+                                                {
+                                                }, -- end of ["Sequence 3 Yellow"]
+                                            }, -- end of ["GroupsPoints"]
+                                            ["Points"] = 
+                                            {
+                                            }, -- end of ["Points"]
+                                        }, -- end of ["dataCartridge"]
+                                        ["y"] = 354824.79453259,
+                                        ["x"] = -281378.04938749,
+                                        ["name"] = "DictKey_UnitName_46",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                                [1] = 
+                                                {
+                                                    ["CLSID"] = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+                                                }, -- end of [1]
+                                                [2] = 
+                                                {
+                                                    ["CLSID"] = "{GBU-31V3B}",
+                                                }, -- end of [2]
+                                                [3] = 
+                                                {
+                                                    ["CLSID"] = "{GBU-31V3B}",
+                                                }, -- end of [3]
+                                                [4] = 
+                                                {
+                                                    ["CLSID"] = "{AAQ-28_LEFT}",
+                                                }, -- end of [4]
+                                                [5] = 
+                                                {
+                                                    ["CLSID"] = "{AWW-13}",
+                                                }, -- end of [5]
+                                                [6] = 
+                                                {
+                                                    ["CLSID"] = "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+                                                }, -- end of [6]
+                                                [7] = 
+                                                {
+                                                    ["CLSID"] = "{GBU-31V3B}",
+                                                }, -- end of [7]
+                                                [8] = 
+                                                {
+                                                    ["CLSID"] = "{GBU-31V3B}",
+                                                }, -- end of [8]
+                                                [9] = 
+                                                {
+                                                    ["CLSID"] = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+                                                }, -- end of [9]
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = 4900,
+                                            ["flare"] = 30,
+                                            ["ammo_type"] = 1,
+                                            ["chaff"] = 60,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["heading"] = 1.5786985522178,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 1,
+                                            [2] = 1,
+                                            [3] = 1,
+                                            ["name"] = "Enfield11",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "010",
+                                    }, -- end of [1]
+                                    [2] = 
+                                    {
+                                        ["alt"] = 9144,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "vfa-37",
+                                        ["skill"] = "Excellent",
+                                        ["speed"] = 244.60331968311,
+                                        ["AddPropAircraft"] = 
+                                        {
+                                            ["OuterBoard"] = 0,
+                                            ["InnerBoard"] = 0,
+                                            ["HelmetMountedDevice"] = 1,
+                                        }, -- end of ["AddPropAircraft"]
+                                        ["type"] = "FA-18C_hornet",
+                                        ["unitId"] = 17,
+                                        ["psi"] = -1.5786985522178,
+                                        ["y"] = 354864.79453259,
+                                        ["x"] = -281418.04938749,
+                                        ["name"] = "DictKey_UnitName_98",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                                [1] = 
+                                                {
+                                                    ["CLSID"] = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+                                                }, -- end of [1]
+                                                [2] = 
+                                                {
+                                                    ["CLSID"] = "{GBU-31V3B}",
+                                                }, -- end of [2]
+                                                [3] = 
+                                                {
+                                                    ["CLSID"] = "{GBU-31V3B}",
+                                                }, -- end of [3]
+                                                [4] = 
+                                                {
+                                                    ["CLSID"] = "{AAQ-28_LEFT}",
+                                                }, -- end of [4]
+                                                [5] = 
+                                                {
+                                                    ["CLSID"] = "{AWW-13}",
+                                                }, -- end of [5]
+                                                [6] = 
+                                                {
+                                                    ["CLSID"] = "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+                                                }, -- end of [6]
+                                                [7] = 
+                                                {
+                                                    ["CLSID"] = "{GBU-31V3B}",
+                                                }, -- end of [7]
+                                                [8] = 
+                                                {
+                                                    ["CLSID"] = "{GBU-31V3B}",
+                                                }, -- end of [8]
+                                                [9] = 
+                                                {
+                                                    ["CLSID"] = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+                                                }, -- end of [9]
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = 4900,
+                                            ["flare"] = 30,
+                                            ["ammo_type"] = 1,
+                                            ["chaff"] = 60,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["heading"] = 1.5786985522178,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 1,
+                                            [2] = 1,
+                                            [3] = 2,
+                                            ["name"] = "Enfield12",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "011",
+                                    }, -- end of [2]
+                                    [3] = 
+                                    {
+                                        ["alt"] = 9144,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "vfa-37",
+                                        ["skill"] = "Excellent",
+                                        ["speed"] = 244.60331968311,
+                                        ["AddPropAircraft"] = 
+                                        {
+                                            ["OuterBoard"] = 0,
+                                            ["InnerBoard"] = 0,
+                                            ["HelmetMountedDevice"] = 1,
+                                        }, -- end of ["AddPropAircraft"]
+                                        ["type"] = "FA-18C_hornet",
+                                        ["unitId"] = 18,
+                                        ["psi"] = -1.5786985522178,
+                                        ["y"] = 354904.79453259,
+                                        ["x"] = -281458.04938749,
+                                        ["name"] = "DictKey_UnitName_99",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                                [1] = 
+                                                {
+                                                    ["CLSID"] = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+                                                }, -- end of [1]
+                                                [2] = 
+                                                {
+                                                    ["CLSID"] = "{GBU-31V3B}",
+                                                }, -- end of [2]
+                                                [3] = 
+                                                {
+                                                    ["CLSID"] = "{GBU-31V3B}",
+                                                }, -- end of [3]
+                                                [4] = 
+                                                {
+                                                    ["CLSID"] = "{AAQ-28_LEFT}",
+                                                }, -- end of [4]
+                                                [5] = 
+                                                {
+                                                    ["CLSID"] = "{AWW-13}",
+                                                }, -- end of [5]
+                                                [6] = 
+                                                {
+                                                    ["CLSID"] = "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+                                                }, -- end of [6]
+                                                [7] = 
+                                                {
+                                                    ["CLSID"] = "{GBU-31V3B}",
+                                                }, -- end of [7]
+                                                [8] = 
+                                                {
+                                                    ["CLSID"] = "{GBU-31V3B}",
+                                                }, -- end of [8]
+                                                [9] = 
+                                                {
+                                                    ["CLSID"] = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+                                                }, -- end of [9]
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = 4900,
+                                            ["flare"] = 30,
+                                            ["ammo_type"] = 1,
+                                            ["chaff"] = 60,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["heading"] = 1.5786985522178,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 1,
+                                            [2] = 1,
+                                            [3] = 3,
+                                            ["name"] = "Enfield13",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "012",
+                                    }, -- end of [3]
+                                    [4] = 
+                                    {
+                                        ["alt"] = 9144,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "vfa-37",
+                                        ["skill"] = "Excellent",
+                                        ["speed"] = 244.60331968311,
+                                        ["AddPropAircraft"] = 
+                                        {
+                                            ["OuterBoard"] = 0,
+                                            ["InnerBoard"] = 0,
+                                            ["HelmetMountedDevice"] = 1,
+                                        }, -- end of ["AddPropAircraft"]
+                                        ["type"] = "FA-18C_hornet",
+                                        ["unitId"] = 19,
+                                        ["psi"] = -1.5786985522178,
+                                        ["y"] = 354944.79453259,
+                                        ["x"] = -281498.04938749,
+                                        ["name"] = "DictKey_UnitName_100",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                                [1] = 
+                                                {
+                                                    ["CLSID"] = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+                                                }, -- end of [1]
+                                                [2] = 
+                                                {
+                                                    ["CLSID"] = "{GBU-31V3B}",
+                                                }, -- end of [2]
+                                                [3] = 
+                                                {
+                                                    ["CLSID"] = "{GBU-31V3B}",
+                                                }, -- end of [3]
+                                                [4] = 
+                                                {
+                                                    ["CLSID"] = "{AAQ-28_LEFT}",
+                                                }, -- end of [4]
+                                                [5] = 
+                                                {
+                                                    ["CLSID"] = "{AWW-13}",
+                                                }, -- end of [5]
+                                                [6] = 
+                                                {
+                                                    ["CLSID"] = "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+                                                }, -- end of [6]
+                                                [7] = 
+                                                {
+                                                    ["CLSID"] = "{GBU-31V3B}",
+                                                }, -- end of [7]
+                                                [8] = 
+                                                {
+                                                    ["CLSID"] = "{GBU-31V3B}",
+                                                }, -- end of [8]
+                                                [9] = 
+                                                {
+                                                    ["CLSID"] = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+                                                }, -- end of [9]
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = 4900,
+                                            ["flare"] = 30,
+                                            ["ammo_type"] = 1,
+                                            ["chaff"] = 60,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["heading"] = 1.5786985522178,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 1,
+                                            [2] = 1,
+                                            [3] = 4,
+                                            ["name"] = "Enfield14",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "013",
+                                    }, -- end of [4]
+                                }, -- end of ["units"]
+                                ["y"] = 354824.79453259,
+                                ["x"] = -281378.04938749,
+                                ["name"] = "DictKey_GroupName_45",
+                                ["communication"] = true,
+                                ["start_time"] = 0,
+                                ["uncontrollable"] = false,
+                                ["frequency"] = 305,
+                            }, -- end of [1]
+                        }, -- end of ["group"]
+                    }, -- end of ["plane"]
+                }, -- end of [1]
+                [2] = 
+                {
+                    ["id"] = 16,
+                    ["name"] = "Georgia",
+                    ["plane"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["modulation"] = 0,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["radioSet"] = false,
+                                ["task"] = "Pinpoint Strike",
+                                ["uncontrolled"] = false,
+                                ["taskSelected"] = true,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 10,
+                                            ["action"] = "From Parking Area",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 138.88888888889,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "TakeOffParking",
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["y"] = 618097.125,
+                                            ["x"] = -355962.5625,
+                                            ["name"] = "DictKey_WptName_131",
+                                            ["formation_template"] = "",
+                                            ["airdromeId"] = 22,
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                        [2] = 
+                                        {
+                                            ["alt"] = 2000,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 138.88888888889,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 242.92690269424,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 602673.68864229,
+                                            ["x"] = -325954.31485457,
+                                            ["name"] = "DictKey_WptName_132",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [2]
+                                        [3] = 
+                                        {
+                                            ["alt"] = 2000,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 138.88888888889,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 461.96477843872,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 582632.95748269,
+                                            ["x"] = -348842.36300952,
+                                            ["name"] = "DictKey_WptName_133",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [3]
+                                        [4] = 
+                                        {
+                                            ["alt"] = 2000,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 138.88888888889,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 692.91936473191,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 602071.37158558,
+                                            ["x"] = -374358.70377557,
+                                            ["name"] = "DictKey_WptName_134",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [4]
+                                        [5] = 
+                                        {
+                                            ["alt"] = 2000,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 138.88888888889,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 868.6783146805,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 624959.41974054,
+                                            ["x"] = -365871.50888558,
+                                            ["name"] = "DictKey_WptName_135",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [5]
+                                        [6] = 
+                                        {
+                                            ["alt"] = 10,
+                                            ["action"] = "Landing",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 138.88888888889,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Land",
+                                            ["ETA"] = 959.34514867927,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 617386.1875,
+                                            ["x"] = -355810.6875,
+                                            ["name"] = "DictKey_WptName_136",
+                                            ["formation_template"] = "",
+                                            ["airdromeId"] = 22,
+                                            ["speed_locked"] = true,
+                                        }, -- end of [6]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 24,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["alt"] = 10,
+                                        ["hardpoint_racks"] = true,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "af standard 101",
+                                        ["skill"] = "Client",
+                                        ["parking"] = "6",
+                                        ["speed"] = 138.88888888889,
+                                        ["type"] = "Su-25T",
+                                        ["unitId"] = 29,
+                                        ["psi"] = 0.47476361228532,
+                                        ["parking_id"] = "01",
+                                        ["x"] = -355962.5625,
+                                        ["name"] = "DictKey_UnitName_130",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                                [1] = 
+                                                {
+                                                    ["CLSID"] = "{44EE8698-89F9-48EE-AF36-5FD31896A82D}",
+                                                }, -- end of [1]
+                                                [2] = 
+                                                {
+                                                    ["CLSID"] = "{CBC29BFE-3D24-4C64-B81D-941239D12249}",
+                                                }, -- end of [2]
+                                                [3] = 
+                                                {
+                                                    ["CLSID"] = "{E8D4652F-FD48-45B7-BA5B-2AE05BB5A9CF}",
+                                                }, -- end of [3]
+                                                [4] = 
+                                                {
+                                                    ["CLSID"] = "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+                                                }, -- end of [4]
+                                                [5] = 
+                                                {
+                                                    ["CLSID"] = "{E2C426E3-8B10-4E09-B733-9CDC26520F48}",
+                                                }, -- end of [5]
+                                                [7] = 
+                                                {
+                                                    ["CLSID"] = "{E2C426E3-8B10-4E09-B733-9CDC26520F48}",
+                                                }, -- end of [7]
+                                                [8] = 
+                                                {
+                                                    ["CLSID"] = "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+                                                }, -- end of [8]
+                                                [9] = 
+                                                {
+                                                    ["CLSID"] = "{E8D4652F-FD48-45B7-BA5B-2AE05BB5A9CF}",
+                                                }, -- end of [9]
+                                                [10] = 
+                                                {
+                                                    ["CLSID"] = "{CBC29BFE-3D24-4C64-B81D-941239D12249}",
+                                                }, -- end of [10]
+                                                [11] = 
+                                                {
+                                                    ["CLSID"] = "{44EE8698-89F9-48EE-AF36-5FD31896A82C}",
+                                                }, -- end of [11]
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = "3790",
+                                            ["flare"] = 128,
+                                            ["chaff"] = 128,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["y"] = 618097.125,
+                                        ["heading"] = -0.47476361228532,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 1,
+                                            [2] = 1,
+                                            [3] = 1,
+                                            ["name"] = "Enfield11",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "010",
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 618097.125,
+                                ["x"] = -355962.5625,
+                                ["name"] = "DictKey_GroupName_129",
+                                ["communication"] = true,
+                                ["start_time"] = 0,
+                                ["uncontrollable"] = false,
+                                ["frequency"] = 124,
+                            }, -- end of [1]
+                        }, -- end of ["group"]
+                    }, -- end of ["plane"]
+                }, -- end of [2]
+            }, -- end of ["country"]
+        }, -- end of ["blue"]
+        ["red"] = 
+        {
+            ["bullseye"] = 
+            {
+                ["y"] = 508918.43882353,
+                ["x"] = -97511.922032086,
+            }, -- end of ["bullseye"]
+            ["nav_points"] = 
+            {
+            }, -- end of ["nav_points"]
+            ["name"] = "red",
+            ["country"] = 
+            {
+                [1] = 
+                {
+                    ["id"] = 0,
+                    ["static"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["heading"] = 4.7996554429844,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 646999.65771192,
+                                            ["speed"] = 0,
+                                            ["x"] = -281655.12310986,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 16,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Warehouses",
+                                        ["shape_name"] = "SkladC",
+                                        ["type"] = ".Ammunition depot",
+                                        ["unitId"] = 21,
+                                        ["rate"] = 100,
+                                        ["y"] = 646999.65771192,
+                                        ["x"] = -281655.12310986,
+                                        ["name"] = "DictKey_GroupName_104",
+                                        ["heading"] = 4.7996554429844,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 646999.65771192,
+                                ["x"] = -281655.12310986,
+                                ["name"] = "DictKey_GroupName_104",
+                                ["dead"] = false,
+                            }, -- end of [1]
+                            [2] = 
+                            {
+                                ["heading"] = 5.235987755983,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 650679.38292018,
+                                            ["speed"] = 0,
+                                            ["x"] = -280197.43123447,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 17,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Warehouses",
+                                        ["shape_name"] = "SkladC",
+                                        ["type"] = ".Ammunition depot",
+                                        ["unitId"] = 22,
+                                        ["y"] = 650679.38292018,
+                                        ["x"] = -280197.43123447,
+                                        ["name"] = "DictKey_GroupName_107",
+                                        ["heading"] = 5.235987755983,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 650679.38292018,
+                                ["x"] = -280197.43123447,
+                                ["name"] = "DictKey_GroupName_107",
+                                ["dead"] = false,
+                            }, -- end of [2]
+                            [3] = 
+                            {
+                                ["heading"] = 4.4680428851055,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 648115.92925244,
+                                            ["speed"] = 0,
+                                            ["x"] = -278509.06065726,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 18,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Warehouses",
+                                        ["shape_name"] = "SkladC",
+                                        ["type"] = ".Ammunition depot",
+                                        ["unitId"] = 23,
+                                        ["y"] = 648115.92925244,
+                                        ["x"] = -278509.06065726,
+                                        ["name"] = "DictKey_GroupName_110",
+                                        ["heading"] = 4.4680428851055,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 648115.92925244,
+                                ["x"] = -278509.06065726,
+                                ["name"] = "DictKey_GroupName_110",
+                                ["dead"] = false,
+                            }, -- end of [3]
+                            [4] = 
+                            {
+                                ["heading"] = 3.3161255787892,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 649425.4068636,
+                                            ["speed"] = 0,
+                                            ["x"] = -287523.89588932,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 19,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Warehouses",
+                                        ["shape_name"] = "SkladC",
+                                        ["type"] = ".Ammunition depot",
+                                        ["unitId"] = 24,
+                                        ["y"] = 649425.4068636,
+                                        ["x"] = -287523.89588932,
+                                        ["name"] = "DictKey_GroupName_113",
+                                        ["heading"] = 3.3161255787892,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 649425.4068636,
+                                ["x"] = -287523.89588932,
+                                ["name"] = "DictKey_GroupName_113",
+                                ["dead"] = false,
+                            }, -- end of [4]
+                            [5] = 
+                            {
+                                ["heading"] = 5.235987755983,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 651261.03317854,
+                                            ["speed"] = 0,
+                                            ["x"] = -280032.13324498,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 20,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["type"] = "Sandbox",
+                                        ["unitId"] = 25,
+                                        ["rate"] = 5,
+                                        ["y"] = 651261.03317854,
+                                        ["x"] = -280032.13324498,
+                                        ["name"] = "DictKey_GroupName_116",
+                                        ["heading"] = 5.235987755983,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 651261.03317854,
+                                ["x"] = -280032.13324498,
+                                ["name"] = "DictKey_GroupName_116",
+                                ["dead"] = false,
+                            }, -- end of [5]
+                            [6] = 
+                            {
+                                ["heading"] = 4.4331363000656,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 648460.34826128,
+                                            ["speed"] = 0,
+                                            ["x"] = -278539.37999548,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 21,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["shape_name"] = "ComCenter",
+                                        ["type"] = ".Command Center",
+                                        ["unitId"] = 26,
+                                        ["rate"] = 100,
+                                        ["y"] = 648460.34826128,
+                                        ["x"] = -278539.37999548,
+                                        ["name"] = "DictKey_GroupName_119",
+                                        ["heading"] = 4.4331363000656,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 648460.34826128,
+                                ["x"] = -278539.37999548,
+                                ["name"] = "DictKey_GroupName_119",
+                                ["dead"] = false,
+                            }, -- end of [6]
+                            [7] = 
+                            {
+                                ["heading"] = 5.235987755983,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 646275.2069191,
+                                            ["speed"] = 0,
+                                            ["x"] = -281575.66648391,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 22,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["shape_name"] = "ComCenter",
+                                        ["type"] = ".Command Center",
+                                        ["unitId"] = 27,
+                                        ["rate"] = 100,
+                                        ["y"] = 646275.2069191,
+                                        ["x"] = -281575.66648391,
+                                        ["name"] = "DictKey_GroupName_122",
+                                        ["heading"] = 5.235987755983,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 646275.2069191,
+                                ["x"] = -281575.66648391,
+                                ["name"] = "DictKey_GroupName_122",
+                                ["dead"] = false,
+                            }, -- end of [7]
+                            [8] = 
+                            {
+                                ["heading"] = 4.9043751981041,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 649375.60891567,
+                                            ["speed"] = 0,
+                                            ["x"] = -287393.86048309,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 23,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Fortifications",
+                                        ["shape_name"] = "tech",
+                                        ["type"] = "Repair workshop",
+                                        ["unitId"] = 28,
+                                        ["rate"] = 100,
+                                        ["y"] = 649375.60891567,
+                                        ["x"] = -287393.86048309,
+                                        ["name"] = "DictKey_GroupName_125",
+                                        ["heading"] = 4.9043751981041,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 649375.60891567,
+                                ["x"] = -287393.86048309,
+                                ["name"] = "DictKey_GroupName_125",
+                                ["dead"] = false,
+                            }, -- end of [8]
+                        }, -- end of ["group"]
+                    }, -- end of ["static"]
+                    ["name"] = "Russia",
+                }, -- end of [1]
+            }, -- end of ["country"]
+        }, -- end of ["red"]
+    }, -- end of ["coalition"]
+    ["sortie"] = "DictKey_sortie_5",
+    ["version"] = 18,
+    ["trigrules"] = 
+    {
+        [1] = 
+        {
+            ["rules"] = 
+            {
+            }, -- end of ["rules"]
+            ["eventlist"] = "",
+            ["actions"] = 
+            {
+                [1] = 
+                {
+                    ["file"] = "ResKey_Action_84",
+                    ["meters"] = 1000,
+                    ["predicate"] = "a_do_script_file",
+                    ["zone"] = "",
+                }, -- end of [1]
+            }, -- end of ["actions"]
+            ["predicate"] = "triggerStart",
+            ["comment"] = "Load MOOSE",
+        }, -- end of [1]
+        [2] = 
+        {
+            ["rules"] = 
+            {
+            }, -- end of ["rules"]
+            ["comment"] = "Load Mission",
+            ["eventlist"] = "",
+            ["actions"] = 
+            {
+                [1] = 
+                {
+                    ["meters"] = 1000,
+                    ["zone"] = "",
+                    ["KeyDict_text"] = "DictKey_ActionText_85",
+                    ["text"] = "DictKey_ActionText_85",
+                    ["predicate"] = "a_do_script_file",
+                    ["file"] = "ResKey_Action_128",
+                }, -- end of [1]
+            }, -- end of ["actions"]
+            ["predicate"] = "triggerStart",
+        }, -- end of [2]
+    }, -- end of ["trigrules"]
+    ["currentKey"] = 4919,
+    ["start_time"] = 65400,
+    ["forcedOptions"] = 
+    {
+    }, -- end of ["forcedOptions"]
+    ["failures"] = 
+    {
+        ["Failure_Fuel_Tank1Transfer"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Fuel_Tank1Transfer",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Fuel_Tank1Transfer"]
+        ["Failure_Ctrl_Aileron"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Ctrl_Aileron",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Ctrl_Aileron"]
+        ["Failure_Ctrl_FCS_Ch3"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Ctrl_FCS_Ch3",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Ctrl_FCS_Ch3"]
+        ["Failure_PP_EngR_Main_FFCS"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_PP_EngR_Main_FFCS",
+            ["mm"] = 0,
+        }, -- end of ["Failure_PP_EngR_Main_FFCS"]
+        ["Failure_Elec_LeftGenerator"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Elec_LeftGenerator",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Elec_LeftGenerator"]
+        ["Failure_Gear_NWS"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Gear_NWS",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Gear_NWS"]
+        ["Failure_Comp_ADC"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Comp_ADC",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Comp_ADC"]
+        ["Failure_PP_RightPTS"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_PP_RightPTS",
+            ["mm"] = 0,
+        }, -- end of ["Failure_PP_RightPTS"]
+        ["Failure_Comp_MC2"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Comp_MC2",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Comp_MC2"]
+        ["Failure_Hyd_IsolatedHYD2BSystem_Leak"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Hyd_IsolatedHYD2BSystem_Leak",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Hyd_IsolatedHYD2BSystem_Leak"]
+        ["Failure_Ctrl_FCS_Ch1"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Ctrl_FCS_Ch1",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Ctrl_FCS_Ch1"]
+        ["Failure_PP_LeftAMAD_OilLeak"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_PP_LeftAMAD_OilLeak",
+            ["mm"] = 0,
+        }, -- end of ["Failure_PP_LeftAMAD_OilLeak"]
+        ["Failure_PP_EngR_Nozzle_CS"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_PP_EngR_Nozzle_CS",
+            ["mm"] = 0,
+        }, -- end of ["Failure_PP_EngR_Nozzle_CS"]
+        ["Failure_Elec_RightGenerator"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Elec_RightGenerator",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Elec_RightGenerator"]
+        ["Failure_Gear_WOW"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Gear_WOW",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Gear_WOW"]
+        ["Failure_Ctrl_FCS_Ch2"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Ctrl_FCS_Ch2",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Ctrl_FCS_Ch2"]
+        ["Failure_Fuel_QuantityGaging"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Fuel_QuantityGaging",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Fuel_QuantityGaging"]
+        ["Failure_Fuel_Tank4Transfer"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Fuel_Tank4Transfer",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Fuel_Tank4Transfer"]
+        ["Failure_Elec_EmergencyBattery"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Elec_EmergencyBattery",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Elec_EmergencyBattery"]
+        ["Failure_PP_EngR_OilLeak"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_PP_EngR_OilLeak",
+            ["mm"] = 0,
+        }, -- end of ["Failure_PP_EngR_OilLeak"]
+        ["Failure_PP_LeftPTS"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_PP_LeftPTS",
+            ["mm"] = 0,
+        }, -- end of ["Failure_PP_LeftPTS"]
+        ["Failure_Hyd_HYD1B_Leak"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Hyd_HYD1B_Leak",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Hyd_HYD1B_Leak"]
+        ["Failure_Sens_LeftPitotHeater"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Sens_LeftPitotHeater",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Sens_LeftPitotHeater"]
+        ["Failure_Fuel_ExtTankTransferC"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Fuel_ExtTankTransferC",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Fuel_ExtTankTransferC"]
+        ["Failure_PP_RightAMAD_OilLeak"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_PP_RightAMAD_OilLeak",
+            ["mm"] = 0,
+        }, -- end of ["Failure_PP_RightAMAD_OilLeak"]
+        ["Failure_Comp_MC1"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Comp_MC1",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Comp_MC1"]
+        ["Failure_Ctrl_LEF"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Ctrl_LEF",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Ctrl_LEF"]
+        ["Failure_ECS_OBOGS"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_ECS_OBOGS",
+            ["mm"] = 0,
+        }, -- end of ["Failure_ECS_OBOGS"]
+        ["Failure_Fuel_RightBoostPump"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Fuel_RightBoostPump",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Fuel_RightBoostPump"]
+        ["Failure_ECS_Valve"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_ECS_Valve",
+            ["mm"] = 0,
+        }, -- end of ["Failure_ECS_Valve"]
+        ["Failure_Ctrl_FCS_Ch4"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Ctrl_FCS_Ch4",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Ctrl_FCS_Ch4"]
+        ["Failure_Sens_RightPitotHeater"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Sens_RightPitotHeater",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Sens_RightPitotHeater"]
+        ["Failure_Hyd_HYD2B_Leak"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Hyd_HYD2B_Leak",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Hyd_HYD2B_Leak"]
+        ["Failure_Hyd_HYD1A_Leak"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Hyd_HYD1A_Leak",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Hyd_HYD1A_Leak"]
+        ["Failure_PP_EngR_AB_FFCS"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_PP_EngR_AB_FFCS",
+            ["mm"] = 0,
+        }, -- end of ["Failure_PP_EngR_AB_FFCS"]
+        ["Failure_PP_EngL_Nozzle_CS"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_PP_EngL_Nozzle_CS",
+            ["mm"] = 0,
+        }, -- end of ["Failure_PP_EngL_Nozzle_CS"]
+        ["Failure_PP_EngL_Main_FFCS"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_PP_EngL_Main_FFCS",
+            ["mm"] = 0,
+        }, -- end of ["Failure_PP_EngL_Main_FFCS"]
+        ["Failure_Elec_LeftTransformerRectifier"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Elec_LeftTransformerRectifier",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Elec_LeftTransformerRectifier"]
+        ["Failure_Fuel_ExtTankTransferL"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Fuel_ExtTankTransferL",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Fuel_ExtTankTransferL"]
+        ["Failure_Elec_UtilityBattery"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Elec_UtilityBattery",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Elec_UtilityBattery"]
+        ["Failure_Elec_RightTransformerRectifier"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Elec_RightTransformerRectifier",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Elec_RightTransformerRectifier"]
+        ["Failure_PP_EngL_AB_FFCS"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_PP_EngL_AB_FFCS",
+            ["mm"] = 0,
+        }, -- end of ["Failure_PP_EngL_AB_FFCS"]
+        ["Failure_Fuel_ExtTankTransferR"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Fuel_ExtTankTransferR",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Fuel_ExtTankTransferR"]
+        ["Failure_Fuel_LeftBoostPump"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Fuel_LeftBoostPump",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Fuel_LeftBoostPump"]
+        ["Failure_PP_EngL_OilLeak"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_PP_EngL_OilLeak",
+            ["mm"] = 0,
+        }, -- end of ["Failure_PP_EngL_OilLeak"]
+        ["Failure_Hyd_HYD2A_Leak"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "Failure_Hyd_HYD2A_Leak",
+            ["mm"] = 0,
+        }, -- end of ["Failure_Hyd_HYD2A_Leak"]
+    }, -- end of ["failures"]
+} -- end of mission
