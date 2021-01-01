@@ -2,10 +2,11 @@
 -- Name: AIC-PLN-000 - Airplane
 -- Author: FlightControl
 -- Date Created: 14 Apr 2018
---
+-- Date Checked: 01 Jan 2021 
+-- Update to latest Moose, working
+-- 
 
 VehicleCargoSet = SET_CARGO:New():FilterTypes( "Vehicles" ):FilterStart()
-
 
 for i = 1, 10 do
   local WorkerGroup = GROUP:FindByName( string.format( "Vehicle #%03d", i ) )
@@ -20,7 +21,6 @@ CargoAirplane = AI_CARGO_AIRPLANE:New( Airplane, VehicleCargoSet )
 
 PickupAirbase = AIRBASE:FindByName( AIRBASE.Caucasus.Kobuleti )
 DeployAirbases = { AIRBASE:FindByName( AIRBASE.Caucasus.Batumi ), AIRBASE:FindByName( AIRBASE.Caucasus.Gudauta ) }
-
 
 CargoAirplane:Pickup( PickupAirbase:GetCoordinate() )
 

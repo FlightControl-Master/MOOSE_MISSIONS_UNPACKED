@@ -13,9 +13,9 @@ mission =
     {
         ["actions"] = 
         {
-            [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_13\"));",
-            [2] = "a_do_script(getValueDictByKey(\"DictKey_ActionText_15\"));",
-            [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_14\"));",
+            [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_13\")); mission.trig.func[1]=nil;",
+            [2] = "a_do_script(getValueDictByKey(\"DictKey_ActionText_15\")); mission.trig.func[2]=nil;",
+            [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_14\")); mission.trig.func[3]=nil;",
         }, -- end of ["actions"]
         ["events"] = 
         {
@@ -25,6 +25,9 @@ mission =
         }, -- end of ["custom"]
         ["func"] = 
         {
+            [1] = "if mission.trig.conditions[1]() then mission.trig.actions[1]() end",
+            [2] = "if mission.trig.conditions[2]() then mission.trig.actions[2]() end",
+            [3] = "if mission.trig.conditions[3]() then mission.trig.actions[3]() end",
         }, -- end of ["func"]
         ["flag"] = 
         {
@@ -34,18 +37,15 @@ mission =
         }, -- end of ["flag"]
         ["conditions"] = 
         {
-            [1] = "return(true)",
-            [2] = "return(true)",
-            [3] = "return(true)",
+            [1] = "return(c_time_after(5) )",
+            [2] = "return(c_time_after(6) )",
+            [3] = "return(c_time_after(7) )",
         }, -- end of ["conditions"]
         ["customStartup"] = 
         {
         }, -- end of ["customStartup"]
         ["funcStartup"] = 
         {
-            [1] = "if mission.trig.conditions[1]() then mission.trig.actions[1]() end",
-            [2] = "if mission.trig.conditions[2]() then mission.trig.actions[2]() end",
-            [3] = "if mission.trig.conditions[3]() then mission.trig.actions[3]() end",
         }, -- end of ["funcStartup"]
     }, -- end of ["trig"]
     ["result"] = 
@@ -148,6 +148,11 @@ mission =
             }, -- end of ["at2000"]
         }, -- end of ["wind"]
         ["enable_fog"] = false,
+        ["fog"] = 
+        {
+            ["thickness"] = 0,
+            ["visibility"] = 25,
+        }, -- end of ["fog"]
         ["season"] = 
         {
             ["temperature"] = 20,
@@ -158,17 +163,13 @@ mission =
         {
         }, -- end of ["cyclones"]
         ["name"] = "Winter, clean sky",
-        ["fog"] = 
-        {
-            ["thickness"] = 0,
-            ["visibility"] = 25,
-            ["density"] = 7,
-        }, -- end of ["fog"]
-        ["groundTurbulence"] = 0,
+        ["dust_density"] = 0,
         ["visibility"] = 
         {
             ["distance"] = 80000,
         }, -- end of ["visibility"]
+        ["groundTurbulence"] = 0,
+        ["enable_dust"] = false,
         ["clouds"] = 
         {
             ["thickness"] = 200,
@@ -233,6 +234,42 @@ mission =
             [15] = 46,
             [16] = 22,
             [17] = 7,
+            [18] = 48,
+            [19] = 49,
+            [20] = 50,
+            [21] = 51,
+            [22] = 52,
+            [23] = 53,
+            [24] = 54,
+            [25] = 55,
+            [26] = 56,
+            [27] = 57,
+            [28] = 58,
+            [29] = 59,
+            [30] = 60,
+            [31] = 61,
+            [32] = 62,
+            [33] = 63,
+            [34] = 64,
+            [35] = 65,
+            [36] = 66,
+            [37] = 67,
+            [38] = 68,
+            [39] = 69,
+            [40] = 70,
+            [41] = 71,
+            [42] = 72,
+            [43] = 73,
+            [44] = 74,
+            [45] = 75,
+            [46] = 76,
+            [47] = 77,
+            [48] = 78,
+            [49] = 79,
+            [50] = 80,
+            [51] = 81,
+            [52] = 82,
+            [53] = 83,
         }, -- end of ["neutrals"]
         ["red"] = 
         {
@@ -278,96 +315,6 @@ mission =
             {
                 [1] = 
                 {
-                    ["id"] = 21,
-                    ["name"] = "Australia",
-                }, -- end of [1]
-                [2] = 
-                {
-                    ["id"] = 11,
-                    ["name"] = "Belgium",
-                }, -- end of [2]
-                [3] = 
-                {
-                    ["id"] = 8,
-                    ["name"] = "Canada",
-                }, -- end of [3]
-                [4] = 
-                {
-                    ["id"] = 28,
-                    ["name"] = "Croatia",
-                }, -- end of [4]
-                [5] = 
-                {
-                    ["id"] = 26,
-                    ["name"] = "Czech Republic",
-                }, -- end of [5]
-                [6] = 
-                {
-                    ["id"] = 13,
-                    ["name"] = "Denmark",
-                }, -- end of [6]
-                [7] = 
-                {
-                    ["id"] = 5,
-                    ["name"] = "France",
-                }, -- end of [7]
-                [8] = 
-                {
-                    ["id"] = 16,
-                    ["name"] = "Georgia",
-                }, -- end of [8]
-                [9] = 
-                {
-                    ["id"] = 6,
-                    ["name"] = "Germany",
-                }, -- end of [9]
-                [10] = 
-                {
-                    ["id"] = 15,
-                    ["name"] = "Israel",
-                }, -- end of [10]
-                [11] = 
-                {
-                    ["id"] = 20,
-                    ["name"] = "Italy",
-                }, -- end of [11]
-                [12] = 
-                {
-                    ["id"] = 12,
-                    ["name"] = "Norway",
-                }, -- end of [12]
-                [13] = 
-                {
-                    ["id"] = 40,
-                    ["name"] = "Poland",
-                }, -- end of [13]
-                [14] = 
-                {
-                    ["id"] = 45,
-                    ["name"] = "South Korea",
-                }, -- end of [14]
-                [15] = 
-                {
-                    ["id"] = 9,
-                    ["name"] = "Spain",
-                }, -- end of [15]
-                [16] = 
-                {
-                    ["id"] = 10,
-                    ["name"] = "The Netherlands",
-                }, -- end of [16]
-                [17] = 
-                {
-                    ["id"] = 3,
-                    ["name"] = "Turkey",
-                }, -- end of [17]
-                [18] = 
-                {
-                    ["id"] = 4,
-                    ["name"] = "UK",
-                }, -- end of [18]
-                [19] = 
-                {
                     ["name"] = "USA",
                     ["id"] = 2,
                     ["vehicle"] = 
@@ -377,6 +324,10 @@ mission =
                             [1] = 
                             {
                                 ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["task"] = "Ground Nothing",
                                 ["taskSelected"] = true,
                                 ["route"] = 
                                 {
@@ -445,67 +396,67 @@ mission =
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
                                 ["groupId"] = 29,
-                                ["tasks"] = 
-                                {
-                                }, -- end of ["tasks"]
                                 ["hidden"] = false,
                                 ["units"] = 
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 85,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 85,
                                         ["y"] = 635739.15542857,
                                         ["x"] = -318211.0237143,
                                         ["name"] = "DictKey_UnitName_193",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [1]
                                     [2] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 91,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 91,
                                         ["y"] = 635744.01257142,
                                         ["x"] = -318223.88085716,
                                         ["name"] = "DictKey_UnitName_205",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [2]
                                     [3] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 92,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 92,
                                         ["y"] = 635748.29828571,
                                         ["x"] = -318236.73800001,
                                         ["name"] = "DictKey_UnitName_206",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [3]
                                 }, -- end of ["units"]
                                 ["y"] = 635739.15542857,
                                 ["x"] = -318211.0237143,
                                 ["name"] = "DictKey_GroupName_192",
                                 ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
                             }, -- end of [1]
                             [2] = 
                             {
                                 ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["task"] = "Ground Nothing",
                                 ["taskSelected"] = true,
                                 ["route"] = 
                                 {
@@ -574,67 +525,67 @@ mission =
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
                                 ["groupId"] = 32,
-                                ["tasks"] = 
-                                {
-                                }, -- end of ["tasks"]
                                 ["hidden"] = false,
                                 ["units"] = 
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 93,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 93,
                                         ["y"] = 635752.584,
                                         ["x"] = -318205.67885716,
                                         ["name"] = "DictKey_UnitName_208",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [1]
                                     [2] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 94,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 94,
                                         ["y"] = 635757.44114286,
                                         ["x"] = -318218.53600002,
                                         ["name"] = "DictKey_UnitName_209",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [2]
                                     [3] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 95,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 95,
                                         ["y"] = 635761.72685715,
                                         ["x"] = -318231.39314288,
                                         ["name"] = "DictKey_UnitName_210",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [3]
                                 }, -- end of ["units"]
                                 ["y"] = 635752.584,
                                 ["x"] = -318205.67885716,
                                 ["name"] = "DictKey_GroupName_207",
                                 ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
                             }, -- end of [2]
                             [3] = 
                             {
                                 ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["task"] = "Ground Nothing",
                                 ["taskSelected"] = true,
                                 ["route"] = 
                                 {
@@ -703,67 +654,67 @@ mission =
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
                                 ["groupId"] = 33,
-                                ["tasks"] = 
-                                {
-                                }, -- end of ["tasks"]
                                 ["hidden"] = false,
                                 ["units"] = 
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 96,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 96,
                                         ["y"] = 635765.44114286,
                                         ["x"] = -318201.39314288,
                                         ["name"] = "DictKey_UnitName_213",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [1]
                                     [2] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 97,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 97,
                                         ["y"] = 635770.29828572,
                                         ["x"] = -318214.25028574,
                                         ["name"] = "DictKey_UnitName_214",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [2]
                                     [3] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 98,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 98,
                                         ["y"] = 635774.584,
                                         ["x"] = -318227.1074286,
                                         ["name"] = "DictKey_UnitName_215",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [3]
                                 }, -- end of ["units"]
                                 ["y"] = 635765.44114286,
                                 ["x"] = -318201.39314288,
                                 ["name"] = "DictKey_GroupName_212",
                                 ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
                             }, -- end of [3]
                             [4] = 
                             {
                                 ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["task"] = "Ground Nothing",
                                 ["taskSelected"] = true,
                                 ["route"] = 
                                 {
@@ -832,67 +783,67 @@ mission =
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
                                 ["groupId"] = 34,
-                                ["tasks"] = 
-                                {
-                                }, -- end of ["tasks"]
                                 ["hidden"] = false,
                                 ["units"] = 
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 99,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 99,
                                         ["y"] = 635778.01257143,
                                         ["x"] = -318196.25028573,
                                         ["name"] = "DictKey_UnitName_218",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [1]
                                     [2] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 100,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 100,
                                         ["y"] = 635782.86971429,
                                         ["x"] = -318209.10742859,
                                         ["name"] = "DictKey_UnitName_219",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [2]
                                     [3] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 101,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 101,
                                         ["y"] = 635787.15542857,
                                         ["x"] = -318221.96457145,
                                         ["name"] = "DictKey_UnitName_220",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [3]
                                 }, -- end of ["units"]
                                 ["y"] = 635778.01257143,
                                 ["x"] = -318196.25028573,
                                 ["name"] = "DictKey_GroupName_217",
                                 ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
                             }, -- end of [4]
                             [5] = 
                             {
                                 ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["task"] = "Ground Nothing",
                                 ["taskSelected"] = true,
                                 ["route"] = 
                                 {
@@ -961,67 +912,67 @@ mission =
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
                                 ["groupId"] = 35,
-                                ["tasks"] = 
-                                {
-                                }, -- end of ["tasks"]
                                 ["hidden"] = false,
                                 ["units"] = 
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 102,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 102,
                                         ["y"] = 635790.584,
                                         ["x"] = -318190.8217143,
                                         ["name"] = "DictKey_UnitName_223",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [1]
                                     [2] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 103,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 103,
                                         ["y"] = 635795.44114286,
                                         ["x"] = -318203.67885716,
                                         ["name"] = "DictKey_UnitName_224",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [2]
                                     [3] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 104,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 104,
                                         ["y"] = 635799.72685715,
                                         ["x"] = -318216.53600001,
                                         ["name"] = "DictKey_UnitName_225",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [3]
                                 }, -- end of ["units"]
                                 ["y"] = 635790.584,
                                 ["x"] = -318190.8217143,
                                 ["name"] = "DictKey_GroupName_222",
                                 ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
                             }, -- end of [5]
                             [6] = 
                             {
                                 ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["task"] = "Ground Nothing",
                                 ["taskSelected"] = true,
                                 ["route"] = 
                                 {
@@ -1090,67 +1041,67 @@ mission =
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
                                 ["groupId"] = 36,
-                                ["tasks"] = 
-                                {
-                                }, -- end of ["tasks"]
                                 ["hidden"] = false,
                                 ["units"] = 
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 105,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 105,
                                         ["y"] = 635803.15542857,
                                         ["x"] = -318186.53600002,
                                         ["name"] = "DictKey_UnitName_228",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [1]
                                     [2] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 106,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 106,
                                         ["y"] = 635808.01257143,
                                         ["x"] = -318199.39314288,
                                         ["name"] = "DictKey_UnitName_229",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [2]
                                     [3] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 107,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 107,
                                         ["y"] = 635812.29828572,
                                         ["x"] = -318212.25028573,
                                         ["name"] = "DictKey_UnitName_230",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [3]
                                 }, -- end of ["units"]
                                 ["y"] = 635803.15542857,
                                 ["x"] = -318186.53600002,
                                 ["name"] = "DictKey_GroupName_227",
                                 ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
                             }, -- end of [6]
                             [7] = 
                             {
                                 ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["task"] = "Ground Nothing",
                                 ["taskSelected"] = true,
                                 ["route"] = 
                                 {
@@ -1219,67 +1170,67 @@ mission =
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
                                 ["groupId"] = 37,
-                                ["tasks"] = 
-                                {
-                                }, -- end of ["tasks"]
                                 ["hidden"] = false,
                                 ["units"] = 
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 108,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 108,
                                         ["y"] = 635815.98114286,
                                         ["x"] = -318182.21200002,
                                         ["name"] = "DictKey_UnitName_233",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [1]
                                     [2] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 109,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 109,
                                         ["y"] = 635820.83828572,
                                         ["x"] = -318195.06914288,
                                         ["name"] = "DictKey_UnitName_234",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [2]
                                     [3] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 110,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 110,
                                         ["y"] = 635825.12400001,
                                         ["x"] = -318207.92628573,
                                         ["name"] = "DictKey_UnitName_235",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [3]
                                 }, -- end of ["units"]
                                 ["y"] = 635815.98114286,
                                 ["x"] = -318182.21200002,
                                 ["name"] = "DictKey_GroupName_232",
                                 ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
                             }, -- end of [7]
                             [8] = 
                             {
                                 ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["task"] = "Ground Nothing",
                                 ["taskSelected"] = true,
                                 ["route"] = 
                                 {
@@ -1348,67 +1299,67 @@ mission =
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
                                 ["groupId"] = 38,
-                                ["tasks"] = 
-                                {
-                                }, -- end of ["tasks"]
                                 ["hidden"] = false,
                                 ["units"] = 
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 111,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 111,
                                         ["y"] = 635830.84657143,
                                         ["x"] = -318175.05457145,
                                         ["name"] = "DictKey_UnitName_238",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [1]
                                     [2] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 112,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 112,
                                         ["y"] = 635835.70371429,
                                         ["x"] = -318187.91171431,
                                         ["name"] = "DictKey_UnitName_239",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [2]
                                     [3] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 113,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 113,
                                         ["y"] = 635839.98942858,
                                         ["x"] = -318200.76885716,
                                         ["name"] = "DictKey_UnitName_240",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [3]
                                 }, -- end of ["units"]
                                 ["y"] = 635830.84657143,
                                 ["x"] = -318175.05457145,
                                 ["name"] = "DictKey_GroupName_237",
                                 ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
                             }, -- end of [8]
                             [9] = 
                             {
                                 ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["task"] = "Ground Nothing",
                                 ["taskSelected"] = true,
                                 ["route"] = 
                                 {
@@ -1477,67 +1428,67 @@ mission =
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
                                 ["groupId"] = 39,
-                                ["tasks"] = 
-                                {
-                                }, -- end of ["tasks"]
                                 ["hidden"] = false,
                                 ["units"] = 
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 114,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 114,
                                         ["y"] = 635845.96228571,
                                         ["x"] = -318170.72085716,
                                         ["name"] = "DictKey_UnitName_243",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [1]
                                     [2] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 115,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 115,
                                         ["y"] = 635850.81942857,
                                         ["x"] = -318183.57800002,
                                         ["name"] = "DictKey_UnitName_244",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [2]
                                     [3] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 116,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 116,
                                         ["y"] = 635855.10514286,
                                         ["x"] = -318196.43514287,
                                         ["name"] = "DictKey_UnitName_245",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [3]
                                 }, -- end of ["units"]
                                 ["y"] = 635845.96228571,
                                 ["x"] = -318170.72085716,
                                 ["name"] = "DictKey_GroupName_242",
                                 ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
                             }, -- end of [9]
                             [10] = 
                             {
                                 ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["task"] = "Ground Nothing",
                                 ["taskSelected"] = true,
                                 ["route"] = 
                                 {
@@ -1606,63 +1557,59 @@ mission =
                                     }, -- end of ["points"]
                                 }, -- end of ["route"]
                                 ["groupId"] = 40,
-                                ["tasks"] = 
-                                {
-                                }, -- end of ["tasks"]
                                 ["hidden"] = false,
                                 ["units"] = 
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 117,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 117,
                                         ["y"] = 635859.67657143,
                                         ["x"] = -318165.00657145,
                                         ["name"] = "DictKey_UnitName_248",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [1]
                                     [2] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 118,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 118,
                                         ["y"] = 635864.53371429,
                                         ["x"] = -318177.86371431,
                                         ["name"] = "DictKey_UnitName_249",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [2]
                                     [3] = 
                                     {
-                                        ["type"] = "M-2 Bradley",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 119,
                                         ["skill"] = "Average",
+                                        ["type"] = "M-2 Bradley",
+                                        ["unitId"] = 119,
                                         ["y"] = 635868.81942858,
                                         ["x"] = -318190.72085716,
                                         ["name"] = "DictKey_UnitName_250",
-                                        ["playerCanDrive"] = true,
                                         ["heading"] = 5.9864793343406,
+                                        ["playerCanDrive"] = true,
                                     }, -- end of [3]
                                 }, -- end of ["units"]
                                 ["y"] = 635859.67657143,
                                 ["x"] = -318165.00657145,
                                 ["name"] = "DictKey_GroupName_247",
                                 ["start_time"] = 0,
-                                ["task"] = "Ground Nothing",
                             }, -- end of [10]
                         }, -- end of ["group"]
                     }, -- end of ["vehicle"]
@@ -1783,9 +1730,24 @@ mission =
                             }, -- end of [1]
                         }, -- end of ["group"]
                     }, -- end of ["plane"]
-                }, -- end of [19]
+                }, -- end of [1]
             }, -- end of ["country"]
         }, -- end of ["blue"]
+        ["neutrals"] = 
+        {
+            ["bullseye"] = 
+            {
+                ["y"] = 100,
+                ["x"] = 100,
+            }, -- end of ["bullseye"]
+            ["nav_points"] = 
+            {
+            }, -- end of ["nav_points"]
+            ["name"] = "neutrals",
+            ["country"] = 
+            {
+            }, -- end of ["country"]
+        }, -- end of ["neutrals"]
         ["red"] = 
         {
             ["bullseye"] = 
@@ -1799,76 +1761,27 @@ mission =
             ["name"] = "red",
             ["country"] = 
             {
-                [1] = 
-                {
-                    ["id"] = 18,
-                    ["name"] = "Abkhazia",
-                }, -- end of [1]
-                [2] = 
-                {
-                    ["id"] = 24,
-                    ["name"] = "Belarus",
-                }, -- end of [2]
-                [3] = 
-                {
-                    ["id"] = 27,
-                    ["name"] = "China",
-                }, -- end of [3]
-                [4] = 
-                {
-                    ["id"] = 34,
-                    ["name"] = "Iran",
-                }, -- end of [4]
-                [5] = 
-                {
-                    ["id"] = 37,
-                    ["name"] = "Kazakhstan",
-                }, -- end of [5]
-                [6] = 
-                {
-                    ["id"] = 38,
-                    ["name"] = "North Korea",
-                }, -- end of [6]
-                [7] = 
-                {
-                    ["id"] = 0,
-                    ["name"] = "Russia",
-                }, -- end of [7]
-                [8] = 
-                {
-                    ["id"] = 43,
-                    ["name"] = "Serbia",
-                }, -- end of [8]
-                [9] = 
-                {
-                    ["id"] = 19,
-                    ["name"] = "South Ossetia",
-                }, -- end of [9]
-                [10] = 
-                {
-                    ["id"] = 47,
-                    ["name"] = "Syria",
-                }, -- end of [10]
-                [11] = 
-                {
-                    ["id"] = 1,
-                    ["name"] = "Ukraine",
-                }, -- end of [11]
             }, -- end of ["country"]
         }, -- end of ["red"]
     }, -- end of ["coalition"]
     ["sortie"] = "DictKey_sortie_4",
-    ["version"] = 14,
+    ["version"] = 18,
     ["trigrules"] = 
     {
         [1] = 
         {
             ["rules"] = 
             {
+                [1] = 
+                {
+                    ["seconds"] = 5,
+                    ["predicate"] = "c_time_after",
+                    ["zone"] = "",
+                }, -- end of [1]
             }, -- end of ["rules"]
             ["comment"] = "Load Moose",
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
+            ["predicate"] = "triggerOnce",
             ["actions"] = 
             {
                 [1] = 
@@ -1887,6 +1800,12 @@ mission =
         {
             ["rules"] = 
             {
+                [1] = 
+                {
+                    ["seconds"] = 6,
+                    ["predicate"] = "c_time_after",
+                    ["zone"] = "",
+                }, -- end of [1]
             }, -- end of ["rules"]
             ["eventlist"] = "",
             ["actions"] = 
@@ -1903,17 +1822,23 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["predicate"] = "triggerStart",
+            ["predicate"] = "triggerOnce",
             ["comment"] = "Trace",
         }, -- end of [2]
         [3] = 
         {
             ["rules"] = 
             {
+                [1] = 
+                {
+                    ["seconds"] = 7,
+                    ["predicate"] = "c_time_after",
+                    ["zone"] = "",
+                }, -- end of [1]
             }, -- end of ["rules"]
             ["comment"] = "Load Mission",
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
+            ["predicate"] = "triggerOnce",
             ["actions"] = 
             {
                 [1] = 
@@ -1929,7 +1854,7 @@ mission =
             }, -- end of ["actions"]
         }, -- end of [3]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 11577,
+    ["currentKey"] = 11909,
     ["start_time"] = 43200,
     ["forcedOptions"] = 
     {
@@ -2173,15 +2098,15 @@ mission =
             ["id"] = "HYD_ALT_2_FAIL",
             ["mm"] = 0,
         }, -- end of ["HYD_ALT_2_FAIL"]
-        ["AAR_47_FAILURE_SENSOR_RIGHT"] = 
+        ["TAIL_GEAR_FAIL_GO_DOWN"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "AAR_47_FAILURE_SENSOR_RIGHT",
+            ["id"] = "TAIL_GEAR_FAIL_GO_DOWN",
             ["mm"] = 0,
-        }, -- end of ["AAR_47_FAILURE_SENSOR_RIGHT"]
+        }, -- end of ["TAIL_GEAR_FAIL_GO_DOWN"]
         ["GUN_FAIL_RIGHT_CENTER_GUN"] = 
         {
             ["hh"] = 0,
@@ -2200,15 +2125,15 @@ mission =
             ["id"] = "LeftEngine_ShaveInOil",
             ["mm"] = 0,
         }, -- end of ["LeftEngine_ShaveInOil"]
-        ["MAIN_R_GEAR_D_LOCK"] = 
+        ["hydro_common"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "MAIN_R_GEAR_D_LOCK",
+            ["id"] = "hydro_common",
             ["mm"] = 0,
-        }, -- end of ["MAIN_R_GEAR_D_LOCK"]
+        }, -- end of ["hydro_common"]
         ["R_GEAR_DLK_FAULT"] = 
         {
             ["hh"] = 0,
@@ -2273,15 +2198,15 @@ mission =
             ["id"] = "engine_droop_failure",
             ["mm"] = 0,
         }, -- end of ["engine_droop_failure"]
-        ["TGP_FAILURE_LEFT"] = 
+        ["IGNITION_TERM_CONNECT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TGP_FAILURE_LEFT",
+            ["id"] = "IGNITION_TERM_CONNECT",
             ["mm"] = 0,
-        }, -- end of ["TGP_FAILURE_LEFT"]
+        }, -- end of ["IGNITION_TERM_CONNECT"]
         ["CADC_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
@@ -2453,15 +2378,15 @@ mission =
             ["id"] = "PITOT_HEAT_ELEMENT",
             ["mm"] = 0,
         }, -- end of ["PITOT_HEAT_ELEMENT"]
-        ["ILS_FAILURE_ANT_LOCALIZER"] = 
+        ["FUEL_VALVE_LEAK"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "ILS_FAILURE_ANT_LOCALIZER",
+            ["id"] = "FUEL_VALVE_LEAK",
             ["mm"] = 0,
-        }, -- end of ["ILS_FAILURE_ANT_LOCALIZER"]
+        }, -- end of ["FUEL_VALVE_LEAK"]
         ["AN_ALE_40V_FAILURE_CONTAINER_LEFT_GEAR"] = 
         {
             ["hh"] = 0,
@@ -2572,15 +2497,16 @@ mission =
             ["id"] = "asc_p",
             ["mm"] = 0,
         }, -- end of ["asc_p"]
-        ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"] = 
+        ["es_damage_VU3"] = 
         {
             ["hh"] = 0,
-            ["prob"] = 100,
             ["enable"] = false,
+            ["prob"] = 0,
+            ["id"] = "es_damage_VU3",
             ["mmint"] = 1,
-            ["id"] = "BOMBS_ARMING_BROKEN_SOLENOID_LEFT",
+            ["hidden"] = true,
             ["mm"] = 0,
-        }, -- end of ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"]
+        }, -- end of ["es_damage_VU3"]
         ["GUN_LEFT_IN_AMMUN_FAULT"] = 
         {
             ["hh"] = 0,
@@ -2653,15 +2579,15 @@ mission =
             ["id"] = "AAR_47_FAILURE_SENSOR_BOTTOM",
             ["mm"] = 0,
         }, -- end of ["AAR_47_FAILURE_SENSOR_BOTTOM"]
-        ["TURNIND_INCORRECT_SENS_VAC_HIGH"] = 
+        ["BOMBS_ARMING_BROKEN_WIRING_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TURNIND_INCORRECT_SENS_VAC_HIGH",
+            ["id"] = "BOMBS_ARMING_BROKEN_WIRING_LEFT",
             ["mm"] = 0,
-        }, -- end of ["TURNIND_INCORRECT_SENS_VAC_HIGH"]
+        }, -- end of ["BOMBS_ARMING_BROKEN_WIRING_LEFT"]
         ["OIL_RADIATOR_WIRING"] = 
         {
             ["hh"] = 0,
@@ -2716,15 +2642,15 @@ mission =
             ["id"] = "VHF_VT_BURNED_OUT",
             ["mm"] = 0,
         }, -- end of ["VHF_VT_BURNED_OUT"]
-        ["COMPASS_ERRATIC_OPERATION"] = 
+        ["COOLANT_RADIATOR_WIRING"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "COMPASS_ERRATIC_OPERATION",
+            ["id"] = "COOLANT_RADIATOR_WIRING",
             ["mm"] = 0,
-        }, -- end of ["COMPASS_ERRATIC_OPERATION"]
+        }, -- end of ["COOLANT_RADIATOR_WIRING"]
         ["asc_a"] = 
         {
             ["hh"] = 0,
@@ -2887,15 +2813,15 @@ mission =
             ["id"] = "MANIFOLD_SHIFT",
             ["mm"] = 0,
         }, -- end of ["MANIFOLD_SHIFT"]
-        ["RADAR_ALTIMETR_RIGHT_ANT_FAILURE"] = 
+        ["RIGHT_GUNNER_KILLED_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "RADAR_ALTIMETR_RIGHT_ANT_FAILURE",
+            ["id"] = "RIGHT_GUNNER_KILLED_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["RADAR_ALTIMETR_RIGHT_ANT_FAILURE"]
+        }, -- end of ["RIGHT_GUNNER_KILLED_FAILURE"]
         ["UNLOAD_VALVE_NOT_UNLOAD"] = 
         {
             ["hh"] = 0,
@@ -2959,15 +2885,15 @@ mission =
             ["id"] = "K14_MOV_LAMP_DEFECTIVE",
             ["mm"] = 0,
         }, -- end of ["K14_MOV_LAMP_DEFECTIVE"]
-        ["ILS_FAILURE_TOTAL"] = 
+        ["INS_PART_FAIL"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "ILS_FAILURE_TOTAL",
+            ["id"] = "INS_PART_FAIL",
             ["mm"] = 0,
-        }, -- end of ["ILS_FAILURE_TOTAL"]
+        }, -- end of ["INS_PART_FAIL"]
         ["GUN_RIGHT_OUT_BARREL_WORN"] = 
         {
             ["hh"] = 0,
@@ -3356,16 +3282,15 @@ mission =
             ["id"] = "BOMBS_TRAIN_DEFECTIVE_WIRING",
             ["mm"] = 0,
         }, -- end of ["BOMBS_TRAIN_DEFECTIVE_WIRING"]
-        ["es_damage_VU2"] = 
+        ["autopilot"] = 
         {
             ["hh"] = 0,
+            ["prob"] = 100,
             ["enable"] = false,
-            ["prob"] = 0,
-            ["id"] = "es_damage_VU2",
             ["mmint"] = 1,
-            ["hidden"] = true,
+            ["id"] = "autopilot",
             ["mm"] = 0,
-        }, -- end of ["es_damage_VU2"]
+        }, -- end of ["autopilot"]
         ["TransitionalReductor_LowOilPressure"] = 
         {
             ["hh"] = 0,
@@ -3476,33 +3401,33 @@ mission =
             ["id"] = "fs_damage_left_cell_boost_pump",
             ["mm"] = 0,
         }, -- end of ["fs_damage_left_cell_boost_pump"]
-        ["INS_PART_FAIL"] = 
+        ["ILS_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "INS_PART_FAIL",
+            ["id"] = "ILS_FAILURE_TOTAL",
             ["mm"] = 0,
-        }, -- end of ["INS_PART_FAIL"]
-        ["BOMBS_DAMAGE_ELINKAGE_LEFT"] = 
+        }, -- end of ["ILS_FAILURE_TOTAL"]
+        ["BOOST_REG"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "BOMBS_DAMAGE_ELINKAGE_LEFT",
+            ["id"] = "BOOST_REG",
             ["mm"] = 0,
-        }, -- end of ["BOMBS_DAMAGE_ELINKAGE_LEFT"]
-        ["OIL_SYSTEM_FAIL_100"] = 
+        }, -- end of ["BOOST_REG"]
+        ["COOLANT_RADIATOR_SENSOR"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "OIL_SYSTEM_FAIL_100",
+            ["id"] = "COOLANT_RADIATOR_SENSOR",
             ["mm"] = 0,
-        }, -- end of ["OIL_SYSTEM_FAIL_100"]
+        }, -- end of ["COOLANT_RADIATOR_SENSOR"]
         ["r_conv"] = 
         {
             ["hh"] = 0,
@@ -3521,15 +3446,15 @@ mission =
             ["id"] = "ENGINE_JAM",
             ["mm"] = 0,
         }, -- end of ["ENGINE_JAM"]
-        ["COOLANT_RADIATOR_SENSOR"] = 
+        ["APU_Fire"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "COOLANT_RADIATOR_SENSOR",
+            ["id"] = "APU_Fire",
             ["mm"] = 0,
-        }, -- end of ["COOLANT_RADIATOR_SENSOR"]
+        }, -- end of ["APU_Fire"]
         ["MAGNETO_2"] = 
         {
             ["hh"] = 0,
@@ -3539,15 +3464,15 @@ mission =
             ["id"] = "MAGNETO_2",
             ["mm"] = 0,
         }, -- end of ["MAGNETO_2"]
-        ["es_damage_SpareInverter"] = 
+        ["TURNIND_INCORRECT_SENS_DEFECTIVE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "es_damage_SpareInverter",
+            ["id"] = "TURNIND_INCORRECT_SENS_DEFECTIVE",
             ["mm"] = 0,
-        }, -- end of ["es_damage_SpareInverter"]
+        }, -- end of ["TURNIND_INCORRECT_SENS_DEFECTIVE"]
         ["SAR_1_95"] = 
         {
             ["hh"] = 0,
@@ -3585,15 +3510,15 @@ mission =
             ["id"] = "INS_TOTAL_FAIL",
             ["mm"] = 0,
         }, -- end of ["INS_TOTAL_FAIL"]
-        ["OIL_SYSTEM_FAIL_050"] = 
+        ["engine_surge_failure"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "OIL_SYSTEM_FAIL_050",
+            ["id"] = "engine_surge_failure",
             ["mm"] = 0,
-        }, -- end of ["OIL_SYSTEM_FAIL_050"]
+        }, -- end of ["engine_surge_failure"]
         ["l_conv"] = 
         {
             ["hh"] = 0,
@@ -3603,15 +3528,15 @@ mission =
             ["id"] = "l_conv",
             ["mm"] = 0,
         }, -- end of ["l_conv"]
-        ["AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT"] = 
+        ["INT_HYDRO_LEAK"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT",
+            ["id"] = "INT_HYDRO_LEAK",
             ["mm"] = 0,
-        }, -- end of ["AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT"]
+        }, -- end of ["INT_HYDRO_LEAK"]
         ["TAIL_GEAR_C_CABLE"] = 
         {
             ["hh"] = 0,
@@ -3621,24 +3546,24 @@ mission =
             ["id"] = "TAIL_GEAR_C_CABLE",
             ["mm"] = 0,
         }, -- end of ["TAIL_GEAR_C_CABLE"]
-        ["RIGHT_GUNNER_KILLED_FAILURE"] = 
+        ["es_damage_SpareInverter"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "RIGHT_GUNNER_KILLED_FAILURE",
+            ["id"] = "es_damage_SpareInverter",
             ["mm"] = 0,
-        }, -- end of ["RIGHT_GUNNER_KILLED_FAILURE"]
-        ["APU_Fire"] = 
+        }, -- end of ["es_damage_SpareInverter"]
+        ["RADAR_ALTIMETR_RIGHT_ANT_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "APU_Fire",
+            ["id"] = "RADAR_ALTIMETR_RIGHT_ANT_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["APU_Fire"]
+        }, -- end of ["RADAR_ALTIMETR_RIGHT_ANT_FAILURE"]
         ["STARTER_WIRING"] = 
         {
             ["hh"] = 0,
@@ -3684,15 +3609,15 @@ mission =
             ["id"] = "IFFCC_FAILURE_GUN",
             ["mm"] = 0,
         }, -- end of ["IFFCC_FAILURE_GUN"]
-        ["hydro_main_irreversible_valve"] = 
+        ["CDU_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "hydro_main_irreversible_valve",
+            ["id"] = "CDU_FAILURE_TOTAL",
             ["mm"] = 0,
-        }, -- end of ["hydro_main_irreversible_valve"]
+        }, -- end of ["CDU_FAILURE_TOTAL"]
         ["mfd"] = 
         {
             ["hh"] = 0,
@@ -3711,15 +3636,6 @@ mission =
             ["id"] = "CARBAIR_GND_LEAD",
             ["mm"] = 0,
         }, -- end of ["CARBAIR_GND_LEAD"]
-        ["engine_surge_failure"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "engine_surge_failure",
-            ["mm"] = 0,
-        }, -- end of ["engine_surge_failure"]
         ["GUN_RIGHT_OUT_AMMUN_FAULT"] = 
         {
             ["hh"] = 0,
@@ -3729,6 +3645,16 @@ mission =
             ["id"] = "GUN_RIGHT_OUT_AMMUN_FAULT",
             ["mm"] = 0,
         }, -- end of ["GUN_RIGHT_OUT_AMMUN_FAULT"]
+        ["fuel_sys_swapping_pumps"] = 
+        {
+            ["hh"] = 0,
+            ["enable"] = false,
+            ["prob"] = 0,
+            ["id"] = "fuel_sys_swapping_pumps",
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["fuel_sys_swapping_pumps"]
         ["GMC_MAGN_COMP_FAILURE"] = 
         {
             ["hh"] = 0,
@@ -3738,33 +3664,33 @@ mission =
             ["id"] = "GMC_MAGN_COMP_FAILURE",
             ["mm"] = 0,
         }, -- end of ["GMC_MAGN_COMP_FAILURE"]
-        ["PUMP_FAILS"] = 
+        ["hydro_main_irreversible_valve"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "PUMP_FAILS",
+            ["id"] = "hydro_main_irreversible_valve",
             ["mm"] = 0,
-        }, -- end of ["PUMP_FAILS"]
-        ["BOMBS_DAMAGE_ELINKAGE_RIGHT"] = 
+        }, -- end of ["hydro_main_irreversible_valve"]
+        ["ILS_FAILURE_ANT_GLIDESLOPE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "BOMBS_DAMAGE_ELINKAGE_RIGHT",
+            ["id"] = "ILS_FAILURE_ANT_GLIDESLOPE",
             ["mm"] = 0,
-        }, -- end of ["BOMBS_DAMAGE_ELINKAGE_RIGHT"]
-        ["COOLANT_SHORT_CIRCUIT"] = 
+        }, -- end of ["ILS_FAILURE_ANT_GLIDESLOPE"]
+        ["COPILOT_KILLED_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "COOLANT_SHORT_CIRCUIT",
+            ["id"] = "COPILOT_KILLED_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["COOLANT_SHORT_CIRCUIT"]
+        }, -- end of ["COPILOT_KILLED_FAILURE"]
         ["fuel_sys_feed_tank_pump"] = 
         {
             ["hh"] = 0,
@@ -3783,97 +3709,6 @@ mission =
             ["id"] = "es_damage_GeneratorLeft",
             ["mm"] = 0,
         }, -- end of ["es_damage_GeneratorLeft"]
-        ["RightEngine_ShaveInOil"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "RightEngine_ShaveInOil",
-            ["mm"] = 0,
-        }, -- end of ["RightEngine_ShaveInOil"]
-        ["HYD_PUMP_2_FAIL_100"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "HYD_PUMP_2_FAIL_100",
-            ["mm"] = 0,
-        }, -- end of ["HYD_PUMP_2_FAIL_100"]
-        ["FLEX_S_NO_GUN_SIGN"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "FLEX_S_NO_GUN_SIGN",
-            ["mm"] = 0,
-        }, -- end of ["FLEX_S_NO_GUN_SIGN"]
-        ["SUPERCHARGER_SOLENOID"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "SUPERCHARGER_SOLENOID",
-            ["mm"] = 0,
-        }, -- end of ["SUPERCHARGER_SOLENOID"]
-        ["BOMBS_ARMING_BROKEN_WIRING_LEFT"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "BOMBS_ARMING_BROKEN_WIRING_LEFT",
-            ["mm"] = 0,
-        }, -- end of ["BOMBS_ARMING_BROKEN_WIRING_LEFT"]
-        ["engine_chip"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "engine_chip",
-            ["mm"] = 0,
-        }, -- end of ["engine_chip"]
-        ["hydro_auxiliary"] = 
-        {
-            ["hh"] = 0,
-            ["enable"] = false,
-            ["prob"] = 0,
-            ["id"] = "hydro_auxiliary",
-            ["mmint"] = 1,
-            ["hidden"] = true,
-            ["mm"] = 0,
-        }, -- end of ["hydro_auxiliary"]
-        ["CADC_FAILURE_MACH"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "CADC_FAILURE_MACH",
-            ["mm"] = 0,
-        }, -- end of ["CADC_FAILURE_MACH"]
-        ["VHF_SHORTED_CTL_BOX"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "VHF_SHORTED_CTL_BOX",
-            ["mm"] = 0,
-        }, -- end of ["VHF_SHORTED_CTL_BOX"]
-        ["CDU_FAILURE_TOTAL"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "CDU_FAILURE_TOTAL",
-            ["mm"] = 0,
-        }, -- end of ["CDU_FAILURE_TOTAL"]
         ["ROCKETS_DEFECTIVE_WIRING"] = 
         {
             ["hh"] = 0,
@@ -3883,6 +3718,15 @@ mission =
             ["id"] = "ROCKETS_DEFECTIVE_WIRING",
             ["mm"] = 0,
         }, -- end of ["ROCKETS_DEFECTIVE_WIRING"]
+        ["HYD_PUMP_2_FAIL_100"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "HYD_PUMP_2_FAIL_100",
+            ["mm"] = 0,
+        }, -- end of ["HYD_PUMP_2_FAIL_100"]
         ["sas_pitch_left"] = 
         {
             ["hh"] = 0,
@@ -3892,6 +3736,87 @@ mission =
             ["id"] = "sas_pitch_left",
             ["mm"] = 0,
         }, -- end of ["sas_pitch_left"]
+        ["SUPERCHARGER_SOLENOID"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "SUPERCHARGER_SOLENOID",
+            ["mm"] = 0,
+        }, -- end of ["SUPERCHARGER_SOLENOID"]
+        ["TURNIND_INCORRECT_SENS_VAC_HIGH"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "TURNIND_INCORRECT_SENS_VAC_HIGH",
+            ["mm"] = 0,
+        }, -- end of ["TURNIND_INCORRECT_SENS_VAC_HIGH"]
+        ["EEC_Failure_RightEngine"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "EEC_Failure_RightEngine",
+            ["mm"] = 0,
+        }, -- end of ["EEC_Failure_RightEngine"]
+        ["GUN_LEFT_CENTER_AMMUN_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "GUN_LEFT_CENTER_AMMUN_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_LEFT_CENTER_AMMUN_FAULT"]
+        ["CADC_FAILURE_MACH"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "CADC_FAILURE_MACH",
+            ["mm"] = 0,
+        }, -- end of ["CADC_FAILURE_MACH"]
+        ["CLOCK_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "CLOCK_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["CLOCK_FAILURE"]
+        ["TransitionalReductor_ShaveInOil"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "TransitionalReductor_ShaveInOil",
+            ["mm"] = 0,
+        }, -- end of ["TransitionalReductor_ShaveInOil"]
+        ["RightEngine_ShaveInOil"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "RightEngine_ShaveInOil",
+            ["mm"] = 0,
+        }, -- end of ["RightEngine_ShaveInOil"]
+        ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "BOMBS_ARMING_BROKEN_SOLENOID_LEFT",
+            ["mm"] = 0,
+        }, -- end of ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"]
         ["hydro_diaphragm"] = 
         {
             ["hh"] = 0,
@@ -3902,16 +3827,15 @@ mission =
             ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["hydro_diaphragm"]
-        ["fuel_sys_swapping_pumps"] = 
+        ["OIL_SYSTEM_FAIL_100"] = 
         {
             ["hh"] = 0,
+            ["prob"] = 100,
             ["enable"] = false,
-            ["prob"] = 0,
-            ["id"] = "fuel_sys_swapping_pumps",
             ["mmint"] = 1,
-            ["hidden"] = true,
+            ["id"] = "OIL_SYSTEM_FAIL_100",
             ["mm"] = 0,
-        }, -- end of ["fuel_sys_swapping_pumps"]
+        }, -- end of ["OIL_SYSTEM_FAIL_100"]
         ["CARBAIR_SHORT_CIRCUIT_LEADS"] = 
         {
             ["hh"] = 0,
@@ -3921,24 +3845,25 @@ mission =
             ["id"] = "CARBAIR_SHORT_CIRCUIT_LEADS",
             ["mm"] = 0,
         }, -- end of ["CARBAIR_SHORT_CIRCUIT_LEADS"]
-        ["GUN_LEFT_CENTER_AMMUN_FAULT"] = 
+        ["hydro_auxiliary"] = 
+        {
+            ["hh"] = 0,
+            ["enable"] = false,
+            ["prob"] = 0,
+            ["id"] = "hydro_auxiliary",
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["hydro_auxiliary"]
+        ["es_damage_GeneratorRight"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_LEFT_CENTER_AMMUN_FAULT",
+            ["id"] = "es_damage_GeneratorRight",
             ["mm"] = 0,
-        }, -- end of ["GUN_LEFT_CENTER_AMMUN_FAULT"]
-        ["COPILOT_GYRO_TOTAL_FAILURE"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "COPILOT_GYRO_TOTAL_FAILURE",
-            ["mm"] = 0,
-        }, -- end of ["COPILOT_GYRO_TOTAL_FAILURE"]
+        }, -- end of ["es_damage_GeneratorRight"]
         ["laser_failure"] = 
         {
             ["hh"] = 0,
@@ -3966,24 +3891,24 @@ mission =
             ["id"] = "BOMBS_NO_VOLATAGE_BOTH",
             ["mm"] = 0,
         }, -- end of ["BOMBS_NO_VOLATAGE_BOTH"]
-        ["FUEL_VALVE_LEAK"] = 
+        ["ILS_FAILURE_ANT_LOCALIZER"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "FUEL_VALVE_LEAK",
+            ["id"] = "ILS_FAILURE_ANT_LOCALIZER",
             ["mm"] = 0,
-        }, -- end of ["FUEL_VALVE_LEAK"]
-        ["STARTER_SOLENOID"] = 
+        }, -- end of ["ILS_FAILURE_ANT_LOCALIZER"]
+        ["RWR_FAILURE_SENSOR_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "STARTER_SOLENOID",
+            ["id"] = "RWR_FAILURE_SENSOR_LEFT",
             ["mm"] = 0,
-        }, -- end of ["STARTER_SOLENOID"]
+        }, -- end of ["RWR_FAILURE_SENSOR_LEFT"]
         ["BOMBS_ARMING_NO_VOLATAGE_LEFT"] = 
         {
             ["hh"] = 0,
@@ -3993,15 +3918,15 @@ mission =
             ["id"] = "BOMBS_ARMING_NO_VOLATAGE_LEFT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_ARMING_NO_VOLATAGE_LEFT"]
-        ["TACH_BREAK_IN_INDICATOR"] = 
+        ["COOLANT_SHORT_CIRCUIT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TACH_BREAK_IN_INDICATOR",
+            ["id"] = "COOLANT_SHORT_CIRCUIT",
             ["mm"] = 0,
-        }, -- end of ["TACH_BREAK_IN_INDICATOR"]
+        }, -- end of ["COOLANT_SHORT_CIRCUIT"]
         ["BATTERY_OVERHEAT"] = 
         {
             ["hh"] = 0,
@@ -4020,6 +3945,24 @@ mission =
             ["id"] = "NOSE_AIRSPEED_INDICATOR_FAILURE",
             ["mm"] = 0,
         }, -- end of ["NOSE_AIRSPEED_INDICATOR_FAILURE"]
+        ["AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT",
+            ["mm"] = 0,
+        }, -- end of ["AN_ALR69V_FAILURE_SENSOR_NOSE_RIGHT"]
+        ["STARTER_SOLENOID"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "STARTER_SOLENOID",
+            ["mm"] = 0,
+        }, -- end of ["STARTER_SOLENOID"]
         ["hydro_left"] = 
         {
             ["hh"] = 0,
@@ -4029,52 +3972,33 @@ mission =
             ["id"] = "hydro_left",
             ["mm"] = 0,
         }, -- end of ["hydro_left"]
-        ["INT_HYDRO_LEAK"] = 
+        ["BOMBS_DAMAGE_ELINKAGE_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "INT_HYDRO_LEAK",
+            ["id"] = "BOMBS_DAMAGE_ELINKAGE_LEFT",
             ["mm"] = 0,
-        }, -- end of ["INT_HYDRO_LEAK"]
-        ["es_damage_MainGenerator"] = 
+        }, -- end of ["BOMBS_DAMAGE_ELINKAGE_LEFT"]
+        ["FAULTY_ROCKET_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "es_damage_MainGenerator",
+            ["id"] = "FAULTY_ROCKET_LEFT",
             ["mm"] = 0,
-        }, -- end of ["es_damage_MainGenerator"]
-        ["BOOST_REG"] = 
+        }, -- end of ["FAULTY_ROCKET_LEFT"]
+        ["TGP_FAILURE_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "BOOST_REG",
+            ["id"] = "TGP_FAILURE_LEFT",
             ["mm"] = 0,
-        }, -- end of ["BOOST_REG"]
-        ["RWR_FAILURE_SENSOR_LEFT"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "RWR_FAILURE_SENSOR_LEFT",
-            ["mm"] = 0,
-        }, -- end of ["RWR_FAILURE_SENSOR_LEFT"]
-        ["es_damage_VU3"] = 
-        {
-            ["hh"] = 0,
-            ["enable"] = false,
-            ["prob"] = 0,
-            ["id"] = "es_damage_VU3",
-            ["mmint"] = 1,
-            ["hidden"] = true,
-            ["mm"] = 0,
-        }, -- end of ["es_damage_VU3"]
+        }, -- end of ["TGP_FAILURE_LEFT"]
         ["BOMBS_DAMAGE_LINKAGE_RIGHT"] = 
         {
             ["hh"] = 0,
@@ -4084,24 +4008,24 @@ mission =
             ["id"] = "BOMBS_DAMAGE_LINKAGE_RIGHT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_DAMAGE_LINKAGE_RIGHT"]
-        ["es_damage_GeneratorRight"] = 
+        ["asc"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "es_damage_GeneratorRight",
+            ["id"] = "asc",
             ["mm"] = 0,
-        }, -- end of ["es_damage_GeneratorRight"]
-        ["TAIL_GEAR_D_LOCK"] = 
+        }, -- end of ["asc"]
+        ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TAIL_GEAR_D_LOCK",
+            ["id"] = "AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR",
             ["mm"] = 0,
-        }, -- end of ["TAIL_GEAR_D_LOCK"]
+        }, -- end of ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"]
         ["TACH_BREAK_CIRCUIT"] = 
         {
             ["hh"] = 0,
@@ -4111,24 +4035,24 @@ mission =
             ["id"] = "TACH_BREAK_CIRCUIT",
             ["mm"] = 0,
         }, -- end of ["TACH_BREAK_CIRCUIT"]
-        ["GUN_LEFT_CENTER_OPEN_CIRCUIT"] = 
+        ["TACAN_FAILURE_RECEIVER"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_LEFT_CENTER_OPEN_CIRCUIT",
+            ["id"] = "TACAN_FAILURE_RECEIVER",
             ["mm"] = 0,
-        }, -- end of ["GUN_LEFT_CENTER_OPEN_CIRCUIT"]
-        ["CADC_FAILURE_DYNAMIC"] = 
+        }, -- end of ["TACAN_FAILURE_RECEIVER"]
+        ["TAIL_GEAR_D_LOCK"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "CADC_FAILURE_DYNAMIC",
+            ["id"] = "TAIL_GEAR_D_LOCK",
             ["mm"] = 0,
-        }, -- end of ["CADC_FAILURE_DYNAMIC"]
+        }, -- end of ["TAIL_GEAR_D_LOCK"]
         ["hud"] = 
         {
             ["hh"] = 0,
@@ -4138,15 +4062,16 @@ mission =
             ["id"] = "hud",
             ["mm"] = 0,
         }, -- end of ["hud"]
-        ["autopilot"] = 
+        ["es_damage_VU2"] = 
         {
             ["hh"] = 0,
-            ["prob"] = 100,
             ["enable"] = false,
+            ["prob"] = 0,
+            ["id"] = "es_damage_VU2",
             ["mmint"] = 1,
-            ["id"] = "autopilot",
+            ["hidden"] = true,
             ["mm"] = 0,
-        }, -- end of ["autopilot"]
+        }, -- end of ["es_damage_VU2"]
         ["fuel_sys_left_transfer_pump"] = 
         {
             ["hh"] = 0,
@@ -4174,24 +4099,24 @@ mission =
             ["id"] = "RWR_FAILURE_SENSOR_TAIL_R",
             ["mm"] = 0,
         }, -- end of ["RWR_FAILURE_SENSOR_TAIL_R"]
-        ["hydro_common"] = 
+        ["MAIN_R_GEAR_D_LOCK"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "hydro_common",
+            ["id"] = "MAIN_R_GEAR_D_LOCK",
             ["mm"] = 0,
-        }, -- end of ["hydro_common"]
-        ["TAIL_GEAR_FAIL_GO_DOWN"] = 
+        }, -- end of ["MAIN_R_GEAR_D_LOCK"]
+        ["AAR_47_FAILURE_SENSOR_RIGHT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TAIL_GEAR_FAIL_GO_DOWN",
+            ["id"] = "AAR_47_FAILURE_SENSOR_RIGHT",
             ["mm"] = 0,
-        }, -- end of ["TAIL_GEAR_FAIL_GO_DOWN"]
+        }, -- end of ["AAR_47_FAILURE_SENSOR_RIGHT"]
         ["ARN_83_TOTAL_FAILURE"] = 
         {
             ["hh"] = 0,
@@ -4210,15 +4135,15 @@ mission =
             ["id"] = "es_damage_StarterGenerator",
             ["mm"] = 0,
         }, -- end of ["es_damage_StarterGenerator"]
-        ["EEC_Failure_RightEngine"] = 
+        ["engine_chip"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "EEC_Failure_RightEngine",
+            ["id"] = "engine_chip",
             ["mm"] = 0,
-        }, -- end of ["EEC_Failure_RightEngine"]
+        }, -- end of ["engine_chip"]
         ["ENG_ALT_1_FAIL"] = 
         {
             ["hh"] = 0,
@@ -4688,24 +4613,24 @@ mission =
             ["id"] = "BOMBS_TRAIN_DEFECTIVE_SWITCH",
             ["mm"] = 0,
         }, -- end of ["BOMBS_TRAIN_DEFECTIVE_SWITCH"]
-        ["TACAN_FAILURE_RECEIVER"] = 
+        ["GUN_LEFT_CENTER_OPEN_CIRCUIT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TACAN_FAILURE_RECEIVER",
+            ["id"] = "GUN_LEFT_CENTER_OPEN_CIRCUIT",
             ["mm"] = 0,
-        }, -- end of ["TACAN_FAILURE_RECEIVER"]
-        ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"] = 
+        }, -- end of ["GUN_LEFT_CENTER_OPEN_CIRCUIT"]
+        ["CADC_FAILURE_DYNAMIC"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR",
+            ["id"] = "CADC_FAILURE_DYNAMIC",
             ["mm"] = 0,
-        }, -- end of ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"]
+        }, -- end of ["CADC_FAILURE_DYNAMIC"]
         ["GUN_LEFT_IN_BARREL_WORN"] = 
         {
             ["hh"] = 0,
@@ -4725,15 +4650,6 @@ mission =
             ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["SAR_fast"]
-        ["IGNITION_TERM_CONNECT"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "IGNITION_TERM_CONNECT",
-            ["mm"] = 0,
-        }, -- end of ["IGNITION_TERM_CONNECT"]
         ["hydro_right"] = 
         {
             ["hh"] = 0,
@@ -4743,6 +4659,15 @@ mission =
             ["id"] = "hydro_right",
             ["mm"] = 0,
         }, -- end of ["hydro_right"]
+        ["es_damage_MainGenerator"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "es_damage_MainGenerator",
+            ["mm"] = 0,
+        }, -- end of ["es_damage_MainGenerator"]
         ["ROCKETS_INTERVALOMETER_SEQ"] = 
         {
             ["hh"] = 0,
@@ -4752,15 +4677,15 @@ mission =
             ["id"] = "ROCKETS_INTERVALOMETER_SEQ",
             ["mm"] = 0,
         }, -- end of ["ROCKETS_INTERVALOMETER_SEQ"]
-        ["FAULTY_ROCKET_LEFT"] = 
+        ["TACH_BREAK_IN_INDICATOR"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "FAULTY_ROCKET_LEFT",
+            ["id"] = "TACH_BREAK_IN_INDICATOR",
             ["mm"] = 0,
-        }, -- end of ["FAULTY_ROCKET_LEFT"]
+        }, -- end of ["TACH_BREAK_IN_INDICATOR"]
         ["SAR_2_95"] = 
         {
             ["hh"] = 0,
@@ -4789,15 +4714,15 @@ mission =
             ["id"] = "CTRL_TAIL_ROTOR_CONTROL_FAILURE",
             ["mm"] = 0,
         }, -- end of ["CTRL_TAIL_ROTOR_CONTROL_FAILURE"]
-        ["asc"] = 
+        ["HYD_PUMP_3_FAIL_100"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "asc",
+            ["id"] = "HYD_PUMP_3_FAIL_100",
             ["mm"] = 0,
-        }, -- end of ["asc"]
+        }, -- end of ["HYD_PUMP_3_FAIL_100"]
         ["FAULTY_ROCKET_RIGHT"] = 
         {
             ["hh"] = 0,
@@ -4871,15 +4796,15 @@ mission =
             ["id"] = "CLOGGED_FUEL_STRAINER",
             ["mm"] = 0,
         }, -- end of ["CLOGGED_FUEL_STRAINER"]
-        ["CLOCK_FAILURE"] = 
+        ["VHF_SHORTED_CTL_BOX"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "CLOCK_FAILURE",
+            ["id"] = "VHF_SHORTED_CTL_BOX",
             ["mm"] = 0,
-        }, -- end of ["CLOCK_FAILURE"]
+        }, -- end of ["VHF_SHORTED_CTL_BOX"]
         ["r_engine"] = 
         {
             ["hh"] = 0,
@@ -4925,15 +4850,15 @@ mission =
             ["id"] = "D2_RIGHT_CYLINDER",
             ["mm"] = 0,
         }, -- end of ["D2_RIGHT_CYLINDER"]
-        ["TURNIND_INCORRECT_SENS_DEFECTIVE"] = 
+        ["COMPASS_ERRATIC_OPERATION"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TURNIND_INCORRECT_SENS_DEFECTIVE",
+            ["id"] = "COMPASS_ERRATIC_OPERATION",
             ["mm"] = 0,
-        }, -- end of ["TURNIND_INCORRECT_SENS_DEFECTIVE"]
+        }, -- end of ["COMPASS_ERRATIC_OPERATION"]
         ["AN_ALR69V_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
@@ -4943,24 +4868,6 @@ mission =
             ["id"] = "AN_ALR69V_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["AN_ALR69V_FAILURE_TOTAL"]
-        ["COOLANT_RADIATOR_WIRING"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "COOLANT_RADIATOR_WIRING",
-            ["mm"] = 0,
-        }, -- end of ["COOLANT_RADIATOR_WIRING"]
-        ["ILS_FAILURE_ANT_GLIDESLOPE"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "ILS_FAILURE_ANT_GLIDESLOPE",
-            ["mm"] = 0,
-        }, -- end of ["ILS_FAILURE_ANT_GLIDESLOPE"]
         ["TURNIND_POINTER_VIBRATES"] = 
         {
             ["hh"] = 0,
@@ -4970,6 +4877,24 @@ mission =
             ["id"] = "TURNIND_POINTER_VIBRATES",
             ["mm"] = 0,
         }, -- end of ["TURNIND_POINTER_VIBRATES"]
+        ["COPILOT_GYRO_TOTAL_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "COPILOT_GYRO_TOTAL_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["COPILOT_GYRO_TOTAL_FAILURE"]
+        ["PUMP_FAILS"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "PUMP_FAILS",
+            ["mm"] = 0,
+        }, -- end of ["PUMP_FAILS"]
         ["l_engine"] = 
         {
             ["hh"] = 0,
@@ -4979,16 +4904,6 @@ mission =
             ["id"] = "l_engine",
             ["mm"] = 0,
         }, -- end of ["l_engine"]
-        ["Vibration_RightEngine"] = 
-        {
-            ["hh"] = 0,
-            ["enable"] = false,
-            ["prob"] = 0,
-            ["id"] = "Vibration_RightEngine",
-            ["mmint"] = 1,
-            ["hidden"] = true,
-            ["mm"] = 0,
-        }, -- end of ["Vibration_RightEngine"]
         ["GUN_RIGHT_CENTER_BARREL_WORN"] = 
         {
             ["hh"] = 0,
@@ -4998,15 +4913,6 @@ mission =
             ["id"] = "GUN_RIGHT_CENTER_BARREL_WORN",
             ["mm"] = 0,
         }, -- end of ["GUN_RIGHT_CENTER_BARREL_WORN"]
-        ["COPILOT_KILLED_FAILURE"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "COPILOT_KILLED_FAILURE",
-            ["mm"] = 0,
-        }, -- end of ["COPILOT_KILLED_FAILURE"]
         ["RIGHT_WING_TANK_LEAK"] = 
         {
             ["hh"] = 0,
@@ -5016,6 +4922,24 @@ mission =
             ["id"] = "RIGHT_WING_TANK_LEAK",
             ["mm"] = 0,
         }, -- end of ["RIGHT_WING_TANK_LEAK"]
+        ["FLEX_S_NO_GUN_SIGN"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "FLEX_S_NO_GUN_SIGN",
+            ["mm"] = 0,
+        }, -- end of ["FLEX_S_NO_GUN_SIGN"]
+        ["BOMBS_DAMAGE_ELINKAGE_RIGHT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "BOMBS_DAMAGE_ELINKAGE_RIGHT",
+            ["mm"] = 0,
+        }, -- end of ["BOMBS_DAMAGE_ELINKAGE_RIGHT"]
         ["JADRO_1A_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
@@ -5034,24 +4958,25 @@ mission =
             ["id"] = "BOMBS_ARMING_NO_VOLATAGE_RIGHT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_ARMING_NO_VOLATAGE_RIGHT"]
-        ["HYD_PUMP_3_FAIL_100"] = 
+        ["OIL_SYSTEM_FAIL_050"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "HYD_PUMP_3_FAIL_100",
+            ["id"] = "OIL_SYSTEM_FAIL_050",
             ["mm"] = 0,
-        }, -- end of ["HYD_PUMP_3_FAIL_100"]
-        ["TransitionalReductor_ShaveInOil"] = 
+        }, -- end of ["OIL_SYSTEM_FAIL_050"]
+        ["Vibration_RightEngine"] = 
         {
             ["hh"] = 0,
-            ["prob"] = 100,
             ["enable"] = false,
+            ["prob"] = 0,
+            ["id"] = "Vibration_RightEngine",
             ["mmint"] = 1,
-            ["id"] = "TransitionalReductor_ShaveInOil",
+            ["hidden"] = true,
             ["mm"] = 0,
-        }, -- end of ["TransitionalReductor_ShaveInOil"]
+        }, -- end of ["Vibration_RightEngine"]
         ["GUN_LEFT_OUT_BARREL_WORN"] = 
         {
             ["hh"] = 0,

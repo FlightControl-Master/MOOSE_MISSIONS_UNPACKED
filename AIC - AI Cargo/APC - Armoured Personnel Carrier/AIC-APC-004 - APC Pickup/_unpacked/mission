@@ -5,8 +5,8 @@ mission =
     }, -- end of ["requiredModules"]
     ["date"] = 
     {
-        ["Day"] = 1,
         ["Year"] = 2011,
+        ["Day"] = 1,
         ["Month"] = 6,
     }, -- end of ["date"]
     ["trig"] = 
@@ -136,18 +136,19 @@ mission =
                 ["speed"] = 0,
                 ["dir"] = 0,
             }, -- end of ["at8000"]
-            ["at2000"] = 
-            {
-                ["speed"] = 0,
-                ["dir"] = 0,
-            }, -- end of ["at2000"]
             ["atGround"] = 
             {
                 ["speed"] = 0,
                 ["dir"] = 0,
             }, -- end of ["atGround"]
+            ["at2000"] = 
+            {
+                ["speed"] = 0,
+                ["dir"] = 0,
+            }, -- end of ["at2000"]
         }, -- end of ["wind"]
         ["enable_fog"] = false,
+        ["dust_density"] = 0,
         ["season"] = 
         {
             ["temperature"] = 20,
@@ -162,8 +163,8 @@ mission =
         {
             ["thickness"] = 0,
             ["visibility"] = 25,
-            ["density"] = 7,
         }, -- end of ["fog"]
+        ["enable_dust"] = false,
         ["groundTurbulence"] = 0,
         ["visibility"] = 
         {
@@ -187,6 +188,7 @@ mission =
                 ["y"] = 632545.076,
                 ["radius"] = 100,
                 ["zoneId"] = 332,
+                ["x"] = -323805.42657144,
                 ["color"] = 
                 {
                     [1] = 1,
@@ -194,7 +196,6 @@ mission =
                     [3] = 1,
                     [4] = 0.15,
                 }, -- end of ["color"]
-                ["x"] = -323805.42657144,
                 ["hidden"] = false,
                 ["name"] = "Deploy",
             }, -- end of [1]
@@ -203,6 +204,7 @@ mission =
                 ["y"] = 630585.91742856,
                 ["radius"] = 200,
                 ["zoneId"] = 498,
+                ["x"] = -322385.8737143,
                 ["color"] = 
                 {
                     [1] = 1,
@@ -210,7 +212,6 @@ mission =
                     [3] = 1,
                     [4] = 0.15,
                 }, -- end of ["color"]
-                ["x"] = -322385.8737143,
                 ["hidden"] = false,
                 ["name"] = "Pickup",
             }, -- end of [2]
@@ -224,26 +225,6 @@ mission =
     }, -- end of ["map"]
     ["coalitions"] = 
     {
-        ["neutrals"] = 
-        {
-            [1] = 23,
-            [2] = 25,
-            [3] = 29,
-            [4] = 30,
-            [5] = 31,
-            [6] = 32,
-            [7] = 33,
-            [8] = 17,
-            [9] = 35,
-            [10] = 36,
-            [11] = 39,
-            [12] = 41,
-            [13] = 42,
-            [14] = 44,
-            [15] = 46,
-            [16] = 22,
-            [17] = 7,
-        }, -- end of ["neutrals"]
         ["blue"] = 
         {
             [1] = 21,
@@ -266,6 +247,62 @@ mission =
             [18] = 4,
             [19] = 2,
         }, -- end of ["blue"]
+        ["neutrals"] = 
+        {
+            [1] = 23,
+            [2] = 25,
+            [3] = 29,
+            [4] = 30,
+            [5] = 31,
+            [6] = 32,
+            [7] = 33,
+            [8] = 17,
+            [9] = 35,
+            [10] = 36,
+            [11] = 39,
+            [12] = 41,
+            [13] = 42,
+            [14] = 44,
+            [15] = 46,
+            [16] = 22,
+            [17] = 7,
+            [18] = 48,
+            [19] = 49,
+            [20] = 50,
+            [21] = 51,
+            [22] = 52,
+            [23] = 53,
+            [24] = 54,
+            [25] = 55,
+            [26] = 56,
+            [27] = 57,
+            [28] = 58,
+            [29] = 59,
+            [30] = 60,
+            [31] = 61,
+            [32] = 62,
+            [33] = 63,
+            [34] = 64,
+            [35] = 65,
+            [36] = 66,
+            [37] = 67,
+            [38] = 68,
+            [39] = 69,
+            [40] = 70,
+            [41] = 71,
+            [42] = 72,
+            [43] = 73,
+            [44] = 74,
+            [45] = 75,
+            [46] = 76,
+            [47] = 77,
+            [48] = 78,
+            [49] = 79,
+            [50] = 80,
+            [51] = 81,
+            [52] = 82,
+            [53] = 83,
+        }, -- end of ["neutrals"]
         ["red"] = 
         {
             [1] = 18,
@@ -295,6 +332,21 @@ mission =
     }, -- end of ["pictureFileNameB"]
     ["coalition"] = 
     {
+        ["neutrals"] = 
+        {
+            ["bullseye"] = 
+            {
+                ["y"] = 100,
+                ["x"] = 100,
+            }, -- end of ["bullseye"]
+            ["nav_points"] = 
+            {
+            }, -- end of ["nav_points"]
+            ["name"] = "neutrals",
+            ["country"] = 
+            {
+            }, -- end of ["country"]
+        }, -- end of ["neutrals"]
         ["blue"] = 
         {
             ["bullseye"] = 
@@ -309,96 +361,6 @@ mission =
             ["country"] = 
             {
                 [1] = 
-                {
-                    ["id"] = 21,
-                    ["name"] = "Australia",
-                }, -- end of [1]
-                [2] = 
-                {
-                    ["id"] = 11,
-                    ["name"] = "Belgium",
-                }, -- end of [2]
-                [3] = 
-                {
-                    ["id"] = 8,
-                    ["name"] = "Canada",
-                }, -- end of [3]
-                [4] = 
-                {
-                    ["id"] = 28,
-                    ["name"] = "Croatia",
-                }, -- end of [4]
-                [5] = 
-                {
-                    ["id"] = 26,
-                    ["name"] = "Czech Republic",
-                }, -- end of [5]
-                [6] = 
-                {
-                    ["id"] = 13,
-                    ["name"] = "Denmark",
-                }, -- end of [6]
-                [7] = 
-                {
-                    ["id"] = 5,
-                    ["name"] = "France",
-                }, -- end of [7]
-                [8] = 
-                {
-                    ["id"] = 16,
-                    ["name"] = "Georgia",
-                }, -- end of [8]
-                [9] = 
-                {
-                    ["id"] = 6,
-                    ["name"] = "Germany",
-                }, -- end of [9]
-                [10] = 
-                {
-                    ["id"] = 15,
-                    ["name"] = "Israel",
-                }, -- end of [10]
-                [11] = 
-                {
-                    ["id"] = 20,
-                    ["name"] = "Italy",
-                }, -- end of [11]
-                [12] = 
-                {
-                    ["id"] = 12,
-                    ["name"] = "Norway",
-                }, -- end of [12]
-                [13] = 
-                {
-                    ["id"] = 40,
-                    ["name"] = "Poland",
-                }, -- end of [13]
-                [14] = 
-                {
-                    ["id"] = 45,
-                    ["name"] = "South Korea",
-                }, -- end of [14]
-                [15] = 
-                {
-                    ["id"] = 9,
-                    ["name"] = "Spain",
-                }, -- end of [15]
-                [16] = 
-                {
-                    ["id"] = 10,
-                    ["name"] = "The Netherlands",
-                }, -- end of [16]
-                [17] = 
-                {
-                    ["id"] = 3,
-                    ["name"] = "Turkey",
-                }, -- end of [17]
-                [18] = 
-                {
-                    ["id"] = 4,
-                    ["name"] = "UK",
-                }, -- end of [18]
-                [19] = 
                 {
                     ["id"] = 2,
                     ["vehicle"] = 
@@ -466,48 +428,48 @@ mission =
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "AAV7",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 1,
                                         ["skill"] = "Excellent",
+                                        ["type"] = "AAV7",
+                                        ["unitId"] = 1,
                                         ["y"] = 629625.20314285,
                                         ["x"] = -323106.05028572,
                                         ["name"] = "DictKey_UnitName_6",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.3425842430646,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [1]
                                     [2] = 
                                     {
-                                        ["type"] = "AAV7",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 65,
                                         ["skill"] = "Excellent",
+                                        ["type"] = "AAV7",
+                                        ["unitId"] = 65,
                                         ["y"] = 629586.24024512,
                                         ["x"] = -323115.09973876,
                                         ["name"] = "DictKey_UnitName_157",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.3425842430646,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [2]
                                     [3] = 
                                     {
-                                        ["type"] = "AAV7",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 66,
                                         ["skill"] = "Average",
+                                        ["type"] = "AAV7",
+                                        ["unitId"] = 66,
                                         ["y"] = 629547.27734739,
                                         ["x"] = -323124.14919181,
                                         ["name"] = "DictKey_UnitName_158",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.3425842430646,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [3]
                                 }, -- end of ["units"]
                                 ["y"] = 629625.20314285,
@@ -554,7 +516,7 @@ mission =
                                             ["x"] = -322267.29200001,
                                             ["name"] = "DictKey_WptName_56",
                                             ["ETA_locked"] = true,
-                                            ["speed"] = 5.5555555555556,
+                                            ["speed"] = 0,
                                             ["action"] = "Off Road",
                                             ["task"] = 
                                             {
@@ -576,123 +538,123 @@ mission =
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "2B11 mortar",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 18,
                                         ["skill"] = "Average",
+                                        ["type"] = "2B11 mortar",
+                                        ["unitId"] = 18,
                                         ["y"] = 630391.32457142,
                                         ["x"] = -322267.29200001,
                                         ["name"] = "DictKey_UnitName_55",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [1]
                                     [2] = 
                                     {
-                                        ["type"] = "Soldier M4",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 19,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier M4",
+                                        ["unitId"] = 19,
                                         ["y"] = 630364.35885713,
                                         ["x"] = -322281.46628572,
                                         ["name"] = "DictKey_UnitName_58",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [2]
                                     [3] = 
                                     {
-                                        ["type"] = "Soldier M4",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 20,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier M4",
+                                        ["unitId"] = 20,
                                         ["y"] = 630402.91999999,
                                         ["x"] = -322280.82000001,
                                         ["name"] = "DictKey_UnitName_59",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [3]
                                     [4] = 
                                     {
-                                        ["type"] = "Soldier stinger",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 33,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier stinger",
+                                        ["unitId"] = 33,
                                         ["y"] = 630397.22685713,
                                         ["x"] = -322284.99885714,
                                         ["name"] = "DictKey_UnitName_87",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [4]
                                     [5] = 
                                     {
-                                        ["type"] = "Stinger comm",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 34,
                                         ["skill"] = "Average",
+                                        ["type"] = "Stinger comm",
+                                        ["unitId"] = 34,
                                         ["y"] = 630374.03885713,
                                         ["x"] = -322289.76342858,
                                         ["name"] = "DictKey_UnitName_88",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [5]
                                     [6] = 
                                     {
-                                        ["type"] = "Soldier stinger",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 35,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier stinger",
+                                        ["unitId"] = 35,
                                         ["y"] = 630398.23114284,
                                         ["x"] = -322262.52285716,
                                         ["name"] = "DictKey_UnitName_89",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [6]
                                     [7] = 
                                     {
-                                        ["type"] = "Soldier M4",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 36,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier M4",
+                                        ["unitId"] = 36,
                                         ["y"] = 630364.01314285,
                                         ["x"] = -322268.67485715,
                                         ["name"] = "DictKey_UnitName_90",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [7]
                                     [8] = 
                                     {
-                                        ["type"] = "Soldier M4",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 37,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier M4",
+                                        ["unitId"] = 37,
                                         ["y"] = 630387.86742856,
                                         ["x"] = -322284.92342858,
                                         ["name"] = "DictKey_UnitName_91",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [8]
                                 }, -- end of ["units"]
                                 ["y"] = 630391.32457142,
@@ -739,7 +701,7 @@ mission =
                                             ["x"] = -322371.65085715,
                                             ["name"] = "DictKey_WptName_146",
                                             ["ETA_locked"] = true,
-                                            ["speed"] = 5.5555555555556,
+                                            ["speed"] = 0,
                                             ["action"] = "Off Road",
                                             ["task"] = 
                                             {
@@ -761,123 +723,123 @@ mission =
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "2B11 mortar",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 49,
                                         ["skill"] = "Average",
+                                        ["type"] = "2B11 mortar",
+                                        ["unitId"] = 49,
                                         ["y"] = 630391.32457142,
                                         ["x"] = -322371.65085715,
                                         ["name"] = "DictKey_UnitName_138",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [1]
                                     [2] = 
                                     {
-                                        ["type"] = "Soldier M4",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 50,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier M4",
+                                        ["unitId"] = 50,
                                         ["y"] = 630364.35885713,
                                         ["x"] = -322385.82514286,
                                         ["name"] = "DictKey_UnitName_139",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [2]
                                     [3] = 
                                     {
-                                        ["type"] = "Soldier M4",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 51,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier M4",
+                                        ["unitId"] = 51,
                                         ["y"] = 630379.13914284,
                                         ["x"] = -322365.96000002,
                                         ["name"] = "DictKey_UnitName_140",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [3]
                                     [4] = 
                                     {
-                                        ["type"] = "Soldier stinger",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 52,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier stinger",
+                                        ["unitId"] = 52,
                                         ["y"] = 630397.22685713,
                                         ["x"] = -322389.35771428,
                                         ["name"] = "DictKey_UnitName_141",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [4]
                                     [5] = 
                                     {
-                                        ["type"] = "Stinger comm",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 53,
                                         ["skill"] = "Average",
+                                        ["type"] = "Stinger comm",
+                                        ["unitId"] = 53,
                                         ["y"] = 630374.03885713,
                                         ["x"] = -322394.12228572,
                                         ["name"] = "DictKey_UnitName_142",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [5]
                                     [6] = 
                                     {
-                                        ["type"] = "Soldier stinger",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 54,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier stinger",
+                                        ["unitId"] = 54,
                                         ["y"] = 630398.23114284,
                                         ["x"] = -322366.8817143,
                                         ["name"] = "DictKey_UnitName_143",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [6]
                                     [7] = 
                                     {
-                                        ["type"] = "Soldier M4",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 55,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier M4",
+                                        ["unitId"] = 55,
                                         ["y"] = 630364.01314285,
                                         ["x"] = -322373.03371429,
                                         ["name"] = "DictKey_UnitName_144",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [7]
                                     [8] = 
                                     {
-                                        ["type"] = "Soldier M4",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 56,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier M4",
+                                        ["unitId"] = 56,
                                         ["y"] = 630387.86742856,
                                         ["x"] = -322389.28228572,
                                         ["name"] = "DictKey_UnitName_145",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [8]
                                 }, -- end of ["units"]
                                 ["y"] = 630391.32457142,
@@ -924,7 +886,7 @@ mission =
                                             ["x"] = -322497.26800001,
                                             ["name"] = "DictKey_WptName_156",
                                             ["ETA_locked"] = true,
-                                            ["speed"] = 5.5555555555556,
+                                            ["speed"] = 0,
                                             ["action"] = "Off Road",
                                             ["task"] = 
                                             {
@@ -946,123 +908,123 @@ mission =
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "2B11 mortar",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 57,
                                         ["skill"] = "Average",
+                                        ["type"] = "2B11 mortar",
+                                        ["unitId"] = 57,
                                         ["y"] = 630373.93142856,
                                         ["x"] = -322497.26800001,
                                         ["name"] = "DictKey_UnitName_148",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [1]
                                     [2] = 
                                     {
-                                        ["type"] = "Soldier M4",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 58,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier M4",
+                                        ["unitId"] = 58,
                                         ["y"] = 630346.96571427,
                                         ["x"] = -322511.44228572,
                                         ["name"] = "DictKey_UnitName_149",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [2]
                                     [3] = 
                                     {
-                                        ["type"] = "Soldier M4",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 59,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier M4",
+                                        ["unitId"] = 59,
                                         ["y"] = 630361.74599998,
                                         ["x"] = -322491.57714288,
                                         ["name"] = "DictKey_UnitName_150",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [3]
                                     [4] = 
                                     {
-                                        ["type"] = "Soldier stinger",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 60,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier stinger",
+                                        ["unitId"] = 60,
                                         ["y"] = 630379.83371427,
                                         ["x"] = -322514.97485714,
                                         ["name"] = "DictKey_UnitName_151",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [4]
                                     [5] = 
                                     {
-                                        ["type"] = "Stinger comm",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 61,
                                         ["skill"] = "Average",
+                                        ["type"] = "Stinger comm",
+                                        ["unitId"] = 61,
                                         ["y"] = 630356.64571427,
                                         ["x"] = -322519.73942858,
                                         ["name"] = "DictKey_UnitName_152",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [5]
                                     [6] = 
                                     {
-                                        ["type"] = "Soldier stinger",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 62,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier stinger",
+                                        ["unitId"] = 62,
                                         ["y"] = 630380.83799998,
                                         ["x"] = -322492.49885716,
                                         ["name"] = "DictKey_UnitName_153",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [6]
                                     [7] = 
                                     {
-                                        ["type"] = "Soldier M4",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 63,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier M4",
+                                        ["unitId"] = 63,
                                         ["y"] = 630346.61999999,
                                         ["x"] = -322498.65085715,
                                         ["name"] = "DictKey_UnitName_154",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [7]
                                     [8] = 
                                     {
-                                        ["type"] = "Soldier M4",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 64,
                                         ["skill"] = "Average",
+                                        ["type"] = "Soldier M4",
+                                        ["unitId"] = 64,
                                         ["y"] = 630370.4742857,
                                         ["x"] = -322514.89942858,
                                         ["name"] = "DictKey_UnitName_155",
-                                        ["playerCanDrive"] = false,
                                         ["heading"] = 1.5956727106574,
+                                        ["playerCanDrive"] = false,
                                     }, -- end of [8]
                                 }, -- end of ["units"]
                                 ["y"] = 630373.93142856,
@@ -1073,7 +1035,7 @@ mission =
                         }, -- end of ["group"]
                     }, -- end of ["vehicle"]
                     ["name"] = "USA",
-                }, -- end of [19]
+                }, -- end of [1]
             }, -- end of ["country"]
         }, -- end of ["blue"]
         ["red"] = 
@@ -1089,66 +1051,11 @@ mission =
             ["name"] = "red",
             ["country"] = 
             {
-                [1] = 
-                {
-                    ["id"] = 18,
-                    ["name"] = "Abkhazia",
-                }, -- end of [1]
-                [2] = 
-                {
-                    ["id"] = 24,
-                    ["name"] = "Belarus",
-                }, -- end of [2]
-                [3] = 
-                {
-                    ["id"] = 27,
-                    ["name"] = "China",
-                }, -- end of [3]
-                [4] = 
-                {
-                    ["id"] = 34,
-                    ["name"] = "Iran",
-                }, -- end of [4]
-                [5] = 
-                {
-                    ["id"] = 37,
-                    ["name"] = "Kazakhstan",
-                }, -- end of [5]
-                [6] = 
-                {
-                    ["id"] = 38,
-                    ["name"] = "North Korea",
-                }, -- end of [6]
-                [7] = 
-                {
-                    ["id"] = 0,
-                    ["name"] = "Russia",
-                }, -- end of [7]
-                [8] = 
-                {
-                    ["id"] = 43,
-                    ["name"] = "Serbia",
-                }, -- end of [8]
-                [9] = 
-                {
-                    ["id"] = 19,
-                    ["name"] = "South Ossetia",
-                }, -- end of [9]
-                [10] = 
-                {
-                    ["id"] = 47,
-                    ["name"] = "Syria",
-                }, -- end of [10]
-                [11] = 
-                {
-                    ["id"] = 1,
-                    ["name"] = "Ukraine",
-                }, -- end of [11]
             }, -- end of ["country"]
         }, -- end of ["red"]
     }, -- end of ["coalition"]
     ["sortie"] = "DictKey_sortie_4",
-    ["version"] = 14,
+    ["version"] = 18,
     ["trigrules"] = 
     {
         [1] = 
@@ -1156,7 +1063,9 @@ mission =
             ["rules"] = 
             {
             }, -- end of ["rules"]
+            ["comment"] = "Load Moose",
             ["eventlist"] = "",
+            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -1170,23 +1079,20 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["predicate"] = "triggerStart",
-            ["comment"] = "Load Moose",
         }, -- end of [1]
         [2] = 
         {
             ["rules"] = 
             {
             }, -- end of ["rules"]
-            ["comment"] = "Trace",
             ["eventlist"] = "",
             ["actions"] = 
             {
                 [1] = 
                 {
-                    ["predicate"] = "a_do_script",
-                    ["text"] = "DictKey_ActionText_15",
                     ["KeyDict_text"] = "DictKey_ActionText_15",
+                    ["text"] = "DictKey_ActionText_15",
+                    ["predicate"] = "a_do_script",
                     ["ai_task"] = 
                     {
                         [1] = "",
@@ -1195,13 +1101,16 @@ mission =
                 }, -- end of [1]
             }, -- end of ["actions"]
             ["predicate"] = "triggerStart",
+            ["comment"] = "Trace",
         }, -- end of [2]
         [3] = 
         {
             ["rules"] = 
             {
             }, -- end of ["rules"]
+            ["comment"] = "Load Mission",
             ["eventlist"] = "",
+            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -1215,11 +1124,9 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
-            ["predicate"] = "triggerStart",
-            ["comment"] = "Load Mission",
         }, -- end of [3]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 11419,
+    ["currentKey"] = 11821,
     ["start_time"] = 43200,
     ["forcedOptions"] = 
     {
@@ -1462,15 +1369,15 @@ mission =
             ["id"] = "HYD_ALT_2_FAIL",
             ["mm"] = 0,
         }, -- end of ["HYD_ALT_2_FAIL"]
-        ["AAR_47_FAILURE_SENSOR_RIGHT"] = 
+        ["TAIL_GEAR_FAIL_GO_DOWN"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "AAR_47_FAILURE_SENSOR_RIGHT",
+            ["id"] = "TAIL_GEAR_FAIL_GO_DOWN",
             ["mm"] = 0,
-        }, -- end of ["AAR_47_FAILURE_SENSOR_RIGHT"]
+        }, -- end of ["TAIL_GEAR_FAIL_GO_DOWN"]
         ["GUN_FAIL_RIGHT_CENTER_GUN"] = 
         {
             ["hh"] = 0,
@@ -1489,15 +1396,15 @@ mission =
             ["id"] = "LeftEngine_ShaveInOil",
             ["mm"] = 0,
         }, -- end of ["LeftEngine_ShaveInOil"]
-        ["MAIN_R_GEAR_D_LOCK"] = 
+        ["hydro_common"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "MAIN_R_GEAR_D_LOCK",
+            ["id"] = "hydro_common",
             ["mm"] = 0,
-        }, -- end of ["MAIN_R_GEAR_D_LOCK"]
+        }, -- end of ["hydro_common"]
         ["R_GEAR_DLK_FAULT"] = 
         {
             ["hh"] = 0,
@@ -1562,15 +1469,15 @@ mission =
             ["id"] = "engine_droop_failure",
             ["mm"] = 0,
         }, -- end of ["engine_droop_failure"]
-        ["TGP_FAILURE_LEFT"] = 
+        ["IGNITION_TERM_CONNECT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TGP_FAILURE_LEFT",
+            ["id"] = "IGNITION_TERM_CONNECT",
             ["mm"] = 0,
-        }, -- end of ["TGP_FAILURE_LEFT"]
+        }, -- end of ["IGNITION_TERM_CONNECT"]
         ["CADC_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
@@ -1742,15 +1649,15 @@ mission =
             ["id"] = "PITOT_HEAT_ELEMENT",
             ["mm"] = 0,
         }, -- end of ["PITOT_HEAT_ELEMENT"]
-        ["ILS_FAILURE_ANT_LOCALIZER"] = 
+        ["FUEL_VALVE_LEAK"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "ILS_FAILURE_ANT_LOCALIZER",
+            ["id"] = "FUEL_VALVE_LEAK",
             ["mm"] = 0,
-        }, -- end of ["ILS_FAILURE_ANT_LOCALIZER"]
+        }, -- end of ["FUEL_VALVE_LEAK"]
         ["AN_ALE_40V_FAILURE_CONTAINER_LEFT_GEAR"] = 
         {
             ["hh"] = 0,
@@ -1861,15 +1768,16 @@ mission =
             ["id"] = "asc_p",
             ["mm"] = 0,
         }, -- end of ["asc_p"]
-        ["COOLANT_SHORT_CIRCUIT"] = 
+        ["es_damage_VU3"] = 
         {
             ["hh"] = 0,
-            ["prob"] = 100,
             ["enable"] = false,
+            ["prob"] = 0,
+            ["id"] = "es_damage_VU3",
             ["mmint"] = 1,
-            ["id"] = "COOLANT_SHORT_CIRCUIT",
+            ["hidden"] = true,
             ["mm"] = 0,
-        }, -- end of ["COOLANT_SHORT_CIRCUIT"]
+        }, -- end of ["es_damage_VU3"]
         ["GUN_LEFT_IN_AMMUN_FAULT"] = 
         {
             ["hh"] = 0,
@@ -1942,15 +1850,15 @@ mission =
             ["id"] = "AAR_47_FAILURE_SENSOR_BOTTOM",
             ["mm"] = 0,
         }, -- end of ["AAR_47_FAILURE_SENSOR_BOTTOM"]
-        ["TURNIND_INCORRECT_SENS_VAC_HIGH"] = 
+        ["BOMBS_ARMING_BROKEN_WIRING_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TURNIND_INCORRECT_SENS_VAC_HIGH",
+            ["id"] = "BOMBS_ARMING_BROKEN_WIRING_LEFT",
             ["mm"] = 0,
-        }, -- end of ["TURNIND_INCORRECT_SENS_VAC_HIGH"]
+        }, -- end of ["BOMBS_ARMING_BROKEN_WIRING_LEFT"]
         ["OIL_RADIATOR_WIRING"] = 
         {
             ["hh"] = 0,
@@ -2176,24 +2084,24 @@ mission =
             ["id"] = "MANIFOLD_SHIFT",
             ["mm"] = 0,
         }, -- end of ["MANIFOLD_SHIFT"]
-        ["RADAR_ALTIMETR_RIGHT_ANT_FAILURE"] = 
+        ["RIGHT_GUNNER_KILLED_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "RADAR_ALTIMETR_RIGHT_ANT_FAILURE",
+            ["id"] = "RIGHT_GUNNER_KILLED_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["RADAR_ALTIMETR_RIGHT_ANT_FAILURE"]
-        ["es_damage_SpareInverter"] = 
+        }, -- end of ["RIGHT_GUNNER_KILLED_FAILURE"]
+        ["UNLOAD_VALVE_NOT_UNLOAD"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "es_damage_SpareInverter",
+            ["id"] = "UNLOAD_VALVE_NOT_UNLOAD",
             ["mm"] = 0,
-        }, -- end of ["es_damage_SpareInverter"]
+        }, -- end of ["UNLOAD_VALVE_NOT_UNLOAD"]
         ["STARTER_BURNOUT"] = 
         {
             ["hh"] = 0,
@@ -2248,15 +2156,15 @@ mission =
             ["id"] = "K14_MOV_LAMP_DEFECTIVE",
             ["mm"] = 0,
         }, -- end of ["K14_MOV_LAMP_DEFECTIVE"]
-        ["ILS_FAILURE_TOTAL"] = 
+        ["INS_PART_FAIL"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "ILS_FAILURE_TOTAL",
+            ["id"] = "INS_PART_FAIL",
             ["mm"] = 0,
-        }, -- end of ["ILS_FAILURE_TOTAL"]
+        }, -- end of ["INS_PART_FAIL"]
         ["GUN_RIGHT_OUT_BARREL_WORN"] = 
         {
             ["hh"] = 0,
@@ -2455,15 +2363,15 @@ mission =
             ["id"] = "ARN_82_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["ARN_82_FAILURE_TOTAL"]
-        ["TURNIND_INCORRECT_SENS_DEFECTIVE"] = 
+        ["FLEX_S_NO_POWER_SUPPLY"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TURNIND_INCORRECT_SENS_DEFECTIVE",
+            ["id"] = "FLEX_S_NO_POWER_SUPPLY",
             ["mm"] = 0,
-        }, -- end of ["TURNIND_INCORRECT_SENS_DEFECTIVE"]
+        }, -- end of ["FLEX_S_NO_POWER_SUPPLY"]
         ["eos"] = 
         {
             ["hh"] = 0,
@@ -2645,16 +2553,15 @@ mission =
             ["id"] = "BOMBS_TRAIN_DEFECTIVE_WIRING",
             ["mm"] = 0,
         }, -- end of ["BOMBS_TRAIN_DEFECTIVE_WIRING"]
-        ["es_damage_VU2"] = 
+        ["autopilot"] = 
         {
             ["hh"] = 0,
+            ["prob"] = 100,
             ["enable"] = false,
-            ["prob"] = 0,
-            ["id"] = "es_damage_VU2",
             ["mmint"] = 1,
-            ["hidden"] = true,
+            ["id"] = "autopilot",
             ["mm"] = 0,
-        }, -- end of ["es_damage_VU2"]
+        }, -- end of ["autopilot"]
         ["TransitionalReductor_LowOilPressure"] = 
         {
             ["hh"] = 0,
@@ -2765,33 +2672,33 @@ mission =
             ["id"] = "fs_damage_left_cell_boost_pump",
             ["mm"] = 0,
         }, -- end of ["fs_damage_left_cell_boost_pump"]
-        ["INS_PART_FAIL"] = 
+        ["ILS_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "INS_PART_FAIL",
+            ["id"] = "ILS_FAILURE_TOTAL",
             ["mm"] = 0,
-        }, -- end of ["INS_PART_FAIL"]
-        ["BOMBS_DAMAGE_ELINKAGE_LEFT"] = 
+        }, -- end of ["ILS_FAILURE_TOTAL"]
+        ["BOOST_REG"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "BOMBS_DAMAGE_ELINKAGE_LEFT",
+            ["id"] = "BOOST_REG",
             ["mm"] = 0,
-        }, -- end of ["BOMBS_DAMAGE_ELINKAGE_LEFT"]
-        ["OIL_SYSTEM_FAIL_100"] = 
+        }, -- end of ["BOOST_REG"]
+        ["COOLANT_RADIATOR_SENSOR"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "OIL_SYSTEM_FAIL_100",
+            ["id"] = "COOLANT_RADIATOR_SENSOR",
             ["mm"] = 0,
-        }, -- end of ["OIL_SYSTEM_FAIL_100"]
+        }, -- end of ["COOLANT_RADIATOR_SENSOR"]
         ["r_conv"] = 
         {
             ["hh"] = 0,
@@ -2810,15 +2717,15 @@ mission =
             ["id"] = "ENGINE_JAM",
             ["mm"] = 0,
         }, -- end of ["ENGINE_JAM"]
-        ["CDU_FAILURE_TOTAL"] = 
+        ["APU_Fire"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "CDU_FAILURE_TOTAL",
+            ["id"] = "APU_Fire",
             ["mm"] = 0,
-        }, -- end of ["CDU_FAILURE_TOTAL"]
+        }, -- end of ["APU_Fire"]
         ["MAGNETO_2"] = 
         {
             ["hh"] = 0,
@@ -2828,15 +2735,15 @@ mission =
             ["id"] = "MAGNETO_2",
             ["mm"] = 0,
         }, -- end of ["MAGNETO_2"]
-        ["FLEX_S_NO_POWER_SUPPLY"] = 
+        ["TURNIND_INCORRECT_SENS_DEFECTIVE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "FLEX_S_NO_POWER_SUPPLY",
+            ["id"] = "TURNIND_INCORRECT_SENS_DEFECTIVE",
             ["mm"] = 0,
-        }, -- end of ["FLEX_S_NO_POWER_SUPPLY"]
+        }, -- end of ["TURNIND_INCORRECT_SENS_DEFECTIVE"]
         ["SAR_1_95"] = 
         {
             ["hh"] = 0,
@@ -2874,15 +2781,15 @@ mission =
             ["id"] = "INS_TOTAL_FAIL",
             ["mm"] = 0,
         }, -- end of ["INS_TOTAL_FAIL"]
-        ["OIL_SYSTEM_FAIL_050"] = 
+        ["engine_surge_failure"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "OIL_SYSTEM_FAIL_050",
+            ["id"] = "engine_surge_failure",
             ["mm"] = 0,
-        }, -- end of ["OIL_SYSTEM_FAIL_050"]
+        }, -- end of ["engine_surge_failure"]
         ["l_conv"] = 
         {
             ["hh"] = 0,
@@ -2910,25 +2817,24 @@ mission =
             ["id"] = "TAIL_GEAR_C_CABLE",
             ["mm"] = 0,
         }, -- end of ["TAIL_GEAR_C_CABLE"]
-        ["Vibration_RightEngine"] = 
-        {
-            ["hh"] = 0,
-            ["enable"] = false,
-            ["prob"] = 0,
-            ["id"] = "Vibration_RightEngine",
-            ["mmint"] = 1,
-            ["hidden"] = true,
-            ["mm"] = 0,
-        }, -- end of ["Vibration_RightEngine"]
-        ["UNLOAD_VALVE_NOT_UNLOAD"] = 
+        ["es_damage_SpareInverter"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "UNLOAD_VALVE_NOT_UNLOAD",
+            ["id"] = "es_damage_SpareInverter",
             ["mm"] = 0,
-        }, -- end of ["UNLOAD_VALVE_NOT_UNLOAD"]
+        }, -- end of ["es_damage_SpareInverter"]
+        ["RADAR_ALTIMETR_RIGHT_ANT_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "RADAR_ALTIMETR_RIGHT_ANT_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["RADAR_ALTIMETR_RIGHT_ANT_FAILURE"]
         ["STARTER_WIRING"] = 
         {
             ["hh"] = 0,
@@ -2965,24 +2871,24 @@ mission =
             ["id"] = "HUD_FAILURE",
             ["mm"] = 0,
         }, -- end of ["HUD_FAILURE"]
-        ["RIGHT_GUNNER_KILLED_FAILURE"] = 
+        ["IFFCC_FAILURE_GUN"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "RIGHT_GUNNER_KILLED_FAILURE",
+            ["id"] = "IFFCC_FAILURE_GUN",
             ["mm"] = 0,
-        }, -- end of ["RIGHT_GUNNER_KILLED_FAILURE"]
-        ["COPILOT_KILLED_FAILURE"] = 
+        }, -- end of ["IFFCC_FAILURE_GUN"]
+        ["CDU_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "COPILOT_KILLED_FAILURE",
+            ["id"] = "CDU_FAILURE_TOTAL",
             ["mm"] = 0,
-        }, -- end of ["COPILOT_KILLED_FAILURE"]
+        }, -- end of ["CDU_FAILURE_TOTAL"]
         ["mfd"] = 
         {
             ["hh"] = 0,
@@ -3010,51 +2916,52 @@ mission =
             ["id"] = "GUN_RIGHT_OUT_AMMUN_FAULT",
             ["mm"] = 0,
         }, -- end of ["GUN_RIGHT_OUT_AMMUN_FAULT"]
-        ["APU_Fire"] = 
+        ["fuel_sys_swapping_pumps"] = 
+        {
+            ["hh"] = 0,
+            ["enable"] = false,
+            ["prob"] = 0,
+            ["id"] = "fuel_sys_swapping_pumps",
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["fuel_sys_swapping_pumps"]
+        ["GMC_MAGN_COMP_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "APU_Fire",
+            ["id"] = "GMC_MAGN_COMP_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["APU_Fire"]
-        ["IFFCC_FAILURE_GUN"] = 
+        }, -- end of ["GMC_MAGN_COMP_FAILURE"]
+        ["hydro_main_irreversible_valve"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "IFFCC_FAILURE_GUN",
+            ["id"] = "hydro_main_irreversible_valve",
             ["mm"] = 0,
-        }, -- end of ["IFFCC_FAILURE_GUN"]
-        ["TURNIND_POINTER_VIBRATES"] = 
+        }, -- end of ["hydro_main_irreversible_valve"]
+        ["ILS_FAILURE_ANT_GLIDESLOPE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TURNIND_POINTER_VIBRATES",
+            ["id"] = "ILS_FAILURE_ANT_GLIDESLOPE",
             ["mm"] = 0,
-        }, -- end of ["TURNIND_POINTER_VIBRATES"]
-        ["SUPERCHARGER_SOLENOID"] = 
+        }, -- end of ["ILS_FAILURE_ANT_GLIDESLOPE"]
+        ["COPILOT_KILLED_FAILURE"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "SUPERCHARGER_SOLENOID",
+            ["id"] = "COPILOT_KILLED_FAILURE",
             ["mm"] = 0,
-        }, -- end of ["SUPERCHARGER_SOLENOID"]
-        ["BOMBS_DAMAGE_ELINKAGE_RIGHT"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "BOMBS_DAMAGE_ELINKAGE_RIGHT",
-            ["mm"] = 0,
-        }, -- end of ["BOMBS_DAMAGE_ELINKAGE_RIGHT"]
+        }, -- end of ["COPILOT_KILLED_FAILURE"]
         ["fuel_sys_feed_tank_pump"] = 
         {
             ["hh"] = 0,
@@ -3082,97 +2989,15 @@ mission =
             ["id"] = "ROCKETS_DEFECTIVE_WIRING",
             ["mm"] = 0,
         }, -- end of ["ROCKETS_DEFECTIVE_WIRING"]
-        ["hydro_main_irreversible_valve"] = 
+        ["HYD_PUMP_2_FAIL_100"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "hydro_main_irreversible_valve",
+            ["id"] = "HYD_PUMP_2_FAIL_100",
             ["mm"] = 0,
-        }, -- end of ["hydro_main_irreversible_valve"]
-        ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "BOMBS_ARMING_BROKEN_SOLENOID_LEFT",
-            ["mm"] = 0,
-        }, -- end of ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"]
-        ["ILS_FAILURE_ANT_GLIDESLOPE"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "ILS_FAILURE_ANT_GLIDESLOPE",
-            ["mm"] = 0,
-        }, -- end of ["ILS_FAILURE_ANT_GLIDESLOPE"]
-        ["BOMBS_ARMING_BROKEN_WIRING_LEFT"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "BOMBS_ARMING_BROKEN_WIRING_LEFT",
-            ["mm"] = 0,
-        }, -- end of ["BOMBS_ARMING_BROKEN_WIRING_LEFT"]
-        ["engine_chip"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "engine_chip",
-            ["mm"] = 0,
-        }, -- end of ["engine_chip"]
-        ["hydro_auxiliary"] = 
-        {
-            ["hh"] = 0,
-            ["enable"] = false,
-            ["prob"] = 0,
-            ["id"] = "hydro_auxiliary",
-            ["mmint"] = 1,
-            ["hidden"] = true,
-            ["mm"] = 0,
-        }, -- end of ["hydro_auxiliary"]
-        ["CADC_FAILURE_MACH"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "CADC_FAILURE_MACH",
-            ["mm"] = 0,
-        }, -- end of ["CADC_FAILURE_MACH"]
-        ["VHF_SHORTED_CTL_BOX"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "VHF_SHORTED_CTL_BOX",
-            ["mm"] = 0,
-        }, -- end of ["VHF_SHORTED_CTL_BOX"]
-        ["COPILOT_GYRO_TOTAL_FAILURE"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "COPILOT_GYRO_TOTAL_FAILURE",
-            ["mm"] = 0,
-        }, -- end of ["COPILOT_GYRO_TOTAL_FAILURE"]
-        ["RightEngine_ShaveInOil"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "RightEngine_ShaveInOil",
-            ["mm"] = 0,
-        }, -- end of ["RightEngine_ShaveInOil"]
+        }, -- end of ["HYD_PUMP_2_FAIL_100"]
         ["sas_pitch_left"] = 
         {
             ["hh"] = 0,
@@ -3182,6 +3007,87 @@ mission =
             ["id"] = "sas_pitch_left",
             ["mm"] = 0,
         }, -- end of ["sas_pitch_left"]
+        ["SUPERCHARGER_SOLENOID"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "SUPERCHARGER_SOLENOID",
+            ["mm"] = 0,
+        }, -- end of ["SUPERCHARGER_SOLENOID"]
+        ["TURNIND_INCORRECT_SENS_VAC_HIGH"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "TURNIND_INCORRECT_SENS_VAC_HIGH",
+            ["mm"] = 0,
+        }, -- end of ["TURNIND_INCORRECT_SENS_VAC_HIGH"]
+        ["EEC_Failure_RightEngine"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "EEC_Failure_RightEngine",
+            ["mm"] = 0,
+        }, -- end of ["EEC_Failure_RightEngine"]
+        ["GUN_LEFT_CENTER_AMMUN_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "GUN_LEFT_CENTER_AMMUN_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_LEFT_CENTER_AMMUN_FAULT"]
+        ["CADC_FAILURE_MACH"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "CADC_FAILURE_MACH",
+            ["mm"] = 0,
+        }, -- end of ["CADC_FAILURE_MACH"]
+        ["CLOCK_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "CLOCK_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["CLOCK_FAILURE"]
+        ["TransitionalReductor_ShaveInOil"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "TransitionalReductor_ShaveInOil",
+            ["mm"] = 0,
+        }, -- end of ["TransitionalReductor_ShaveInOil"]
+        ["RightEngine_ShaveInOil"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "RightEngine_ShaveInOil",
+            ["mm"] = 0,
+        }, -- end of ["RightEngine_ShaveInOil"]
+        ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "BOMBS_ARMING_BROKEN_SOLENOID_LEFT",
+            ["mm"] = 0,
+        }, -- end of ["BOMBS_ARMING_BROKEN_SOLENOID_LEFT"]
         ["hydro_diaphragm"] = 
         {
             ["hh"] = 0,
@@ -3192,15 +3098,15 @@ mission =
             ["hidden"] = true,
             ["mm"] = 0,
         }, -- end of ["hydro_diaphragm"]
-        ["FLEX_S_NO_GUN_SIGN"] = 
+        ["OIL_SYSTEM_FAIL_100"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "FLEX_S_NO_GUN_SIGN",
+            ["id"] = "OIL_SYSTEM_FAIL_100",
             ["mm"] = 0,
-        }, -- end of ["FLEX_S_NO_GUN_SIGN"]
+        }, -- end of ["OIL_SYSTEM_FAIL_100"]
         ["CARBAIR_SHORT_CIRCUIT_LEADS"] = 
         {
             ["hh"] = 0,
@@ -3210,24 +3116,25 @@ mission =
             ["id"] = "CARBAIR_SHORT_CIRCUIT_LEADS",
             ["mm"] = 0,
         }, -- end of ["CARBAIR_SHORT_CIRCUIT_LEADS"]
-        ["GUN_LEFT_CENTER_AMMUN_FAULT"] = 
+        ["hydro_auxiliary"] = 
+        {
+            ["hh"] = 0,
+            ["enable"] = false,
+            ["prob"] = 0,
+            ["id"] = "hydro_auxiliary",
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["hydro_auxiliary"]
+        ["es_damage_GeneratorRight"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_LEFT_CENTER_AMMUN_FAULT",
+            ["id"] = "es_damage_GeneratorRight",
             ["mm"] = 0,
-        }, -- end of ["GUN_LEFT_CENTER_AMMUN_FAULT"]
-        ["asc"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "asc",
-            ["mm"] = 0,
-        }, -- end of ["asc"]
+        }, -- end of ["es_damage_GeneratorRight"]
         ["laser_failure"] = 
         {
             ["hh"] = 0,
@@ -3255,24 +3162,24 @@ mission =
             ["id"] = "BOMBS_NO_VOLATAGE_BOTH",
             ["mm"] = 0,
         }, -- end of ["BOMBS_NO_VOLATAGE_BOTH"]
-        ["FUEL_VALVE_LEAK"] = 
+        ["ILS_FAILURE_ANT_LOCALIZER"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "FUEL_VALVE_LEAK",
+            ["id"] = "ILS_FAILURE_ANT_LOCALIZER",
             ["mm"] = 0,
-        }, -- end of ["FUEL_VALVE_LEAK"]
-        ["FAULTY_ROCKET_LEFT"] = 
+        }, -- end of ["ILS_FAILURE_ANT_LOCALIZER"]
+        ["RWR_FAILURE_SENSOR_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "FAULTY_ROCKET_LEFT",
+            ["id"] = "RWR_FAILURE_SENSOR_LEFT",
             ["mm"] = 0,
-        }, -- end of ["FAULTY_ROCKET_LEFT"]
+        }, -- end of ["RWR_FAILURE_SENSOR_LEFT"]
         ["BOMBS_ARMING_NO_VOLATAGE_LEFT"] = 
         {
             ["hh"] = 0,
@@ -3282,16 +3189,15 @@ mission =
             ["id"] = "BOMBS_ARMING_NO_VOLATAGE_LEFT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_ARMING_NO_VOLATAGE_LEFT"]
-        ["es_damage_VU3"] = 
+        ["COOLANT_SHORT_CIRCUIT"] = 
         {
             ["hh"] = 0,
+            ["prob"] = 100,
             ["enable"] = false,
-            ["prob"] = 0,
-            ["id"] = "es_damage_VU3",
             ["mmint"] = 1,
-            ["hidden"] = true,
+            ["id"] = "COOLANT_SHORT_CIRCUIT",
             ["mm"] = 0,
-        }, -- end of ["es_damage_VU3"]
+        }, -- end of ["COOLANT_SHORT_CIRCUIT"]
         ["BATTERY_OVERHEAT"] = 
         {
             ["hh"] = 0,
@@ -3337,33 +3243,33 @@ mission =
             ["id"] = "hydro_left",
             ["mm"] = 0,
         }, -- end of ["hydro_left"]
-        ["BOOST_REG"] = 
+        ["BOMBS_DAMAGE_ELINKAGE_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "BOOST_REG",
+            ["id"] = "BOMBS_DAMAGE_ELINKAGE_LEFT",
             ["mm"] = 0,
-        }, -- end of ["BOOST_REG"]
-        ["RWR_FAILURE_SENSOR_LEFT"] = 
+        }, -- end of ["BOMBS_DAMAGE_ELINKAGE_LEFT"]
+        ["FAULTY_ROCKET_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "RWR_FAILURE_SENSOR_LEFT",
+            ["id"] = "FAULTY_ROCKET_LEFT",
             ["mm"] = 0,
-        }, -- end of ["RWR_FAILURE_SENSOR_LEFT"]
-        ["IGNITION_TERM_CONNECT"] = 
+        }, -- end of ["FAULTY_ROCKET_LEFT"]
+        ["TGP_FAILURE_LEFT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "IGNITION_TERM_CONNECT",
+            ["id"] = "TGP_FAILURE_LEFT",
             ["mm"] = 0,
-        }, -- end of ["IGNITION_TERM_CONNECT"]
+        }, -- end of ["TGP_FAILURE_LEFT"]
         ["BOMBS_DAMAGE_LINKAGE_RIGHT"] = 
         {
             ["hh"] = 0,
@@ -3373,15 +3279,15 @@ mission =
             ["id"] = "BOMBS_DAMAGE_LINKAGE_RIGHT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_DAMAGE_LINKAGE_RIGHT"]
-        ["es_damage_GeneratorRight"] = 
+        ["asc"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "es_damage_GeneratorRight",
+            ["id"] = "asc",
             ["mm"] = 0,
-        }, -- end of ["es_damage_GeneratorRight"]
+        }, -- end of ["asc"]
         ["AN_ALE_40V_FAILURE_CONTAINER_RIGHT_GEAR"] = 
         {
             ["hh"] = 0,
@@ -3400,15 +3306,15 @@ mission =
             ["id"] = "TACH_BREAK_CIRCUIT",
             ["mm"] = 0,
         }, -- end of ["TACH_BREAK_CIRCUIT"]
-        ["GUN_LEFT_CENTER_OPEN_CIRCUIT"] = 
+        ["TACAN_FAILURE_RECEIVER"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GUN_LEFT_CENTER_OPEN_CIRCUIT",
+            ["id"] = "TACAN_FAILURE_RECEIVER",
             ["mm"] = 0,
-        }, -- end of ["GUN_LEFT_CENTER_OPEN_CIRCUIT"]
+        }, -- end of ["TACAN_FAILURE_RECEIVER"]
         ["TAIL_GEAR_D_LOCK"] = 
         {
             ["hh"] = 0,
@@ -3427,15 +3333,16 @@ mission =
             ["id"] = "hud",
             ["mm"] = 0,
         }, -- end of ["hud"]
-        ["autopilot"] = 
+        ["es_damage_VU2"] = 
         {
             ["hh"] = 0,
-            ["prob"] = 100,
             ["enable"] = false,
+            ["prob"] = 0,
+            ["id"] = "es_damage_VU2",
             ["mmint"] = 1,
-            ["id"] = "autopilot",
+            ["hidden"] = true,
             ["mm"] = 0,
-        }, -- end of ["autopilot"]
+        }, -- end of ["es_damage_VU2"]
         ["fuel_sys_left_transfer_pump"] = 
         {
             ["hh"] = 0,
@@ -3463,24 +3370,24 @@ mission =
             ["id"] = "RWR_FAILURE_SENSOR_TAIL_R",
             ["mm"] = 0,
         }, -- end of ["RWR_FAILURE_SENSOR_TAIL_R"]
-        ["hydro_common"] = 
+        ["MAIN_R_GEAR_D_LOCK"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "hydro_common",
+            ["id"] = "MAIN_R_GEAR_D_LOCK",
             ["mm"] = 0,
-        }, -- end of ["hydro_common"]
-        ["TAIL_GEAR_FAIL_GO_DOWN"] = 
+        }, -- end of ["MAIN_R_GEAR_D_LOCK"]
+        ["AAR_47_FAILURE_SENSOR_RIGHT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TAIL_GEAR_FAIL_GO_DOWN",
+            ["id"] = "AAR_47_FAILURE_SENSOR_RIGHT",
             ["mm"] = 0,
-        }, -- end of ["TAIL_GEAR_FAIL_GO_DOWN"]
+        }, -- end of ["AAR_47_FAILURE_SENSOR_RIGHT"]
         ["ARN_83_TOTAL_FAILURE"] = 
         {
             ["hh"] = 0,
@@ -3499,15 +3406,15 @@ mission =
             ["id"] = "es_damage_StarterGenerator",
             ["mm"] = 0,
         }, -- end of ["es_damage_StarterGenerator"]
-        ["EEC_Failure_RightEngine"] = 
+        ["engine_chip"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "EEC_Failure_RightEngine",
+            ["id"] = "engine_chip",
             ["mm"] = 0,
-        }, -- end of ["EEC_Failure_RightEngine"]
+        }, -- end of ["engine_chip"]
         ["ENG_ALT_1_FAIL"] = 
         {
             ["hh"] = 0,
@@ -3977,15 +3884,15 @@ mission =
             ["id"] = "BOMBS_TRAIN_DEFECTIVE_SWITCH",
             ["mm"] = 0,
         }, -- end of ["BOMBS_TRAIN_DEFECTIVE_SWITCH"]
-        ["TACAN_FAILURE_RECEIVER"] = 
+        ["GUN_LEFT_CENTER_OPEN_CIRCUIT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TACAN_FAILURE_RECEIVER",
+            ["id"] = "GUN_LEFT_CENTER_OPEN_CIRCUIT",
             ["mm"] = 0,
-        }, -- end of ["TACAN_FAILURE_RECEIVER"]
+        }, -- end of ["GUN_LEFT_CENTER_OPEN_CIRCUIT"]
         ["CADC_FAILURE_DYNAMIC"] = 
         {
             ["hh"] = 0,
@@ -4160,15 +4067,15 @@ mission =
             ["id"] = "CLOGGED_FUEL_STRAINER",
             ["mm"] = 0,
         }, -- end of ["CLOGGED_FUEL_STRAINER"]
-        ["CLOCK_FAILURE"] = 
+        ["VHF_SHORTED_CTL_BOX"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "CLOCK_FAILURE",
+            ["id"] = "VHF_SHORTED_CTL_BOX",
             ["mm"] = 0,
-        }, -- end of ["CLOCK_FAILURE"]
+        }, -- end of ["VHF_SHORTED_CTL_BOX"]
         ["r_engine"] = 
         {
             ["hh"] = 0,
@@ -4232,15 +4139,24 @@ mission =
             ["id"] = "AN_ALR69V_FAILURE_TOTAL",
             ["mm"] = 0,
         }, -- end of ["AN_ALR69V_FAILURE_TOTAL"]
-        ["engine_surge_failure"] = 
+        ["TURNIND_POINTER_VIBRATES"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "engine_surge_failure",
+            ["id"] = "TURNIND_POINTER_VIBRATES",
             ["mm"] = 0,
-        }, -- end of ["engine_surge_failure"]
+        }, -- end of ["TURNIND_POINTER_VIBRATES"]
+        ["COPILOT_GYRO_TOTAL_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "COPILOT_GYRO_TOTAL_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["COPILOT_GYRO_TOTAL_FAILURE"]
         ["PUMP_FAILS"] = 
         {
             ["hh"] = 0,
@@ -4250,15 +4166,6 @@ mission =
             ["id"] = "PUMP_FAILS",
             ["mm"] = 0,
         }, -- end of ["PUMP_FAILS"]
-        ["HYD_PUMP_2_FAIL_100"] = 
-        {
-            ["hh"] = 0,
-            ["prob"] = 100,
-            ["enable"] = false,
-            ["mmint"] = 1,
-            ["id"] = "HYD_PUMP_2_FAIL_100",
-            ["mm"] = 0,
-        }, -- end of ["HYD_PUMP_2_FAIL_100"]
         ["l_engine"] = 
         {
             ["hh"] = 0,
@@ -4286,24 +4193,24 @@ mission =
             ["id"] = "RIGHT_WING_TANK_LEAK",
             ["mm"] = 0,
         }, -- end of ["RIGHT_WING_TANK_LEAK"]
-        ["GMC_MAGN_COMP_FAILURE"] = 
+        ["FLEX_S_NO_GUN_SIGN"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "GMC_MAGN_COMP_FAILURE",
+            ["id"] = "FLEX_S_NO_GUN_SIGN",
             ["mm"] = 0,
-        }, -- end of ["GMC_MAGN_COMP_FAILURE"]
-        ["COOLANT_RADIATOR_SENSOR"] = 
+        }, -- end of ["FLEX_S_NO_GUN_SIGN"]
+        ["BOMBS_DAMAGE_ELINKAGE_RIGHT"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "COOLANT_RADIATOR_SENSOR",
+            ["id"] = "BOMBS_DAMAGE_ELINKAGE_RIGHT",
             ["mm"] = 0,
-        }, -- end of ["COOLANT_RADIATOR_SENSOR"]
+        }, -- end of ["BOMBS_DAMAGE_ELINKAGE_RIGHT"]
         ["JADRO_1A_FAILURE_TOTAL"] = 
         {
             ["hh"] = 0,
@@ -4322,25 +4229,25 @@ mission =
             ["id"] = "BOMBS_ARMING_NO_VOLATAGE_RIGHT",
             ["mm"] = 0,
         }, -- end of ["BOMBS_ARMING_NO_VOLATAGE_RIGHT"]
-        ["TransitionalReductor_ShaveInOil"] = 
+        ["OIL_SYSTEM_FAIL_050"] = 
         {
             ["hh"] = 0,
             ["prob"] = 100,
             ["enable"] = false,
             ["mmint"] = 1,
-            ["id"] = "TransitionalReductor_ShaveInOil",
+            ["id"] = "OIL_SYSTEM_FAIL_050",
             ["mm"] = 0,
-        }, -- end of ["TransitionalReductor_ShaveInOil"]
-        ["fuel_sys_swapping_pumps"] = 
+        }, -- end of ["OIL_SYSTEM_FAIL_050"]
+        ["Vibration_RightEngine"] = 
         {
             ["hh"] = 0,
             ["enable"] = false,
             ["prob"] = 0,
-            ["id"] = "fuel_sys_swapping_pumps",
+            ["id"] = "Vibration_RightEngine",
             ["mmint"] = 1,
             ["hidden"] = true,
             ["mm"] = 0,
-        }, -- end of ["fuel_sys_swapping_pumps"]
+        }, -- end of ["Vibration_RightEngine"]
         ["GUN_LEFT_OUT_BARREL_WORN"] = 
         {
             ["hh"] = 0,

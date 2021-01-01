@@ -2,6 +2,7 @@
 -- Name: AIC-APC-010 - Multiple APC
 -- Author: FlightControl
 -- Date Created: 24 Apr 2018
+-- Date Checked: 01 Jan 2021, working
 --
 
 local InfantrySet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
