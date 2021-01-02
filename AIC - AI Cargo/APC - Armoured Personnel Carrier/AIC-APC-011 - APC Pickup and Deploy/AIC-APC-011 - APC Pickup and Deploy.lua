@@ -2,7 +2,10 @@
 -- Name: AIC-APC-004 - APC Pickup
 -- Author: FlightControl
 -- Date Created: 23 Apr 2018
---
+-- Date Checked: 01 Jan 2021
+
+BASE:TraceClass("AI_CARGO_APC")
+BASE:TraceOn()
 
 local InfantryCargoSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
 
@@ -19,7 +22,7 @@ for i = 1, 4 do
   -- @param #string Event
   -- @param #string To
   Cargo_APC[i].OnAfterLoaded = function( self, APC, From, Event, To )
-    self:Deploy( ZONE:New( "Deploy" ):GetRandomCoordinate( 300, 500 ), 70, "Line abreast" )
+    self:__Deploy( 5, ZONE:New( "Deploy" ):GetRandomCoordinate( 300, 500 ) )
   end
   
   --- Unloaded Handler OnAfter for Cargo_APC
@@ -30,10 +33,10 @@ for i = 1, 4 do
   -- @param #string Event
   -- @param #string To
   Cargo_APC[i].OnAfterUnloaded = function( self, APC, From, Event, To )
-    self:Pickup( ZONE:New( "Pickup" ):GetRandomCoordinate( 50, 70 ), 70, "Line abreast" )
+    self:Pickup( ZONE:New( "Pickup" ):GetRandomCoordinate( 50, 70 ) )
   end
 
-  Cargo_APC[i]:__Pickup( i * 120, ZONE:New( "Pickup" ):GetRandomCoordinate( 50, 70 ), 70, "Line abreast" )
+  Cargo_APC[i]:__Pickup( i * 30, ZONE:New( "Pickup" ):GetRandomCoordinate( 50, 70 ) )
 
 end
 
