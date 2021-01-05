@@ -84,7 +84,7 @@ mission =
             }, -- end of ["func"]
         }, -- end of ["red"]
     }, -- end of ["result"]
-    ["maxDictId"] = 18,
+    ["maxDictId"] = 20,
     ["pictureFileNameN"] = 
     {
     }, -- end of ["pictureFileNameN"]
@@ -225,6 +225,24 @@ mission =
             [32] = 63,
             [33] = 64,
             [34] = 65,
+            [35] = 66,
+            [36] = 67,
+            [37] = 68,
+            [38] = 69,
+            [39] = 70,
+            [40] = 71,
+            [41] = 72,
+            [42] = 73,
+            [43] = 74,
+            [44] = 75,
+            [45] = 76,
+            [46] = 77,
+            [47] = 78,
+            [48] = 79,
+            [49] = 80,
+            [50] = 81,
+            [51] = 82,
+            [52] = 83,
         }, -- end of ["neutrals"]
         ["blue"] = 
         {
@@ -289,21 +307,6 @@ mission =
             ["country"] = 
             {
                 [1] = 
-                {
-                    ["id"] = 11,
-                    ["name"] = "Belgium",
-                }, -- end of [1]
-                [2] = 
-                {
-                    ["id"] = 4,
-                    ["name"] = "UK",
-                }, -- end of [2]
-                [3] = 
-                {
-                    ["id"] = 6,
-                    ["name"] = "Germany",
-                }, -- end of [3]
-                [4] = 
                 {
                     ["id"] = 16,
                     ["name"] = "Georgia",
@@ -422,33 +425,8 @@ mission =
                             }, -- end of [1]
                         }, -- end of ["group"]
                     }, -- end of ["plane"]
-                }, -- end of [4]
-                [5] = 
-                {
-                    ["id"] = 13,
-                    ["name"] = "Denmark",
-                }, -- end of [5]
-                [6] = 
-                {
-                    ["id"] = 15,
-                    ["name"] = "Israel",
-                }, -- end of [6]
-                [7] = 
-                {
-                    ["id"] = 9,
-                    ["name"] = "Spain",
-                }, -- end of [7]
-                [8] = 
-                {
-                    ["id"] = 8,
-                    ["name"] = "Canada",
-                }, -- end of [8]
-                [9] = 
-                {
-                    ["id"] = 12,
-                    ["name"] = "Norway",
-                }, -- end of [9]
-                [10] = 
+                }, -- end of [1]
+                [2] = 
                 {
                     ["name"] = "USA",
                     ["id"] = 2,
@@ -504,13 +482,13 @@ mission =
                                 {
                                     [1] = 
                                     {
-                                        ["type"] = "AAV7",
                                         ["transportable"] = 
                                         {
                                             ["randomTransportable"] = false,
                                         }, -- end of ["transportable"]
-                                        ["unitId"] = 3,
                                         ["skill"] = "Average",
+                                        ["type"] = "AAV7",
+                                        ["unitId"] = 3,
                                         ["y"] = 633079.71428571,
                                         ["x"] = -320615.14285714,
                                         ["name"] = "DictKey_UnitName_13",
@@ -600,16 +578,18 @@ mission =
                                     {
                                         ["alt"] = 2000,
                                         ["alt_type"] = "BARO",
+                                        ["livery_id"] = "F99th Mirage",
                                         ["skill"] = "High",
                                         ["speed"] = 138.88888888889,
                                         ["AddPropAircraft"] = 
                                         {
+                                            ["ForceINSRules"] = false,
                                             ["LaserCode100"] = 6,
                                             ["NoDDMSensor"] = false,
                                             ["LaserCode1"] = 8,
-                                            ["RocketBurst"] = 6,
                                             ["WpBullseye"] = 0,
-                                            ["ForceINSRules"] = false,
+                                            ["LoadNVGCase"] = false,
+                                            ["RocketBurst"] = 6,
                                             ["LaserCode10"] = 8,
                                             ["GunBurst"] = 1,
                                         }, -- end of ["AddPropAircraft"]
@@ -650,59 +630,24 @@ mission =
                             }, -- end of [1]
                         }, -- end of ["group"]
                     }, -- end of ["plane"]
-                }, -- end of [10]
-                [11] = 
-                {
-                    ["id"] = 3,
-                    ["name"] = "Turkey",
-                }, -- end of [11]
-                [12] = 
-                {
-                    ["id"] = 5,
-                    ["name"] = "France",
-                }, -- end of [12]
-                [13] = 
-                {
-                    ["id"] = 10,
-                    ["name"] = "The Netherlands",
-                }, -- end of [13]
-                [14] = 
-                {
-                    ["id"] = 20,
-                    ["name"] = "Italy",
-                }, -- end of [14]
-                [15] = 
-                {
-                    ["id"] = 21,
-                    ["name"] = "Australia",
-                }, -- end of [15]
-                [16] = 
-                {
-                    ["id"] = 40,
-                    ["name"] = "Poland",
-                }, -- end of [16]
-                [18] = 
-                {
-                    ["id"] = 45,
-                    ["name"] = "South Korea",
-                }, -- end of [18]
-                [19] = 
-                {
-                    ["id"] = 28,
-                    ["name"] = "Croatia",
-                }, -- end of [19]
-                [17] = 
-                {
-                    ["id"] = 26,
-                    ["name"] = "Czech Republic",
-                }, -- end of [17]
-                [20] = 
-                {
-                    ["id"] = 46,
-                    ["name"] = "Sweden",
-                }, -- end of [20]
+                }, -- end of [2]
             }, -- end of ["country"]
         }, -- end of ["blue"]
+        ["neutrals"] = 
+        {
+            ["bullseye"] = 
+            {
+                ["y"] = 100,
+                ["x"] = 100,
+            }, -- end of ["bullseye"]
+            ["nav_points"] = 
+            {
+            }, -- end of ["nav_points"]
+            ["name"] = "neutrals",
+            ["country"] = 
+            {
+            }, -- end of ["country"]
+        }, -- end of ["neutrals"]
         ["red"] = 
         {
             ["bullseye"] = 
@@ -716,66 +661,11 @@ mission =
             ["name"] = "red",
             ["country"] = 
             {
-                [1] = 
-                {
-                    ["id"] = 0,
-                    ["name"] = "Russia",
-                }, -- end of [1]
-                [2] = 
-                {
-                    ["id"] = 1,
-                    ["name"] = "Ukraine",
-                }, -- end of [2]
-                [3] = 
-                {
-                    ["id"] = 18,
-                    ["name"] = "Abkhazia",
-                }, -- end of [3]
-                [4] = 
-                {
-                    ["id"] = 19,
-                    ["name"] = "South Ossetia",
-                }, -- end of [4]
-                [5] = 
-                {
-                    ["id"] = 37,
-                    ["name"] = "Kazakhstan",
-                }, -- end of [5]
-                [6] = 
-                {
-                    ["id"] = 24,
-                    ["name"] = "Belarus",
-                }, -- end of [6]
-                [7] = 
-                {
-                    ["id"] = 27,
-                    ["name"] = "China",
-                }, -- end of [7]
-                [8] = 
-                {
-                    ["id"] = 43,
-                    ["name"] = "Serbia",
-                }, -- end of [8]
-                [9] = 
-                {
-                    ["id"] = 47,
-                    ["name"] = "Syria",
-                }, -- end of [9]
-                [10] = 
-                {
-                    ["id"] = 34,
-                    ["name"] = "Iran",
-                }, -- end of [10]
-                [11] = 
-                {
-                    ["id"] = 38,
-                    ["name"] = "North Korea",
-                }, -- end of [11]
             }, -- end of ["country"]
         }, -- end of ["red"]
     }, -- end of ["coalition"]
     ["sortie"] = "DictKey_sortie_4",
-    ["version"] = 16,
+    ["version"] = 18,
     ["trigrules"] = 
     {
         [1] = 
@@ -785,7 +675,6 @@ mission =
             }, -- end of ["rules"]
             ["comment"] = "Trigger 1492610038",
             ["eventlist"] = "",
-            ["predicate"] = "triggerStart",
             ["actions"] = 
             {
                 [1] = 
@@ -799,6 +688,7 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
+            ["predicate"] = "triggerStart",
         }, -- end of [1]
         [2] = 
         {
@@ -807,7 +697,6 @@ mission =
             }, -- end of ["rules"]
             ["comment"] = "Speech",
             ["eventlist"] = "",
-            ["predicate"] = "triggerOnce",
             ["actions"] = 
             {
                 [1] = 
@@ -821,9 +710,10 @@ mission =
                     }, -- end of ["ai_task"]
                 }, -- end of [1]
             }, -- end of ["actions"]
+            ["predicate"] = "triggerOnce",
         }, -- end of [2]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 447,
+    ["currentKey"] = 489,
     ["start_time"] = 43200,
     ["forcedOptions"] = 
     {

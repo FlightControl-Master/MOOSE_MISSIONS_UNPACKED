@@ -14,6 +14,6 @@ local LandUnit = UNIT:FindByName("Unit2")
 RadioSpeech = RADIOSPEECH:New( 124 )
 RadioSpeech:SetSenderUnitName( "Unit2" )
 
-RadioSpeech:Start()
+RadioSpeech:Start(2)
 
 RadioSpeech:ScheduleRepeat( 5, 30, 0, nil, RadioSpeech.Speak, "springfield11, patrolling" )
