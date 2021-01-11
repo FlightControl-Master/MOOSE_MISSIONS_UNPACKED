@@ -21,9 +21,9 @@
   do    
     --Create Spawn Groups
    
-    local Tanker_Texaco = SPAWN:New("Tanker_Texaco_Droge"):InitLimit( 1, 10 ):SpawnScheduled( 60, .0 ):InitCleanUp( 240 )
-    local Escort_Texaco_1 = SPAWN:New("Escort_Texaco_F15C-1"):InitLimit( 1, 20 ):SpawnScheduled( 120, .1 ):InitCleanUp( 240 )
-    local Escort_Texaco_2 = SPAWN:New("Escort_Texaco_F15C"):InitLimit( 1, 20 ):SpawnScheduled( 120, .2 ):InitCleanUp( 240 )
+    local Tanker_Texaco = SPAWN:New("Tanker_Texaco_Droge"):InitLimit( 1, 10 ):InitCleanUp( 240 ):SpawnScheduled( 60, .0 )
+    local Escort_Texaco_1 = SPAWN:New("Escort_Texaco_F15C-1"):InitLimit( 1, 20 ):InitCleanUp( 240 ):SpawnScheduled( 120, .1 )
+    local Escort_Texaco_2 = SPAWN:New("Escort_Texaco_F15C"):InitLimit( 1, 20 ):InitCleanUp( 240 ):SpawnScheduled( 120, .2 )
     -- Now to spawn the ojects  
     --Texaco set Task
     --Spawn Groups into world
