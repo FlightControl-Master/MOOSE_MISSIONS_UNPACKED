@@ -22,7 +22,6 @@ A2GDispatcher:AddDefenseCoordinate( "HQ", GROUP:FindByName( "HQ" ):GetCoordinate
 A2GDispatcher:SetDefenseReactivityHigh()
 
 A2GDispatcher:SetDefenseRadius( 200000 )
-A2GDispatcher:SetEngageRadius( 200000 )
 
 
 A2GDispatcher:SetTacticalDisplay( true )
