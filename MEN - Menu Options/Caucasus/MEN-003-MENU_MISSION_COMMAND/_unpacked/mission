@@ -1,0 +1,3399 @@
+mission = 
+{
+    ["requiredModules"] = 
+    {
+    }, -- end of ["requiredModules"]
+    ["date"] = 
+    {
+        ["Day"] = 7,
+        ["Year"] = 2016,
+        ["Month"] = 6,
+    }, -- end of ["date"]
+    ["trig"] = 
+    {
+        ["actions"] = 
+        {
+            [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_19\"));a_do_script_file(getValueResourceByKey(\"ResKey_Action_327\"));",
+        }, -- end of ["actions"]
+        ["events"] = 
+        {
+        }, -- end of ["events"]
+        ["custom"] = 
+        {
+        }, -- end of ["custom"]
+        ["func"] = 
+        {
+        }, -- end of ["func"]
+        ["flag"] = 
+        {
+            [1] = true,
+        }, -- end of ["flag"]
+        ["conditions"] = 
+        {
+            [1] = "return(true)",
+        }, -- end of ["conditions"]
+        ["customStartup"] = 
+        {
+        }, -- end of ["customStartup"]
+        ["funcStartup"] = 
+        {
+            [1] = "if mission.trig.conditions[1]() then mission.trig.actions[1]() end",
+        }, -- end of ["funcStartup"]
+    }, -- end of ["trig"]
+    ["result"] = 
+    {
+        ["offline"] = 
+        {
+            ["conditions"] = 
+            {
+            }, -- end of ["conditions"]
+            ["actions"] = 
+            {
+            }, -- end of ["actions"]
+            ["func"] = 
+            {
+            }, -- end of ["func"]
+        }, -- end of ["offline"]
+        ["total"] = 0,
+        ["blue"] = 
+        {
+            ["conditions"] = 
+            {
+            }, -- end of ["conditions"]
+            ["actions"] = 
+            {
+            }, -- end of ["actions"]
+            ["func"] = 
+            {
+            }, -- end of ["func"]
+        }, -- end of ["blue"]
+        ["red"] = 
+        {
+            ["conditions"] = 
+            {
+            }, -- end of ["conditions"]
+            ["actions"] = 
+            {
+            }, -- end of ["actions"]
+            ["func"] = 
+            {
+            }, -- end of ["func"]
+        }, -- end of ["red"]
+    }, -- end of ["result"]
+    ["maxDictId"] = 331,
+    ["pictureFileNameN"] = 
+    {
+    }, -- end of ["pictureFileNameN"]
+    ["groundControl"] = 
+    {
+        ["isPilotControlVehicles"] = false,
+        ["roles"] = 
+        {
+            ["artillery_commander"] = 
+            {
+                ["neutrals"] = 0,
+                ["blue"] = 1,
+                ["red"] = 0,
+            }, -- end of ["artillery_commander"]
+            ["instructor"] = 
+            {
+                ["neutrals"] = 0,
+                ["blue"] = 1,
+                ["red"] = 1,
+            }, -- end of ["instructor"]
+            ["observer"] = 
+            {
+                ["neutrals"] = 0,
+                ["blue"] = 0,
+                ["red"] = 0,
+            }, -- end of ["observer"]
+            ["forward_observer"] = 
+            {
+                ["neutrals"] = 0,
+                ["blue"] = 0,
+                ["red"] = 0,
+            }, -- end of ["forward_observer"]
+        }, -- end of ["roles"]
+    }, -- end of ["groundControl"]
+    ["goals"] = 
+    {
+    }, -- end of ["goals"]
+    ["weather"] = 
+    {
+        ["atmosphere_type"] = 0,
+        ["wind"] = 
+        {
+            ["at8000"] = 
+            {
+                ["speed"] = 0,
+                ["dir"] = 0,
+            }, -- end of ["at8000"]
+            ["atGround"] = 
+            {
+                ["speed"] = 0,
+                ["dir"] = 0,
+            }, -- end of ["atGround"]
+            ["at2000"] = 
+            {
+                ["speed"] = 0,
+                ["dir"] = 0,
+            }, -- end of ["at2000"]
+        }, -- end of ["wind"]
+        ["enable_fog"] = false,
+        ["groundTurbulence"] = 0,
+        ["season"] = 
+        {
+            ["temperature"] = 20,
+        }, -- end of ["season"]
+        ["type_weather"] = 0,
+        ["qnh"] = 760,
+        ["cyclones"] = 
+        {
+        }, -- end of ["cyclones"]
+        ["name"] = "Winter, clean sky",
+        ["fog"] = 
+        {
+            ["thickness"] = 0,
+            ["visibility"] = 0,
+        }, -- end of ["fog"]
+        ["visibility"] = 
+        {
+            ["distance"] = 80000,
+        }, -- end of ["visibility"]
+        ["dust_density"] = 0,
+        ["enable_dust"] = false,
+        ["clouds"] = 
+        {
+            ["thickness"] = 200,
+            ["density"] = 0,
+            ["base"] = 300,
+            ["iprecptns"] = 0,
+        }, -- end of ["clouds"]
+    }, -- end of ["weather"]
+    ["theatre"] = "Caucasus",
+    ["triggers"] = 
+    {
+        ["zones"] = 
+        {
+            [1] = 
+            {
+                ["y"] = 137979.6227411,
+                ["radius"] = 1524,
+                ["zoneId"] = 1829,
+                ["x"] = -38652.993678716,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 0,
+                    [3] = 1,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "ZoneBullseye",
+            }, -- end of [1]
+            [2] = 
+            {
+                ["y"] = 303658.74611608,
+                ["radius"] = 22860,
+                ["zoneId"] = 1994,
+                ["x"] = -13639.316703697,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.15,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["name"] = "Zone Charlie",
+            }, -- end of [2]
+        }, -- end of ["zones"]
+    }, -- end of ["triggers"]
+    ["map"] = 
+    {
+        ["centerY"] = 283541.96949023,
+        ["zoom"] = 241584.07858371,
+        ["centerX"] = -6441.2283976662,
+    }, -- end of ["map"]
+    ["coalitions"] = 
+    {
+        ["blue"] = 
+        {
+            [1] = 80,
+            [2] = 16,
+            [3] = 2,
+        }, -- end of ["blue"]
+        ["neutrals"] = 
+        {
+            [1] = 18,
+            [2] = 70,
+            [3] = 83,
+            [4] = 21,
+            [5] = 23,
+            [6] = 65,
+            [7] = 24,
+            [8] = 11,
+            [9] = 64,
+            [10] = 25,
+            [11] = 8,
+            [12] = 63,
+            [13] = 27,
+            [14] = 28,
+            [15] = 76,
+            [16] = 26,
+            [17] = 13,
+            [18] = 29,
+            [19] = 62,
+            [20] = 30,
+            [21] = 5,
+            [22] = 78,
+            [23] = 6,
+            [24] = 31,
+            [25] = 61,
+            [26] = 32,
+            [27] = 33,
+            [28] = 60,
+            [29] = 17,
+            [30] = 34,
+            [31] = 35,
+            [32] = 15,
+            [33] = 69,
+            [34] = 20,
+            [35] = 36,
+            [36] = 59,
+            [37] = 37,
+            [38] = 71,
+            [39] = 79,
+            [40] = 58,
+            [41] = 57,
+            [42] = 56,
+            [43] = 55,
+            [44] = 38,
+            [45] = 12,
+            [46] = 73,
+            [47] = 39,
+            [48] = 54,
+            [49] = 40,
+            [50] = 77,
+            [51] = 72,
+            [52] = 41,
+            [53] = 0,
+            [54] = 42,
+            [55] = 43,
+            [56] = 44,
+            [57] = 75,
+            [58] = 45,
+            [59] = 19,
+            [60] = 9,
+            [61] = 53,
+            [62] = 46,
+            [63] = 22,
+            [64] = 47,
+            [65] = 52,
+            [66] = 10,
+            [67] = 66,
+            [68] = 51,
+            [69] = 3,
+            [70] = 4,
+            [71] = 1,
+            [72] = 74,
+            [73] = 82,
+            [74] = 68,
+            [75] = 50,
+            [76] = 49,
+            [77] = 48,
+            [78] = 67,
+        }, -- end of ["neutrals"]
+        ["red"] = 
+        {
+            [1] = 81,
+            [2] = 7,
+        }, -- end of ["red"]
+    }, -- end of ["coalitions"]
+    ["descriptionText"] = "DictKey_descriptionText_1",
+    ["pictureFileNameR"] = 
+    {
+    }, -- end of ["pictureFileNameR"]
+    ["descriptionNeutralsTask"] = "DictKey_descriptionNeutralsTask_4",
+    ["descriptionBlueTask"] = "DictKey_descriptionBlueTask_3",
+    ["descriptionRedTask"] = "DictKey_descriptionRedTask_2",
+    ["pictureFileNameB"] = 
+    {
+    }, -- end of ["pictureFileNameB"]
+    ["coalition"] = 
+    {
+        ["blue"] = 
+        {
+            ["bullseye"] = 
+            {
+                ["y"] = 137973.42776374,
+                ["x"] = -38625.127671123,
+            }, -- end of ["bullseye"]
+            ["nav_points"] = 
+            {
+            }, -- end of ["nav_points"]
+            ["name"] = "blue",
+            ["country"] = 
+            {
+                [1] = 
+                {
+                    ["id"] = 2,
+                    ["name"] = "USA",
+                    ["plane"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["lateActivation"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["radioSet"] = false,
+                                ["task"] = "Reconnaissance",
+                                ["uncontrolled"] = false,
+                                ["hiddenOnMFD"] = true,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = false,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 6096,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 30.833333333333,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["number"] = 1,
+                                                            ["auto"] = true,
+                                                            ["id"] = "WrappedAction",
+                                                            ["enabled"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "EPLRS",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["value"] = true,
+                                                                        ["groupId"] = 4,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                        [2] = 
+                                                        {
+                                                            ["number"] = 2,
+                                                            ["auto"] = false,
+                                                            ["id"] = "WrappedAction",
+                                                            ["enabled"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "SetInvisible",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["value"] = true,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [2]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["y"] = 57703.971580902,
+                                            ["x"] = -12590.312384636,
+                                            ["name"] = "DictKey_WptName_150",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                        [2] = 
+                                        {
+                                            ["alt"] = 6096,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 30.833333333333,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 3597.9527886838,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 59594.666437914,
+                                            ["x"] = -123511.07732939,
+                                            ["name"] = "DictKey_WptName_155",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [2]
+                                        [3] = 
+                                        {
+                                            ["alt"] = 6096,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 30.833333333333,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 8843.6764625454,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 221249.07671251,
+                                            ["x"] = -118154.10856785,
+                                            ["name"] = "DictKey_WptName_156",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [3]
+                                        [4] = 
+                                        {
+                                            ["alt"] = 6096,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 30.833333333333,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 12446.343504463,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 215261.87633197,
+                                            ["x"] = -7233.3436230993,
+                                            ["name"] = "DictKey_WptName_157",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [4]
+                                        [5] = 
+                                        {
+                                            ["alt"] = 6096,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 30.833333333333,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 17558.945247948,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 57703.971580902,
+                                            ["x"] = -12275.196575134,
+                                            ["name"] = "DictKey_WptName_158",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [5]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 11,
+                                ["uncontrollable"] = true,
+                                ["hidden"] = true,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["alt"] = 6096,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "USAF Standard",
+                                        ["skill"] = "High",
+                                        ["speed"] = 30.833333333333,
+                                        ["type"] = "RQ-1A Predator",
+                                        ["unitId"] = 24,
+                                        ["psi"] = -3.1245488495948,
+                                        ["y"] = 57703.971580902,
+                                        ["x"] = -12590.312384636,
+                                        ["name"] = "DictKey_UnitName_149",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = "200",
+                                            ["flare"] = 0,
+                                            ["chaff"] = 0,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["heading"] = 3.1245488495948,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 4,
+                                            [2] = 1,
+                                            [3] = 1,
+                                            ["name"] = "Colt11",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "017",
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 57703.971580902,
+                                ["x"] = -12590.312384636,
+                                ["name"] = "DictKey_GroupName_148",
+                                ["communication"] = true,
+                                ["modulation"] = 0,
+                                ["start_time"] = 0,
+                                ["hiddenOnPlanner"] = true,
+                                ["frequency"] = 127.5,
+                            }, -- end of [1]
+                            [2] = 
+                            {
+                                ["hiddenOnPlanner"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["radioSet"] = false,
+                                ["task"] = "Reconnaissance",
+                                ["uncontrolled"] = false,
+                                ["hiddenOnMFD"] = true,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 6096,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 30.833333333333,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["number"] = 1,
+                                                            ["auto"] = true,
+                                                            ["id"] = "WrappedAction",
+                                                            ["enabled"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "EPLRS",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["value"] = true,
+                                                                        ["groupId"] = 5,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                        [2] = 
+                                                        {
+                                                            ["number"] = 2,
+                                                            ["auto"] = false,
+                                                            ["id"] = "WrappedAction",
+                                                            ["enabled"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "SetInvisible",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["value"] = true,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [2]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["y"] = -99706.354983106,
+                                            ["x"] = -14989.481263019,
+                                            ["name"] = "DictKey_WptName_161",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                        [2] = 
+                                        {
+                                            ["alt"] = 6096,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 30.833333333333,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 3571.7206564701,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = -100213.85214547,
+                                            ["x"] = -125116.36549542,
+                                            ["name"] = "DictKey_WptName_166",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [2]
+                                        [3] = 
+                                        {
+                                            ["alt"] = 6096,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 30.833333333333,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 8772.9849358655,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 60155.251160703,
+                                            ["x"] = -124101.3711707,
+                                            ["name"] = "DictKey_WptName_167",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [3]
+                                        [4] = 
+                                        {
+                                            ["alt"] = 6096,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 30.833333333333,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 12378.938973537,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 57110.268186535,
+                                            ["x"] = -12959.492613574,
+                                            ["name"] = "DictKey_WptName_168",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [4]
+                                        [5] = 
+                                        {
+                                            ["alt"] = 6096,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 30.833333333333,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 17482.006517209,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = -100213.85214547,
+                                            ["x"] = -15496.978425381,
+                                            ["name"] = "DictKey_WptName_169",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [5]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 12,
+                                ["hidden"] = true,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["alt"] = 6096,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "USAF Standard",
+                                        ["skill"] = "High",
+                                        ["speed"] = 30.833333333333,
+                                        ["type"] = "RQ-1A Predator",
+                                        ["unitId"] = 25,
+                                        ["psi"] = 3.1369843912796,
+                                        ["y"] = -99706.354983106,
+                                        ["x"] = -14989.481263019,
+                                        ["name"] = "DictKey_UnitName_160",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = "200",
+                                            ["flare"] = 0,
+                                            ["chaff"] = 0,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["heading"] = -3.1369843912796,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 5,
+                                            [2] = 1,
+                                            [3] = 1,
+                                            ["name"] = "Dodge11",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "018",
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -99706.354983106,
+                                ["x"] = -14989.481263019,
+                                ["name"] = "DictKey_GroupName_159",
+                                ["communication"] = true,
+                                ["uncontrollable"] = true,
+                                ["start_time"] = 0,
+                                ["modulation"] = 0,
+                                ["frequency"] = 127.5,
+                            }, -- end of [2]
+                            [3] = 
+                            {
+                                ["hiddenOnPlanner"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["radioSet"] = false,
+                                ["task"] = "Reconnaissance",
+                                ["uncontrolled"] = false,
+                                ["hiddenOnMFD"] = true,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 6096,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 30.833333333333,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["number"] = 1,
+                                                            ["auto"] = true,
+                                                            ["id"] = "WrappedAction",
+                                                            ["enabled"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "EPLRS",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["value"] = true,
+                                                                        ["groupId"] = 6,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                        [2] = 
+                                                        {
+                                                            ["number"] = 2,
+                                                            ["auto"] = false,
+                                                            ["id"] = "WrappedAction",
+                                                            ["enabled"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "SetInvisible",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["value"] = true,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [2]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["y"] = 215320.19873953,
+                                            ["x"] = -6781.6416844655,
+                                            ["name"] = "DictKey_WptName_172",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                        [2] = 
+                                        {
+                                            ["alt"] = 6096,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 30.833333333333,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 5123.9809592136,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 372993.70513889,
+                                            ["x"] = 3204.3470541609,
+                                            ["name"] = "DictKey_WptName_173",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [2]
+                                        [3] = 
+                                        {
+                                            ["alt"] = 6096,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 30.833333333333,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 8712.715751426,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 380877.38045886,
+                                            ["x"] = -107167.10742539,
+                                            ["name"] = "DictKey_WptName_174",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [3]
+                                        [4] = 
+                                        {
+                                            ["alt"] = 6096,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 30.833333333333,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 13922.845590185,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 220575.98228617,
+                                            ["x"] = -117678.67451868,
+                                            ["name"] = "DictKey_WptName_175",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [4]
+                                        [5] = 
+                                        {
+                                            ["alt"] = 6096,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 30.833333333333,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 17490.345439235,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 214794.62038486,
+                                            ["x"] = -7832.7983937946,
+                                            ["name"] = "DictKey_WptName_176",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [5]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 13,
+                                ["hidden"] = true,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["alt"] = 6096,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "USAF Standard",
+                                        ["skill"] = "High",
+                                        ["speed"] = 30.833333333333,
+                                        ["type"] = "RQ-1A Predator",
+                                        ["unitId"] = 26,
+                                        ["psi"] = -1.5075474692618,
+                                        ["y"] = 215320.19873953,
+                                        ["x"] = -6781.6416844655,
+                                        ["name"] = "DictKey_UnitName_171",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = "200",
+                                            ["flare"] = 0,
+                                            ["chaff"] = 0,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["heading"] = 1.5075474692618,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 6,
+                                            [2] = 1,
+                                            [3] = 1,
+                                            ["name"] = "Ford11",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "019",
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 215320.19873953,
+                                ["x"] = -6781.6416844655,
+                                ["name"] = "DictKey_GroupName_170",
+                                ["communication"] = true,
+                                ["uncontrollable"] = true,
+                                ["start_time"] = 0,
+                                ["modulation"] = 0,
+                                ["frequency"] = 127.5,
+                            }, -- end of [3]
+                            [4] = 
+                            {
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["radioSet"] = false,
+                                ["task"] = "Intercept",
+                                ["uncontrolled"] = false,
+                                ["hiddenOnMFD"] = true,
+                                ["taskSelected"] = true,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 2000,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 179.86111111111,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["number"] = 1,
+                                                            ["auto"] = true,
+                                                            ["id"] = "WrappedAction",
+                                                            ["enabled"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "EPLRS",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["value"] = true,
+                                                                        ["groupId"] = 8,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["y"] = 97285.515628989,
+                                            ["x"] = 137020.42737007,
+                                            ["name"] = "DictKey_WptName_209",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 15,
+                                ["uncontrollable"] = true,
+                                ["hidden"] = true,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["alt"] = 2000,
+                                        ["hardpoint_racks"] = true,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "vfa-37",
+                                        ["skill"] = "Excellent",
+                                        ["speed"] = 179.86111111111,
+                                        ["AddPropAircraft"] = 
+                                        {
+                                        }, -- end of ["AddPropAircraft"]
+                                        ["type"] = "FA-18C_hornet",
+                                        ["unitId"] = 36,
+                                        ["psi"] = 0,
+                                        ["y"] = 97285.515628989,
+                                        ["x"] = 137020.42737007,
+                                        ["name"] = "DictKey_UnitName_208",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                                [1] = 
+                                                {
+                                                    ["CLSID"] = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+                                                }, -- end of [1]
+                                                [2] = 
+                                                {
+                                                    ["CLSID"] = "{LAU-115 - AIM-7H}",
+                                                }, -- end of [2]
+                                                [3] = 
+                                                {
+                                                    ["CLSID"] = "{FPU_8A_FUEL_TANK}",
+                                                }, -- end of [3]
+                                                [4] = 
+                                                {
+                                                    ["CLSID"] = "{C8E06185-7CD6-4C90-959F-044679E90751}",
+                                                }, -- end of [4]
+                                                [5] = 
+                                                {
+                                                    ["CLSID"] = "{FPU_8A_FUEL_TANK}",
+                                                }, -- end of [5]
+                                                [6] = 
+                                                {
+                                                    ["CLSID"] = "{C8E06185-7CD6-4C90-959F-044679E90751}",
+                                                }, -- end of [6]
+                                                [7] = 
+                                                {
+                                                    ["CLSID"] = "{FPU_8A_FUEL_TANK}",
+                                                }, -- end of [7]
+                                                [8] = 
+                                                {
+                                                    ["CLSID"] = "{LAU-115 - AIM-7H}",
+                                                }, -- end of [8]
+                                                [9] = 
+                                                {
+                                                    ["CLSID"] = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+                                                }, -- end of [9]
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = 4900,
+                                            ["flare"] = 30,
+                                            ["ammo_type"] = 1,
+                                            ["chaff"] = 60,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["heading"] = 0,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 8,
+                                            [2] = 1,
+                                            [3] = 1,
+                                            ["name"] = "Pontiac11",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "024",
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 97285.515628989,
+                                ["x"] = 137020.42737007,
+                                ["name"] = "DictKey_GroupName_207",
+                                ["communication"] = true,
+                                ["modulation"] = 0,
+                                ["start_time"] = 0,
+                                ["hiddenOnPlanner"] = true,
+                                ["frequency"] = 305,
+                            }, -- end of [4]
+                            [5] = 
+                            {
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["radioSet"] = false,
+                                ["task"] = "Intercept",
+                                ["uncontrolled"] = false,
+                                ["hiddenOnMFD"] = true,
+                                ["taskSelected"] = true,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 2000,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 179.86111111111,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["number"] = 1,
+                                                            ["auto"] = true,
+                                                            ["id"] = "WrappedAction",
+                                                            ["enabled"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "EPLRS",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["value"] = true,
+                                                                        ["groupId"] = 9,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["y"] = 105995.08517568,
+                                            ["x"] = 137020.42737007,
+                                            ["name"] = "DictKey_WptName_226",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 18,
+                                ["uncontrollable"] = true,
+                                ["hidden"] = true,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["alt"] = 2000,
+                                        ["hardpoint_racks"] = true,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "vfa-37",
+                                        ["skill"] = "High",
+                                        ["speed"] = 179.86111111111,
+                                        ["AddPropAircraft"] = 
+                                        {
+                                        }, -- end of ["AddPropAircraft"]
+                                        ["type"] = "FA-18C_hornet",
+                                        ["unitId"] = 39,
+                                        ["psi"] = 0,
+                                        ["y"] = 105995.08517568,
+                                        ["x"] = 137020.42737007,
+                                        ["name"] = "DictKey_UnitName_225",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                                [1] = 
+                                                {
+                                                    ["CLSID"] = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+                                                }, -- end of [1]
+                                                [2] = 
+                                                {
+                                                    ["CLSID"] = "LAU-115_2*LAU-127_AIM-120C",
+                                                }, -- end of [2]
+                                                [3] = 
+                                                {
+                                                    ["CLSID"] = "{FPU_8A_FUEL_TANK}",
+                                                }, -- end of [3]
+                                                [4] = 
+                                                {
+                                                    ["CLSID"] = "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+                                                }, -- end of [4]
+                                                [5] = 
+                                                {
+                                                    ["CLSID"] = "{FPU_8A_FUEL_TANK}",
+                                                }, -- end of [5]
+                                                [6] = 
+                                                {
+                                                    ["CLSID"] = "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+                                                }, -- end of [6]
+                                                [7] = 
+                                                {
+                                                    ["CLSID"] = "{FPU_8A_FUEL_TANK}",
+                                                }, -- end of [7]
+                                                [8] = 
+                                                {
+                                                    ["CLSID"] = "LAU-115_2*LAU-127_AIM-120C",
+                                                }, -- end of [8]
+                                                [9] = 
+                                                {
+                                                    ["CLSID"] = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+                                                }, -- end of [9]
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = 4900,
+                                            ["flare"] = 30,
+                                            ["ammo_type"] = 1,
+                                            ["chaff"] = 60,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["heading"] = -1.7506498265874,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 3,
+                                            [2] = 1,
+                                            [3] = 1,
+                                            ["name"] = "Uzi11",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "026",
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 105995.08517568,
+                                ["x"] = 137020.42737007,
+                                ["name"] = "DictKey_GroupName_224",
+                                ["communication"] = true,
+                                ["modulation"] = 0,
+                                ["start_time"] = 0,
+                                ["hiddenOnPlanner"] = true,
+                                ["frequency"] = 305,
+                            }, -- end of [5]
+                        }, -- end of ["group"]
+                    }, -- end of ["plane"]
+                }, -- end of [1]
+                [2] = 
+                {
+                    ["id"] = 16,
+                    ["name"] = "Georgia",
+                    ["plane"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["modulation"] = 0,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["radioSet"] = false,
+                                ["task"] = "CAS",
+                                ["uncontrolled"] = false,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 43,
+                                            ["action"] = "From Parking Area",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 138.88888888889,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["number"] = 1,
+                                                            ["key"] = "CAS",
+                                                            ["id"] = "EngageTargets",
+                                                            ["enabled"] = true,
+                                                            ["auto"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["targetTypes"] = 
+                                                                {
+                                                                    [1] = "Helicopters",
+                                                                    [2] = "Ground Units",
+                                                                    [3] = "Light armed ships",
+                                                                }, -- end of ["targetTypes"]
+                                                                ["priority"] = 0,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "TakeOffParking",
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["y"] = 242787.984375,
+                                            ["x"] = -5238.2578125,
+                                            ["name"] = "DictKey_WptName_280",
+                                            ["formation_template"] = "",
+                                            ["airdromeId"] = 12,
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                        [2] = 
+                                        {
+                                            ["alt"] = 7000,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 180.55555555556,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["number"] = 1,
+                                                            ["auto"] = false,
+                                                            ["id"] = "AttackGroup",
+                                                            ["enabled"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["direction"] = 0,
+                                                                ["groupId"] = 26,
+                                                                ["attackQtyLimit"] = false,
+                                                                ["attackQty"] = 1,
+                                                                ["expend"] = "Auto",
+                                                                ["altitude"] = 7000,
+                                                                ["directionEnabled"] = false,
+                                                                ["groupAttack"] = false,
+                                                                ["weaponType"] = 1073741822,
+                                                                ["altitudeEnabled"] = false,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 236.13141640729,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 284806.15483427,
+                                            ["x"] = 1986.8964475838,
+                                            ["name"] = "DictKey_WptName_328",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [2]
+                                        [3] = 
+                                        {
+                                            ["alt"] = 2000,
+                                            ["action"] = "Turning Point",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 138.88888888889,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 423.59756260288,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 260690.75987726,
+                                            ["x"] = -7829.9899950936,
+                                            ["name"] = "DictKey_WptName_329",
+                                            ["formation_template"] = "",
+                                            ["speed_locked"] = true,
+                                        }, -- end of [3]
+                                        [4] = 
+                                        {
+                                            ["alt"] = 43,
+                                            ["action"] = "Landing",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 138.88888888889,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "Land",
+                                            ["ETA"] = 551.23600117096,
+                                            ["ETA_locked"] = false,
+                                            ["y"] = 243128.820313,
+                                            ["x"] = -5412.409668,
+                                            ["name"] = "DictKey_WptName_331",
+                                            ["formation_template"] = "",
+                                            ["airdromeId"] = 12,
+                                            ["speed_locked"] = true,
+                                        }, -- end of [4]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 25,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["alt"] = 43,
+                                        ["hardpoint_racks"] = true,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "su-25t taw_ravens snow",
+                                        ["skill"] = "Client",
+                                        ["parking"] = "28",
+                                        ["speed"] = 138.88888888889,
+                                        ["type"] = "Su-25T",
+                                        ["unitId"] = 51,
+                                        ["psi"] = -1.4005085528535,
+                                        ["parking_id"] = "24",
+                                        ["x"] = -5238.2578125,
+                                        ["name"] = "DictKey_UnitName_279",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                                [1] = 
+                                                {
+                                                    ["CLSID"] = "{44EE8698-89F9-48EE-AF36-5FD31896A82D}",
+                                                }, -- end of [1]
+                                                [2] = 
+                                                {
+                                                    ["CLSID"] = "{CBC29BFE-3D24-4C64-B81D-941239D12249}",
+                                                }, -- end of [2]
+                                                [3] = 
+                                                {
+                                                    ["CLSID"] = "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+                                                }, -- end of [3]
+                                                [4] = 
+                                                {
+                                                    ["CLSID"] = "{F789E86A-EE2E-4E6B-B81E-D5E5F903B6ED}",
+                                                }, -- end of [4]
+                                                [5] = 
+                                                {
+                                                    ["CLSID"] = "{E92CBFE5-C153-11d8-9897-000476191836}",
+                                                }, -- end of [5]
+                                                [6] = 
+                                                {
+                                                    ["CLSID"] = "{B1EF6B0E-3D91-4047-A7A5-A99E7D8B4A8B}",
+                                                }, -- end of [6]
+                                                [7] = 
+                                                {
+                                                    ["CLSID"] = "{E92CBFE5-C153-11d8-9897-000476191836}",
+                                                }, -- end of [7]
+                                                [8] = 
+                                                {
+                                                    ["CLSID"] = "{F789E86A-EE2E-4E6B-B81E-D5E5F903B6ED}",
+                                                }, -- end of [8]
+                                                [9] = 
+                                                {
+                                                    ["CLSID"] = "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+                                                }, -- end of [9]
+                                                [10] = 
+                                                {
+                                                    ["CLSID"] = "{CBC29BFE-3D24-4C64-B81D-941239D12249}",
+                                                }, -- end of [10]
+                                                [11] = 
+                                                {
+                                                    ["CLSID"] = "{44EE8698-89F9-48EE-AF36-5FD31896A82C}",
+                                                }, -- end of [11]
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = "3790",
+                                            ["flare"] = 128,
+                                            ["chaff"] = 128,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["y"] = 242787.984375,
+                                        ["heading"] = 1.4005085528535,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 1,
+                                            [2] = 1,
+                                            [3] = 1,
+                                            ["name"] = "Enfield11",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "030",
+                                    }, -- end of [1]
+                                    [2] = 
+                                    {
+                                        ["alt"] = 43,
+                                        ["hardpoint_racks"] = true,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "taw 200th fighting anuras",
+                                        ["skill"] = "Excellent",
+                                        ["parking"] = "27",
+                                        ["speed"] = 138.88888888889,
+                                        ["type"] = "Su-25T",
+                                        ["unitId"] = 58,
+                                        ["psi"] = -1.4005085528535,
+                                        ["parking_id"] = "23",
+                                        ["x"] = -5253.1147460938,
+                                        ["name"] = "DictKey_UnitName_293",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                                [1] = 
+                                                {
+                                                    ["CLSID"] = "{44EE8698-89F9-48EE-AF36-5FD31896A82D}",
+                                                }, -- end of [1]
+                                                [2] = 
+                                                {
+                                                    ["CLSID"] = "{CBC29BFE-3D24-4C64-B81D-941239D12249}",
+                                                }, -- end of [2]
+                                                [3] = 
+                                                {
+                                                    ["CLSID"] = "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+                                                }, -- end of [3]
+                                                [4] = 
+                                                {
+                                                    ["CLSID"] = "{F789E86A-EE2E-4E6B-B81E-D5E5F903B6ED}",
+                                                }, -- end of [4]
+                                                [5] = 
+                                                {
+                                                    ["CLSID"] = "{E92CBFE5-C153-11d8-9897-000476191836}",
+                                                }, -- end of [5]
+                                                [6] = 
+                                                {
+                                                    ["CLSID"] = "{B1EF6B0E-3D91-4047-A7A5-A99E7D8B4A8B}",
+                                                }, -- end of [6]
+                                                [7] = 
+                                                {
+                                                    ["CLSID"] = "{E92CBFE5-C153-11d8-9897-000476191836}",
+                                                }, -- end of [7]
+                                                [8] = 
+                                                {
+                                                    ["CLSID"] = "{F789E86A-EE2E-4E6B-B81E-D5E5F903B6ED}",
+                                                }, -- end of [8]
+                                                [9] = 
+                                                {
+                                                    ["CLSID"] = "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+                                                }, -- end of [9]
+                                                [10] = 
+                                                {
+                                                    ["CLSID"] = "{CBC29BFE-3D24-4C64-B81D-941239D12249}",
+                                                }, -- end of [10]
+                                                [11] = 
+                                                {
+                                                    ["CLSID"] = "{44EE8698-89F9-48EE-AF36-5FD31896A82C}",
+                                                }, -- end of [11]
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = "3790",
+                                            ["flare"] = 128,
+                                            ["chaff"] = 128,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["y"] = 242774.59375,
+                                        ["heading"] = 1.4005085528535,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 1,
+                                            [2] = 1,
+                                            [3] = 2,
+                                            ["name"] = "Enfield12",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "030",
+                                    }, -- end of [2]
+                                    [3] = 
+                                    {
+                                        ["alt"] = 43,
+                                        ["hardpoint_racks"] = true,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "taw 200th fighting anuras",
+                                        ["skill"] = "Excellent",
+                                        ["parking"] = "26",
+                                        ["speed"] = 138.88888888889,
+                                        ["type"] = "Su-25T",
+                                        ["unitId"] = 59,
+                                        ["psi"] = -1.4005085528535,
+                                        ["parking_id"] = "22",
+                                        ["x"] = -5268.0561523438,
+                                        ["name"] = "DictKey_UnitName_294",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                                [1] = 
+                                                {
+                                                    ["CLSID"] = "{44EE8698-89F9-48EE-AF36-5FD31896A82D}",
+                                                }, -- end of [1]
+                                                [2] = 
+                                                {
+                                                    ["CLSID"] = "{CBC29BFE-3D24-4C64-B81D-941239D12249}",
+                                                }, -- end of [2]
+                                                [3] = 
+                                                {
+                                                    ["CLSID"] = "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+                                                }, -- end of [3]
+                                                [4] = 
+                                                {
+                                                    ["CLSID"] = "{F789E86A-EE2E-4E6B-B81E-D5E5F903B6ED}",
+                                                }, -- end of [4]
+                                                [5] = 
+                                                {
+                                                    ["CLSID"] = "{E92CBFE5-C153-11d8-9897-000476191836}",
+                                                }, -- end of [5]
+                                                [6] = 
+                                                {
+                                                    ["CLSID"] = "{B1EF6B0E-3D91-4047-A7A5-A99E7D8B4A8B}",
+                                                }, -- end of [6]
+                                                [7] = 
+                                                {
+                                                    ["CLSID"] = "{E92CBFE5-C153-11d8-9897-000476191836}",
+                                                }, -- end of [7]
+                                                [8] = 
+                                                {
+                                                    ["CLSID"] = "{F789E86A-EE2E-4E6B-B81E-D5E5F903B6ED}",
+                                                }, -- end of [8]
+                                                [9] = 
+                                                {
+                                                    ["CLSID"] = "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+                                                }, -- end of [9]
+                                                [10] = 
+                                                {
+                                                    ["CLSID"] = "{CBC29BFE-3D24-4C64-B81D-941239D12249}",
+                                                }, -- end of [10]
+                                                [11] = 
+                                                {
+                                                    ["CLSID"] = "{44EE8698-89F9-48EE-AF36-5FD31896A82C}",
+                                                }, -- end of [11]
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = "3790",
+                                            ["flare"] = 128,
+                                            ["chaff"] = 128,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["y"] = 242761.203125,
+                                        ["heading"] = 1.4005085528535,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 1,
+                                            [2] = 1,
+                                            [3] = 3,
+                                            ["name"] = "Enfield13",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "031",
+                                    }, -- end of [3]
+                                    [4] = 
+                                    {
+                                        ["alt"] = 43,
+                                        ["hardpoint_racks"] = true,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "taw 200th fighting anuras",
+                                        ["skill"] = "Excellent",
+                                        ["parking"] = "25",
+                                        ["speed"] = 138.88888888889,
+                                        ["type"] = "Su-25T",
+                                        ["unitId"] = 60,
+                                        ["psi"] = -1.4005085528535,
+                                        ["parking_id"] = "21",
+                                        ["x"] = -5282.7329101563,
+                                        ["name"] = "DictKey_UnitName_295",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                                [1] = 
+                                                {
+                                                    ["CLSID"] = "{44EE8698-89F9-48EE-AF36-5FD31896A82D}",
+                                                }, -- end of [1]
+                                                [2] = 
+                                                {
+                                                    ["CLSID"] = "{CBC29BFE-3D24-4C64-B81D-941239D12249}",
+                                                }, -- end of [2]
+                                                [3] = 
+                                                {
+                                                    ["CLSID"] = "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+                                                }, -- end of [3]
+                                                [4] = 
+                                                {
+                                                    ["CLSID"] = "{F789E86A-EE2E-4E6B-B81E-D5E5F903B6ED}",
+                                                }, -- end of [4]
+                                                [5] = 
+                                                {
+                                                    ["CLSID"] = "{E92CBFE5-C153-11d8-9897-000476191836}",
+                                                }, -- end of [5]
+                                                [6] = 
+                                                {
+                                                    ["CLSID"] = "{B1EF6B0E-3D91-4047-A7A5-A99E7D8B4A8B}",
+                                                }, -- end of [6]
+                                                [7] = 
+                                                {
+                                                    ["CLSID"] = "{E92CBFE5-C153-11d8-9897-000476191836}",
+                                                }, -- end of [7]
+                                                [8] = 
+                                                {
+                                                    ["CLSID"] = "{F789E86A-EE2E-4E6B-B81E-D5E5F903B6ED}",
+                                                }, -- end of [8]
+                                                [9] = 
+                                                {
+                                                    ["CLSID"] = "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+                                                }, -- end of [9]
+                                                [10] = 
+                                                {
+                                                    ["CLSID"] = "{CBC29BFE-3D24-4C64-B81D-941239D12249}",
+                                                }, -- end of [10]
+                                                [11] = 
+                                                {
+                                                    ["CLSID"] = "{44EE8698-89F9-48EE-AF36-5FD31896A82C}",
+                                                }, -- end of [11]
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = "3790",
+                                            ["flare"] = 128,
+                                            ["chaff"] = 128,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["y"] = 242747.71875,
+                                        ["heading"] = 1.4005085528535,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 1,
+                                            [2] = 1,
+                                            [3] = 4,
+                                            ["name"] = "Enfield14",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "010",
+                                    }, -- end of [4]
+                                }, -- end of ["units"]
+                                ["y"] = 242787.984375,
+                                ["x"] = -5238.2578125,
+                                ["name"] = "DictKey_GroupName_278",
+                                ["communication"] = true,
+                                ["start_time"] = 0,
+                                ["uncontrollable"] = false,
+                                ["frequency"] = 124,
+                            }, -- end of [1]
+                        }, -- end of ["group"]
+                    }, -- end of ["plane"]
+                }, -- end of [2]
+            }, -- end of ["country"]
+        }, -- end of ["blue"]
+        ["neutrals"] = 
+        {
+            ["bullseye"] = 
+            {
+                ["y"] = 0,
+                ["x"] = 0,
+            }, -- end of ["bullseye"]
+            ["nav_points"] = 
+            {
+            }, -- end of ["nav_points"]
+            ["name"] = "neutrals",
+            ["country"] = 
+            {
+            }, -- end of ["country"]
+        }, -- end of ["neutrals"]
+        ["red"] = 
+        {
+            ["bullseye"] = 
+            {
+                ["y"] = 371700,
+                ["x"] = 11557,
+            }, -- end of ["bullseye"]
+            ["nav_points"] = 
+            {
+            }, -- end of ["nav_points"]
+            ["name"] = "red",
+            ["country"] = 
+            {
+                [1] = 
+                {
+                    ["id"] = 81,
+                    ["vehicle"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["route"] = 
+                                {
+                                    ["spans"] = 
+                                    {
+                                        [2] = 
+                                        {
+                                            [27] = 
+                                            {
+                                                ["y"] = 308152.11788896,
+                                                ["x"] = -17235.235208066,
+                                            }, -- end of [27]
+                                            [2] = 
+                                            {
+                                                ["y"] = 314082.21748534,
+                                                ["x"] = -17682.01264984,
+                                            }, -- end of [2]
+                                            [38] = 
+                                            {
+                                                ["y"] = 307105.34237705,
+                                                ["x"] = -16863.206283764,
+                                            }, -- end of [38]
+                                            [3] = 
+                                            {
+                                                ["y"] = 314080.41139123,
+                                                ["x"] = -17686.640025682,
+                                            }, -- end of [3]
+                                            [54] = 
+                                            {
+                                                ["y"] = 305469.77553826,
+                                                ["x"] = -16667.169560974,
+                                            }, -- end of [54]
+                                            [4] = 
+                                            {
+                                                ["y"] = 314076.88388866,
+                                                ["x"] = -17690.104924916,
+                                            }, -- end of [4]
+                                            [5] = 
+                                            {
+                                                ["y"] = 314072.04447044,
+                                                ["x"] = -17691.104854038,
+                                            }, -- end of [5]
+                                            [6] = 
+                                            {
+                                                ["y"] = 314067.03207183,
+                                                ["x"] = -17691.105644713,
+                                            }, -- end of [6]
+                                            [7] = 
+                                            {
+                                                ["y"] = 313972.09703021,
+                                                ["x"] = -17688.459629177,
+                                            }, -- end of [7]
+                                            [8] = 
+                                            {
+                                                ["y"] = 313937.15195692,
+                                                ["x"] = -17690.360770536,
+                                            }, -- end of [8]
+                                            [10] = 
+                                            {
+                                                ["y"] = 313518.04643511,
+                                                ["x"] = -17716.203737951,
+                                            }, -- end of [10]
+                                            [12] = 
+                                            {
+                                                ["y"] = 311902.56830499,
+                                                ["x"] = -17541.63121094,
+                                            }, -- end of [12]
+                                            [14] = 
+                                            {
+                                                ["y"] = 310156.9646925,
+                                                ["x"] = -17282.445912204,
+                                            }, -- end of [14]
+                                            [16] = 
+                                            {
+                                                ["y"] = 309967.04731874,
+                                                ["x"] = -17282.620184449,
+                                            }, -- end of [16]
+                                            [20] = 
+                                            {
+                                                ["y"] = 308798.54812594,
+                                                ["x"] = -17270.740603697,
+                                            }, -- end of [20]
+                                            [24] = 
+                                            {
+                                                ["y"] = 308469.15818596,
+                                                ["x"] = -17276.50916049,
+                                            }, -- end of [24]
+                                            [28] = 
+                                            {
+                                                ["y"] = 307453.35224414,
+                                                ["x"] = -17024.015315467,
+                                            }, -- end of [28]
+                                            [32] = 
+                                            {
+                                                ["y"] = 307361.47068494,
+                                                ["x"] = -16985.061797495,
+                                            }, -- end of [32]
+                                            [40] = 
+                                            {
+                                                ["y"] = 307060.78545174,
+                                                ["x"] = -16857.082112988,
+                                            }, -- end of [40]
+                                            [48] = 
+                                            {
+                                                ["y"] = 305822.0446226,
+                                                ["x"] = -16691.133741134,
+                                            }, -- end of [48]
+                                            [56] = 
+                                            {
+                                                ["y"] = 305389.44821629,
+                                                ["x"] = -16639.487692577,
+                                            }, -- end of [56]
+                                            [63] = 
+                                            {
+                                                ["y"] = 304732.38692702,
+                                                ["x"] = -16344.719678938,
+                                            }, -- end of [63]
+                                            [62] = 
+                                            {
+                                                ["y"] = 304749.04206035,
+                                                ["x"] = -16347.555920599,
+                                            }, -- end of [62]
+                                            [55] = 
+                                            {
+                                                ["y"] = 305431.62459724,
+                                                ["x"] = -16655.164805308,
+                                            }, -- end of [55]
+                                            [33] = 
+                                            {
+                                                ["y"] = 307204.23696522,
+                                                ["x"] = -16897.481012558,
+                                            }, -- end of [33]
+                                            [41] = 
+                                            {
+                                                ["y"] = 306985.89764466,
+                                                ["x"] = -16853.103527674,
+                                            }, -- end of [41]
+                                            [49] = 
+                                            {
+                                                ["y"] = 305657.15661616,
+                                                ["x"] = -16695.39709434,
+                                            }, -- end of [49]
+                                            [57] = 
+                                            {
+                                                ["y"] = 305325.12706289,
+                                                ["x"] = -16611.886314588,
+                                            }, -- end of [57]
+                                            [17] = 
+                                            {
+                                                ["y"] = 309617.70798036,
+                                                ["x"] = -17303.496459417,
+                                            }, -- end of [17]
+                                            [21] = 
+                                            {
+                                                ["y"] = 308578.92269762,
+                                                ["x"] = -17282.996696566,
+                                            }, -- end of [21]
+                                            [25] = 
+                                            {
+                                                ["y"] = 308230.56210694,
+                                                ["x"] = -17250.64585809,
+                                            }, -- end of [25]
+                                            [29] = 
+                                            {
+                                                ["y"] = 307420.25560556,
+                                                ["x"] = -17012.640260837,
+                                            }, -- end of [29]
+                                            [34] = 
+                                            {
+                                                ["y"] = 307181.58576346,
+                                                ["x"] = -16886.908181775,
+                                            }, -- end of [34]
+                                            [42] = 
+                                            {
+                                                ["y"] = 306766.12916247,
+                                                ["x"] = -16843.652769553,
+                                            }, -- end of [42]
+                                            [50] = 
+                                            {
+                                                ["y"] = 305617.21304572,
+                                                ["x"] = -16693.3455387,
+                                            }, -- end of [50]
+                                            [58] = 
+                                            {
+                                                ["y"] = 304825.78603833,
+                                                ["x"] = -16369.746825326,
+                                            }, -- end of [58]
+                                            [61] = 
+                                            {
+                                                ["y"] = 304763.72272544,
+                                                ["x"] = -16350.626411739,
+                                            }, -- end of [61]
+                                            [35] = 
+                                            {
+                                                ["y"] = 307163.024421,
+                                                ["x"] = -16879.467879149,
+                                            }, -- end of [35]
+                                            [51] = 
+                                            {
+                                                ["y"] = 305572.4659237,
+                                                ["x"] = -16688.625805379,
+                                            }, -- end of [51]
+                                            [59] = 
+                                            {
+                                                ["y"] = 304806.98901289,
+                                                ["x"] = -16362.919448442,
+                                            }, -- end of [59]
+                                            [9] = 
+                                            {
+                                                ["y"] = 313533.03966943,
+                                                ["x"] = -17716.533796725,
+                                            }, -- end of [9]
+                                            [11] = 
+                                            {
+                                                ["y"] = 313423.50036038,
+                                                ["x"] = -17706.974361307,
+                                            }, -- end of [11]
+                                            [13] = 
+                                            {
+                                                ["y"] = 310236.71547234,
+                                                ["x"] = -17288.653903473,
+                                            }, -- end of [13]
+                                            [15] = 
+                                            {
+                                                ["y"] = 310077.00731381,
+                                                ["x"] = -17280.08756863,
+                                            }, -- end of [15]
+                                            [18] = 
+                                            {
+                                                ["y"] = 309602.71979548,
+                                                ["x"] = -17302.944638057,
+                                            }, -- end of [18]
+                                            [22] = 
+                                            {
+                                                ["y"] = 308543.9672182,
+                                                ["x"] = -17281.310376477,
+                                            }, -- end of [22]
+                                            [26] = 
+                                            {
+                                                ["y"] = 308186.1681344,
+                                                ["x"] = -17243.320009408,
+                                            }, -- end of [26]
+                                            [30] = 
+                                            {
+                                                ["y"] = 307401.70513394,
+                                                ["x"] = -17005.170567874,
+                                            }, -- end of [30]
+                                            [36] = 
+                                            {
+                                                ["y"] = 307144.10772336,
+                                                ["x"] = -16872.981160966,
+                                            }, -- end of [36]
+                                            [44] = 
+                                            {
+                                                ["y"] = 306139.46882937,
+                                                ["x"] = -16779.20703034,
+                                            }, -- end of [44]
+                                            [52] = 
+                                            {
+                                                ["y"] = 305537.90273419,
+                                                ["x"] = -16683.138209435,
+                                            }, -- end of [52]
+                                            [60] = 
+                                            {
+                                                ["y"] = 304787.92563906,
+                                                ["x"] = -16356.880108936,
+                                            }, -- end of [60]
+                                            [47] = 
+                                            {
+                                                ["y"] = 305827.04444464,
+                                                ["x"] = -16691.127090824,
+                                            }, -- end of [47]
+                                            [46] = 
+                                            {
+                                                ["y"] = 305846.94081621,
+                                                ["x"] = -16693.115003801,
+                                            }, -- end of [46]
+                                            [39] = 
+                                            {
+                                                ["y"] = 307085.62916995,
+                                                ["x"] = -16859.84547975,
+                                            }, -- end of [39]
+                                            [43] = 
+                                            {
+                                                ["y"] = 306149.31441838,
+                                                ["x"] = -16780.949327439,
+                                            }, -- end of [43]
+                                            [37] = 
+                                            {
+                                                ["y"] = 307124.86272558,
+                                                ["x"] = -16867.547090535,
+                                            }, -- end of [37]
+                                            [45] = 
+                                            {
+                                                ["y"] = 306129.74241979,
+                                                ["x"] = -16776.888784646,
+                                            }, -- end of [45]
+                                            [53] = 
+                                            {
+                                                ["y"] = 305503.64919593,
+                                                ["x"] = -16675.964107898,
+                                            }, -- end of [53]
+                                            [1] = 
+                                            {
+                                                ["y"] = 314084.39086447,
+                                                ["x"] = -17652.098199164,
+                                            }, -- end of [1]
+                                            [19] = 
+                                            {
+                                                ["y"] = 308838.53496955,
+                                                ["x"] = -17269.889996409,
+                                            }, -- end of [19]
+                                            [23] = 
+                                            {
+                                                ["y"] = 308489.14091514,
+                                                ["x"] = -17277.113936711,
+                                            }, -- end of [23]
+                                            [31] = 
+                                            {
+                                                ["y"] = 307383.57272423,
+                                                ["x"] = -16996.736963129,
+                                            }, -- end of [31]
+                                        }, -- end of [2]
+                                        [3] = 
+                                        {
+                                            [31] = 
+                                            {
+                                                ["y"] = 302597.86707203,
+                                                ["x"] = -15675.315388172,
+                                            }, -- end of [31]
+                                            [2] = 
+                                            {
+                                                ["y"] = 304052.69841354,
+                                                ["x"] = -16260.018895707,
+                                            }, -- end of [2]
+                                            [8] = 
+                                            {
+                                                ["y"] = 303917.09189256,
+                                                ["x"] = -16210.428853754,
+                                            }, -- end of [8]
+                                            [32] = 
+                                            {
+                                                ["y"] = 302588.57302196,
+                                                ["x"] = -15671.627494818,
+                                            }, -- end of [32]
+                                            [33] = 
+                                            {
+                                                ["y"] = 302579.46914437,
+                                                ["x"] = -15667.492268166,
+                                            }, -- end of [33]
+                                            [34] = 
+                                            {
+                                                ["y"] = 302570.57812099,
+                                                ["x"] = -15662.916857303,
+                                            }, -- end of [34]
+                                            [35] = 
+                                            {
+                                                ["y"] = 302561.93382536,
+                                                ["x"] = -15657.892060683,
+                                            }, -- end of [35]
+                                            [9] = 
+                                            {
+                                                ["y"] = 303891.33860075,
+                                                ["x"] = -16195.04819306,
+                                            }, -- end of [9]
+                                            [36] = 
+                                            {
+                                                ["y"] = 302553.56712688,
+                                                ["x"] = -15652.418598436,
+                                            }, -- end of [36]
+                                            [37] = 
+                                            {
+                                                ["y"] = 302541.46270524,
+                                                ["x"] = -15643.561431253,
+                                            }, -- end of [37]
+                                            [38] = 
+                                            {
+                                                ["y"] = 302533.75071863,
+                                                ["x"] = -15637.198019796,
+                                            }, -- end of [38]
+                                            [39] = 
+                                            {
+                                                ["y"] = 302522.83661369,
+                                                ["x"] = -15626.912291914,
+                                            }, -- end of [39]
+                                            [10] = 
+                                            {
+                                                ["y"] = 303833.29540713,
+                                                ["x"] = -16155.932025305,
+                                            }, -- end of [10]
+                                            [40] = 
+                                            {
+                                                ["y"] = 302512.57680758,
+                                                ["x"] = -15615.972509058,
+                                            }, -- end of [40]
+                                            [41] = 
+                                            {
+                                                ["y"] = 302499.7173538,
+                                                ["x"] = -15600.65776166,
+                                            }, -- end of [41]
+                                            [42] = 
+                                            {
+                                                ["y"] = 302478.65485868,
+                                                ["x"] = -15572.709049071,
+                                            }, -- end of [42]
+                                            [43] = 
+                                            {
+                                                ["y"] = 302292.63856309,
+                                                ["x"] = -15300.180991644,
+                                            }, -- end of [43]
+                                            [11] = 
+                                            {
+                                                ["y"] = 303242.70661264,
+                                                ["x"] = -15735.490266373,
+                                            }, -- end of [11]
+                                            [44] = 
+                                            {
+                                                ["y"] = 302289.32564329,
+                                                ["x"] = -15296.437013838,
+                                            }, -- end of [44]
+                                            [45] = 
+                                            {
+                                                ["y"] = 302285.7160497,
+                                                ["x"] = -15292.980420614,
+                                            }, -- end of [45]
+                                            [46] = 
+                                            {
+                                                ["y"] = 302281.68794605,
+                                                ["x"] = -15290.027071096,
+                                            }, -- end of [46]
+                                            [3] = 
+                                            {
+                                                ["y"] = 304028.30236036,
+                                                ["x"] = -16254.567727998,
+                                            }, -- end of [3]
+                                            [12] = 
+                                            {
+                                                ["y"] = 303216.97803025,
+                                                ["x"] = -15720.067412549,
+                                            }, -- end of [12]
+                                            [48] = 
+                                            {
+                                                ["y"] = 302272.49618286,
+                                                ["x"] = -15286.174532153,
+                                            }, -- end of [48]
+                                            [49] = 
+                                            {
+                                                ["y"] = 302267.64651702,
+                                                ["x"] = -15284.959433555,
+                                            }, -- end of [49]
+                                            [50] = 
+                                            {
+                                                ["y"] = 302141.07283832,
+                                                ["x"] = -15255.464859102,
+                                            }, -- end of [50]
+                                            [51] = 
+                                            {
+                                                ["y"] = 302083.83245085,
+                                                ["x"] = -15237.499380982,
+                                            }, -- end of [51]
+                                            [13] = 
+                                            {
+                                                ["y"] = 303194.88235027,
+                                                ["x"] = -15708.379367868,
+                                            }, -- end of [13]
+                                            [52] = 
+                                            {
+                                                ["y"] = 302032.27974865,
+                                                ["x"] = -15218.348941394,
+                                            }, -- end of [52]
+                                            [53] = 
+                                            {
+                                                ["y"] = 300176.60817555,
+                                                ["x"] = -14433.477024477,
+                                            }, -- end of [53]
+                                            [54] = 
+                                            {
+                                                ["y"] = 300162.21401082,
+                                                ["x"] = -14429.264846356,
+                                            }, -- end of [54]
+                                            [55] = 
+                                            {
+                                                ["y"] = 299211.28073949,
+                                                ["x"] = -14192.892499908,
+                                            }, -- end of [55]
+                                            [14] = 
+                                            {
+                                                ["y"] = 303176.67489565,
+                                                ["x"] = -15700.111057126,
+                                            }, -- end of [14]
+                                            [56] = 
+                                            {
+                                                ["y"] = 299168.79464291,
+                                                ["x"] = -14178.078985625,
+                                            }, -- end of [56]
+                                            [57] = 
+                                            {
+                                                ["y"] = 298824.05354404,
+                                                ["x"] = -14043.752225693,
+                                            }, -- end of [57]
+                                            [58] = 
+                                            {
+                                                ["y"] = 298814.41203351,
+                                                ["x"] = -14041.105063624,
+                                            }, -- end of [58]
+                                            [59] = 
+                                            {
+                                                ["y"] = 298794.83624889,
+                                                ["x"] = -14037.016932005,
+                                            }, -- end of [59]
+                                            [15] = 
+                                            {
+                                                ["y"] = 303153.38680343,
+                                                ["x"] = -15691.02945069,
+                                            }, -- end of [15]
+                                            [60] = 
+                                            {
+                                                ["y"] = 298391.51621945,
+                                                ["x"] = -13963.397564813,
+                                            }, -- end of [60]
+                                            [61] = 
+                                            {
+                                                ["y"] = 298381.97397363,
+                                                ["x"] = -13960.423627751,
+                                            }, -- end of [61]
+                                            [62] = 
+                                            {
+                                                ["y"] = 298377.35854307,
+                                                ["x"] = -13958.502897019,
+                                            }, -- end of [62]
+                                            [1] = 
+                                            {
+                                                ["y"] = 304732.37529213,
+                                                ["x"] = -16344.717888159,
+                                            }, -- end of [1]
+                                            [4] = 
+                                            {
+                                                ["y"] = 304004.23878718,
+                                                ["x"] = -16247.798616156,
+                                            }, -- end of [4]
+                                            [16] = 
+                                            {
+                                                ["y"] = 303134.34323672,
+                                                ["x"] = -15684.927510925,
+                                            }, -- end of [16]
+                                            [64] = 
+                                            {
+                                                ["y"] = 298359.74233869,
+                                                ["x"] = -13949.049685628,
+                                            }, -- end of [64]
+                                            [65] = 
+                                            {
+                                                ["y"] = 298157.84538146,
+                                                ["x"] = -13828.814575059,
+                                            }, -- end of [65]
+                                            [66] = 
+                                            {
+                                                ["y"] = 298112.2580801,
+                                                ["x"] = -13798.054325258,
+                                            }, -- end of [66]
+                                            [17] = 
+                                            {
+                                                ["y"] = 303114.99204905,
+                                                ["x"] = -15679.884112753,
+                                            }, -- end of [17]
+                                            [68] = 
+                                            {
+                                                ["y"] = 297635.0122904,
+                                                ["x"] = -13460.658841139,
+                                            }, -- end of [68]
+                                            [69] = 
+                                            {
+                                                ["y"] = 297453.56260961,
+                                                ["x"] = -13356.999767659,
+                                            }, -- end of [69]
+                                            [18] = 
+                                            {
+                                                ["y"] = 303095.39726269,
+                                                ["x"] = -15675.890697367,
+                                            }, -- end of [18]
+                                            [19] = 
+                                            {
+                                                ["y"] = 303075.6149933,
+                                                ["x"] = -15672.964780738,
+                                            }, -- end of [19]
+                                            [5] = 
+                                            {
+                                                ["y"] = 303980.55652102,
+                                                ["x"] = -16239.801565213,
+                                            }, -- end of [5]
+                                            [20] = 
+                                            {
+                                                ["y"] = 303055.70571979,
+                                                ["x"] = -15671.083404186,
+                                            }, -- end of [20]
+                                            [21] = 
+                                            {
+                                                ["y"] = 303030.73206325,
+                                                ["x"] = -15669.996459233,
+                                            }, -- end of [21]
+                                            [22] = 
+                                            {
+                                                ["y"] = 302995.73618471,
+                                                ["x"] = -15670.233858452,
+                                            }, -- end of [22]
+                                            [23] = 
+                                            {
+                                                ["y"] = 302865.9856477,
+                                                ["x"] = -15678.103404295,
+                                            }, -- end of [23]
+                                            [6] = 
+                                            {
+                                                ["y"] = 303957.37892066,
+                                                ["x"] = -16230.440495974,
+                                            }, -- end of [6]
+                                            [24] = 
+                                            {
+                                                ["y"] = 302706.33918898,
+                                                ["x"] = -15688.521010408,
+                                            }, -- end of [24]
+                                            [25] = 
+                                            {
+                                                ["y"] = 302676.34288682,
+                                                ["x"] = -15688.709001776,
+                                            }, -- end of [25]
+                                            [26] = 
+                                            {
+                                                ["y"] = 302656.36988907,
+                                                ["x"] = -15687.724575175,
+                                            }, -- end of [26]
+                                            [27] = 
+                                            {
+                                                ["y"] = 302641.45848678,
+                                                ["x"] = -15686.117678209,
+                                            }, -- end of [27]
+                                            [7] = 
+                                            {
+                                                ["y"] = 303934.76830955,
+                                                ["x"] = -16219.78077018,
+                                            }, -- end of [7]
+                                            [28] = 
+                                            {
+                                                ["y"] = 302626.6777848,
+                                                ["x"] = -15683.578063582,
+                                            }, -- end of [28]
+                                            [29] = 
+                                            {
+                                                ["y"] = 302616.94141336,
+                                                ["x"] = -15681.302437472,
+                                            }, -- end of [29]
+                                            [67] = 
+                                            {
+                                                ["y"] = 297737.87866422,
+                                                ["x"] = -13522.426327419,
+                                            }, -- end of [67]
+                                            [30] = 
+                                            {
+                                                ["y"] = 302607.33034964,
+                                                ["x"] = -15678.544489394,
+                                            }, -- end of [30]
+                                            [63] = 
+                                            {
+                                                ["y"] = 298372.85914969,
+                                                ["x"] = -13956.323334913,
+                                            }, -- end of [63]
+                                            [47] = 
+                                            {
+                                                ["y"] = 302277.23016958,
+                                                ["x"] = -15287.775516804,
+                                            }, -- end of [47]
+                                        }, -- end of [3]
+                                        [1] = 
+                                        {
+                                            [1] = 
+                                            {
+                                                ["y"] = 318895.60633597,
+                                                ["x"] = -10763.972690712,
+                                            }, -- end of [1]
+                                            [2] = 
+                                            {
+                                                ["y"] = 314085.72426534,
+                                                ["x"] = -17652.163623652,
+                                            }, -- end of [2]
+                                        }, -- end of [1]
+                                        [4] = 
+                                        {
+                                            [31] = 
+                                            {
+                                                ["y"] = 297562.13660755,
+                                                ["x"] = -12670.554562341,
+                                            }, -- end of [31]
+                                            [2] = 
+                                            {
+                                                ["y"] = 297227.72484785,
+                                                ["x"] = -13228.107936779,
+                                            }, -- end of [2]
+                                            [8] = 
+                                            {
+                                                ["y"] = 297250.47942462,
+                                                ["x"] = -13166.611497408,
+                                            }, -- end of [8]
+                                            [32] = 
+                                            {
+                                                ["y"] = 297569.16788625,
+                                                ["x"] = -12663.445948616,
+                                            }, -- end of [32]
+                                            [33] = 
+                                            {
+                                                ["y"] = 297575.75691477,
+                                                ["x"] = -12655.925843693,
+                                            }, -- end of [33]
+                                            [34] = 
+                                            {
+                                                ["y"] = 297581.87462637,
+                                                ["x"] = -12648.017370723,
+                                            }, -- end of [34]
+                                            [35] = 
+                                            {
+                                                ["y"] = 297587.52012427,
+                                                ["x"] = -12639.765020606,
+                                            }, -- end of [35]
+                                            [9] = 
+                                            {
+                                                ["y"] = 297257.87782174,
+                                                ["x"] = -13148.033778928,
+                                            }, -- end of [9]
+                                            [36] = 
+                                            {
+                                                ["y"] = 297592.7105464,
+                                                ["x"] = -12631.21887158,
+                                            }, -- end of [36]
+                                            [37] = 
+                                            {
+                                                ["y"] = 297599.71306338,
+                                                ["x"] = -12617.956874046,
+                                            }, -- end of [37]
+                                            [38] = 
+                                            {
+                                                ["y"] = 297605.90119042,
+                                                ["x"] = -12604.2947938,
+                                            }, -- end of [38]
+                                            [39] = 
+                                            {
+                                                ["y"] = 297613.14715922,
+                                                ["x"] = -12585.65611005,
+                                            }, -- end of [39]
+                                            [10] = 
+                                            {
+                                                ["y"] = 297265.58276596,
+                                                ["x"] = -13124.253162169,
+                                            }, -- end of [10]
+                                            [40] = 
+                                            {
+                                                ["y"] = 297622.51912282,
+                                                ["x"] = -12557.160893071,
+                                            }, -- end of [40]
+                                            [41] = 
+                                            {
+                                                ["y"] = 297640.97692495,
+                                                ["x"] = -12489.645015498,
+                                            }, -- end of [41]
+                                            [42] = 
+                                            {
+                                                ["y"] = 298086.43732738,
+                                                ["x"] = -10591.299767699,
+                                            }, -- end of [42]
+                                            [43] = 
+                                            {
+                                                ["y"] = 298099.04093574,
+                                                ["x"] = -10553.342126871,
+                                            }, -- end of [43]
+                                            [11] = 
+                                            {
+                                                ["y"] = 297367.37897048,
+                                                ["x"] = -12789.531666448,
+                                            }, -- end of [11]
+                                            [44] = 
+                                            {
+                                                ["y"] = 298109.9918882,
+                                                ["x"] = -10525.416257065,
+                                            }, -- end of [44]
+                                            [45] = 
+                                            {
+                                                ["y"] = 298120.43780187,
+                                                ["x"] = -10502.707242252,
+                                            }, -- end of [45]
+                                            [46] = 
+                                            {
+                                                ["y"] = 298129.85574684,
+                                                ["x"] = -10485.066656901,
+                                            }, -- end of [46]
+                                            [3] = 
+                                            {
+                                                ["y"] = 297223.90305013,
+                                                ["x"] = -13224.948018609,
+                                            }, -- end of [3]
+                                            [12] = 
+                                            {
+                                                ["y"] = 297371.70276167,
+                                                ["x"] = -12770.007078943,
+                                            }, -- end of [12]
+                                            [48] = 
+                                            {
+                                                ["y"] = 298146.05791573,
+                                                ["x"] = -10459.834467988,
+                                            }, -- end of [48]
+                                            [49] = 
+                                            {
+                                                ["y"] = 298155.18821858,
+                                                ["x"] = -10447.936055334,
+                                            }, -- end of [49]
+                                            [50] = 
+                                            {
+                                                ["y"] = 298165.03825744,
+                                                ["x"] = -10436.626904196,
+                                            }, -- end of [50]
+                                            [51] = 
+                                            {
+                                                ["y"] = 298175.5852439,
+                                                ["x"] = -10425.964440678,
+                                            }, -- end of [51]
+                                            [13] = 
+                                            {
+                                                ["y"] = 297381.20502846,
+                                                ["x"] = -12715.846793145,
+                                            }, -- end of [13]
+                                            [52] = 
+                                            {
+                                                ["y"] = 298186.77209669,
+                                                ["x"] = -10415.975251081,
+                                            }, -- end of [52]
+                                            [53] = 
+                                            {
+                                                ["y"] = 298198.54406135,
+                                                ["x"] = -10406.682627322,
+                                            }, -- end of [53]
+                                            [54] = 
+                                            {
+                                                ["y"] = 298210.85000548,
+                                                ["x"] = -10398.109539315,
+                                            }, -- end of [54]
+                                            [55] = 
+                                            {
+                                                ["y"] = 298223.64176655,
+                                                ["x"] = -10390.279752597,
+                                            }, -- end of [55]
+                                            [14] = 
+                                            {
+                                                ["y"] = 297384.91917522,
+                                                ["x"] = -12712.884457776,
+                                            }, -- end of [14]
+                                            [56] = 
+                                            {
+                                                ["y"] = 298236.87338183,
+                                                ["x"] = -10383.218668564,
+                                            }, -- end of [56]
+                                            [57] = 
+                                            {
+                                                ["y"] = 298250.50011774,
+                                                ["x"] = -10376.95400373,
+                                            }, -- end of [57]
+                                            [58] = 
+                                            {
+                                                ["y"] = 298264.47734302,
+                                                ["x"] = -10371.516261038,
+                                            }, -- end of [58]
+                                            [59] = 
+                                            {
+                                                ["y"] = 298278.75938596,
+                                                ["x"] = -10366.938930973,
+                                            }, -- end of [59]
+                                            [15] = 
+                                            {
+                                                ["y"] = 297389.9188416,
+                                                ["x"] = -12712.670540267,
+                                            }, -- end of [15]
+                                            [60] = 
+                                            {
+                                                ["y"] = 298293.29830495,
+                                                ["x"] = -10363.258467104,
+                                            }, -- end of [60]
+                                            [61] = 
+                                            {
+                                                ["y"] = 298308.04131238,
+                                                ["x"] = -10360.507980993,
+                                            }, -- end of [61]
+                                            [62] = 
+                                            {
+                                                ["y"] = 298322.92538792,
+                                                ["x"] = -10358.663996751,
+                                            }, -- end of [62]
+                                            [1] = 
+                                            {
+                                                ["y"] = 297453.56254166,
+                                                ["x"] = -13356.999727199,
+                                            }, -- end of [1]
+                                            [4] = 
+                                            {
+                                                ["y"] = 297223.50602207,
+                                                ["x"] = -13220.170886251,
+                                            }, -- end of [4]
+                                            [16] = 
+                                            {
+                                                ["y"] = 297394.8867206,
+                                                ["x"] = -12713.214401313,
+                                            }, -- end of [16]
+                                            [64] = 
+                                            {
+                                                ["y"] = 298352.88676911,
+                                                ["x"] = -10357.426844042,
+                                            }, -- end of [64]
+                                            [65] = 
+                                            {
+                                                ["y"] = 298372.87024884,
+                                                ["x"] = -10358.171022379,
+                                            }, -- end of [65]
+                                            [66] = 
+                                            {
+                                                ["y"] = 298392.78880682,
+                                                ["x"] = -10359.953119319,
+                                            }, -- end of [66]
+                                            [17] = 
+                                            {
+                                                ["y"] = 297429.63979105,
+                                                ["x"] = -12717.307009336,
+                                            }, -- end of [17]
+                                            [68] = 
+                                            {
+                                                ["y"] = 298451.94486377,
+                                                ["x"] = -10369.841222732,
+                                            }, -- end of [68]
+                                            [69] = 
+                                            {
+                                                ["y"] = 298519.9924981,
+                                                ["x"] = -10386.231288632,
+                                            }, -- end of [69]
+                                            [70] = 
+                                            {
+                                                ["y"] = 298977.47459336,
+                                                ["x"] = -10522.504202977,
+                                            }, -- end of [70]
+                                            [18] = 
+                                            {
+                                                ["y"] = 297444.62424374,
+                                                ["x"] = -12717.932738527,
+                                            }, -- end of [18]
+                                            [19] = 
+                                            {
+                                                ["y"] = 297454.62179234,
+                                                ["x"] = -12717.76760962,
+                                            }, -- end of [19]
+                                            [5] = 
+                                            {
+                                                ["y"] = 297225.3961642,
+                                                ["x"] = -13215.530254091,
+                                            }, -- end of [5]
+                                            [20] = 
+                                            {
+                                                ["y"] = 297464.59446781,
+                                                ["x"] = -12717.048568396,
+                                            }, -- end of [20]
+                                            [21] = 
+                                            {
+                                                ["y"] = 297474.5031683,
+                                                ["x"] = -12715.713602913,
+                                            }, -- end of [21]
+                                            [22] = 
+                                            {
+                                                ["y"] = 297484.3001055,
+                                                ["x"] = -12713.718732419,
+                                            }, -- end of [22]
+                                            [23] = 
+                                            {
+                                                ["y"] = 297493.93732714,
+                                                ["x"] = -12711.05669778,
+                                            }, -- end of [23]
+                                            [6] = 
+                                            {
+                                                ["y"] = 297230.13878568,
+                                                ["x"] = -13206.728244498,
+                                            }, -- end of [6]
+                                            [24] = 
+                                            {
+                                                ["y"] = 297503.38234254,
+                                                ["x"] = -12707.776635943,
+                                            }, -- end of [24]
+                                            [25] = 
+                                            {
+                                                ["y"] = 297512.61017474,
+                                                ["x"] = -12703.927238902,
+                                            }, -- end of [25]
+                                            [26] = 
+                                            {
+                                                ["y"] = 297521.59843354,
+                                                ["x"] = -12699.547268265,
+                                            }, -- end of [26]
+                                            [27] = 
+                                            {
+                                                ["y"] = 297530.32541381,
+                                                ["x"] = -12694.667321027,
+                                            }, -- end of [27]
+                                            [7] = 
+                                            {
+                                                ["y"] = 297244.20693705,
+                                                ["x"] = -13180.235007466,
+                                            }, -- end of [7]
+                                            [28] = 
+                                            {
+                                                ["y"] = 297538.76865508,
+                                                ["x"] = -12689.311346235,
+                                            }, -- end of [28]
+                                            [29] = 
+                                            {
+                                                ["y"] = 297546.90374891,
+                                                ["x"] = -12683.498003404,
+                                            }, -- end of [29]
+                                            [67] = 
+                                            {
+                                                ["y"] = 298417.55161089,
+                                                ["x"] = -10363.371679189,
+                                            }, -- end of [67]
+                                            [30] = 
+                                            {
+                                                ["y"] = 297554.70339711,
+                                                ["x"] = -12677.241872215,
+                                            }, -- end of [30]
+                                            [63] = 
+                                            {
+                                                ["y"] = 298337.89011713,
+                                                ["x"] = -10357.66176944,
+                                            }, -- end of [63]
+                                            [47] = 
+                                            {
+                                                ["y"] = 298137.62633131,
+                                                ["x"] = -10472.238180144,
+                                            }, -- end of [47]
+                                        }, -- end of [4]
+                                        [5] = 
+                                        {
+                                            [1] = 
+                                            {
+                                                ["y"] = 298981.96248738,
+                                                ["x"] = -10507.570452038,
+                                            }, -- end of [1]
+                                            [2] = 
+                                            {
+                                                ["y"] = 298981.96248738,
+                                                ["x"] = -10507.570452038,
+                                            }, -- end of [2]
+                                        }, -- end of [5]
+                                    }, -- end of ["spans"]
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 18,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = 318895.60633597,
+                                            ["x"] = -10763.972690712,
+                                            ["name"] = "DictKey_WptName_298",
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 5.5555555555556,
+                                            ["action"] = "Off Road",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                        [2] = 
+                                        {
+                                            ["alt"] = 44,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 1512.2371942023,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = 314085.72426534,
+                                            ["x"] = -17652.163623652,
+                                            ["name"] = "DictKey_WptName_320",
+                                            ["ETA_locked"] = false,
+                                            ["speed"] = 5.5555555555556,
+                                            ["action"] = "On Road",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [2]
+                                        [3] = 
+                                        {
+                                            ["alt"] = 48,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 3235.9118726638,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = 304732.05538241,
+                                            ["x"] = -16346.199846052,
+                                            ["name"] = "DictKey_WptName_321",
+                                            ["ETA_locked"] = false,
+                                            ["speed"] = 5.5555555555556,
+                                            ["action"] = "On Road",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [3]
+                                        [4] = 
+                                        {
+                                            ["alt"] = 29,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 4687.281211827,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = 297452.72109816,
+                                            ["x"] = -13358.080601506,
+                                            ["name"] = "DictKey_WptName_322",
+                                            ["ETA_locked"] = false,
+                                            ["speed"] = 5.5555555555556,
+                                            ["action"] = "On Road",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [4]
+                                        [5] = 
+                                        {
+                                            ["alt"] = 14,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 5267.0609062477,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = 298977.90488916,
+                                            ["x"] = -10521.067300987,
+                                            ["name"] = "DictKey_WptName_324",
+                                            ["ETA_locked"] = false,
+                                            ["speed"] = 5.5555555555556,
+                                            ["action"] = "On Road",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [5]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 26,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "BMP-3",
+                                        ["unitId"] = 61,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -10763.972690712,
+                                        ["name"] = "DictKey_UnitName_297",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [1]
+                                    [2] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "BMP-3",
+                                        ["unitId"] = 62,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -10803.972690712,
+                                        ["name"] = "DictKey_UnitName_299",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [2]
+                                    [3] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "BMP-3",
+                                        ["unitId"] = 63,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -10843.972690712,
+                                        ["name"] = "DictKey_UnitName_300",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [3]
+                                    [4] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "BMP-3",
+                                        ["unitId"] = 64,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -10883.972690712,
+                                        ["name"] = "DictKey_UnitName_301",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [4]
+                                    [5] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "BMP-3",
+                                        ["unitId"] = 65,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -10923.972690712,
+                                        ["name"] = "DictKey_UnitName_302",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [5]
+                                    [6] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "BMP-3",
+                                        ["unitId"] = 66,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -10963.972690712,
+                                        ["name"] = "DictKey_UnitName_303",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [6]
+                                    [7] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "BMP-3",
+                                        ["unitId"] = 67,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -11003.972690712,
+                                        ["name"] = "DictKey_UnitName_304",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [7]
+                                    [8] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "T-90",
+                                        ["unitId"] = 68,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -11043.972690712,
+                                        ["name"] = "DictKey_UnitName_305",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [8]
+                                    [9] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "T-90",
+                                        ["unitId"] = 69,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -11083.972690712,
+                                        ["name"] = "DictKey_UnitName_306",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [9]
+                                    [10] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "T-90",
+                                        ["unitId"] = 70,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -11123.972690712,
+                                        ["name"] = "DictKey_UnitName_307",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [10]
+                                    [11] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "T-90",
+                                        ["unitId"] = 71,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -11163.972690712,
+                                        ["name"] = "DictKey_UnitName_308",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [11]
+                                    [12] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "T-90",
+                                        ["unitId"] = 72,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -11203.972690712,
+                                        ["name"] = "DictKey_UnitName_309",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [12]
+                                    [13] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "T-90",
+                                        ["unitId"] = 73,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -11243.972690712,
+                                        ["name"] = "DictKey_UnitName_310",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [13]
+                                    [14] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "T-90",
+                                        ["unitId"] = 74,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -11283.972690712,
+                                        ["name"] = "DictKey_UnitName_311",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [14]
+                                    [15] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "T-90",
+                                        ["unitId"] = 75,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -11323.972690712,
+                                        ["name"] = "DictKey_UnitName_312",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [15]
+                                    [16] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "T-90",
+                                        ["unitId"] = 76,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -11363.972690712,
+                                        ["name"] = "DictKey_UnitName_313",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [16]
+                                    [17] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "T-90",
+                                        ["unitId"] = 77,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -11403.972690712,
+                                        ["name"] = "DictKey_UnitName_314",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [17]
+                                    [18] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "T-90",
+                                        ["unitId"] = 78,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -11443.972690712,
+                                        ["name"] = "DictKey_UnitName_315",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [18]
+                                    [19] = 
+                                    {
+                                        ["transportable"] = 
+                                        {
+                                            ["randomTransportable"] = false,
+                                        }, -- end of ["transportable"]
+                                        ["skill"] = "Average",
+                                        ["type"] = "T-90",
+                                        ["unitId"] = 79,
+                                        ["y"] = 318895.60633597,
+                                        ["x"] = -11483.972690712,
+                                        ["name"] = "DictKey_UnitName_316",
+                                        ["heading"] = -2.5320223646659,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [19]
+                                }, -- end of ["units"]
+                                ["y"] = 318895.60633597,
+                                ["x"] = -10763.972690712,
+                                ["name"] = "DictKey_GroupName_296",
+                                ["start_time"] = 0,
+                            }, -- end of [1]
+                        }, -- end of ["group"]
+                    }, -- end of ["vehicle"]
+                    ["name"] = "CJTF Red",
+                }, -- end of [1]
+            }, -- end of ["country"]
+        }, -- end of ["red"]
+    }, -- end of ["coalition"]
+    ["sortie"] = "DictKey_sortie_5",
+    ["version"] = 18,
+    ["trigrules"] = 
+    {
+        [1] = 
+        {
+            ["rules"] = 
+            {
+            }, -- end of ["rules"]
+            ["eventlist"] = "",
+            ["actions"] = 
+            {
+                [1] = 
+                {
+                    ["file"] = "ResKey_Action_19",
+                    ["meters"] = 1000,
+                    ["predicate"] = "a_do_script_file",
+                    ["zone"] = "",
+                }, -- end of [1]
+                [2] = 
+                {
+                    ["meters"] = 1000,
+                    ["file"] = "ResKey_Action_327",
+                    ["predicate"] = "a_do_script_file",
+                    ["zone"] = 1994,
+                }, -- end of [2]
+            }, -- end of ["actions"]
+            ["predicate"] = "triggerStart",
+            ["comment"] = "LoadMoose",
+        }, -- end of [1]
+    }, -- end of ["trigrules"]
+    ["currentKey"] = 31735,
+    ["start_time"] = 63900,
+    ["forcedOptions"] = 
+    {
+    }, -- end of ["forcedOptions"]
+    ["failures"] = 
+    {
+    }, -- end of ["failures"]
+} -- end of mission
