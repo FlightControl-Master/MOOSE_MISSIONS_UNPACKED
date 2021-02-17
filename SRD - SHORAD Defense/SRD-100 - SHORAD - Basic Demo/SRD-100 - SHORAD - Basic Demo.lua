@@ -3,15 +3,15 @@
 -------------------------------------------------------------------------
 -- Documentation
 -- 
--- SHORAD: https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/tbd
+-- SHORAD: https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Functional.Shorad.html
 -- 
 -- Note: As of Feb/21, SHORAD is WIP. Needs a recent build of Moose.lua => 2.5.3
 -- 
 -------------------------------------------------------------------------
--- Observe a set of Red SAM sites being attacked by Blue SEAD and Helicopters.
--- Red SHORAD systems will be switched on for 10 minutes to defend against
+-- Observe a set of Blue SAM sites being attacked by Red SEAD and Helicopters.
+-- Blue SHORAD systems will be switched on for 10 minutes to defend against
 -- HARMSs and AGMs.
--- Red SAMs will try to evade HARMs fired at them.
+-- Blue SAMs will try to evade HARMs fired at them.
 -------------------------------------------------------------------------
 -- Date: 16 Feb 2021
 -------------------------------------------------------------------------
