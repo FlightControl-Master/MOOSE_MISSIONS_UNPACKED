@@ -14,8 +14,7 @@ mission =
         ["actions"] = 
         {
             [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_120\")); mission.trig.func[1]=nil;",
-            [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_121\")); mission.trig.func[2]=nil;",
-            [3] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_151\")); mission.trig.func[3]=nil;",
+            [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_151\")); mission.trig.func[2]=nil;",
         }, -- end of ["actions"]
         ["events"] = 
         {
@@ -27,19 +26,16 @@ mission =
         {
             [1] = "if mission.trig.conditions[1]() then mission.trig.actions[1]() end",
             [2] = "if mission.trig.conditions[2]() then mission.trig.actions[2]() end",
-            [3] = "if mission.trig.conditions[3]() then mission.trig.actions[3]() end",
         }, -- end of ["func"]
         ["flag"] = 
         {
             [1] = true,
             [2] = true,
-            [3] = true,
         }, -- end of ["flag"]
         ["conditions"] = 
         {
             [1] = "return(c_time_after(5) )",
-            [2] = "return(c_time_after(7) )",
-            [3] = "return(c_time_after(8) )",
+            [2] = "return(c_time_after(8) )",
         }, -- end of ["conditions"]
         ["customStartup"] = 
         {
@@ -205,9 +201,9 @@ mission =
     }, -- end of ["triggers"]
     ["map"] = 
     {
-        ["centerY"] = 492818.6770243,
-        ["zoom"] = 930083.82597405,
-        ["centerX"] = 12230.162448504,
+        ["centerY"] = 461432.04591805,
+        ["zoom"] = 227010.12432201,
+        ["centerX"] = -22093.005765828,
     }, -- end of ["map"]
     ["coalitions"] = 
     {
@@ -286,6 +282,7 @@ mission =
             [39] = 49,
             [40] = 48,
             [41] = 67,
+            [42] = 83,
         }, -- end of ["neutrals"]
         ["red"] = 
         {
@@ -2973,31 +2970,6 @@ mission =
             {
                 [1] = 
                 {
-                    ["seconds"] = 7,
-                    ["predicate"] = "c_time_after",
-                    ["zone"] = "",
-                }, -- end of [1]
-            }, -- end of ["rules"]
-            ["comment"] = "Mantis",
-            ["eventlist"] = "",
-            ["actions"] = 
-            {
-                [1] = 
-                {
-                    ["meters"] = 1000,
-                    ["file"] = "ResKey_Action_121",
-                    ["predicate"] = "a_do_script_file",
-                    ["zone"] = "",
-                }, -- end of [1]
-            }, -- end of ["actions"]
-            ["predicate"] = "triggerOnce",
-        }, -- end of [2]
-        [3] = 
-        {
-            ["rules"] = 
-            {
-                [1] = 
-                {
                     ["seconds"] = 8,
                     ["predicate"] = "c_time_after",
                     ["zone"] = "",
@@ -3016,9 +2988,9 @@ mission =
                 }, -- end of [1]
             }, -- end of ["actions"]
             ["comment"] = "Demo",
-        }, -- end of [3]
+        }, -- end of [2]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 6873,
+    ["currentKey"] = 7609,
     ["start_time"] = 28800,
     ["forcedOptions"] = 
     {

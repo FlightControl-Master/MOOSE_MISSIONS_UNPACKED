@@ -61,9 +61,11 @@ awacstimer = TIMER:New(destroy,"Red EWR Awacs")
 nhqtimer = TIMER:New(createhq)
 newrtimer = TIMER:New(createewr)
 
+-- slow down
 hqtimer:Start(300) -- 5 min
 ewrtimer:Start(360) -- 6 min
 awacstimer:Start(420) -- 7 min
 
+--speed up
 nhqtimer:Start(600) -- 10 min
 newrtimer:Start(660) -- 11 min
