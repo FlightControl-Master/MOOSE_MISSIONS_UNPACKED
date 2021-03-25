@@ -10,14 +10,14 @@ options =
         ["f11_free_camera"] = true,
         ["F2_view_effects"] = 1,
         ["f10_awacs"] = true,
-        ["Coordinate_Display"] = "Lat Long Decimal",
+        ["Coordinate_Display"] = "Precise Lat Long",
         ["accidental_failures"] = false,
         ["autologin"] = true,
         ["force_feedback_enabled"] = false,
-        ["collect_stat"] = true,
+        ["collect_stat"] = false,
         ["chat_window_at_start"] = true,
         ["synchronize_controls"] = true,
-        ["show_pilot_body"] = true,
+        ["show_pilot_body"] = false,
     }, -- end of ["miscellaneous"]
     ["difficulty"] = 
     {
@@ -35,14 +35,14 @@ options =
         ["permitCrash"] = false,
         ["immortal"] = false,
         ["easyCommunication"] = true,
-        ["cockpitVisualRM"] = false,
+        ["cockpitVisualRM"] = true,
         ["easyFlight"] = false,
         ["reports"] = true,
         ["hideStick"] = true,
         ["radio"] = false,
         ["userMarks"] = true,
         ["unrestrictedSATNAV"] = false,
-        ["units"] = "metric",
+        ["units"] = "imperial",
         ["spectatorExternalViews"] = true,
         ["tips"] = false,
         ["userSnapView"] = true,
@@ -85,7 +85,7 @@ options =
         ["MSAA"] = 1,
         ["SSAA"] = 0,
         ["height"] = 1440,
-        ["forestDistanceFactor"] = 0.6,
+        ["forestDistanceFactor"] = 0.55,
         ["cockpitGI"] = 0,
         ["terrainTextures"] = "max",
         ["multiMonitorSetup"] = "1camera",
@@ -110,20 +110,34 @@ options =
     }, -- end of ["graphics"]
     ["plugins"] = 
     {
-        ["Su-25T"] = 
+        ["CA"] = 
         {
-            ["CPLocalList"] = "default",
-        }, -- end of ["Su-25T"]
+            ["kompass_options"] = 1,
+            ["ground_target_info"] = true,
+            ["ground_aim_helper"] = true,
+            ["ground_platform_shake"] = true,
+            ["ground_automatic"] = true,
+        }, -- end of ["CA"]
         ["M-2000C"] = 
         {
             ["UNI_ALIGNED"] = true,
             ["AOA_SHOWINHUD"] = true,
             ["TDC_GatePPI"] = 5,
             ["TDC_PPI_is_Polar"] = false,
-            ["CPLocalList"] = "English",
             ["UNI_NODRIFT"] = false,
+            ["CPLocalList"] = "English",
+            ["FUEL_DETOT_AUTO"] = true,
             ["TDC_KBPrecission"] = 100,
         }, -- end of ["M-2000C"]
+        ["F-16C"] = 
+        {
+            ["abDetent"] = 0,
+            ["canopyReflections"] = 0,
+            ["hmdEye"] = 1,
+            ["CPLocalList"] = "default",
+            ["canopyTint"] = 1,
+            ["mfdReflections"] = 0,
+        }, -- end of ["F-16C"]
         ["CaptoGlove"] = 
         {
             ["shoulderJointZ_Right"] = 23,
@@ -173,44 +187,50 @@ options =
             ["F18RealisticTDC"] = true,
             ["mfdReflections"] = 0,
         }, -- end of ["F/A-18C"]
+        ["Hercules"] = 
+        {
+            ["Steam_Version"] = false,
+            ["NWS_Coupled_Separate_Input_Device"] = false,
+            ["TAWS_Enabled"] = true,
+        }, -- end of ["Hercules"]
+        ["A-4E-C"] = 
+        {
+            ["catapultLaunchMode"] = 0,
+            ["trimSpeed"] = 0,
+            ["catapultAlignmentCheck"] = true,
+        }, -- end of ["A-4E-C"]
         ["Tacview"] = 
         {
-            ["tacviewProfilingPeriod"] = 600,
-            ["tacviewHostTelemetryPassword"] = "",
+            ["tacviewDebugMode"] = 0,
             ["tacviewRemoteControlPort"] = "42675",
-            ["tacviewDataRecordingEnabled"] = true,
+            ["tacviewFlightDataRecordingEnabled"] = true,
+            ["tacviewRealTimeTelemetryPassword"] = "",
+            ["tacviewSinglePlayerFlights"] = 2,
             ["tacviewTerrainExport"] = 0,
-            ["tacviewRecordClientsSessionsEnabled"] = false,
-            ["tacviewPlaybackDelay"] = 600,
-            ["tacviewBookmarkShortcut"] = 0,
-            ["tacviewCompressionLevel"] = 1,
-            ["tacviewDebugModeEnabled"] = false,
-            ["tacviewRealTimeTelemetryPort"] = "42674",
+            ["tacviewAutoDiscardFlights"] = 10,
             ["tacviewRemoteControlPassword"] = "",
+            ["tacviewRealTimeTelemetryPort"] = "42674",
+            ["tacviewBookmarkShortcut"] = 0,
+            ["tacviewRemoteControlEnabled"] = false,
+            ["tacviewMultiplayerFlightsAsHost"] = 2,
+            ["tacviewRealTimeTelemetryEnabled"] = true,
+            ["tacviewMultiplayerFlightsAsClient"] = 2,
+            ["tacviewModuleEnabled"] = true,
         }, -- end of ["Tacview"]
-        ["F-16C"] = 
+        ["Su-25T"] = 
         {
-            ["abDetent"] = 0,
-            ["canopyReflections"] = 0,
-            ["hmdEye"] = 1,
             ["CPLocalList"] = "default",
-            ["canopyTint"] = 1,
-            ["mfdReflections"] = 0,
-        }, -- end of ["F-16C"]
-        ["CA"] = 
-        {
-            ["kompass_options"] = 1,
-            ["ground_target_info"] = true,
-            ["ground_aim_helper"] = true,
-            ["ground_platform_shake"] = true,
-            ["ground_automatic"] = true,
-        }, -- end of ["CA"]
+        }, -- end of ["Su-25T"]
         ["TF-51D"] = 
         {
             ["assistance"] = 100,
             ["CPLocalList"] = "default",
             ["autoRudder"] = true,
         }, -- end of ["TF-51D"]
+        ["AH-6J"] = 
+        {
+            ["aimingMarkRemove"] = false,
+        }, -- end of ["AH-6J"]
         ["FW-190D9"] = 
         {
             ["assistance"] = 80,
@@ -219,12 +239,12 @@ options =
         }, -- end of ["FW-190D9"]
         ["F-14"] = 
         {
-            ["JESTER_HeadMenu"] = true,
+            ["JESTER_HeadMenu"] = false,
             ["FFB_TRIM"] = false,
             ["JESTER_LandingCallouts"] = true,
             ["AB_GATE"] = false,
             ["JESTER_SwitchToPSTT"] = true,
-            ["TID_A2G"] = false,
+            ["TID_A2G"] = true,
             ["WEAP_OFF_GUN"] = false,
             ["WEAP_UP_SPPH"] = false,
             ["JESTER_Camera"] = true,
@@ -233,7 +253,7 @@ options =
         ["SA342"] = 
         {
             ["StickRollCurve"] = 0,
-            ["VibrationRate"] = 100,
+            ["VibrationRate"] = 25,
             ["PreloadWaypoints"] = true,
             ["CPLocalList"] = "default",
             ["EngineBreak"] = true,
@@ -243,7 +263,7 @@ options =
             ["StickPitchCurve"] = 0,
             ["CPLocalListMG"] = "default",
             ["CPLocalListL"] = "default",
-            ["ControlsDisplayLocation"] = 0,
+            ["ControlsDisplayLocation"] = 3,
             ["CPLocalListM"] = "default",
         }, -- end of ["SA342"]
         ["DCS-SRS"] = 
@@ -257,17 +277,17 @@ options =
     ["format"] = 1,
     ["sound"] = 
     {
-        ["main_output"] = "{0.0.0.00000000}.{701a1408-79f6-4354-b8bd-89fa66383da8}",
+        ["main_output"] = "{0.0.0.00000000}.{396ef850-7efe-47cc-923a-a33e704a164c}",
         ["FakeAfterburner"] = true,
-        ["volume"] = 66,
+        ["volume"] = 75,
         ["headphones_on_external_views"] = true,
         ["subtitles"] = true,
         ["world"] = 100,
         ["hear_in_helmet"] = true,
         ["radioSpeech"] = true,
-        ["hp_output"] = "{0.0.0.00000000}.{701a1408-79f6-4354-b8bd-89fa66383da8}",
+        ["hp_output"] = "{0.0.0.00000000}.{396ef850-7efe-47cc-923a-a33e704a164c}",
         ["cockpit"] = 100,
-        ["voice_chat_output"] = "0:{0.0.0.00000000}.{701a1408-79f6-4354-b8bd-89fa66383da8}",
+        ["voice_chat_output"] = "4:{0.0.0.00000000}.{396ef850-7efe-47cc-923a-a33e704a164c}",
         ["voice_chat"] = false,
         ["microphone_use"] = 2,
         ["GBreathEffect"] = true,
@@ -275,7 +295,7 @@ options =
         ["play_audio_while_minimized"] = false,
         ["headphones"] = 85,
         ["music"] = 0,
-        ["voice_chat_input"] = "0:{0.0.1.00000000}.{473212fb-01d5-4951-a507-edb12a70e29e}",
+        ["voice_chat_input"] = "2:{0.0.1.00000000}.{48aff594-01d2-4535-8c78-60bbbfafc82a}",
         ["gui"] = 100,
     }, -- end of ["sound"]
     ["views"] = 

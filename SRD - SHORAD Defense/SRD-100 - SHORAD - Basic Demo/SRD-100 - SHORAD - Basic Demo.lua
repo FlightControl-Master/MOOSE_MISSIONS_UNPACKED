@@ -8,12 +8,12 @@
 -- Note: As of Feb/21, SHORAD is WIP. Needs a recent build of Moose.lua => 2.5.3
 -- 
 -------------------------------------------------------------------------
--- Observe a set of Blue SAM sites being attacked by Red SEAD and Helicopters.
--- Blue SHORAD systems will be switched on for 10 minutes to defend against
+-- Observe a set of Red SAM sites being attacked by Blue SEAD and Helicopters.
+-- Red SHORAD systems will be switched on for 10 minutes to defend against
 -- HARMSs and AGMs.
--- Blue SAMs will try to evade HARMs fired at them.
+-- Red SAMs will try to evade HARMs fired at them.
 -------------------------------------------------------------------------
--- Date: 16 Feb 2021
+-- Date: 16 Feb 2021, Updated 25 Mar 2021
 -------------------------------------------------------------------------
 
 local SamSet = SET_GROUP:New():FilterPrefixes("Blue SAM"):FilterCoalitions("blue"):FilterStart()

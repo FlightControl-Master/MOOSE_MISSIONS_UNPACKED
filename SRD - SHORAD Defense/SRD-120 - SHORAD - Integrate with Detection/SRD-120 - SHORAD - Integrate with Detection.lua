@@ -12,7 +12,7 @@
 -- Red SHORAD systems will be switched on for 10 minutes to defend against
 -- HARMSs and AGMs.
 -------------------------------------------------------------------------
--- Date: 17 Feb 2021
+-- Date: 17 Feb 2021, Updated 25 Mar 2021
 -------------------------------------------------------------------------
 
 local SamSet = SET_GROUP:New():FilterPrefixes("Red HVT"):FilterCoalitions("red"):FilterStart()
