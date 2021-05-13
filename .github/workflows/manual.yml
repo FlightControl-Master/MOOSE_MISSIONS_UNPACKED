@@ -31,22 +31,20 @@ jobs:
     # Runs a single command using the runners shell
     - name: Set environment variables
       run: |
-        Get-ChildItem Env:
-    - name: Use environment variables
-      run: |
-        echo "GIT_SHA=${GIT_SHA}"
-        echo "GIT_BRANCH=${GIT_BRANCH}"
-    - name: build demo missions
+         $branch = $env:GITHUB_REF -replace "refs/heads/",""
+         echo "Branch is $branch"
+    - name: pull missions
       run: | 
-        echo "Hello ${{ github.event.inputs.name }}"
-        echo "Build for ${GIT_BRANCH}"
+        echo "Build for $branch"
         git config --global user.email "post@tniedermeier.com" 
         git config --global user.name "Applevangelist"
         dir
         git config --system core.longpaths true
-        git clone --depth 1 -b ${GIT_BRANCH} https://github.com/FlightControl-Master/MOOSE_MISSIONS_UNPACKED.git .\MOOSE_MISSIONS_UNPACKED
-        git clone --depth 1 -b ${GIT_BRANCH} https://github.com/FlightControl-Master/MOOSE_MISSIONS.git .\MOOSE_MISSIONS
-        git clone --depth 1 -b ${GIT_BRANCH} https://github.com/FlightControl-Master/MOOSE_INCLUDE.git .\MOOSE_INCLUDE
+        git clone --depth 1 -b "$branch" https://github.com/FlightControl-Master/MOOSE_MISSIONS_UNPACKED.git .\MOOSE_MISSIONS_UNPACKED
+        git clone --depth 1 -b "$branch" https://github.com/FlightControl-Master/MOOSE_MISSIONS.git .\MOOSE_MISSIONS
+        git clone --depth 1 -b "$branch" https://github.com/FlightControl-Master/MOOSE_INCLUDE.git .\MOOSE_INCLUDE
+    - name: Replace Moose.lua
+      run: |
         dir
         # will use the somewhat compressed Moose_.lua - so rename it
         Remove-Item -Path '.\MOOSE_INCLUDE\Moose_Include_Static\Moose.lua'
@@ -61,6 +59,8 @@ jobs:
           Copy-Item -Path .\Moose_Include\Moose_Include_Static\Moose.lua -Destination $file
         }
 
+    - name: Pack Missions
+      run: |
         # pack missions using pack.ps1 in the directories
         $curDir = Get-Location
         Write-Host "Current Working Directory: $curDir"
@@ -70,7 +70,9 @@ jobs:
           . $file
         }
         cd $curDir
-
+    
+    - name: Move -miz files into MISSIONS
+      run: |
         # move .miz files into MOOSE_MISSIONS folder
         foreach( $file in Get-ChildItem ".\Moose_Missions_Unpacked" -Filter "*.miz" -Recurse | % { $_.FullName } )
         {
@@ -88,6 +90,8 @@ jobs:
            Move-Item -Path "$file" -Destination "$to_file" -Force #miz file
         }
 
+    - name: Copy ps1 and lua mission files
+      run: |
         # Copy ps1 and lua files
         foreach( $file in Get-ChildItem ".\Moose_Missions_Unpacked" -Exclude "Moose.lua" -Include "*.ps1","*.lua" -Recurse | % { $_.FullName } )
         {
@@ -104,6 +108,9 @@ jobs:
             }
            Copy-Item -Path "$file" -Destination "$to_file" -Force -Verbose #ps1 and lua mission file
          }
+         
+    - name: Push Changes
+      run: |
         dir
         cd .\MOOSE_MISSIONS_UNPACKED
         git add .
@@ -116,6 +123,10 @@ jobs:
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/FlightControl-Master/MOOSE_MISSIONS
         git push
         cd ..
+        
+    - name: Build done
+      run: |
+        echo "Build done for $branch"
          
         
         
