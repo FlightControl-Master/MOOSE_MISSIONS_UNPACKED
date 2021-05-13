@@ -35,6 +35,64 @@ jobs:
         git clone --depth 1 -b master https://github.com/FlightControl-Master/MOOSE_MISSIONS.git .\MOOSE_MISSIONS
         git clone --depth 1 -b master https://github.com/FlightControl-Master/MOOSE_INCLUDE.git .\MOOSE_INCLUDE
         dir
+        # will use the somewhat compressed Moose_.lua - so rename it
+        Remove-Item -Path '.\MOOSE_INCLUDE\Moose_Include_Static\Moose.lua'
+        Rename-Item -Path '.\MOOSE_INCLUDE\Moose_Include_Static\Moose_.lua' -NewName "Moose.lua"
+
+        # replace Moose.lua
+        $Exclude=@("LICENSE","README.md","\.*")
+        Get-ChildItem . -directory -exclude "$Exclude" | git rm -r $_.FullName
+        foreach( $file in Get-ChildItem ".\Moose_Missions_Unpacked" -Filter Moose.lua -Recurse | % { $_.FullName } )  
+        { 
+          Write-Host "file : $file" 
+          Copy-Item -Path .\Moose_Include\Moose_Include_Static\Moose.lua -Destination $file
+        }
+
+        # pack missions using pack.ps1 in the directories
+        $curDir = Get-Location
+        Write-Host "Current Working Directory: $curDir"
+        foreach( $file in Get-ChildItem ".\Moose_Missions_Unpacked" -Filter pack.ps1 -Recurse | % { $_.FullName } )  
+        { 
+          Write-Host "file : $file" 
+          . $file
+        }
+        cd $curDir
+
+        # move .miz files into MOOSE_MISSIONS folder
+        foreach( $file in Get-ChildItem ".\Moose_Missions_Unpacked" -Filter "*.miz" -Recurse | % { $_.FullName } )
+        {
+           #Write-Host "file : $file"
+           $to_file = $file -replace "Missions_Unpacked","Missions"
+           $to_parent = Split-Path -Path $to_dir -Parent
+           $from_parent = Split-Path -Path $file -Parent
+           Write-Host "todir : $to_file"
+           Write-Host "fromparent : $from_parent"
+           Write-Host "toparent : $to_parent"
+           If (!(test-path $to_parent))
+            {
+              md "$to_parent"
+            }
+           Move-Item -Path "$file" -Destination "$to_file" -Force #miz file
+        }
+
+        # Copy ps1 and lua files
+        foreach( $file in Get-ChildItem ".\Moose_Missions_Unpacked" -Exclude "Moose.lua" -Include "*.ps1","*.lua" -Recurse | % { $_.FullName } )
+        {
+           #Write-Host "file : $file"
+           $to_file = $file -replace "Missions_Unpacked","Missions"
+           $to_parent = Split-Path -Path $to_dir -Parent
+           $from_parent = Split-Path -Path $file -Parent
+           #Write-Host "todir : $to_file"
+           #Write-Host "fromparent : $from_parent"
+           #Write-Host "toparent : $to_parent"
+           If (!(test-path $to_parent))
+            {
+              md "$to_parent"
+            }
+           Copy-Item -Path "$file" -Destination "$to_file" -Force -Verbose #ps1 and lua mission file
+         }
+         dir
+        
         
 
 
