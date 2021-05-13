@@ -29,17 +29,25 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Runs a single command using the runners shell
+    - name: Set environment variables
+      run: |
+          echo "GIT_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
+          echo "GIT_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+    - name: Use environment variables
+      run: |
+        echo "GIT_SHA=${GIT_SHA}"
+        echo "GIT_BRANCH=${GIT_BRANCH}"
     - name: build demo missions
       run: | 
         echo "Hello ${{ github.event.inputs.name }}"
-        echo "Build for ${{ env.GITHUB_BASE_REF }}"
+        echo "Build for ${GIT_BRANCH}"
         git config --global user.email "post@tniedermeier.com" 
         git config --global user.name "Applevangelist"
         dir
         git config --system core.longpaths true
-        git clone --depth 1 -b ${{ env.GITHUB_BASE_REF }} https://github.com/FlightControl-Master/MOOSE_MISSIONS_UNPACKED.git .\MOOSE_MISSIONS_UNPACKED
-        git clone --depth 1 -b ${{ env.GITHUB_BASE_REF }} https://github.com/FlightControl-Master/MOOSE_MISSIONS.git .\MOOSE_MISSIONS
-        git clone --depth 1 -b ${{ env.GITHUB_BASE_REF }} https://github.com/FlightControl-Master/MOOSE_INCLUDE.git .\MOOSE_INCLUDE
+        git clone --depth 1 -b ${GIT_BRANCH} https://github.com/FlightControl-Master/MOOSE_MISSIONS_UNPACKED.git .\MOOSE_MISSIONS_UNPACKED
+        git clone --depth 1 -b ${GIT_BRANCH} https://github.com/FlightControl-Master/MOOSE_MISSIONS.git .\MOOSE_MISSIONS
+        git clone --depth 1 -b ${GIT_BRANCH} https://github.com/FlightControl-Master/MOOSE_INCLUDE.git .\MOOSE_INCLUDE
         dir
         # will use the somewhat compressed Moose_.lua - so rename it
         Remove-Item -Path '.\MOOSE_INCLUDE\Moose_Include_Static\Moose.lua'
