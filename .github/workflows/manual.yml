@@ -6,7 +6,7 @@ name: Build Demo Missions
 # or API.
 on:
   workflow_dispatch:
-    # Inputs the workflow accepts.
+  # Inputs the workflow accepts.
     inputs:
       name:
         # Friendly description to be shown in the UI instead of 'name'
@@ -15,6 +15,10 @@ on:
         default: 'Funky'
         # Input has to be provided for the workflow to run
         required: true
+  push:
+    branches:
+      - master
+      - develop
         
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
