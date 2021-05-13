@@ -32,7 +32,8 @@ jobs:
     - name: pull missions
       run: | 
         $branch = $env:GITHUB_REF -replace "refs/heads/",""
-        echo "Build for $branch"
+        Write-Host "Build for $branch"
+        Write-Host "Token: $env:GITHUB_TOKEN"
         git config --global user.email "post@tniedermeier.com" 
         git config --global user.name "Applevangelist"
         dir
@@ -119,12 +120,12 @@ jobs:
         cd .\MOOSE_MISSIONS_UNPACKED
         git add .
         git commit -m "MOOSE demonstration missions [skip ci]"
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/FlightControl-Master/MOOSE_MISSIONS_UNPACKED
+        git remote set-url origin https://x-access-token:"$env:GITHUB_TOKEN"@github.com/FlightControl-Master/MOOSE_MISSIONS_UNPACKED
         git push --force-with-lease
         cd ..\MOOSE_MISSIONS
         git add .
         git commit -m "MOOSE demonstration missions [skip ci]"
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/FlightControl-Master/MOOSE_MISSIONS
+        git remote set-url origin https://x-access-token:"$env:GITHUB_TOKEN"@github.com/FlightControl-Master/MOOSE_MISSIONS
         git push --force-with-lease
         cd ..
         
