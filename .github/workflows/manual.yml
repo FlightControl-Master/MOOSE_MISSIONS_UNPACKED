@@ -115,21 +115,23 @@ jobs:
          }
          
     - name: Push Changes
+      env:
+        SUPER_SECRET: ${{ secrets.APPLE_KEY }}
       run: |
         dir
         git config --global credential.helper store  
-        Add-Content "$env:USERPROFILE\.git-credentials" "https://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:x-oauth-basic@github.com`n" 
+        Add-Content "$env:USERPROFILE\.git-credentials" "https://'$env:SUPER_SECRET':x-oauth-basic@github.com`n" 
         git config --global user.email "post@tniedermeier.com" 
         git config --global user.name "Applevangelist"
         cd .\MOOSE_MISSIONS_UNPACKED
         git add .
         git commit -m "MOOSE demonstration missions [skip ci]"
-        #git remote set-url origin https://x-access-token:"$env:GITHUB_TOKEN"@github.com/FlightControl-Master/MOOSE_MISSIONS_UNPACKED
+        git remote set-url origin https://x-access-token:"$env:SUPER_SECRET"@github.com/FlightControl-Master/MOOSE_MISSIONS_UNPACKED
         git push --force-with-lease
         cd ..\MOOSE_MISSIONS
         git add .
         git commit -m "MOOSE demonstration missions [skip ci]"
-        #git remote set-url origin https://x-access-token:"$env:GITHUB_TOKEN"@github.com/FlightControl-Master/MOOSE_MISSIONS
+        git remote set-url origin https://x-access-token:"$env:SUPER_SECRET"@github.com/FlightControl-Master/MOOSE_MISSIONS
         git push --force-with-lease
         cd ..
         
