@@ -12,7 +12,7 @@ on:
         # Friendly description to be shown in the UI instead of 'name'
         description: 'Person to greet'
         # Default value if no value is explicitly provided
-        default: 'World'
+        default: 'Funky'
         # Input has to be provided for the workflow to run
         required: true
 
@@ -30,11 +30,11 @@ jobs:
       run: | 
         echo "Hello ${{ github.event.inputs.name }}"
         dir
-        git init
-        git checkout master
         git config --system core.longpaths true
         git clone --depth 1 -b master https://github.com/FlightControl-Master/MOOSE_MISSIONS_UNPACKED.git .\MOOSE_MISSIONS_UNPACKED
         git clone --depth 1 -b master https://github.com/FlightControl-Master/MOOSE_MISSIONS.git .\MOOSE_MISSIONS
         git clone --depth 1 -b master https://github.com/FlightControl-Master/MOOSE_INCLUDE.git .\MOOSE_INCLUDE
+        dir
+        
 
 
