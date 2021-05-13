@@ -18,6 +18,7 @@ on:
         
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  SUPER_SECRET: ${{ secrets.APPLE_KEY }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -115,8 +116,6 @@ jobs:
          }
          
     - name: Push Changes
-      env:
-        SUPER_SECRET: ${{ secrets.APPLE_KEY }}
       run: |
         dir
         git config --global credential.helper store  
