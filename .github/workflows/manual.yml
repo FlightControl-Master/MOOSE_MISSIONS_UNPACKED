@@ -27,19 +27,22 @@ jobs:
     steps:
     # Runs a single command using the runners shell
     - name: Checkout unpacked demo missions
-      uses: actions/checkout@v2.3.4
-      with: 
+      uses: actions/checkout@v2.3.4 
+      with:
         path: unpacked
-    -name: Checkout packed demo missions
+   #
+    - name: Checkout packed demo missions
       uses: actions/checkout@v2.3.4
       with:
         repository: FlightControl-Master/MOOSE_MISSIONS
         path: packed
-    -name: Checkout Moose Include
+  #
+    - name: Checkout Moose Include
       uses: actions/checkout@v2.3.4
       with:
         repository: FlightControl-Master/MOOSE_INCLUDE
         path: include
+      
     #build
     - name: build demo missions
       run: | 
