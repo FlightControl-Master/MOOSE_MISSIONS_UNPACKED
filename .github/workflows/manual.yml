@@ -1,6 +1,6 @@
 # This is a basic workflow that is manually triggered
 
-name: Manual workflow
+name: Build Demo Missions
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
@@ -15,11 +15,14 @@ on:
         default: 'Funky'
         # Input has to be provided for the workflow to run
         required: true
+        
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "greet"
-  greet:
+  build-demo-missions:
     # The type of runner that the job will run on
     runs-on: windows-latest
 
@@ -29,6 +32,8 @@ jobs:
     - name: build demo missions
       run: | 
         echo "Hello ${{ github.event.inputs.name }}"
+        git config --global user.email "post@tniedermeier.com" 
+        git config --global user.name "Applevangelist"
         dir
         git config --system core.longpaths true
         git clone --depth 1 -b master https://github.com/FlightControl-Master/MOOSE_MISSIONS_UNPACKED.git .\MOOSE_MISSIONS_UNPACKED
@@ -95,10 +100,12 @@ jobs:
         cd .\MOOSE_MISSIONS_UNPACKED
         git add .
         git commit -m "MOOSE demonstration missions [skip ci]"
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/MOOSE_MISSIONS_UNPACKED
         git push
         cd ..\MOOSE_MISSIONS
         git add .
         git commit -m "MOOSE demonstration missions [skip ci]"
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/MOOSE_MISSIONS
         git push
         cd ..
          
