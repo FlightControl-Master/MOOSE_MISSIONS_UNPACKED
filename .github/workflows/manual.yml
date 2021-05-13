@@ -114,12 +114,12 @@ jobs:
         git add .
         git commit -m "MOOSE demonstration missions [skip ci]"
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/FlightControl-Master/MOOSE_MISSIONS_UNPACKED
-        git push
+        git push --force-with-lease
         cd ..\MOOSE_MISSIONS
         git add .
         git commit -m "MOOSE demonstration missions [skip ci]"
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/FlightControl-Master/MOOSE_MISSIONS
-        git push
+        git push --force-with-lease
         cd ..
         
     - name: Build done
