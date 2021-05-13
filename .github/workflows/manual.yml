@@ -49,8 +49,8 @@ jobs:
         Rename-Item -Path '.\MOOSE_INCLUDE\Moose_Include_Static\Moose_.lua' -NewName "Moose.lua"
 
         # replace Moose.lua
-        $Exclude=@("LICENSE","README.md","\.*")
-        Get-ChildItem . -directory -exclude "$Exclude" | git rm -r $_.FullName
+        # $Exclude=@("LICENSE","README.md","\.*")
+        # Get-ChildItem . -directory -exclude "$Exclude" | git rm -r $_.FullName
         foreach( $file in Get-ChildItem ".\Moose_Missions_Unpacked" -Filter Moose.lua -Recurse | % { $_.FullName } )  
         { 
           Write-Host "file : $file" 
