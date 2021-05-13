@@ -34,7 +34,7 @@ jobs:
       run: | 
         $branch = $env:GITHUB_REF -replace "refs/heads/",""
         Write-Host "Build for $branch"
-        Write-Host "Token: $env:GITHUB_TOKEN"
+        #Write-Host "Token: $env:GITHUB_TOKEN"
         git config --global user.email "post@tniedermeier.com" 
         git config --global user.name "Applevangelist"
         dir
@@ -49,6 +49,7 @@ jobs:
         git checkout "$branch"
         git pull
         cd ..
+        
     - name: Replace Moose.lua
       run: |
         dir
@@ -77,7 +78,7 @@ jobs:
         }
         cd $curDir
     
-    - name: Move -miz files into MISSIONS
+    - name: Move .miz files into MISSIONS
       run: |
         # move .miz files into MOOSE_MISSIONS folder
         foreach( $file in Get-ChildItem ".\Moose_Missions_Unpacked" -Filter "*.miz" -Recurse | % { $_.FullName } )
@@ -115,7 +116,7 @@ jobs:
            Copy-Item -Path "$file" -Destination "$to_file" -Force -Verbose #ps1 and lua mission file
          }
          
-    - name: Push Changes
+    - name: Push Changes Unpacked
       run: |
         dir
         git config --global credential.helper store  
@@ -127,7 +128,16 @@ jobs:
         git commit -m "MOOSE demonstration missions [skip ci]"
         git remote set-url origin https://x-access-token:"$env:SUPER_SECRET"@github.com/FlightControl-Master/MOOSE_MISSIONS_UNPACKED
         git push --force-with-lease
-        cd ..\MOOSE_MISSIONS
+        cd ..
+
+    - name: Push Changes Packed
+      run: |
+        dir
+        git config --global credential.helper store  
+        Add-Content "$env:USERPROFILE\.git-credentials" "https://'$env:SUPER_SECRET':x-oauth-basic@github.com`n" 
+        git config --global user.email "post@tniedermeier.com" 
+        git config --global user.name "Applevangelist"
+        cd .\MOOSE_MISSIONS
         git add .
         git commit -m "MOOSE demonstration missions [skip ci]"
         git remote set-url origin https://x-access-token:"$env:SUPER_SECRET"@github.com/FlightControl-Master/MOOSE_MISSIONS
