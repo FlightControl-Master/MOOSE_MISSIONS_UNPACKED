@@ -26,28 +26,13 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Runs a single command using the runners shell
-    - name: Checkout unpacked demo missions
-      uses: actions/checkout@v2.3.4 
-      with:
-        path: unpacked
-   #
-    - name: Checkout packed demo missions
-      uses: actions/checkout@v2.3.4
-      with:
-        repository: FlightControl-Master/MOOSE_MISSIONS
-        path: packed
-  #
-    - name: Checkout Moose Include
-      uses: actions/checkout@v2.3.4
-      with:
-        repository: FlightControl-Master/MOOSE_INCLUDE
-        path: include
-      
-    #build
     - name: build demo missions
       run: | 
         echo "Hello ${{ github.event.inputs.name }}"
         dir
-        dir ..
+        git checkout master
+        git clone --depth 1 -b master https://github.com/FlightControl-Master/MOOSE_MISSIONS_UNPACKED.git .\MOOSE_MISSIONS_UNPACKED
+        git clone --depth 1 -b master https://github.com/FlightControl-Master/MOOSE_MISSIONS.git .\MOOSE_MISSIONS
+        git clone --depth 1 -b master https://github.com/FlightControl-Master/MOOSE_INCLUDE.git .\MOOSE_INCLUDE
 
 
