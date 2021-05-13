@@ -31,8 +31,7 @@ jobs:
     # Runs a single command using the runners shell
     - name: Set environment variables
       run: |
-          echo "GIT_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
-          echo "GIT_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+        Get-ChildItem Env:
     - name: Use environment variables
       run: |
         echo "GIT_SHA=${GIT_SHA}"
