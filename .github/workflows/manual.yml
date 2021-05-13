@@ -63,11 +63,11 @@ jobs:
         {
            #Write-Host "file : $file"
            $to_file = $file -replace "Missions_Unpacked","Missions"
-           $to_parent = Split-Path -Path $to_dir -Parent
+           $to_parent = Split-Path -Path $to_file -Parent
            $from_parent = Split-Path -Path $file -Parent
-           Write-Host "todir : $to_file"
-           Write-Host "fromparent : $from_parent"
-           Write-Host "toparent : $to_parent"
+           #Write-Host "todir : $to_file"
+           #Write-Host "fromparent : $from_parent"
+           #Write-Host "toparent : $to_parent"
            If (!(test-path $to_parent))
             {
               md "$to_parent"
@@ -80,7 +80,7 @@ jobs:
         {
            #Write-Host "file : $file"
            $to_file = $file -replace "Missions_Unpacked","Missions"
-           $to_parent = Split-Path -Path $to_dir -Parent
+           $to_parent = Split-Path -Path $to_file -Parent
            $from_parent = Split-Path -Path $file -Parent
            #Write-Host "todir : $to_file"
            #Write-Host "fromparent : $from_parent"
@@ -91,7 +91,17 @@ jobs:
             }
            Copy-Item -Path "$file" -Destination "$to_file" -Force -Verbose #ps1 and lua mission file
          }
-         dir
+        dir
+        cd .\MOOSE_MISSIONS_UNPACKED
+        git add .
+        git commit -m "MOOSE demonstration missions [skip ci]"
+        git push
+        cd ..\MOOSE_MISSIONS
+        git add .
+        git commit -m "MOOSE demonstration missions [skip ci]"
+        git push
+        cd ..
+         
         
         
 
