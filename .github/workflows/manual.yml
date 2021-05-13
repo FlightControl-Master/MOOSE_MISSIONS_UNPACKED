@@ -29,12 +29,9 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Runs a single command using the runners shell
-    - name: Set environment variables
-      run: |
-         $branch = $env:GITHUB_REF -replace "refs/heads/",""
-         echo "Branch is $branch"
     - name: pull missions
       run: | 
+        $branch = $env:GITHUB_REF -replace "refs/heads/",""
         echo "Build for $branch"
         git config --global user.email "post@tniedermeier.com" 
         git config --global user.name "Applevangelist"
@@ -43,6 +40,7 @@ jobs:
         git clone --depth 1 -b "$branch" https://github.com/FlightControl-Master/MOOSE_MISSIONS_UNPACKED.git .\MOOSE_MISSIONS_UNPACKED
         git clone --depth 1 -b "$branch" https://github.com/FlightControl-Master/MOOSE_MISSIONS.git .\MOOSE_MISSIONS
         git clone --depth 1 -b "$branch" https://github.com/FlightControl-Master/MOOSE_INCLUDE.git .\MOOSE_INCLUDE
+        
     - name: Replace Moose.lua
       run: |
         dir
