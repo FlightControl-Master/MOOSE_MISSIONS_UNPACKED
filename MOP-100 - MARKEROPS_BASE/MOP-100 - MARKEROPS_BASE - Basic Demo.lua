@@ -82,5 +82,5 @@ function menucalltanker()
   end
 end
 
-MenuTop = MENU_COALITION:New( coalition.side.BLUE,"Call Tanker")
+MenuTop = MENU_COALITION:New( coalition.side.BLUE,"Call A Tanker")
 MenuTanker = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Start Tanker",MenuTop,menucalltanker)
