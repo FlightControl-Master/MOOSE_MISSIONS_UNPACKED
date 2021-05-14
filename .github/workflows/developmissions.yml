@@ -1,0 +1,152 @@
+# This is a basic workflow that is manually triggered
+
+name: Build Demo Missions (develop)
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  schedule:
+    - cron: '0 7 * * 6'
+    
+  push:
+    branches:
+      - master
+      - develop
+
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'API Run'
+        required: false
+        default: 'The Octoverse'
+        
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  SUPER_SECRET: ${{ secrets.APPLE_KEY }}
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "greet"
+  build-demo-missions:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Runs a single command using the runners shell
+    - name: pull missions
+      run: | 
+        #$branch = $env:GITHUB_REF -replace "refs/heads/",""
+        $branch = "develop"
+        Write-Host "***** Build for $branch"
+        #Write-Host "Token: $env:GITHUB_TOKEN"
+        git config --global user.email "post@tniedermeier.com" 
+        git config --global user.name "Applevangelist"
+        dir
+        git config --system core.longpaths true
+        git clone --depth 1 -b "$branch" https://github.com/FlightControl-Master/MOOSE_MISSIONS_UNPACKED.git .\MOOSE_MISSIONS_UNPACKED
+        git clone --depth 1 -b "$branch" https://github.com/FlightControl-Master/MOOSE_MISSIONS.git .\MOOSE_MISSIONS
+        git clone --depth 1 -b "$branch" https://github.com/FlightControl-Master/MOOSE_INCLUDE.git .\MOOSE_INCLUDE
+        cd MOOSE_MISSIONS
+        git checkout "$branch"
+        git pull
+        cd ..\MOOSE_MISSIONS_UNPACKED
+        git checkout "$branch"
+        git pull
+        cd ..
+        
+    - name: Replace Moose.lua
+      run: |
+        dir
+        # will use the somewhat compressed Moose_.lua - so rename it
+        Remove-Item -Path '.\MOOSE_INCLUDE\Moose_Include_Static\Moose.lua'
+        Rename-Item -Path '.\MOOSE_INCLUDE\Moose_Include_Static\Moose_.lua' -NewName "Moose.lua"
+        # replace Moose.lua
+        # $Exclude=@("LICENSE","README.md","\.*")
+        # Get-ChildItem . -directory -exclude "$Exclude" | git rm -r $_.FullName
+        foreach( $file in Get-ChildItem ".\Moose_Missions_Unpacked" -Filter Moose.lua -Recurse | % { $_.FullName } )  
+        { 
+          Write-Host "file : $file" 
+          Copy-Item -Path .\Moose_Include\Moose_Include_Static\Moose.lua -Destination $file
+        }
+    - name: Pack Missions
+      run: |
+        # pack missions using pack.ps1 in the directories
+        $curDir = Get-Location
+        Write-Host "Current Working Directory: $curDir"
+        foreach( $file in Get-ChildItem ".\Moose_Missions_Unpacked" -Filter pack.ps1 -Recurse | % { $_.FullName } )  
+        { 
+          Write-Host "file : $file" 
+          . $file 2>&1
+        }
+        cd $curDir
+    
+    - name: Move .miz files into MISSIONS
+      run: |
+        # move .miz files into MOOSE_MISSIONS folder
+        foreach( $file in Get-ChildItem ".\Moose_Missions_Unpacked" -Filter "*.miz" -Recurse | % { $_.FullName } )
+        {
+           #Write-Host "file : $file"
+           $to_file = $file -replace "Missions_Unpacked","Missions"
+           $to_parent = Split-Path -Path $to_file -Parent
+           $from_parent = Split-Path -Path $file -Parent
+           #Write-Host "todir : $to_file"
+           #Write-Host "fromparent : $from_parent"
+           #Write-Host "toparent : $to_parent"
+           If (!(test-path $to_parent))
+            {
+              md "$to_parent"
+            }
+           Move-Item -Path "$file" -Destination "$to_file" -Force #miz file
+        }
+    - name: Copy ps1 and lua mission files
+      run: |
+        # Copy ps1 and lua files
+        foreach( $file in Get-ChildItem ".\Moose_Missions_Unpacked" -Exclude "Moose.lua" -Include "*.ps1","*.lua" -Recurse | % { $_.FullName } )
+        {
+           #Write-Host "file : $file"
+           $to_file = $file -replace "Missions_Unpacked","Missions"
+           $to_parent = Split-Path -Path $to_file -Parent
+           $from_parent = Split-Path -Path $file -Parent
+           #Write-Host "todir : $to_file"
+           #Write-Host "fromparent : $from_parent"
+           #Write-Host "toparent : $to_parent"
+           If (!(test-path $to_parent))
+            {
+              md "$to_parent"
+            }
+           Copy-Item -Path "$file" -Destination "$to_file" -Force  #ps1 and lua mission file
+         }
+         
+    - name: Push Changes Unpacked
+      run: |
+        dir
+        git config --global credential.helper store  
+        Add-Content "$env:USERPROFILE\.git-credentials" "https://'$env:SUPER_SECRET':x-oauth-basic@github.com`n" 
+        git config --global user.email "post@tniedermeier.com" 
+        git config --global user.name "Applevangelist"
+        cd .\MOOSE_MISSIONS_UNPACKED
+        git add .
+        git commit -m "MOOSE demonstration missions [skip ci]"
+        git remote set-url origin https://x-access-token:"$env:SUPER_SECRET"@github.com/FlightControl-Master/MOOSE_MISSIONS_UNPACKED
+        git push --force-with-lease
+        cd ..
+    - name: Push Changes Packed
+      run: |
+        dir
+        git config --global credential.helper store  
+        Add-Content "$env:USERPROFILE\.git-credentials" "https://'$env:SUPER_SECRET':x-oauth-basic@github.com`n" 
+        git config --global user.email "post@tniedermeier.com" 
+        git config --global user.name "Applevangelist"
+        cd .\MOOSE_MISSIONS
+        git add .
+        git commit -m "MOOSE demonstration missions [skip ci]"
+        git remote set-url origin https://x-access-token:"$env:SUPER_SECRET"@github.com/FlightControl-Master/MOOSE_MISSIONS
+        git push --force-with-lease
+        cd ..
+        
+    - name: Build done
+      run: |
+        # $branch = $env:GITHUB_REF -replace "refs/heads/",""
+        $branch = "develop"
+        Write-Host "*****Build done for $branch"
