@@ -7,10 +7,18 @@ name: Build Demo Missions
 on:
   schedule:
     - cron: '0 7 * * 6'
+    
   push:
     branches:
       - master
       - develop
+
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'API Run'
+        required: false
+        default: 'The Octoverse'
         
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -70,7 +78,7 @@ jobs:
         foreach( $file in Get-ChildItem ".\Moose_Missions_Unpacked" -Filter pack.ps1 -Recurse | % { $_.FullName } )  
         { 
           Write-Host "file : $file" 
-          . $file 2>%1
+          . $file 2>&1
         }
         cd $curDir
     
@@ -142,7 +150,8 @@ jobs:
         
     - name: Build done
       run: |
-        echo "Build done for $branch"
+        $branch = $env:GITHUB_REF -replace "refs/heads/",""
+        Write-Host "*****Build done for $branch"
          
         
         
