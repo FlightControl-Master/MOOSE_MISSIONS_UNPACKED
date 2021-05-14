@@ -70,7 +70,7 @@ jobs:
         foreach( $file in Get-ChildItem ".\Moose_Missions_Unpacked" -Filter pack.ps1 -Recurse | % { $_.FullName } )  
         { 
           Write-Host "file : $file" 
-          . $file
+          . $file 2>%1
         }
         cd $curDir
     
@@ -109,7 +109,7 @@ jobs:
             {
               md "$to_parent"
             }
-           Copy-Item -Path "$file" -Destination "$to_file" -Force -Verbose #ps1 and lua mission file
+           Copy-Item -Path "$file" -Destination "$to_file" -Force  #ps1 and lua mission file
          }
          
     - name: Push Changes Unpacked
