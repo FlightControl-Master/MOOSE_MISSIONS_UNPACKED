@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-05-12T07:18:31.0000000Z-1ae41319fa76bb001f8ff7d8218e5b60cb32d521 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-05-14T19:57:19.0000000Z-41b01a508d06dbf5a4ab11a260de77e7c778f246 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -7500,10 +7500,6 @@ Zone=ZONE:New(ZoneName)
 else
 self:I(string.format("Register ZONE: %s (Polygon, Quad)",ZoneName))
 Zone=ZONE_POLYGON_BASE:New(ZoneName,ZoneData.verticies)
-for i,vec2 in pairs(ZoneData.verticies)do
-local coord=COORDINATE:NewFromVec2(vec2)
-coord:MarkToAll(string.format("%s Point %d",ZoneName,i))
-end
 end
 if Zone then
 Zone.Color=color
@@ -12057,12 +12053,12 @@ Coalition=Coalition or-1
 Color=Color or{1,0,0}
 Color[4]=Alpha or 1.0
 LineType=LineType or 1
-FillColor=FillColor or Color
+FillColor=FillColor or UTILS.DeepCopy(Color)
 FillColor[4]=FillAlpha or 0.15
 local vecs={}
-table.insert(vecs,self:GetVec3())
-for _,coord in ipairs(Coordinates)do
-table.insert(vecs,coord:GetVec3())
+vecs[1]=self:GetVec3()
+for i,coord in ipairs(Coordinates)do
+vecs[i+1]=coord:GetVec3()
 end
 if#vecs<3 then
 self:E("ERROR: A free form polygon needs at least three points!")
@@ -12073,7 +12069,7 @@ trigger.action.markupToAll(7,Coalition,MarkID,vecs[1],vecs[2],vecs[3],vecs[4],Co
 elseif#vecs==5 then
 trigger.action.markupToAll(7,Coalition,MarkID,vecs[1],vecs[2],vecs[3],vecs[4],vecs[5],Color,FillColor,LineType,ReadOnly,Text or"")
 elseif#vecs==6 then
-trigger.action.markupToAll(7,Coalition,MarkID,vecs[1],vecs[2],vecs[3],vecs[4],vecs[5],vecs[6],Color,FillColor,LineType,ReadOnly,Text or"")
+trigger.action.markupToAll(7,Coalition,MarkID,vecs[1],vecs[2],vecs[3],vecs[4],vecs[5],vecs[6],Color,FillColor,LineType,Text or"")
 elseif#vecs==7 then
 trigger.action.markupToAll(7,Coalition,MarkID,vecs[1],vecs[2],vecs[3],vecs[4],vecs[5],vecs[6],vecs[7],Color,FillColor,LineType,ReadOnly,Text or"")
 elseif#vecs==8 then
