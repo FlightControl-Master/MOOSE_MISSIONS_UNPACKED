@@ -144,6 +144,7 @@ jobs:
         cd .\MOOSE_MISSIONS
         git add .
         git commit -m "MOOSE demonstration missions [skip ci]"
+        git pull
         git remote set-url origin https://x-access-token:"$env:SUPER_SECRET"@github.com/FlightControl-Master/MOOSE_MISSIONS
         git push --force-with-lease
         cd ..
