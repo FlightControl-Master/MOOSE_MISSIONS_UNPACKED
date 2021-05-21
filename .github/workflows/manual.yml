@@ -47,11 +47,13 @@ jobs:
         git clone --depth 1 -b "$branch" https://github.com/FlightControl-Master/MOOSE_MISSIONS.git .\MOOSE_MISSIONS
         git clone --depth 1 -b "$branch" https://github.com/FlightControl-Master/MOOSE_INCLUDE.git .\MOOSE_INCLUDE
         cd MOOSE_MISSIONS
-        git checkout "$branch"
+        git fetch
         git pull
+        git checkout "$branch"
         cd ..\MOOSE_MISSIONS_UNPACKED
-        git checkout "$branch"
+        git fetch
         git pull
+        git checkout "$branch"
         cd ..
         
     - name: Replace Moose.lua
@@ -144,7 +146,7 @@ jobs:
         cd .\MOOSE_MISSIONS
         git add .
         git commit -m "MOOSE demonstration missions [skip ci]"
-        git pull --rebase=merges
+        #git pull --rebase=merges
         git remote set-url origin https://x-access-token:"$env:SUPER_SECRET"@github.com/FlightControl-Master/MOOSE_MISSIONS
         git push --force-with-lease
         cd ..
