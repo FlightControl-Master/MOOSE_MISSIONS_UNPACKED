@@ -148,7 +148,7 @@ jobs:
         git commit -m "MOOSE demonstration missions [skip ci]"
         #git pull --rebase=merges
         git remote set-url origin https://x-access-token:"$env:SUPER_SECRET"@github.com/FlightControl-Master/MOOSE_MISSIONS
-        git push -f
+        git push -f origin
         cd ..
         
     - name: Build done
