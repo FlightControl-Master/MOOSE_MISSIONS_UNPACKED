@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-05-14T19:57:19.0000000Z-41b01a508d06dbf5a4ab11a260de77e7c778f246 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-05-21T10:35:32.0000000Z-47d814e409996fbbbe4d5f3719c452cfd206f8f2 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -18041,7 +18041,21 @@ self:F({PatrolGroup=PatrolGroup:GetName()})
 if PatrolGroup:IsGround()or PatrolGroup:IsShip()then
 local Waypoints=PatrolGroup:GetTemplateRoutePoints()
 local FromCoord=PatrolGroup:GetCoordinate()
-local From=FromCoord:WaypointGround(120)
+local depth=0
+local IsSub=false
+if PatrolGroup:IsShip()then
+local navalvec3=FromCoord:GetVec3()
+if navalvec3.y<0 then
+depth=navalvec3.y
+IsSub=true
+end
+end
+local Waypoint=Waypoints[1]
+local Speed=Waypoint.speed or(20/3.6)
+local From=FromCoord:WaypointGround(Speed)
+if IsSub then
+From=FromCoord:WaypointNaval(Speed,Waypoint.alt)
+end
 table.insert(Waypoints,1,From)
 local TaskRoute=PatrolGroup:TaskFunction("CONTROLLABLE.PatrolRoute")
 self:F({Waypoints=Waypoints})
@@ -18063,6 +18077,15 @@ local FromWaypoint=1
 if ToWaypoint then
 FromWaypoint=ToWaypoint
 end
+local depth=0
+local IsSub=false
+if PatrolGroup:IsShip()then
+local navalvec3=FromCoord:GetVec3()
+if navalvec3.y<0 then
+depth=navalvec3.y
+IsSub=true
+end
+end
 local ToWaypoint
 repeat
 ToWaypoint=math.random(1,#Waypoints)
@@ -18071,8 +18094,13 @@ self:F({FromWaypoint=FromWaypoint,ToWaypoint=ToWaypoint})
 local Waypoint=Waypoints[ToWaypoint]
 local ToCoord=COORDINATE:NewFromVec2({x=Waypoint.x,y=Waypoint.y})
 local Route={}
+if IsSub then
+Route[#Route+1]=FromCoord:WaypointNaval(Speed,depth)
+Route[#Route+1]=ToCoord:WaypointNaval(Speed,Waypoint.alt)
+else
 Route[#Route+1]=FromCoord:WaypointGround(Speed,Formation)
 Route[#Route+1]=ToCoord:WaypointGround(Speed,Formation)
+end
 local TaskRouteToZone=PatrolGroup:TaskFunction("CONTROLLABLE.PatrolRouteRandom",Speed,Formation,ToWaypoint)
 PatrolGroup:SetTaskWaypoint(Route[#Route],TaskRouteToZone)
 PatrolGroup:Route(Route,1)
@@ -18094,11 +18122,25 @@ local Delay=math.random(DelayMin,DelayMax)
 self:F({PatrolGroup=PatrolGroup:GetName()})
 if PatrolGroup:IsGround()or PatrolGroup:IsShip()then
 local FromCoord=PatrolGroup:GetCoordinate()
+local depth=0
+local IsSub=false
+if PatrolGroup:IsShip()then
+local navalvec3=FromCoord:GetVec3()
+if navalvec3.y<0 then
+depth=navalvec3.y
+IsSub=true
+end
+end
 local RandomZone=ZoneList[math.random(1,#ZoneList)]
 local ToCoord=RandomZone:GetRandomCoordinate(10)
 local Route={}
+if IsSub then
+Route[#Route+1]=FromCoord:WaypointNaval(Speed,depth)
+Route[#Route+1]=ToCoord:WaypointNaval(Speed,depth)
+else
 Route[#Route+1]=FromCoord:WaypointGround(Speed,Formation)
 Route[#Route+1]=ToCoord:WaypointGround(Speed,Formation)
+end
 local TaskRouteToZone=PatrolGroup:TaskFunction("CONTROLLABLE.PatrolZones",ZoneList,Speed,Formation,DelayMin,DelayMax)
 PatrolGroup:SetTaskWaypoint(Route[#Route],TaskRouteToZone)
 PatrolGroup:Route(Route,Delay)
