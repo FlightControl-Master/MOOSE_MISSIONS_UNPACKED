@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-05-21T10:35:32.0000000Z-47d814e409996fbbbe4d5f3719c452cfd206f8f2 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-05-28T20:29:59.0000000Z-2d7e7d55a9fc45914ce8bdcd22f96cd16cbd93df ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -6423,13 +6423,6 @@ local PointVec2=POINT_VEC2:NewFromVec2(Vec2)
 self:T2({PointVec2})
 return PointVec2
 end
-function ZONE_BASE:GetCoordinate()
-self:F2(self.ZoneName)
-local Vec2=self:GetVec2()
-local Coordinate=COORDINATE:NewFromVec2(Vec2)
-self:T2({Coordinate})
-return Coordinate
-end
 function ZONE_BASE:GetVec3(Height)
 self:F2(self.ZoneName)
 Height=Height or 0
@@ -6448,9 +6441,14 @@ end
 function ZONE_BASE:GetCoordinate(Height)
 self:F2(self.ZoneName)
 local Vec3=self:GetVec3(Height)
-local PointVec3=COORDINATE:NewFromVec3(Vec3)
-self:T2({PointVec3})
-return PointVec3
+if self.Coordinate then
+self.Coordinate.x=Vec3.x
+self.Coordinate.y=Vec3.y
+self.Coordinate.z=Vec3.z
+else
+self.Coordinate=COORDINATE:NewFromVec3(Vec3)
+end
+return self.Coordinate
 end
 function ZONE_BASE:GetRandomVec2()
 return nil
@@ -6533,6 +6531,21 @@ local self=BASE:Inherit(self,ZONE_BASE:New(ZoneName))
 self:F({ZoneName,Vec2,Radius})
 self.Radius=Radius
 self.Vec2=Vec2
+return self
+end
+function ZONE_RADIUS:UpdateFromVec2(Vec2,Radius)
+self.Vec2=Vec2
+if Radius then
+self.Radius=Radius
+end
+return self
+end
+function ZONE_RADIUS:UpdateFromVec3(Vec3,Radius)
+self.Vec2.x=Vec3.x
+self.Vec2.y=Vec3.z
+if Radius then
+self.Radius=Radius
+end
 return self
 end
 function ZONE_RADIUS:MarkZone(Points)
@@ -6723,6 +6736,23 @@ end
 end
 end
 return SetUnit
+end
+function ZONE_RADIUS:GetScannedSetGroup()
+self.ScanSetGroup=self.ScanSetGroup or SET_GROUP:New()
+self.ScanSetGroup.Set={}
+if self.ScanData then
+for ObjectID,UnitObject in pairs(self.ScanData.Units)do
+local UnitObject=UnitObject
+if UnitObject:isExist()then
+local FoundUnit=UNIT:FindByName(UnitObject:getName())
+if FoundUnit then
+local group=FoundUnit:GetGroup()
+self.ScanSetGroup:AddGroup(group)
+end
+end
+end
+end
+return self.ScanSetGroup
 end
 function ZONE_RADIUS:CountScannedCoalitions()
 local Count=0
@@ -6979,12 +7009,31 @@ ClassName="ZONE_POLYGON_BASE",
 function ZONE_POLYGON_BASE:New(ZoneName,PointsArray)
 local self=BASE:Inherit(self,ZONE_BASE:New(ZoneName))
 self:F({ZoneName,PointsArray})
-local i=0
+if PointsArray then
 self._.Polygon={}
 for i=1,#PointsArray do
 self._.Polygon[i]={}
 self._.Polygon[i].x=PointsArray[i].x
 self._.Polygon[i].y=PointsArray[i].y
+end
+end
+return self
+end
+function ZONE_POLYGON_BASE:UpdateFromVec2(Vec2Array)
+self._.Polygon={}
+for i=1,#Vec2Array do
+self._.Polygon[i]={}
+self._.Polygon[i].x=Vec2Array[i].x
+self._.Polygon[i].y=Vec2Array[i].y
+end
+return self
+end
+function ZONE_POLYGON_BASE:UpdateFromVec3(Vec3Array)
+self._.Polygon={}
+for i=1,#Vec3Array do
+self._.Polygon[i]={}
+self._.Polygon[i].x=Vec3Array[i].x
+self._.Polygon[i].y=Vec3Array[i].z
 end
 return self
 end
@@ -7195,6 +7244,36 @@ y1=(y1>self._.Polygon[i].y)and self._.Polygon[i].y or y1
 y2=(y2<self._.Polygon[i].y)and self._.Polygon[i].y or y2
 end
 return{x1=x1,y1=y1,x2=x2,y2=y2}
+end
+function ZONE_POLYGON_BASE:Boundary(Coalition,Color,Radius,Alpha,Segments,Closed)
+Coalition=Coalition or-1
+Color=Color or{1,1,1}
+Radius=Radius or 1000
+Alpha=Alpha or 1
+Segments=Segments or 10
+Closed=Closed or false
+local i=1
+local j=#self._.Polygon
+if(Closed)then
+Limit=#self._.Polygon+1
+else
+Limit=#self._.Polygon
+end
+while i<=#self._.Polygon do
+self:T({i,j,self._.Polygon[i],self._.Polygon[j]})
+if j~=Limit then
+local DeltaX=self._.Polygon[j].x-self._.Polygon[i].x
+local DeltaY=self._.Polygon[j].y-self._.Polygon[i].y
+for Segment=0,Segments do
+local PointX=self._.Polygon[i].x+(Segment*DeltaX/Segments)
+local PointY=self._.Polygon[i].y+(Segment*DeltaY/Segments)
+ZONE_RADIUS:New("Zone",{x=PointX,y=PointY},Radius):DrawZone(Coalition,Color,1,Color,Alpha,nil,true)
+end
+end
+j=i
+i=i+1
+end
+return self
 end
 ZONE_POLYGON={
 ClassName="ZONE_POLYGON",
@@ -19132,10 +19211,23 @@ if DCSControllable then
 local Controller=self:_GetController()
 if Controller then
 if self:IsGround()then
-self:SetOption(AI.Option.GROUND.id.DISPERSE_ON_ATTACK,seconds)
+self:SetOption(AI.Option.Ground.id.DISPERSE_ON_ATTACK,seconds)
 end
 end
 return self
+end
+return nil
+end
+function POSITIONABLE:IsSubmarine()
+self:F2()
+local DCSUnit=self:GetDCSObject()
+if DCSUnit then
+local UnitDescriptor=DCSUnit:getDesc()
+if UnitDescriptor.attributes["Submarines"]==true then
+return true
+else
+return false
+end
 end
 return nil
 end
