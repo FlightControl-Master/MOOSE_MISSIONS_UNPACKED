@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-06-07T13:16:04.0000000Z-82d78c98bba379ce491da3e28744c38cfb9f84e9 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-06-07T16:07:14.0000000Z-858b00336bdb744de5f20420b94d1d75e0279bf1 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -15889,9 +15889,9 @@ self.SpawnCleanUpTimeStamps[SpawnUnitName]=self.SpawnCleanUpTimeStamps[SpawnUnit
 local Stamp=self.SpawnCleanUpTimeStamps[SpawnUnitName]
 self:T({SpawnUnitName,Stamp})
 if Stamp.Vec2 then
-if(Stamp.Vec2.x==NewVec2.x and Stamp.Vec2.y==NewVec2.y)or(SpawnUnit:GetLife()<=1)then
+if SpawnUnit:InAir()==false and SpawnUnit:GetVelocityKMH()<1 then
 local NewVec2=SpawnUnit:GetVec2()
-if Stamp.Vec2.x==NewVec2.x and Stamp.Vec2.y==NewVec2.y then
+if(Stamp.Vec2.x==NewVec2.x and Stamp.Vec2.y==NewVec2.y)or(SpawnUnit:GetLife()<=1)then
 if Stamp.Time+self.SpawnCleanUpInterval<timer.getTime()then
 self:T({"CleanUp Scheduler:","ReSpawning:",SpawnGroup:GetName()})
 self:ReSpawn(SpawnCursor)
@@ -15909,7 +15909,7 @@ end
 else
 if SpawnUnit:InAir()==false then
 Stamp.Vec2=SpawnUnit:GetVec2()
-if SpawnUnit:GetVelocityKMH()<1 then
+if(SpawnUnit:GetVelocityKMH()<1)then
 Stamp.Time=timer.getTime()
 end
 else
