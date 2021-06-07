@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-05-28T20:29:59.0000000Z-2d7e7d55a9fc45914ce8bdcd22f96cd16cbd93df ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-06-07T13:16:04.0000000Z-82d78c98bba379ce491da3e28744c38cfb9f84e9 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -15889,7 +15889,7 @@ self.SpawnCleanUpTimeStamps[SpawnUnitName]=self.SpawnCleanUpTimeStamps[SpawnUnit
 local Stamp=self.SpawnCleanUpTimeStamps[SpawnUnitName]
 self:T({SpawnUnitName,Stamp})
 if Stamp.Vec2 then
-if SpawnUnit:InAir()==false and SpawnUnit:GetVelocityKMH()<1 then
+if(Stamp.Vec2.x==NewVec2.x and Stamp.Vec2.y==NewVec2.y)or(SpawnUnit:GetLife()<=1)then
 local NewVec2=SpawnUnit:GetVec2()
 if Stamp.Vec2.x==NewVec2.x and Stamp.Vec2.y==NewVec2.y then
 if Stamp.Time+self.SpawnCleanUpInterval<timer.getTime()then
@@ -63782,6 +63782,7 @@ self:SetAutoAssignTasks(false)
 self:SetAutoAcceptTasks(true)
 self:SetAutoAssignMethod(COMMANDCENTER.AutoAssignMethods.Distance)
 self:SetFlashStatus(false)
+self:SetMessageDuration(10)
 self:HandleEvent(EVENTS.Birth,
 function(self,EventData)
 if EventData.IniObjectCategory==1 then
@@ -64013,17 +64014,17 @@ end
 return Has
 end
 function COMMANDCENTER:MessageToAll(Message)
-self:GetPositionable():MessageToAll(Message,20,self:GetName())
+self:GetPositionable():MessageToAll(Message,self.MessageDuration,self:GetName())
 end
 function COMMANDCENTER:MessageToGroup(Message,MessageGroup)
-self:GetPositionable():MessageToGroup(Message,15,MessageGroup,self:GetShortText())
+self:GetPositionable():MessageToGroup(Message,self.MessageDuration,MessageGroup,self:GetShortText())
 end
 function COMMANDCENTER:MessageTypeToGroup(Message,MessageGroup,MessageType)
 self:GetPositionable():MessageTypeToGroup(Message,MessageType,MessageGroup,self:GetShortText())
 end
 function COMMANDCENTER:MessageToCoalition(Message)
 local CCCoalition=self:GetPositionable():GetCoalition()
-self:GetPositionable():MessageToCoalition(Message,15,CCCoalition,self:GetShortText())
+self:GetPositionable():MessageToCoalition(Message,self.MessageDuration,CCCoalition,self:GetShortText())
 end
 function COMMANDCENTER:MessageTypeToCoalition(Message,MessageType)
 local CCCoalition=self:GetPositionable():GetCoalition()
@@ -64061,7 +64062,11 @@ self:MessageToGroup(Report:Text(),ReportGroup)
 end
 function COMMANDCENTER:SetFlashStatus(Flash)
 self:F()
-self.FlashStatus=Flash or true
+self.FlashStatus=Flash and true
+end
+function COMMANDCENTER:SetMessageDuration(seconds)
+self:F()
+self.MessageDuration=10 or seconds
 end
 MISSION={
 ClassName="MISSION",
