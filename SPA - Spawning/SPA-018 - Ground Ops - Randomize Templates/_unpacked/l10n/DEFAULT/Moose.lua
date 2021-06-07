@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-05-12T07:19:07.0000000Z-e49020b905c69e92b7437579fa8241248839fd13 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-05-28T21:01:15.0000000Z-8b6f9f9de7a9c9d1efd90f7d0fbd9c115dfdf13e ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -7292,6 +7292,36 @@ y2=(y2<self._.Polygon[i].y)and self._.Polygon[i].y or y2
 end
 return{x1=x1,y1=y1,x2=x2,y2=y2}
 end
+function ZONE_POLYGON_BASE:Boundary(Coalition,Color,Radius,Alpha,Segments,Closed)
+Coalition=Coalition or-1
+Color=Color or{1,1,1}
+Radius=Radius or 1000
+Alpha=Alpha or 1
+Segments=Segments or 10
+Closed=Closed or false
+local i=1
+local j=#self._.Polygon
+if(Closed)then
+Limit=#self._.Polygon+1
+else
+Limit=#self._.Polygon
+end
+while i<=#self._.Polygon do
+self:T({i,j,self._.Polygon[i],self._.Polygon[j]})
+if j~=Limit then
+local DeltaX=self._.Polygon[j].x-self._.Polygon[i].x
+local DeltaY=self._.Polygon[j].y-self._.Polygon[i].y
+for Segment=0,Segments do
+local PointX=self._.Polygon[i].x+(Segment*DeltaX/Segments)
+local PointY=self._.Polygon[i].y+(Segment*DeltaY/Segments)
+ZONE_RADIUS:New("Zone",{x=PointX,y=PointY},Radius):DrawZone(Coalition,Color,1,Color,Alpha,nil,true)
+end
+end
+j=i
+i=i+1
+end
+return self
+end
 ZONE_POLYGON={
 ClassName="ZONE_POLYGON",
 }
@@ -7595,10 +7625,6 @@ Zone=ZONE:New(ZoneName)
 else
 self:I(string.format("Register ZONE: %s (Polygon, Quad)",ZoneName))
 Zone=ZONE_POLYGON_BASE:New(ZoneName,ZoneData.verticies)
-for i,vec2 in pairs(ZoneData.verticies)do
-local coord=COORDINATE:NewFromVec2(vec2)
-coord:MarkToAll(string.format("%s Point %d",ZoneName,i))
-end
 end
 if Zone then
 Zone.Color=color
@@ -12184,12 +12210,12 @@ Coalition=Coalition or-1
 Color=Color or{1,0,0}
 Color[4]=Alpha or 1.0
 LineType=LineType or 1
-FillColor=FillColor or Color
+FillColor=FillColor or UTILS.DeepCopy(Color)
 FillColor[4]=FillAlpha or 0.15
 local vecs={}
-table.insert(vecs,self:GetVec3())
-for _,coord in ipairs(Coordinates)do
-table.insert(vecs,coord:GetVec3())
+vecs[1]=self:GetVec3()
+for i,coord in ipairs(Coordinates)do
+vecs[i+1]=coord:GetVec3()
 end
 if#vecs<3 then
 self:E("ERROR: A free form polygon needs at least three points!")
@@ -17303,6 +17329,19 @@ return IsShip
 end
 return nil
 end
+function POSITIONABLE:IsSubmarine()
+self:F2()
+local DCSUnit=self:GetDCSObject()
+if DCSUnit then
+local UnitDescriptor=DCSUnit:getDesc()
+if UnitDescriptor.attributes["Submarines"]==true then
+return true
+else
+return false
+end
+end
+return nil
+end
 function POSITIONABLE:InAir()
 self:F2(self.PositionableName)
 return nil
@@ -17373,8 +17412,7 @@ return 0
 end
 function POSITIONABLE:GetVelocityKNOTS()
 self:F2(self.PositionableName)
-local velmps=self:GetVelocityMPS()
-return UTILS.MpsToKnots(velmps)
+return UTILS.MpsToKnots(self:GetVelocityMPS())
 end
 function POSITIONABLE:GetAoA()
 local unitpos=self:GetPosition()
@@ -18634,7 +18672,21 @@ self:F({PatrolGroup=PatrolGroup:GetName()})
 if PatrolGroup:IsGround()or PatrolGroup:IsShip()then
 local Waypoints=PatrolGroup:GetTemplateRoutePoints()
 local FromCoord=PatrolGroup:GetCoordinate()
-local From=FromCoord:WaypointGround(120)
+local depth=0
+local IsSub=false
+if PatrolGroup:IsShip()then
+local navalvec3=FromCoord:GetVec3()
+if navalvec3.y<0 then
+depth=navalvec3.y
+IsSub=true
+end
+end
+local Waypoint=Waypoints[1]
+local Speed=Waypoint.speed or(20/3.6)
+local From=FromCoord:WaypointGround(Speed)
+if IsSub then
+From=FromCoord:WaypointNaval(Speed,Waypoint.alt)
+end
 table.insert(Waypoints,1,From)
 local TaskRoute=PatrolGroup:TaskFunction("CONTROLLABLE.PatrolRoute")
 self:F({Waypoints=Waypoints})
@@ -18656,6 +18708,15 @@ local FromWaypoint=1
 if ToWaypoint then
 FromWaypoint=ToWaypoint
 end
+local depth=0
+local IsSub=false
+if PatrolGroup:IsShip()then
+local navalvec3=FromCoord:GetVec3()
+if navalvec3.y<0 then
+depth=navalvec3.y
+IsSub=true
+end
+end
 local ToWaypoint
 repeat
 ToWaypoint=math.random(1,#Waypoints)
@@ -18664,8 +18725,13 @@ self:F({FromWaypoint=FromWaypoint,ToWaypoint=ToWaypoint})
 local Waypoint=Waypoints[ToWaypoint]
 local ToCoord=COORDINATE:NewFromVec2({x=Waypoint.x,y=Waypoint.y})
 local Route={}
+if IsSub then
+Route[#Route+1]=FromCoord:WaypointNaval(Speed,depth)
+Route[#Route+1]=ToCoord:WaypointNaval(Speed,Waypoint.alt)
+else
 Route[#Route+1]=FromCoord:WaypointGround(Speed,Formation)
 Route[#Route+1]=ToCoord:WaypointGround(Speed,Formation)
+end
 local TaskRouteToZone=PatrolGroup:TaskFunction("CONTROLLABLE.PatrolRouteRandom",Speed,Formation,ToWaypoint)
 PatrolGroup:SetTaskWaypoint(Route[#Route],TaskRouteToZone)
 PatrolGroup:Route(Route,1)
@@ -18687,11 +18753,25 @@ local Delay=math.random(DelayMin,DelayMax)
 self:F({PatrolGroup=PatrolGroup:GetName()})
 if PatrolGroup:IsGround()or PatrolGroup:IsShip()then
 local FromCoord=PatrolGroup:GetCoordinate()
+local depth=0
+local IsSub=false
+if PatrolGroup:IsShip()then
+local navalvec3=FromCoord:GetVec3()
+if navalvec3.y<0 then
+depth=navalvec3.y
+IsSub=true
+end
+end
 local RandomZone=ZoneList[math.random(1,#ZoneList)]
 local ToCoord=RandomZone:GetRandomCoordinate(10)
 local Route={}
+if IsSub then
+Route[#Route+1]=FromCoord:WaypointNaval(Speed,depth)
+Route[#Route+1]=ToCoord:WaypointNaval(Speed,depth)
+else
 Route[#Route+1]=FromCoord:WaypointGround(Speed,Formation)
 Route[#Route+1]=ToCoord:WaypointGround(Speed,Formation)
+end
 local TaskRouteToZone=PatrolGroup:TaskFunction("CONTROLLABLE.PatrolZones",ZoneList,Speed,Formation,DelayMin,DelayMax)
 PatrolGroup:SetTaskWaypoint(Route[#Route],TaskRouteToZone)
 PatrolGroup:Route(Route,Delay)
@@ -19683,10 +19763,23 @@ if DCSControllable then
 local Controller=self:_GetController()
 if Controller then
 if self:IsGround()then
-self:SetOption(AI.Option.GROUND.id.DISPERSE_ON_ATTACK,seconds)
+self:SetOption(AI.Option.Ground.id.DISPERSE_ON_ATTACK,seconds)
 end
 end
 return self
+end
+return nil
+end
+function POSITIONABLE:IsSubmarine()
+self:F2()
+local DCSUnit=self:GetDCSObject()
+if DCSUnit then
+local UnitDescriptor=DCSUnit:getDesc()
+if UnitDescriptor.attributes["Submarines"]==true then
+return true
+else
+return false
+end
 end
 return nil
 end
