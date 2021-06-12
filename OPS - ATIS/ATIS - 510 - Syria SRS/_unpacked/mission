@@ -1,0 +1,675 @@
+mission = 
+{
+    ["trig"] = 
+    {
+        ["actions"] = 
+        {
+            [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_6\"));",
+            [2] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_7\"));",
+        }, -- end of ["actions"]
+        ["events"] = 
+        {
+        }, -- end of ["events"]
+        ["custom"] = 
+        {
+        }, -- end of ["custom"]
+        ["func"] = 
+        {
+        }, -- end of ["func"]
+        ["flag"] = 
+        {
+            [1] = true,
+            [2] = true,
+        }, -- end of ["flag"]
+        ["conditions"] = 
+        {
+            [1] = "return(true)",
+            [2] = "return(true)",
+        }, -- end of ["conditions"]
+        ["customStartup"] = 
+        {
+        }, -- end of ["customStartup"]
+        ["funcStartup"] = 
+        {
+            [1] = "if mission.trig.conditions[1]() then mission.trig.actions[1]() end",
+            [2] = "if mission.trig.conditions[2]() then mission.trig.actions[2]() end",
+        }, -- end of ["funcStartup"]
+    }, -- end of ["trig"]
+    ["requiredModules"] = 
+    {
+    }, -- end of ["requiredModules"]
+    ["date"] = 
+    {
+        ["Day"] = 11,
+        ["Year"] = 2021,
+        ["Month"] = 6,
+    }, -- end of ["date"]
+    ["result"] = 
+    {
+        ["offline"] = 
+        {
+            ["conditions"] = 
+            {
+            }, -- end of ["conditions"]
+            ["actions"] = 
+            {
+            }, -- end of ["actions"]
+            ["func"] = 
+            {
+            }, -- end of ["func"]
+        }, -- end of ["offline"]
+        ["total"] = 0,
+        ["blue"] = 
+        {
+            ["conditions"] = 
+            {
+            }, -- end of ["conditions"]
+            ["actions"] = 
+            {
+            }, -- end of ["actions"]
+            ["func"] = 
+            {
+            }, -- end of ["func"]
+        }, -- end of ["blue"]
+        ["red"] = 
+        {
+            ["conditions"] = 
+            {
+            }, -- end of ["conditions"]
+            ["actions"] = 
+            {
+            }, -- end of ["actions"]
+            ["func"] = 
+            {
+            }, -- end of ["func"]
+        }, -- end of ["red"]
+    }, -- end of ["result"]
+    ["groundControl"] = 
+    {
+        ["isPilotControlVehicles"] = false,
+        ["roles"] = 
+        {
+            ["artillery_commander"] = 
+            {
+                ["neutrals"] = 0,
+                ["blue"] = 0,
+                ["red"] = 0,
+            }, -- end of ["artillery_commander"]
+            ["instructor"] = 
+            {
+                ["neutrals"] = 0,
+                ["blue"] = 0,
+                ["red"] = 0,
+            }, -- end of ["instructor"]
+            ["observer"] = 
+            {
+                ["neutrals"] = 0,
+                ["blue"] = 0,
+                ["red"] = 0,
+            }, -- end of ["observer"]
+            ["forward_observer"] = 
+            {
+                ["neutrals"] = 0,
+                ["blue"] = 0,
+                ["red"] = 0,
+            }, -- end of ["forward_observer"]
+        }, -- end of ["roles"]
+    }, -- end of ["groundControl"]
+    ["maxDictId"] = 7,
+    ["pictureFileNameN"] = 
+    {
+    }, -- end of ["pictureFileNameN"]
+    ["goals"] = 
+    {
+    }, -- end of ["goals"]
+    ["descriptionNeutralsTask"] = "DictKey_descriptionNeutralsTask_4",
+    ["weather"] = 
+    {
+        ["atmosphere_type"] = 0,
+        ["wind"] = 
+        {
+            ["at8000"] = 
+            {
+                ["speed"] = 11.3388,
+                ["dir"] = 59,
+            }, -- end of ["at8000"]
+            ["at2000"] = 
+            {
+                ["speed"] = 5.154,
+                ["dir"] = 81,
+            }, -- end of ["at2000"]
+            ["atGround"] = 
+            {
+                ["speed"] = 3.0924,
+                ["dir"] = 121,
+            }, -- end of ["atGround"]
+        }, -- end of ["wind"]
+        ["enable_fog"] = false,
+        ["groundTurbulence"] = 3.6576,
+        ["enable_dust"] = true,
+        ["season"] = 
+        {
+            ["temperature"] = 31,
+        }, -- end of ["season"]
+        ["type_weather"] = 0,
+        ["modifiedTime"] = true,
+        ["cyclones"] = 
+        {
+        }, -- end of ["cyclones"]
+        ["name"] = "Winter, clean sky",
+        ["fog"] = 
+        {
+            ["thickness"] = 0,
+            ["visibility"] = 0,
+        }, -- end of ["fog"]
+        ["dust_density"] = 550,
+        ["qnh"] = 720.09,
+        ["visibility"] = 
+        {
+            ["distance"] = 80000,
+        }, -- end of ["visibility"]
+        ["clouds"] = 
+        {
+            ["thickness"] = 200,
+            ["density"] = 0,
+            ["preset"] = "Preset13",
+            ["base"] = 3400,
+            ["iprecptns"] = 0,
+        }, -- end of ["clouds"]
+    }, -- end of ["weather"]
+    ["theatre"] = "Syria",
+    ["triggers"] = 
+    {
+        ["zones"] = 
+        {
+        }, -- end of ["zones"]
+    }, -- end of ["triggers"]
+    ["map"] = 
+    {
+        ["centerY"] = 51880.617653429,
+        ["zoom"] = 48158.175817912,
+        ["centerX"] = -177361.01231529,
+    }, -- end of ["map"]
+    ["coalitions"] = 
+    {
+        ["neutrals"] = 
+        {
+            [1] = 70,
+            [2] = 83,
+            [3] = 23,
+            [4] = 65,
+            [5] = 64,
+            [6] = 25,
+            [7] = 63,
+            [8] = 76,
+            [9] = 84,
+            [10] = 29,
+            [11] = 62,
+            [12] = 30,
+            [13] = 78,
+            [14] = 31,
+            [15] = 61,
+            [16] = 32,
+            [17] = 33,
+            [18] = 60,
+            [19] = 17,
+            [20] = 35,
+            [21] = 69,
+            [22] = 36,
+            [23] = 59,
+            [24] = 71,
+            [25] = 79,
+            [26] = 58,
+            [27] = 57,
+            [28] = 56,
+            [29] = 55,
+            [30] = 73,
+            [31] = 39,
+            [32] = 54,
+            [33] = 77,
+            [34] = 72,
+            [35] = 41,
+            [36] = 42,
+            [37] = 44,
+            [38] = 85,
+            [39] = 75,
+            [40] = 53,
+            [41] = 22,
+            [42] = 52,
+            [43] = 66,
+            [44] = 51,
+            [45] = 74,
+            [46] = 82,
+            [47] = 7,
+            [48] = 68,
+            [49] = 50,
+            [50] = 49,
+            [51] = 48,
+            [52] = 67,
+        }, -- end of ["neutrals"]
+        ["blue"] = 
+        {
+            [1] = 21,
+            [2] = 11,
+            [3] = 8,
+            [4] = 80,
+            [5] = 28,
+            [6] = 26,
+            [7] = 13,
+            [8] = 5,
+            [9] = 16,
+            [10] = 6,
+            [11] = 15,
+            [12] = 20,
+            [13] = 12,
+            [14] = 40,
+            [15] = 45,
+            [16] = 9,
+            [17] = 46,
+            [18] = 10,
+            [19] = 3,
+            [20] = 4,
+            [21] = 1,
+            [22] = 2,
+        }, -- end of ["blue"]
+        ["red"] = 
+        {
+            [1] = 18,
+            [2] = 24,
+            [3] = 27,
+            [4] = 81,
+            [5] = 34,
+            [6] = 37,
+            [7] = 38,
+            [8] = 0,
+            [9] = 43,
+            [10] = 19,
+            [11] = 47,
+        }, -- end of ["red"]
+    }, -- end of ["coalitions"]
+    ["descriptionText"] = "DictKey_descriptionText_1",
+    ["pictureFileNameR"] = 
+    {
+    }, -- end of ["pictureFileNameR"]
+    ["descriptionBlueTask"] = "DictKey_descriptionBlueTask_3",
+    ["descriptionRedTask"] = "DictKey_descriptionRedTask_2",
+    ["pictureFileNameB"] = 
+    {
+    }, -- end of ["pictureFileNameB"]
+    ["coalition"] = 
+    {
+        ["neutrals"] = 
+        {
+            ["bullseye"] = 
+            {
+                ["y"] = 0,
+                ["x"] = 0,
+            }, -- end of ["bullseye"]
+            ["nav_points"] = 
+            {
+            }, -- end of ["nav_points"]
+            ["name"] = "neutrals",
+            ["country"] = 
+            {
+            }, -- end of ["country"]
+        }, -- end of ["neutrals"]
+        ["blue"] = 
+        {
+            ["bullseye"] = 
+            {
+                ["y"] = 0,
+                ["x"] = 0,
+            }, -- end of ["bullseye"]
+            ["nav_points"] = 
+            {
+            }, -- end of ["nav_points"]
+            ["name"] = "blue",
+            ["country"] = 
+            {
+                [1] = 
+                {
+                    ["id"] = 2,
+                    ["name"] = "USA",
+                    ["plane"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["modulation"] = 0,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["radioSet"] = true,
+                                ["task"] = "CAP",
+                                ["uncontrolled"] = false,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 612,
+                                            ["action"] = "From Parking Area Hot",
+                                            ["alt_type"] = "BARO",
+                                            ["speed"] = 138.88888888889,
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["enabled"] = true,
+                                                            ["key"] = "CAP",
+                                                            ["id"] = "EngageTargets",
+                                                            ["number"] = 1,
+                                                            ["auto"] = true,
+                                                            ["params"] = 
+                                                            {
+                                                                ["targetTypes"] = 
+                                                                {
+                                                                    [1] = "Air",
+                                                                }, -- end of ["targetTypes"]
+                                                                ["priority"] = 0,
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                        [2] = 
+                                                        {
+                                                            ["enabled"] = true,
+                                                            ["auto"] = true,
+                                                            ["id"] = "WrappedAction",
+                                                            ["number"] = 2,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "EPLRS",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["value"] = true,
+                                                                        ["groupId"] = 1,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [2]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["type"] = "TakeOffParkingHot",
+                                            ["ETA"] = 0,
+                                            ["ETA_locked"] = true,
+                                            ["y"] = 51613.84375,
+                                            ["x"] = -180071.171875,
+                                            ["formation_template"] = "",
+                                            ["airdromeId"] = 7,
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 1,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["alt"] = 612,
+                                        ["alt_type"] = "BARO",
+                                        ["livery_id"] = "VFA-37",
+                                        ["skill"] = "Client",
+                                        ["parking"] = 22,
+                                        ["speed"] = 138.88888888889,
+                                        ["AddPropAircraft"] = 
+                                        {
+                                            ["OuterBoard"] = 0,
+                                            ["InnerBoard"] = 0,
+                                            ["HelmetMountedDevice"] = 1,
+                                        }, -- end of ["AddPropAircraft"]
+                                        ["type"] = "FA-18C_hornet",
+                                        ["Radio"] = 
+                                        {
+                                            [1] = 
+                                            {
+                                                ["modulations"] = 
+                                                {
+                                                    [1] = 0,
+                                                    [2] = 0,
+                                                    [4] = 0,
+                                                    [8] = 0,
+                                                    [16] = 0,
+                                                    [17] = 0,
+                                                    [9] = 0,
+                                                    [18] = 0,
+                                                    [5] = 0,
+                                                    [10] = 0,
+                                                    [20] = 0,
+                                                    [11] = 0,
+                                                    [3] = 0,
+                                                    [6] = 0,
+                                                    [12] = 0,
+                                                    [13] = 0,
+                                                    [7] = 0,
+                                                    [14] = 0,
+                                                    [19] = 0,
+                                                    [15] = 0,
+                                                }, -- end of ["modulations"]
+                                                ["channels"] = 
+                                                {
+                                                    [1] = 250,
+                                                    [2] = 251.5,
+                                                    [4] = 256,
+                                                    [8] = 257,
+                                                    [16] = 261,
+                                                    [17] = 267,
+                                                    [9] = 255,
+                                                    [18] = 251,
+                                                    [5] = 254,
+                                                    [10] = 262,
+                                                    [20] = 266,
+                                                    [11] = 259,
+                                                    [3] = 265,
+                                                    [6] = 250,
+                                                    [12] = 268,
+                                                    [13] = 269,
+                                                    [7] = 270,
+                                                    [14] = 260,
+                                                    [19] = 253,
+                                                    [15] = 263,
+                                                }, -- end of ["channels"]
+                                            }, -- end of [1]
+                                            [2] = 
+                                            {
+                                                ["modulations"] = 
+                                                {
+                                                    [1] = 0,
+                                                    [2] = 0,
+                                                    [4] = 0,
+                                                    [8] = 0,
+                                                    [16] = 0,
+                                                    [17] = 0,
+                                                    [9] = 0,
+                                                    [18] = 0,
+                                                    [5] = 0,
+                                                    [10] = 0,
+                                                    [20] = 0,
+                                                    [11] = 0,
+                                                    [3] = 0,
+                                                    [6] = 0,
+                                                    [12] = 0,
+                                                    [13] = 0,
+                                                    [7] = 0,
+                                                    [14] = 0,
+                                                    [19] = 0,
+                                                    [15] = 0,
+                                                }, -- end of ["modulations"]
+                                                ["channels"] = 
+                                                {
+                                                    [1] = 305,
+                                                    [2] = 264,
+                                                    [4] = 256,
+                                                    [8] = 257,
+                                                    [16] = 261,
+                                                    [17] = 267,
+                                                    [9] = 255,
+                                                    [18] = 251,
+                                                    [5] = 254,
+                                                    [10] = 262,
+                                                    [20] = 266,
+                                                    [11] = 259,
+                                                    [3] = 265,
+                                                    [6] = 250,
+                                                    [12] = 268,
+                                                    [13] = 269,
+                                                    [7] = 270,
+                                                    [14] = 260,
+                                                    [19] = 253,
+                                                    [15] = 263,
+                                                }, -- end of ["channels"]
+                                            }, -- end of [2]
+                                        }, -- end of ["Radio"]
+                                        ["unitId"] = 1,
+                                        ["psi"] = 0,
+                                        ["dataCartridge"] = 
+                                        {
+                                            ["GroupsPoints"] = 
+                                            {
+                                                ["PB"] = 
+                                                {
+                                                }, -- end of ["PB"]
+                                                ["Sequence 2 Red"] = 
+                                                {
+                                                }, -- end of ["Sequence 2 Red"]
+                                                ["Start Location"] = 
+                                                {
+                                                }, -- end of ["Start Location"]
+                                                ["Sequence 1 Blue"] = 
+                                                {
+                                                }, -- end of ["Sequence 1 Blue"]
+                                                ["Sequence 3 Yellow"] = 
+                                                {
+                                                }, -- end of ["Sequence 3 Yellow"]
+                                                ["A/A Waypoint"] = 
+                                                {
+                                                }, -- end of ["A/A Waypoint"]
+                                                ["PP"] = 
+                                                {
+                                                }, -- end of ["PP"]
+                                                ["Initial Point"] = 
+                                                {
+                                                }, -- end of ["Initial Point"]
+                                            }, -- end of ["GroupsPoints"]
+                                            ["Points"] = 
+                                            {
+                                            }, -- end of ["Points"]
+                                        }, -- end of ["dataCartridge"]
+                                        ["parking_id"] = "106",
+                                        ["x"] = -180071.171875,
+                                        ["name"] = "Aerial-1-1",
+                                        ["payload"] = 
+                                        {
+                                            ["pylons"] = 
+                                            {
+                                            }, -- end of ["pylons"]
+                                            ["fuel"] = 4900,
+                                            ["flare"] = 60,
+                                            ["ammo_type"] = 1,
+                                            ["chaff"] = 60,
+                                            ["gun"] = 100,
+                                        }, -- end of ["payload"]
+                                        ["y"] = 51613.84375,
+                                        ["heading"] = 0,
+                                        ["callsign"] = 
+                                        {
+                                            [1] = 1,
+                                            [2] = 1,
+                                            [3] = 1,
+                                            ["name"] = "Enfield11",
+                                        }, -- end of ["callsign"]
+                                        ["onboard_num"] = "010",
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 51613.84375,
+                                ["x"] = -180071.171875,
+                                ["name"] = "Aerial-1",
+                                ["communication"] = true,
+                                ["start_time"] = 0,
+                                ["uncontrollable"] = false,
+                                ["frequency"] = 250,
+                            }, -- end of [1]
+                        }, -- end of ["group"]
+                    }, -- end of ["plane"]
+                }, -- end of [1]
+            }, -- end of ["country"]
+        }, -- end of ["blue"]
+        ["red"] = 
+        {
+            ["bullseye"] = 
+            {
+                ["y"] = 0,
+                ["x"] = 0,
+            }, -- end of ["bullseye"]
+            ["nav_points"] = 
+            {
+            }, -- end of ["nav_points"]
+            ["name"] = "red",
+            ["country"] = 
+            {
+            }, -- end of ["country"]
+        }, -- end of ["red"]
+    }, -- end of ["coalition"]
+    ["sortie"] = "DictKey_sortie_5",
+    ["version"] = 19,
+    ["trigrules"] = 
+    {
+        [1] = 
+        {
+            ["rules"] = 
+            {
+            }, -- end of ["rules"]
+            ["comment"] = "Load Moose",
+            ["eventlist"] = "",
+            ["predicate"] = "triggerStart",
+            ["actions"] = 
+            {
+                [1] = 
+                {
+                    ["meters"] = 1000,
+                    ["file"] = "ResKey_Action_6",
+                    ["predicate"] = "a_do_script_file",
+                    ["zone"] = "",
+                }, -- end of [1]
+            }, -- end of ["actions"]
+            ["colorItem"] = "0xff0000ff",
+        }, -- end of [1]
+        [2] = 
+        {
+            ["rules"] = 
+            {
+            }, -- end of ["rules"]
+            ["eventlist"] = "",
+            ["comment"] = "Load Mission",
+            ["predicate"] = "triggerStart",
+            ["actions"] = 
+            {
+                [1] = 
+                {
+                    ["file"] = "ResKey_Action_7",
+                    ["meters"] = 1000,
+                    ["predicate"] = "a_do_script_file",
+                    ["zone"] = "",
+                }, -- end of [1]
+            }, -- end of ["actions"]
+            ["colorItem"] = "0x00ff00ff",
+        }, -- end of [2]
+    }, -- end of ["trigrules"]
+    ["currentKey"] = 110,
+    ["start_time"] = 72000,
+    ["forcedOptions"] = 
+    {
+    }, -- end of ["forcedOptions"]
+    ["failures"] = 
+    {
+    }, -- end of ["failures"]
+} -- end of mission
