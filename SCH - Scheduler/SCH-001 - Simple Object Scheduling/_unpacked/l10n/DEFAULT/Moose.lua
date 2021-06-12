@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-06-07T16:07:14.0000000Z-858b00336bdb744de5f20420b94d1d75e0279bf1 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-06-11T11:38:25.0000000Z-973b8323c99683b60aefe9051d6a8219a63d1558 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -20554,6 +20554,20 @@ local DCSUnit=self:GetDCSObject()
 if DCSUnit then
 DCSUnit:enableEmission(switch)
 end
+return self
+end
+function GROUP:SetCommandInvisible(switch)
+self:F2(self.GroupName)
+local switch=switch or false
+local SetInvisible={id='SetInvisible',params={value=true}}
+self:SetCommand(SetInvisible)
+return self
+end
+function GROUP:SetCommandImmortal(switch)
+self:F2(self.GroupName)
+local switch=switch or false
+local SetInvisible={id='SetImmortal',params={value=true}}
+self:SetCommand(SetInvisible)
 return self
 end
 UNIT={
