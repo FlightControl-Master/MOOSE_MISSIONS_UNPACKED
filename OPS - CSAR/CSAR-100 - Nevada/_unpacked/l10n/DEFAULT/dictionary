@@ -1,0 +1,23 @@
+dictionary = 
+{
+    ["DictKey_ActionText_10"] = "tank moving",
+    ["DictKey_descriptionText_1"] = "",
+    ["DictKey_ActionRadioText_27"] = "Load File",
+    ["DictKey_ActionText_29"] = "File loaded",
+    ["DictKey_ActionText_25"] = "assert(loadfile(\"C:\\\\Users\\\\post\\\\Saved Games\\\\DCS\\\\Missions\\\\MarkerOps_Base.lua\"))()",
+    ["DictKey_ActionText_30"] = "Moose loaded",
+    ["DictKey_ActionText_19"] = "local grp=GROUP:FindByName(\"Ground-1\")\
+function EventOut(Event)\
+  local m = MESSAGE:New(\"Event Unit Lost\",10,\"Info\"):ToAll()\
+end\
+grp:HandleEvent(EVENTS.Ejection,EventOut)\
+local scoring=SCORING:New(\"Test Scoring\")\
+scoring:AddZoneScore(ZONE:New(\"Las Vegas\"),50)",
+    ["DictKey_descriptionNeutralsTask_4"] = "",
+    ["DictKey_sortie_5"] = "",
+    ["DictKey_ActionText_16"] = "",
+    ["DictKey_ActionText_8"] = "CTLD Loaded",
+    ["DictKey_ActionText_32"] = "Mission loaded",
+    ["DictKey_descriptionBlueTask_3"] = "",
+    ["DictKey_descriptionRedTask_2"] = "",
+} -- end of dictionary
