@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-06-14T11:20:00.0000000Z-7cde279be1e067248ce7171830ed303e1bfbb283 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-06-15T05:42:45.0000000Z-270c69344f5fff637fcec68a755e4908aaf30311 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -65893,7 +65893,7 @@ return self
 end
 CSAR={
 ClassName="CSAR",
-verbose=1,
+verbose=0,
 lid="",
 coalition=1,
 coalitiontxt="blue",
@@ -65940,7 +65940,7 @@ CSAR.AircraftType["SA342M"]=4
 CSAR.AircraftType["UH-1H"]=4
 CSAR.AircraftType["Mi-8MT"]=8
 CSAR.AircraftType["Mi-24"]=8
-CSAR.version="0.1.0r1"
+CSAR.version="0.1.2r2"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
@@ -66002,10 +66002,10 @@ self.csarOncrash=true
 self.allowDownedPilotCAcontrol=false
 self.enableForAI=true
 self.smokecolor=4
-self.coordtype=1
+self.coordtype=2
 self.immortalcrew=true
 self.invisiblecrew=false
-self.messageTime=30
+self.messageTime=15
 self.pilotRuntoExtractPoint=true
 self.loadDistance=75
 self.extractDistance=500
@@ -66019,6 +66019,10 @@ self.template=Template or"generic"
 self.mashprefix={"MASH"}
 self.bluemash=SET_GROUP:New():FilterCoalitions(self.coalition):FilterPrefixes(self.mashprefix):FilterOnce()
 self.autosmoke=false
+self.useSRS=false
+self.SRSPath="E:\\Program Files\\DCS-SimpleRadio-Standalone\\"
+self.SRSchannel=300
+self.SRSModulation=radio.modulation.AM
 return self
 end
 function CSAR:_CreateDownedPilotTrack(Group,Groupname,Side,OriginalUnit,Description,Typename,Frequency,Playername)
@@ -66065,6 +66069,9 @@ return false
 end
 function CSAR:_SpawnPilotInField(country,point)
 self:T({country,point})
+for i=1,10 do
+math.random(i,10000)
+end
 local template=self.template
 local alias=string.format("Downed Pilot-%d",math.random(1,10000))
 local coalition=self.coalition
@@ -66108,9 +66115,6 @@ function CSAR:_AddCsar(_coalition,_country,_point,_typeName,_unitName,_playerNam
 self:T(self.lid.." _AddCsar")
 self:T({_coalition,_country,_point,_typeName,_unitName,_playerName,_freq,noMessage,_description})
 local template=self.template
-local alias=string.format("Downed Pilot-%d",math.random(1,10000))
-local immortalcrew=self.immortalcrew
-local invisiblecrew=self.invisiblecrew
 local _spawnedGroup,_alias=self:_SpawnPilotInField(_country,_point)
 local _typeName=_typeName or"PoW"
 if not noMessage then
@@ -66142,7 +66146,7 @@ self:T(self.lid.." _SpawnCsarAtZone")
 local freq=self:_GenerateADFFrequency()
 local _triggerZone=ZONE:New(_zone)
 if _triggerZone==nil then
-self:E("CSAR - ERROR: Can\'t find zone called ".._zone,10)
+self:E(self.lid.."ERROR: Can\'t find zone called ".._zone,10)
 return
 end
 local _description=_description or"none"
@@ -66288,7 +66292,7 @@ local _coordinatesText=self:_GetPositionOfWounded(_downedGroup)
 local _leadername=_leader:GetName()
 if not _nomessage then
 local _text=string.format("%s requests SAR at %s, beacon at %.2f KHz",_leadername,_coordinatesText,_freqk)
-self:_DisplayToAllSAR(_text)
+self:_DisplayToAllSAR(_text,self.coalition,self.messageTime)
 end
 for _,_heliName in pairs(self.csarUnits)do
 self:_CheckWoundedGroupStatus(_heliName,_groupName)
@@ -66396,7 +66400,7 @@ if _maxUnits==nil then
 _maxUnits=self.max_units
 end
 if _unitsInHelicopter+1>_maxUnits then
-self:_DisplayMessageToSAR(_heliUnit,string.format("%s, %s. We're already crammed with %d guys! Sorry!",_pilotName,_heliName,_unitsInHelicopter,_unitsInHelicopter),10)
+self:_DisplayMessageToSAR(_heliUnit,string.format("%s, %s. We're already crammed with %d guys! Sorry!",_pilotName,_heliName,_unitsInHelicopter,_unitsInHelicopter),self.messageTime)
 return true
 end
 local found,downedgrouptable=self:_CheckNameInDownedPilots(_woundedGroupName)
@@ -66411,7 +66415,7 @@ player=grouptable.player,
 }
 _woundedGroup:Destroy()
 self:_RemoveNameFromDownedPilots(_woundedGroupName,true)
-self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s I'm in! Get to the MASH ASAP! ",_heliName,_pilotName),10)
+self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s I'm in! Get to the MASH ASAP! ",_heliName,_pilotName),self.messageTime,true,true)
 self:__Boarded(5,_heliName,_woundedGroupName)
 return true
 end
@@ -66434,18 +66438,18 @@ self:_PopSmokeForGroup(_woundedGroupName,_woundedLeader)
 end
 if self.heliVisibleMessage[_lookupKeyHeli]==nil then
 if self.autosmoke==true then
-self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. I hear you! Damn, that thing is loud! Land or hover by the smoke.",_heliName,_pilotName),self.messageTime)
+self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. I hear you! Damn, that thing is loud! Land or hover by the smoke.",_heliName,_pilotName),self.messageTime,true,true)
 else
-self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. I hear you! Damn, that thing is loud! Request a Flare or Smoke if you need",_heliName,_pilotName),self.messageTime)
+self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. I hear you! Damn, that thing is loud! Request a Flare or Smoke if you need",_heliName,_pilotName),self.messageTime,true,true)
 end
 self.heliVisibleMessage[_lookupKeyHeli]=true
 end
 if(_distance<500)then
 if self.heliCloseMessage[_lookupKeyHeli]==nil then
 if self.autosmoke==true then
-self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. You're close now! Land or hover at the smoke.",_heliName,_pilotName),10)
+self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. You're close now! Land or hover at the smoke.",_heliName,_pilotName),self.messageTime,true,true)
 else
-self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. You're close now! Land in a safe place, I will go there ",_heliName,_pilotName),10)
+self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. You're close now! Land in a safe place, I will go there ",_heliName,_pilotName),self.messageTime,true,true)
 end
 self.heliCloseMessage[_lookupKeyHeli]=true
 end
@@ -66457,7 +66461,7 @@ if _time==nil then
 self.landedStatus[_lookupKeyHeli]=math.floor((_distance*self.loadtimemax)/self.extractDistance)
 _time=self.landedStatus[_lookupKeyHeli]
 self:_OrderGroupToMoveToPoint(_woundedGroup,_heliUnit:GetCoordinate())
-self:_DisplayMessageToSAR(_heliUnit,"Wait till ".._pilotName..". Gets in \n".._time.." more seconds.",10,true)
+self:_DisplayMessageToSAR(_heliUnit,"Wait till ".._pilotName.." gets in. \nETA ".._time.." more seconds.",self.messageTime,true)
 else
 _time=self.landedStatus[_lookupKeyHeli]-10
 self.landedStatus[_lookupKeyHeli]=_time
@@ -66495,7 +66499,7 @@ _time=self.hoverStatus[_lookupKeyHeli]-10
 self.hoverStatus[_lookupKeyHeli]=_time
 end
 if _time>0 then
-self:_DisplayMessageToSAR(_heliUnit,"Hovering above ".._pilotName..". \n\nHold hover for ".._time.." seconds to winch them up. \n\nIf the countdown stops you're too far away!",10,true)
+self:_DisplayMessageToSAR(_heliUnit,"Hovering above ".._pilotName..". \n\nHold hover for ".._time.." seconds to winch them up. \n\nIf the countdown stops you're too far away!",self.messageTime,true)
 else
 self.hoverStatus[_lookupKeyHeli]=nil
 self:_PickupUnit(_heliUnit,_pilotName,_woundedGroup,_woundedGroupName)
@@ -66503,7 +66507,7 @@ return false
 end
 _reset=false
 else
-self:_DisplayMessageToSAR(_heliUnit,"Too high to winch ".._pilotName.." \nReduce height and hover for 10 seconds!",5,true)
+self:_DisplayMessageToSAR(_heliUnit,"Too high to winch ".._pilotName.." \nReduce height and hover for 10 seconds!",self.messageTime,true,true)
 end
 end
 end
@@ -66525,12 +66529,12 @@ if _woundedGroup and _heliUnit then
 for _currentHeli,_groups in pairs(self.inTransitGroups)do
 if _groups[_woundedGroupName]then
 inTransit=true
-self:_DisplayToAllSAR(string.format("%s has been picked up by %s",_woundedGroupName,_currentHeli),self.coalition,_heliName)
+self:_DisplayToAllSAR(string.format("%s has been picked up by %s",_woundedGroupName,_currentHeli),self.coalition,self.messageTime)
 break
 end
 end
 if not inTransit then
-self:_DisplayToAllSAR(string.format("%s is KIA ",_woundedGroupName),self.coalition,_heliName)
+self:_DisplayToAllSAR(string.format("%s is KIA ",_woundedGroupName),self.coalition,self.messageTime)
 end
 self:_RemoveNameFromDownedPilots(_woundedGroupName)
 end
@@ -66565,10 +66569,11 @@ local _rescuedGroups=self.inTransitGroups[_heliName]
 if _rescuedGroups==nil then
 return
 end
+local PilotsSaved=self:_PilotsOnboard(_heliName)
 self.inTransitGroups[_heliName]=nil
-local _txt=string.format("%s: The pilots have been taken to the\nmedical clinic. Good job!",_heliName)
-self:_DisplayMessageToSAR(_heliUnit,_txt,10)
-self:__Rescued(-1,_heliUnit,_heliName)
+local _txt=string.format("%s: The %d pilot(s) have been taken to the\nmedical clinic. Good job!",_heliName,PilotsSaved)
+self:_DisplayMessageToSAR(_heliUnit,_txt,self.messageTime)
+self:__Rescued(-1,_heliUnit,_heliName,PilotsSaved)
 end
 function CSAR:_GetSARHeli(_unitName)
 self:T(self.lid.." _GetSARHeli")
@@ -66579,11 +66584,20 @@ else
 return nil
 end
 end
-function CSAR:_DisplayMessageToSAR(_unit,_text,_time,_clear)
+function CSAR:_DisplayMessageToSAR(_unit,_text,_time,_clear,_speak)
 self:T(self.lid.." _DisplayMessageToSAR")
 local group=_unit:GetGroup()
 local _clear=_clear or nil
+local _time=_time or self.messageTime
 local m=MESSAGE:New(_text,_time,"Info",_clear):ToGroup(group)
+if _speak and self.useSRS then
+local srstext=SOUNDTEXT:New(_text)
+local path=self.SRSPath
+local modulation=self.SRSModulation
+local channel=self.SRSchannel
+local msrs=MSRS:New(path,channel,modulation)
+msrs:PlaySoundText(srstext,2)
+end
 end
 function CSAR:_GetPositionOfWounded(_woundedGroup)
 self:T(self.lid.." _GetPositionOfWounded")
@@ -66628,7 +66642,13 @@ local _helicoord=_heli:GetCoordinate()
 local _woundcoord=_woundedGroup:GetCoordinate()
 local _distance=self:_GetDistance(_helicoord,_woundcoord)
 self:T({_distance=_distance})
-table.insert(_csarList,{dist=_distance,msg=string.format("%s at %s - %.2f KHz ADF - %.3fKM ",_value.desc,_coordinatesText,_value.frequency/1000,_distance/1000.0)})
+local distancetext=""
+if self.coordtype<4 then
+distancetext=string.format("%.3fnm",UTILS.MetersToNM(_distance))
+else
+distancetext=string.format("%.3fkm",_distance/1000.0)
+end
+table.insert(_csarList,{dist=_distance,msg=string.format("%s at %s - %.2f KHz ADF - %s ",_value.desc,_coordinatesText,_value.frequency/1000,distancetext)})
 end
 end
 local function sortDistance(a,b)
@@ -66638,7 +66658,7 @@ table.sort(_csarList,sortDistance)
 for _,_line in pairs(_csarList)do
 _msg=_msg.."\n".._line.msg
 end
-self:_DisplayMessageToSAR(_heli,_msg,20)
+self:_DisplayMessageToSAR(_heli,_msg,self.messageTime*2)
 end
 function CSAR:_GetClosestDownedPilot(_heli)
 self:T(self.lid.." _GetClosestDownedPilot")
@@ -66673,21 +66693,27 @@ end
 local _closest=self:_GetClosestDownedPilot(_heli)
 if _closest~=nil and _closest.pilot~=nil and _closest.distance<8000.0 then
 local _clockDir=self:_GetClockDirection(_heli,_closest.pilot)
-local _msg=string.format("%s - %.2f KHz ADF - %.3fM - Popping Signal Flare at your %s o\'clock",_closest.groupInfo.desc,_closest.groupInfo.frequency/1000,_closest.distance,_clockDir)
-self:_DisplayMessageToSAR(_heli,_msg,20)
+local _distance=0
+if self.coordtype<4 then
+_distance=string.format("%.3fnm",UTILS.MetersToNM(_closest.distance))
+else
+_distance=string.format("%.3fkm",_closest.distance)
+end
+local _msg=string.format("%s - Popping signal flare at your %s o\'clock. Distance %s",_unitName,_clockDir,_distance)
+self:_DisplayMessageToSAR(_heli,_msg,self.messageTime,false,true)
 local _coord=_closest.pilot:GetCoordinate()
 _coord:FlareRed(_clockDir)
 else
-self:_DisplayMessageToSAR(_heli,"No Pilots within 8KM",20)
+self:_DisplayMessageToSAR(_heli,"No Pilots within 8km/4.32nm",self.messageTime)
 end
 end
-function CSAR:_DisplayToAllSAR(_message,_side,_ignore)
+function CSAR:_DisplayToAllSAR(_message,_side,_messagetime)
 self:T(self.lid.." _DisplayToAllSAR")
 for _,_unitName in pairs(self.csarUnits)do
 local _unit=self:_GetSARHeli(_unitName)
 if _unit then
-if not _ignore then
-self:_DisplayMessageToSAR(_unit,_message,10)
+if not _messagetime then
+self:_DisplayMessageToSAR(_unit,_message,_messagetime)
 end
 end
 end
@@ -66701,13 +66727,19 @@ end
 local _closest=self:_GetClosestDownedPilot(_heli)
 if _closest~=nil and _closest.pilot~=nil and _closest.distance<8000.0 then
 local _clockDir=self:_GetClockDirection(_heli,_closest.pilot)
-local _msg=string.format("%s - %.2f KHz ADF - %.3fM - Popping Blue smoke at your %s o\'clock",_closest.groupInfo.desc,_closest.groupInfo.frequency/1000,_closest.distance,_clockDir)
-self:_DisplayMessageToSAR(_heli,_msg,20)
+local _distance=0
+if self.coordtype<4 then
+_distance=string.format("%.3fnm",UTILS.MetersToNM(_closest.distance))
+else
+_distance=string.format("%.3fkm",_closest.distance)
+end
+local _msg=string.format("%s - Popping signal smoke at your %s o\'clock. Distance %s",_unitName,_clockDir,_distance)
+self:_DisplayMessageToSAR(_heli,_msg,self.messageTime,false,true)
 local _coord=_closest.pilot:GetCoordinate()
 local color=self.smokecolor
 _coord:Smoke(color)
 else
-self:_DisplayMessageToSAR(_heli,"No Pilots within 8KM",20)
+self:_DisplayMessageToSAR(_heli,"No Pilots within 8km/4.32nm",self.messageTime)
 end
 end
 function CSAR:_GetClosestMASH(_heli)
@@ -66766,7 +66798,7 @@ local _text="Onboard - RTB to FARP/Airfield or MASH: "
 for _,_onboard in pairs(self.inTransitGroups[_unitName])do
 _text=_text.."\n".._onboard.desc
 end
-self:_DisplayMessageToSAR(_unit,_text,self.messageTime)
+self:_DisplayMessageToSAR(_unit,_text,self.messageTime*2)
 end
 end
 function CSAR:_AddMedevacMenuItem()
@@ -67010,7 +67042,7 @@ self:T({From,Event,To,Heliname,Woundedgroupname})
 self:_ScheduledSARFlight(Heliname,Woundedgroupname)
 return self
 end
-function CSAR:onbeforeRescued(From,Event,To,HeliUnit,HeliName)
+function CSAR:onbeforeRescued(From,Event,To,HeliUnit,HeliName,PilotsSaved)
 self:T({From,Event,To,HeliName,HeliUnit})
 self.rescues=self.rescues+1
 return self
