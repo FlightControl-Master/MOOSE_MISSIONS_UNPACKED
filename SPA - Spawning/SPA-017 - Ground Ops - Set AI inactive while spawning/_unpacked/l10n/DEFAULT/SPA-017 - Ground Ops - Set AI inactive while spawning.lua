@@ -1,6 +1,7 @@
 -- Name: SPA-017 - Ground Ops - Set AI inactive while spawning
 -- Author: FlightControl
 -- Date Created: 24 Jan 2017
+-- Checked in 15 dez 2020 by ZERO
 --
 -- # Situation:
 --
@@ -11,7 +12,7 @@
 -- 
 -- 1. Observe that the ground vehicles are spawned at the position declared within the mission editor.
 -- 2. The vehicles should spawn according the scheduler parameters.
--- 3. There should not be more than 5 groups spawned.
+-- 3. There should not be more than 10 groups spawned.
 -- 4. Observe that the AI is inactivated, and thus, the vehicles aren't moving.
 -- 5. Observe that the position where the units are spawned, is randomized in the zones perimeters.
 

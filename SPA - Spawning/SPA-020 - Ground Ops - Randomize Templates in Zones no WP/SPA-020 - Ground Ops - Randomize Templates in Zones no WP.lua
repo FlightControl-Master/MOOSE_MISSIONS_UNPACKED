@@ -2,6 +2,7 @@
 -- Name: SPA-020 - Ground Ops - Randomize Templates in Random Zones without Waypoints
 -- Author: FlightControl
 -- Date Created: 24 Feb 2017
+-- Checked in 15 dez 2020 by ZERO
 --
 -- # Situation:
 --
