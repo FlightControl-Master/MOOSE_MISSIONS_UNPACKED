@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-06-11T11:38:25.0000000Z-973b8323c99683b60aefe9051d6a8219a63d1558 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-06-13T08:59:46.0000000Z-8d8070bbd725d031ff842dc84204c259fa19f91f ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -2069,6 +2069,7 @@ Normandy="Normandy",
 PersianGulf="PersianGulf",
 TheChannel="TheChannel",
 Syria="Syria",
+MarianaIslands="MarianaIslands"
 }
 CALLSIGN={
 Aircraft={
@@ -2519,6 +2520,14 @@ table.insert(result,each)
 end
 return result
 end
+function UTILS.GetCharacters(str)
+local chars={}
+for i=1,#str do
+local c=str:sub(i,i)
+table.insert(chars,c)
+end
+return chars
+end
 function UTILS.SecondsToClock(seconds,short)
 if seconds==nil then
 return nil
@@ -2748,6 +2757,8 @@ elseif map==DCSMAP.TheChannel then
 declination=-10
 elseif map==DCSMAP.Syria then
 declination=5
+elseif map==DCSMAP.MarianaIslands then
+declination=2
 else
 declination=0
 end
@@ -2840,6 +2851,8 @@ elseif theatre==DCSMAP.TheChannel then
 return 2
 elseif theatre==DCSMAP.Syria then
 return 3
+elseif theatre==DCSMAP.MarianaIslands then
+return 10
 else
 BASE:E(string.format("ERROR: Unknown Map %s in UTILS.GMTToLocal function. Returning 0",tostring(theatre)))
 return 0
@@ -3571,6 +3584,123 @@ TEMPLATE.GenericAircraft=
 },
 },
 }
+STTS={
+ClassName="STTS",
+DIRECTORY="",
+SRS_PORT=5002,
+GOOGLE_CREDENTIALS="C:\\Users\\Ciaran\\Downloads\\googletts.json",
+EXECUTABLE="DCS-SR-ExternalAudio.exe",
+}
+STTS.DIRECTORY="D:/DCS/_SRS"
+STTS.SRS_PORT=5002
+STTS.GOOGLE_CREDENTIALS="C:\\Users\\Ciaran\\Downloads\\googletts.json"
+STTS.EXECUTABLE="DCS-SR-ExternalAudio.exe"
+function STTS.uuid()
+local random=math.random
+local template='yxxx-xxxxxxxxxxxx'
+return string.gsub(template,'[xy]',function(c)
+local v=(c=='x')and random(0,0xf)or random(8,0xb)
+return string.format('%x',v)
+end)
+end
+function STTS.round(x,n)
+n=math.pow(10,n or 0)
+x=x*n
+if x>=0 then x=math.floor(x+0.5)else x=math.ceil(x-0.5)end
+return x/n
+end
+function STTS.getSpeechTime(length,speed,isGoogle)
+local maxRateRatio=3
+speed=speed or 1.0
+isGoogle=isGoogle or false
+local speedFactor=1.0
+if isGoogle then
+speedFactor=speed
+else
+if speed~=0 then
+speedFactor=math.abs(speed)*(maxRateRatio-1)/10+1
+end
+if speed<0 then
+speedFactor=1/speedFactor
+end
+end
+local wpm=math.ceil(100*speedFactor)
+local cps=math.floor((wpm*5)/60)
+if type(length)=="string"then
+length=string.len(length)
+end
+return math.ceil(length/cps)
+end
+function STTS.TextToSpeech(message,freqs,modulations,volume,name,coalition,point,speed,gender,culture,voice,googleTTS)
+if os==nil or io==nil then
+env.info("[DCS-STTS] LUA modules os or io are sanitized. skipping. ")
+return
+end
+speed=speed or 1
+gender=gender or"female"
+culture=culture or""
+voice=voice or""
+coalition=coalition or"0"
+name=name or"ROBOT"
+volume=1
+speed=1
+message=message:gsub("\"","\\\"")
+local cmd=string.format("start /min \"\" /d \"%s\" /b \"%s\" -f %s -m %s -c %s -p %s -n \"%s\" -h",STTS.DIRECTORY,STTS.EXECUTABLE,freqs or"305",modulations or"AM",coalition,STTS.SRS_PORT,name)
+if voice~=""then
+cmd=cmd..string.format(" -V \"%s\"",voice)
+else
+if culture~=""then
+cmd=cmd..string.format(" -l %s",culture)
+end
+if gender~=""then
+cmd=cmd..string.format(" -g %s",gender)
+end
+end
+if googleTTS==true then
+cmd=cmd..string.format(" -G \"%s\"",STTS.GOOGLE_CREDENTIALS)
+end
+if speed~=1 then
+cmd=cmd..string.format(" -s %s",speed)
+end
+if volume~=1.0 then
+cmd=cmd..string.format(" -v %s",volume)
+end
+if point and type(point)=="table"and point.x then
+local lat,lon,alt=coord.LOtoLL(point)
+lat=STTS.round(lat,4)
+lon=STTS.round(lon,4)
+alt=math.floor(alt)
+cmd=cmd..string.format(" -L %s -O %s -A %s",lat,lon,alt)
+end
+cmd=cmd..string.format(" -t \"%s\"",message)
+if string.len(cmd)>255 then
+local filename=os.getenv('TMP').."\\DCS_STTS-"..STTS.uuid()..".bat"
+local script=io.open(filename,"w+")
+script:write(cmd.." && exit")
+script:close()
+cmd=string.format("\"%s\"",filename)
+timer.scheduleFunction(os.remove,filename,timer.getTime()+1)
+end
+if string.len(cmd)>255 then
+env.info("[DCS-STTS] - cmd string too long")
+env.info("[DCS-STTS] TextToSpeech Command :\n"..cmd.."\n")
+end
+os.execute(cmd)
+return STTS.getSpeechTime(message,speed,googleTTS)
+end
+function STTS.PlayMP3(pathToMP3,freqs,modulations,volume,name,coalition,point)
+local cmd=string.format("start \"\" /d \"%s\" /b /min \"%s\" -i \"%s\" -f %s -m %s -c %s -p %s -n \"%s\" -v %s -h",
+STTS.DIRECTORY,STTS.EXECUTABLE,pathToMP3,freqs or"305",modulations or"AM",coalition or"0",STTS.SRS_PORT,name or"ROBOT",volume or"1")
+if point and type(point)=="table"and point.x then
+local lat,lon,alt=coord.LOtoLL(point)
+lat=STTS.round(lat,4)
+lon=STTS.round(lon,4)
+alt=math.floor(alt)
+cmd=cmd..string.format(" -L %s -O %s -A %s",lat,lon,alt)
+end
+env.info("[DCS-STTS] MP3/OGG Command :\n"..cmd.."\n")
+os.execute(cmd)
+end
 local _TraceOnOff=true
 local _TraceLevel=1
 local _TraceAll=false
@@ -4026,6 +4156,217 @@ else
 env.info(string.format("%1s:%30s%05d(%s)","I",self.ClassName,self.ClassID,routines.utils.oneLineSerialize(Arguments)))
 end
 end
+BEACON={
+ClassName="BEACON",
+Positionable=nil,
+name=nil,
+}
+BEACON.Type={
+NULL=0,
+VOR=1,
+DME=2,
+VOR_DME=3,
+TACAN=4,
+VORTAC=5,
+RSBN=128,
+BROADCAST_STATION=1024,
+HOMER=8,
+AIRPORT_HOMER=4104,
+AIRPORT_HOMER_WITH_MARKER=4136,
+ILS_FAR_HOMER=16408,
+ILS_NEAR_HOMER=16424,
+ILS_LOCALIZER=16640,
+ILS_GLIDESLOPE=16896,
+PRMG_LOCALIZER=33024,
+PRMG_GLIDESLOPE=33280,
+ICLS=131584,
+ICLS_LOCALIZER=131328,
+ICLS_GLIDESLOPE=131584,
+NAUTICAL_HOMER=65536,
+}
+BEACON.System={
+PAR_10=1,
+RSBN_5=2,
+TACAN=3,
+TACAN_TANKER_X=4,
+TACAN_TANKER_Y=5,
+VOR=6,
+ILS_LOCALIZER=7,
+ILS_GLIDESLOPE=8,
+PRMG_LOCALIZER=9,
+PRMG_GLIDESLOPE=10,
+BROADCAST_STATION=11,
+VORTAC=12,
+TACAN_AA_MODE_X=13,
+TACAN_AA_MODE_Y=14,
+VORDME=15,
+ICLS_LOCALIZER=16,
+ICLS_GLIDESLOPE=17,
+}
+function BEACON:New(Positionable)
+local self=BASE:Inherit(self,BASE:New())
+self:F(Positionable)
+if Positionable:GetPointVec2()then
+self.Positionable=Positionable
+self.name=Positionable:GetName()
+self:I(string.format("New BEACON %s",tostring(self.name)))
+return self
+end
+self:E({"The passed positionable is invalid, no BEACON created",Positionable})
+return nil
+end
+function BEACON:ActivateTACAN(Channel,Mode,Message,Bearing,Duration)
+self:T({channel=Channel,mode=Mode,callsign=Message,bearing=Bearing,duration=Duration})
+local Frequency=UTILS.TACANToFrequency(Channel,Mode)
+if not Frequency then
+self:E({"The passed TACAN channel is invalid, the BEACON is not emitting"})
+return self
+end
+local Type=BEACON.Type.TACAN
+local System=BEACON.System.TACAN
+local AA=self.Positionable:IsAir()
+if AA then
+System=5
+if Mode~="Y"then
+self:E({"WARNING: The POSITIONABLE you want to attach the AA Tacan Beacon is an aircraft: Mode should Y !The BEACON is not emitting.",self.Positionable})
+end
+end
+local UnitID=self.Positionable:GetID()
+self:I({string.format("BEACON Activating TACAN %s: Channel=%d%s, Morse=%s, Bearing=%s, Duration=%s!",tostring(self.name),Channel,Mode,Message,tostring(Bearing),tostring(Duration))})
+self.Positionable:CommandActivateBeacon(Type,System,Frequency,UnitID,Channel,Mode,AA,Message,Bearing)
+if Duration then
+self.Positionable:DeactivateBeacon(Duration)
+end
+return self
+end
+function BEACON:ActivateICLS(Channel,Callsign,Duration)
+self:F({Channel=Channel,Callsign=Callsign,Duration=Duration})
+local UnitID=self.Positionable:GetID()
+self:T2({"ICLS BEACON started!"})
+self.Positionable:CommandActivateICLS(Channel,UnitID,Callsign)
+if Duration then
+self.Positionable:DeactivateBeacon(Duration)
+end
+return self
+end
+function BEACON:AATACAN(TACANChannel,Message,Bearing,BeaconDuration)
+self:F({TACANChannel,Message,Bearing,BeaconDuration})
+local IsValid=true
+if not self.Positionable:IsAir()then
+self:E({"The POSITIONABLE you want to attach the AA Tacan Beacon is not an aircraft ! The BEACON is not emitting",self.Positionable})
+IsValid=false
+end
+local Frequency=self:_TACANToFrequency(TACANChannel,"Y")
+if not Frequency then
+self:E({"The passed TACAN channel is invalid, the BEACON is not emitting"})
+IsValid=false
+end
+local System
+if Bearing then
+System=5
+else
+System=14
+end
+if IsValid then
+self:T2({"AA TACAN BEACON started !"})
+self.Positionable:SetCommand({
+id="ActivateBeacon",
+params={
+type=4,
+system=System,
+callsign=Message,
+frequency=Frequency,
+}
+})
+if BeaconDuration then
+SCHEDULER:New(nil,
+function()
+self:StopAATACAN()
+end,{},BeaconDuration)
+end
+end
+return self
+end
+function BEACON:StopAATACAN()
+self:F()
+if not self.Positionable then
+self:E({"Start the beacon first before stoping it !"})
+else
+self.Positionable:SetCommand({
+id='DeactivateBeacon',
+params={
+}
+})
+end
+end
+function BEACON:RadioBeacon(FileName,Frequency,Modulation,Power,BeaconDuration)
+self:F({FileName,Frequency,Modulation,Power,BeaconDuration})
+local IsValid=false
+if type(FileName)=="string"then
+if FileName:find(".ogg")or FileName:find(".wav")then
+if not FileName:find("l10n/DEFAULT/")then
+FileName="l10n/DEFAULT/"..FileName
+end
+IsValid=true
+end
+end
+if not IsValid then
+self:E({"File name invalid. Maybe something wrong with the extension ? ",FileName})
+end
+if type(Frequency)~="number"and IsValid then
+self:E({"Frequency invalid. ",Frequency})
+IsValid=false
+end
+Frequency=Frequency*1000000
+if Modulation~=radio.modulation.AM and Modulation~=radio.modulation.FM and IsValid then
+self:E({"Modulation is invalid. Use DCS's enum radio.modulation.",Modulation})
+IsValid=false
+end
+if type(Power)~="number"and IsValid then
+self:E({"Power is invalid. ",Power})
+IsValid=false
+end
+Power=math.floor(math.abs(Power))
+if IsValid then
+self:T2({"Activating Beacon on ",Frequency,Modulation})
+trigger.action.radioTransmission(FileName,self.Positionable:GetPositionVec3(),Modulation,true,Frequency,Power,tostring(self.ID))
+if BeaconDuration then
+SCHEDULER:New(nil,
+function()
+self:StopRadioBeacon()
+end,{},BeaconDuration)
+end
+end
+end
+function BEACON:StopRadioBeacon()
+self:F()
+trigger.action.stopRadioTransmission(tostring(self.ID))
+return self
+end
+function BEACON:_TACANToFrequency(TACANChannel,TACANMode)
+self:F3({TACANChannel,TACANMode})
+if type(TACANChannel)~="number"then
+if TACANMode~="X"and TACANMode~="Y"then
+return nil
+end
+end
+local A=1151
+local B=64
+if TACANChannel<64 then
+B=1
+end
+if TACANMode=='Y'then
+A=1025
+if TACANChannel<64 then
+A=1088
+end
+else
+if TACANChannel<64 then
+A=962
+end
+end
+return(A+TACANChannel-B)*1000000
+end
 do
 USERFLAG={
 ClassName="USERFLAG",
@@ -4052,41 +4393,6 @@ return trigger.misc.getUserFlag(self.UserFlagName)
 end
 function USERFLAG:Is(Number)
 return trigger.misc.getUserFlag(self.UserFlagName)==Number
-end
-end
-do
-USERSOUND={
-ClassName="USERSOUND",
-}
-function USERSOUND:New(UserSoundFileName)
-local self=BASE:Inherit(self,BASE:New())
-self.UserSoundFileName=UserSoundFileName
-return self
-end
-function USERSOUND:SetFileName(UserSoundFileName)
-self.UserSoundFileName=UserSoundFileName
-return self
-end
-function USERSOUND:ToAll()
-trigger.action.outSound(self.UserSoundFileName)
-return self
-end
-function USERSOUND:ToCoalition(Coalition)
-trigger.action.outSoundForCoalition(Coalition,self.UserSoundFileName)
-return self
-end
-function USERSOUND:ToCountry(Country)
-trigger.action.outSoundForCountry(Country,self.UserSoundFileName)
-return self
-end
-function USERSOUND:ToGroup(Group,Delay)
-Delay=Delay or 0
-if Delay>0 then
-SCHEDULER:New(nil,USERSOUND.ToGroup,{self,Group},Delay)
-else
-trigger.action.outSoundForGroup(Group:GetID(),self.UserSoundFileName)
-end
-return self
 end
 end
 REPORT={
@@ -13380,924 +13686,6 @@ return self[handler](self,self.Set,unpack(params))
 end
 end
 end
-RADIO={
-ClassName="RADIO",
-FileName="",
-Frequency=0,
-Modulation=radio.modulation.AM,
-Subtitle="",
-SubtitleDuration=0,
-Power=100,
-Loop=false,
-alias=nil,
-}
-function RADIO:New(Positionable)
-local self=BASE:Inherit(self,BASE:New())
-self:F(Positionable)
-if Positionable:GetPointVec2()then
-self.Positionable=Positionable
-return self
-end
-self:E({error="The passed positionable is invalid, no RADIO created!",positionable=Positionable})
-return nil
-end
-function RADIO:SetAlias(alias)
-self.alias=tostring(alias)
-return self
-end
-function RADIO:GetAlias()
-return tostring(self.alias)
-end
-function RADIO:SetFileName(FileName)
-self:F2(FileName)
-if type(FileName)=="string"then
-if FileName:find(".ogg")or FileName:find(".wav")then
-if not FileName:find("l10n/DEFAULT/")then
-FileName="l10n/DEFAULT/"..FileName
-end
-self.FileName=FileName
-return self
-end
-end
-self:E({"File name invalid. Maybe something wrong with the extension?",FileName})
-return self
-end
-function RADIO:SetFrequency(Frequency)
-self:F2(Frequency)
-if type(Frequency)=="number"then
-if(Frequency>=30 and Frequency<=87.995)or(Frequency>=108 and Frequency<=173.995)or(Frequency>=225 and Frequency<=399.975)then
-self.Frequency=Frequency*1000000
-if self.Positionable.ClassName=="UNIT"or self.Positionable.ClassName=="GROUP"then
-local commandSetFrequency={
-id="SetFrequency",
-params={
-frequency=self.Frequency,
-modulation=self.Modulation,
-}
-}
-self:T2(commandSetFrequency)
-self.Positionable:SetCommand(commandSetFrequency)
-end
-return self
-end
-end
-self:E({"Frequency is outside of DCS Frequency ranges (30-80, 108-152, 225-400). Frequency unchanged.",Frequency})
-return self
-end
-function RADIO:SetModulation(Modulation)
-self:F2(Modulation)
-if type(Modulation)=="number"then
-if Modulation==radio.modulation.AM or Modulation==radio.modulation.FM then
-self.Modulation=Modulation
-return self
-end
-end
-self:E({"Modulation is invalid. Use DCS's enum radio.modulation. Modulation unchanged.",self.Modulation})
-return self
-end
-function RADIO:SetPower(Power)
-self:F2(Power)
-if type(Power)=="number"then
-self.Power=math.floor(math.abs(Power))
-else
-self:E({"Power is invalid. Power unchanged.",self.Power})
-end
-return self
-end
-function RADIO:SetLoop(Loop)
-self:F2(Loop)
-if type(Loop)=="boolean"then
-self.Loop=Loop
-return self
-end
-self:E({"Loop is invalid. Loop unchanged.",self.Loop})
-return self
-end
-function RADIO:SetSubtitle(Subtitle,SubtitleDuration)
-self:F2({Subtitle,SubtitleDuration})
-if type(Subtitle)=="string"then
-self.Subtitle=Subtitle
-else
-self.Subtitle=""
-self:E({"Subtitle is invalid. Subtitle reset.",self.Subtitle})
-end
-if type(SubtitleDuration)=="number"then
-self.SubtitleDuration=SubtitleDuration
-else
-self.SubtitleDuration=0
-self:E({"SubtitleDuration is invalid. SubtitleDuration reset.",self.SubtitleDuration})
-end
-return self
-end
-function RADIO:NewGenericTransmission(FileName,Frequency,Modulation,Power,Loop)
-self:F({FileName,Frequency,Modulation,Power})
-self:SetFileName(FileName)
-if Frequency then self:SetFrequency(Frequency)end
-if Modulation then self:SetModulation(Modulation)end
-if Power then self:SetPower(Power)end
-if Loop then self:SetLoop(Loop)end
-return self
-end
-function RADIO:NewUnitTransmission(FileName,Subtitle,SubtitleDuration,Frequency,Modulation,Loop)
-self:F({FileName,Subtitle,SubtitleDuration,Frequency,Modulation,Loop})
-self:SetFileName(FileName)
-if Modulation then
-self:SetModulation(Modulation)
-end
-if Frequency then
-self:SetFrequency(Frequency)
-end
-if Subtitle then
-self:SetSubtitle(Subtitle,SubtitleDuration or 0)
-end
-if Loop then
-self:SetLoop(Loop)
-end
-return self
-end
-function RADIO:Broadcast(viatrigger)
-self:F({viatrigger=viatrigger})
-if(self.Positionable.ClassName=="UNIT"or self.Positionable.ClassName=="GROUP")and(not viatrigger)then
-self:T("Broadcasting from a UNIT or a GROUP")
-local commandTransmitMessage={
-id="TransmitMessage",
-params={
-file=self.FileName,
-duration=self.SubtitleDuration,
-subtitle=self.Subtitle,
-loop=self.Loop,
-}}
-self:T3(commandTransmitMessage)
-self.Positionable:SetCommand(commandTransmitMessage)
-else
-self:T("Broadcasting from a POSITIONABLE")
-trigger.action.radioTransmission(self.FileName,self.Positionable:GetPositionVec3(),self.Modulation,self.Loop,self.Frequency,self.Power,tostring(self.ID))
-end
-return self
-end
-function RADIO:StopBroadcast()
-self:F()
-if self.Positionable.ClassName=="UNIT"or self.Positionable.ClassName=="GROUP"then
-local commandStopTransmission={id="StopTransmission",params={}}
-self.Positionable:SetCommand(commandStopTransmission)
-else
-trigger.action.stopRadioTransmission(tostring(self.ID))
-end
-return self
-end
-BEACON={
-ClassName="BEACON",
-Positionable=nil,
-name=nil,
-}
-BEACON.Type={
-NULL=0,
-VOR=1,
-DME=2,
-VOR_DME=3,
-TACAN=4,
-VORTAC=5,
-RSBN=128,
-BROADCAST_STATION=1024,
-HOMER=8,
-AIRPORT_HOMER=4104,
-AIRPORT_HOMER_WITH_MARKER=4136,
-ILS_FAR_HOMER=16408,
-ILS_NEAR_HOMER=16424,
-ILS_LOCALIZER=16640,
-ILS_GLIDESLOPE=16896,
-PRMG_LOCALIZER=33024,
-PRMG_GLIDESLOPE=33280,
-ICLS=131584,
-ICLS_LOCALIZER=131328,
-ICLS_GLIDESLOPE=131584,
-NAUTICAL_HOMER=65536,
-}
-BEACON.System={
-PAR_10=1,
-RSBN_5=2,
-TACAN=3,
-TACAN_TANKER_X=4,
-TACAN_TANKER_Y=5,
-VOR=6,
-ILS_LOCALIZER=7,
-ILS_GLIDESLOPE=8,
-PRMG_LOCALIZER=9,
-PRMG_GLIDESLOPE=10,
-BROADCAST_STATION=11,
-VORTAC=12,
-TACAN_AA_MODE_X=13,
-TACAN_AA_MODE_Y=14,
-VORDME=15,
-ICLS_LOCALIZER=16,
-ICLS_GLIDESLOPE=17,
-}
-function BEACON:New(Positionable)
-local self=BASE:Inherit(self,BASE:New())
-self:F(Positionable)
-if Positionable:GetPointVec2()then
-self.Positionable=Positionable
-self.name=Positionable:GetName()
-self:I(string.format("New BEACON %s",tostring(self.name)))
-return self
-end
-self:E({"The passed positionable is invalid, no BEACON created",Positionable})
-return nil
-end
-function BEACON:ActivateTACAN(Channel,Mode,Message,Bearing,Duration)
-self:T({channel=Channel,mode=Mode,callsign=Message,bearing=Bearing,duration=Duration})
-local Frequency=UTILS.TACANToFrequency(Channel,Mode)
-if not Frequency then
-self:E({"The passed TACAN channel is invalid, the BEACON is not emitting"})
-return self
-end
-local Type=BEACON.Type.TACAN
-local System=BEACON.System.TACAN
-local AA=self.Positionable:IsAir()
-if AA then
-System=5
-if Mode~="Y"then
-self:E({"WARNING: The POSITIONABLE you want to attach the AA Tacan Beacon is an aircraft: Mode should Y !The BEACON is not emitting.",self.Positionable})
-end
-end
-local UnitID=self.Positionable:GetID()
-self:I({string.format("BEACON Activating TACAN %s: Channel=%d%s, Morse=%s, Bearing=%s, Duration=%s!",tostring(self.name),Channel,Mode,Message,tostring(Bearing),tostring(Duration))})
-self.Positionable:CommandActivateBeacon(Type,System,Frequency,UnitID,Channel,Mode,AA,Message,Bearing)
-if Duration then
-self.Positionable:DeactivateBeacon(Duration)
-end
-return self
-end
-function BEACON:ActivateICLS(Channel,Callsign,Duration)
-self:F({Channel=Channel,Callsign=Callsign,Duration=Duration})
-local UnitID=self.Positionable:GetID()
-self:T2({"ICLS BEACON started!"})
-self.Positionable:CommandActivateICLS(Channel,UnitID,Callsign)
-if Duration then
-self.Positionable:DeactivateBeacon(Duration)
-end
-return self
-end
-function BEACON:AATACAN(TACANChannel,Message,Bearing,BeaconDuration)
-self:F({TACANChannel,Message,Bearing,BeaconDuration})
-local IsValid=true
-if not self.Positionable:IsAir()then
-self:E({"The POSITIONABLE you want to attach the AA Tacan Beacon is not an aircraft ! The BEACON is not emitting",self.Positionable})
-IsValid=false
-end
-local Frequency=self:_TACANToFrequency(TACANChannel,"Y")
-if not Frequency then
-self:E({"The passed TACAN channel is invalid, the BEACON is not emitting"})
-IsValid=false
-end
-local System
-if Bearing then
-System=5
-else
-System=14
-end
-if IsValid then
-self:T2({"AA TACAN BEACON started !"})
-self.Positionable:SetCommand({
-id="ActivateBeacon",
-params={
-type=4,
-system=System,
-callsign=Message,
-frequency=Frequency,
-}
-})
-if BeaconDuration then
-SCHEDULER:New(nil,
-function()
-self:StopAATACAN()
-end,{},BeaconDuration)
-end
-end
-return self
-end
-function BEACON:StopAATACAN()
-self:F()
-if not self.Positionable then
-self:E({"Start the beacon first before stoping it !"})
-else
-self.Positionable:SetCommand({
-id='DeactivateBeacon',
-params={
-}
-})
-end
-end
-function BEACON:RadioBeacon(FileName,Frequency,Modulation,Power,BeaconDuration)
-self:F({FileName,Frequency,Modulation,Power,BeaconDuration})
-local IsValid=false
-if type(FileName)=="string"then
-if FileName:find(".ogg")or FileName:find(".wav")then
-if not FileName:find("l10n/DEFAULT/")then
-FileName="l10n/DEFAULT/"..FileName
-end
-IsValid=true
-end
-end
-if not IsValid then
-self:E({"File name invalid. Maybe something wrong with the extension ? ",FileName})
-end
-if type(Frequency)~="number"and IsValid then
-self:E({"Frequency invalid. ",Frequency})
-IsValid=false
-end
-Frequency=Frequency*1000000
-if Modulation~=radio.modulation.AM and Modulation~=radio.modulation.FM and IsValid then
-self:E({"Modulation is invalid. Use DCS's enum radio.modulation.",Modulation})
-IsValid=false
-end
-if type(Power)~="number"and IsValid then
-self:E({"Power is invalid. ",Power})
-IsValid=false
-end
-Power=math.floor(math.abs(Power))
-if IsValid then
-self:T2({"Activating Beacon on ",Frequency,Modulation})
-trigger.action.radioTransmission(FileName,self.Positionable:GetPositionVec3(),Modulation,true,Frequency,Power,tostring(self.ID))
-if BeaconDuration then
-SCHEDULER:New(nil,
-function()
-self:StopRadioBeacon()
-end,{},BeaconDuration)
-end
-end
-end
-function BEACON:StopRadioBeacon()
-self:F()
-trigger.action.stopRadioTransmission(tostring(self.ID))
-return self
-end
-function BEACON:_TACANToFrequency(TACANChannel,TACANMode)
-self:F3({TACANChannel,TACANMode})
-if type(TACANChannel)~="number"then
-if TACANMode~="X"and TACANMode~="Y"then
-return nil
-end
-end
-local A=1151
-local B=64
-if TACANChannel<64 then
-B=1
-end
-if TACANMode=='Y'then
-A=1025
-if TACANChannel<64 then
-A=1088
-end
-else
-if TACANChannel<64 then
-A=962
-end
-end
-return(A+TACANChannel-B)*1000000
-end
-RADIOQUEUE={
-ClassName="RADIOQUEUE",
-Debugmode=nil,
-lid=nil,
-frequency=nil,
-modulation=nil,
-scheduler=nil,
-RQid=nil,
-queue={},
-alias=nil,
-dt=nil,
-delay=nil,
-Tlast=nil,
-sendercoord=nil,
-sendername=nil,
-senderinit=nil,
-power=nil,
-numbers={},
-checking=nil,
-schedonce=false,
-}
-function RADIOQUEUE:New(frequency,modulation,alias)
-local self=BASE:Inherit(self,BASE:New())
-self.alias=alias or"My Radio"
-self.lid=string.format("RADIOQUEUE %s | ",self.alias)
-if frequency==nil then
-self:E(self.lid.."ERROR: No frequency specified as first parameter!")
-return nil
-end
-self.frequency=frequency*1000000
-self.modulation=modulation or radio.modulation.AM
-self:SetRadioPower()
-self.scheduler=SCHEDULER:New()
-self.scheduler:NoTrace()
-return self
-end
-function RADIOQUEUE:Start(delay,dt)
-self.delay=delay or 1
-self.dt=dt or 0.01
-self:I(self.lid..string.format("Starting RADIOQUEUE %s on Frequency %.2f MHz [modulation=%d] in %.1f seconds (dt=%.3f sec)",self.alias,self.frequency/1000000,self.modulation,self.delay,self.dt))
-if self.schedonce then
-self:_CheckRadioQueueDelayed(delay)
-else
-self.RQid=self.scheduler:Schedule(nil,RADIOQUEUE._CheckRadioQueue,{self},delay,dt)
-end
-return self
-end
-function RADIOQUEUE:Stop()
-self:I(self.lid.."Stopping RADIOQUEUE.")
-self.scheduler:Stop(self.RQid)
-self.queue={}
-return self
-end
-function RADIOQUEUE:SetSenderCoordinate(coordinate)
-self.sendercoord=coordinate
-return self
-end
-function RADIOQUEUE:SetSenderUnitName(name)
-self.sendername=name
-return self
-end
-function RADIOQUEUE:SetRadioPower(power)
-self.power=power or 100
-return self
-end
-function RADIOQUEUE:SetDigit(digit,filename,duration,path,subtitle,subduration)
-local transmission={}
-transmission.filename=filename
-transmission.duration=duration
-transmission.path=path or"l10n/DEFAULT/"
-transmission.subtitle=nil
-transmission.subduration=nil
-if type(digit)=="number"then
-digit=tostring(digit)
-end
-self.numbers[digit]=transmission
-return self
-end
-function RADIOQUEUE:AddTransmission(transmission)
-self:F({transmission=transmission})
-transmission.isplaying=false
-transmission.Tstarted=nil
-table.insert(self.queue,transmission)
-if self.schedonce and not self.checking then
-self:_CheckRadioQueueDelayed()
-end
-return self
-end
-function RADIOQUEUE:NewTransmission(filename,duration,path,tstart,interval,subtitle,subduration)
-if not filename then
-self:E(self.lid.."ERROR: No filename specified.")
-return nil
-end
-if type(filename)~="string"then
-self:E(self.lid.."ERROR: Filename specified is NOT a string.")
-return nil
-end
-if not duration then
-self:E(self.lid.."ERROR: No duration of transmission specified.")
-return nil
-end
-if type(duration)~="number"then
-self:E(self.lid.."ERROR: Duration specified is NOT a number.")
-return nil
-end
-local transmission={}
-transmission.filename=filename
-transmission.duration=duration
-transmission.path=path or"l10n/DEFAULT/"
-transmission.Tplay=tstart or timer.getAbsTime()
-transmission.subtitle=subtitle
-transmission.interval=interval or 0
-if transmission.subtitle then
-transmission.subduration=subduration or 5
-else
-transmission.subduration=nil
-end
-self:AddTransmission(transmission)
-return self
-end
-function RADIOQUEUE:Number2Transmission(number,delay,interval)
-local function _split(str)
-local chars={}
-for i=1,#str do
-local c=str:sub(i,i)
-table.insert(chars,c)
-end
-return chars
-end
-local numbers=_split(number)
-local wait=0
-for i=1,#numbers do
-local n=numbers[i]
-local transmission=UTILS.DeepCopy(self.numbers[n])
-transmission.Tplay=timer.getAbsTime()+(delay or 0)
-if interval and i==1 then
-transmission.interval=interval
-end
-self:AddTransmission(transmission)
-wait=wait+transmission.duration
-end
-return wait
-end
-function RADIOQUEUE:Broadcast(transmission)
-local sender=self:_GetRadioSender()
-local filename=string.format("%s%s",transmission.path,transmission.filename)
-if sender then
-self:T(self.lid..string.format("Broadcasting from aircraft %s",sender:GetName()))
-if not self.senderinit then
-local commandFrequency={
-id="SetFrequency",
-params={
-frequency=self.frequency,
-modulation=self.modulation,
-}}
-sender:SetCommand(commandFrequency)
-self.senderinit=true
-end
-local subtitle=nil
-local duration=nil
-if transmission.subtitle and transmission.subduration and transmission.subduration>0 then
-subtitle=transmission.subtitle
-duration=transmission.subduration
-end
-local commandTransmit={
-id="TransmitMessage",
-params={
-file=filename,
-duration=duration,
-subtitle=subtitle,
-loop=false,
-}}
-sender:SetCommand(commandTransmit)
-if self.Debugmode then
-local text=string.format("file=%s, freq=%.2f MHz, duration=%.2f sec, subtitle=%s",filename,self.frequency/1000000,transmission.duration,transmission.subtitle or"")
-MESSAGE:New(text,2,"RADIOQUEUE "..self.alias):ToAll()
-end
-else
-self:T(self.lid..string.format("Broadcasting via trigger.action.radioTransmission()."))
-local vec3=nil
-if self.sendername then
-vec3=self:_GetRadioSenderCoord()
-end
-if self.sendercoord and not vec3 then
-vec3=self.sendercoord:GetVec3()
-end
-if vec3 then
-self:T("Sending")
-self:T({filename=filename,vec3=vec3,modulation=self.modulation,frequency=self.frequency,power=self.power})
-trigger.action.radioTransmission(filename,vec3,self.modulation,false,self.frequency,self.power)
-if self.Debugmode then
-local text=string.format("file=%s, freq=%.2f MHz, duration=%.2f sec, subtitle=%s",filename,self.frequency/1000000,transmission.duration,transmission.subtitle or"")
-MESSAGE:New(string.format(text,filename,transmission.duration,transmission.subtitle or""),5,"RADIOQUEUE "..self.alias):ToAll()
-end
-end
-end
-end
-function RADIOQUEUE:_CheckRadioQueueDelayed(delay)
-self.checking=true
-self:ScheduleOnce(delay or self.dt,RADIOQUEUE._CheckRadioQueue,self)
-end
-function RADIOQUEUE:_CheckRadioQueue()
-if#self.queue==0 then
-self.checking=false
-return
-end
-local time=timer.getAbsTime()
-local playing=false
-local next=nil
-local remove=nil
-for i,_transmission in ipairs(self.queue)do
-local transmission=_transmission
-if time>=transmission.Tplay then
-if transmission.isplaying then
-if time>=transmission.Tstarted+transmission.duration then
-transmission.isplaying=false
-remove=i
-self.Tlast=time
-else
-playing=true
-end
-else
-local Tlast=self.Tlast
-if transmission.interval==nil then
-if next==nil then
-next=transmission
-end
-else
-if Tlast==nil or time-Tlast>=transmission.interval then
-next=transmission
-else
-end
-end
-if next or Tlast then
-break
-end
-end
-else
-end
-end
-if next~=nil and not playing then
-self:Broadcast(next)
-next.isplaying=true
-next.Tstarted=time
-end
-if remove then
-table.remove(self.queue,remove)
-end
-if self.schedonce then
-self:_CheckRadioQueueDelayed()
-end
-end
-function RADIOQUEUE:_GetRadioSender()
-local sender=nil
-if self.sendername then
-sender=UNIT:FindByName(self.sendername)
-if sender and sender:IsAlive()and(sender:IsAir()or sender:IsGround())then
-return sender
-end
-end
-return nil
-end
-function RADIOQUEUE:_GetRadioSenderCoord()
-local vec3=nil
-if self.sendername then
-local sender=UNIT:FindByName(self.sendername)
-if sender and sender:IsAlive()then
-return sender:GetVec3()
-end
-local sender=STATIC:FindByName(self.sendername,false)
-if sender then
-return sender:GetVec3()
-end
-end
-return nil
-end
-RADIOSPEECH={
-ClassName="RADIOSPEECH",
-Vocabulary={
-EN={},
-DE={},
-RU={},
-}
-}
-RADIOSPEECH.Vocabulary.EN={
-["1"]={"1",0.25},
-["2"]={"2",0.25},
-["3"]={"3",0.30},
-["4"]={"4",0.35},
-["5"]={"5",0.35},
-["6"]={"6",0.42},
-["7"]={"7",0.38},
-["8"]={"8",0.20},
-["9"]={"9",0.32},
-["10"]={"10",0.35},
-["11"]={"11",0.40},
-["12"]={"12",0.42},
-["13"]={"13",0.38},
-["14"]={"14",0.42},
-["15"]={"15",0.42},
-["16"]={"16",0.52},
-["17"]={"17",0.59},
-["18"]={"18",0.40},
-["19"]={"19",0.47},
-["20"]={"20",0.38},
-["30"]={"30",0.29},
-["40"]={"40",0.35},
-["50"]={"50",0.32},
-["60"]={"60",0.44},
-["70"]={"70",0.48},
-["80"]={"80",0.26},
-["90"]={"90",0.36},
-["100"]={"100",0.55},
-["200"]={"200",0.55},
-["300"]={"300",0.61},
-["400"]={"400",0.60},
-["500"]={"500",0.61},
-["600"]={"600",0.65},
-["700"]={"700",0.70},
-["800"]={"800",0.54},
-["900"]={"900",0.60},
-["1000"]={"1000",0.60},
-["2000"]={"2000",0.61},
-["3000"]={"3000",0.64},
-["4000"]={"4000",0.62},
-["5000"]={"5000",0.69},
-["6000"]={"6000",0.69},
-["7000"]={"7000",0.75},
-["8000"]={"8000",0.59},
-["9000"]={"9000",0.65},
-["chevy"]={"chevy",0.35},
-["colt"]={"colt",0.35},
-["springfield"]={"springfield",0.65},
-["dodge"]={"dodge",0.35},
-["enfield"]={"enfield",0.5},
-["ford"]={"ford",0.32},
-["pontiac"]={"pontiac",0.55},
-["uzi"]={"uzi",0.28},
-["degrees"]={"degrees",0.5},
-["kilometers"]={"kilometers",0.65},
-["km"]={"kilometers",0.65},
-["miles"]={"miles",0.45},
-["meters"]={"meters",0.41},
-["mi"]={"miles",0.45},
-["feet"]={"feet",0.29},
-["br"]={"br",1.1},
-["bra"]={"bra",0.3},
-["returning to base"]={"returning_to_base",0.85},
-["on route to ground target"]={"on_route_to_ground_target",1.05},
-["intercepting bogeys"]={"intercepting_bogeys",1.00},
-["engaging ground target"]={"engaging_ground_target",1.20},
-["engaging bogeys"]={"engaging_bogeys",0.81},
-["wheels up"]={"wheels_up",0.42},
-["landing at base"]={"landing at base",0.8},
-["patrolling"]={"patrolling",0.55},
-["for"]={"for",0.31},
-["and"]={"and",0.31},
-["at"]={"at",0.3},
-["dot"]={"dot",0.26},
-["defender"]={"defender",0.45},
-}
-RADIOSPEECH.Vocabulary.RU={
-["1"]={"1",0.34},
-["2"]={"2",0.30},
-["3"]={"3",0.23},
-["4"]={"4",0.51},
-["5"]={"5",0.31},
-["6"]={"6",0.44},
-["7"]={"7",0.25},
-["8"]={"8",0.43},
-["9"]={"9",0.45},
-["10"]={"10",0.53},
-["11"]={"11",0.66},
-["12"]={"12",0.70},
-["13"]={"13",0.66},
-["14"]={"14",0.80},
-["15"]={"15",0.65},
-["16"]={"16",0.75},
-["17"]={"17",0.74},
-["18"]={"18",0.85},
-["19"]={"19",0.80},
-["20"]={"20",0.58},
-["30"]={"30",0.51},
-["40"]={"40",0.51},
-["50"]={"50",0.67},
-["60"]={"60",0.76},
-["70"]={"70",0.68},
-["80"]={"80",0.84},
-["90"]={"90",0.71},
-["100"]={"100",0.35},
-["200"]={"200",0.59},
-["300"]={"300",0.53},
-["400"]={"400",0.70},
-["500"]={"500",0.50},
-["600"]={"600",0.58},
-["700"]={"700",0.64},
-["800"]={"800",0.77},
-["900"]={"900",0.75},
-["1000"]={"1000",0.87},
-["2000"]={"2000",0.83},
-["3000"]={"3000",0.84},
-["4000"]={"4000",1.00},
-["5000"]={"5000",0.77},
-["6000"]={"6000",0.90},
-["7000"]={"7000",0.77},
-["8000"]={"8000",0.92},
-["9000"]={"9000",0.87},
-["степени"]={"degrees",0.5},
-["километров"]={"kilometers",0.65},
-["km"]={"kilometers",0.65},
-["миль"]={"miles",0.45},
-["mi"]={"miles",0.45},
-["метры"]={"meters",0.41},
-["m"]={"meters",0.41},
-["ноги"]={"feet",0.37},
-["br"]={"br",1.1},
-["bra"]={"bra",0.3},
-["возвращаясь на базу"]={"returning_to_base",1.40},
-["на пути к наземной цели"]={"on_route_to_ground_target",1.45},
-["перехват самолетов"]={"intercepting_bogeys",1.22},
-["поражение наземной цели"]={"engaging_ground_target",1.53},
-["захватывающие самолеты"]={"engaging_bogeys",1.68},
-["колеса вверх"]={"wheels_up",0.92},
-["посадка на базу"]={"landing at base",1.04},
-["патрулирующий"]={"patrolling",0.96},
-["за"]={"for",0.27},
-["и"]={"and",0.17},
-["в"]={"at",0.19},
-["dot"]={"dot",0.51},
-["defender"]={"defender",0.45},
-}
-function RADIOSPEECH:New(frequency,modulation)
-local self=BASE:Inherit(self,RADIOQUEUE:New(frequency,modulation))
-self.Language="EN"
-self:BuildTree()
-return self
-end
-function RADIOSPEECH:SetLanguage(Langauge)
-self.Language=Langauge
-end
-function RADIOSPEECH:AddSentenceToSpeech(RemainingSentence,Speech,Sentence,Data)
-self:I({RemainingSentence,Speech,Sentence,Data})
-local Token,RemainingSentence=RemainingSentence:match("^ *([^ ]+)(.*)")
-self:I({Token=Token,RemainingSentence=RemainingSentence})
-if Token then
-if not Speech[Token]then
-Speech[Token]={}
-if RemainingSentence and RemainingSentence~=""then
-Speech[Token].Next={}
-self:AddSentenceToSpeech(RemainingSentence,Speech[Token].Next,Sentence,Data)
-else
-Speech[Token].Sentence=Sentence
-Speech[Token].Data=Data
-end
-end
-end
-end
-function RADIOSPEECH:BuildTree()
-self.Speech={}
-for Language,Sentences in pairs(self.Vocabulary)do
-self:I({Language=Language,Sentences=Sentences})
-self.Speech[Language]={}
-for Sentence,Data in pairs(Sentences)do
-self:I({Sentence=Sentence,Data=Data})
-self:AddSentenceToSpeech(Sentence,self.Speech[Language],Sentence,Data)
-end
-end
-self:I({Speech=self.Speech})
-return self
-end
-function RADIOSPEECH:SpeakWords(Sentence,Speech,Language)
-local OriginalSentence=Sentence
-local Word,RemainderSentence=Sentence:match("^[., ]*([^ .,]+)(.*)")
-self:I({Word=Word,Speech=Speech[Word],RemainderSentence=RemainderSentence})
-if Word then
-if Word~=""and tonumber(Word)==nil then
-Word=Word:lower()
-if Speech[Word]then
-if Speech[Word].Next==nil then
-self:I({Sentence=Speech[Word].Sentence,Data=Speech[Word].Data})
-self:NewTransmission(Speech[Word].Data[1]..".wav",Speech[Word].Data[2],Language.."/")
-else
-if RemainderSentence and RemainderSentence~=""then
-return self:SpeakWords(RemainderSentence,Speech[Word].Next,Language)
-end
-end
-end
-return RemainderSentence
-end
-return OriginalSentence
-else
-return""
-end
-end
-function RADIOSPEECH:SpeakDigits(Sentence,Speech,Langauge)
-local OriginalSentence=Sentence
-local Digits,RemainderSentence=Sentence:match("^[., ]*([^ .,]+)(.*)")
-self:I({Digits=Digits,Speech=Speech[Digits],RemainderSentence=RemainderSentence})
-if Digits then
-if Digits~=""and tonumber(Digits)~=nil then
-local Number=tonumber(Digits)
-local Multiple=nil
-while Number>=0 do
-if Number>1000 then
-Multiple=math.floor(Number/1000)*1000
-elseif Number>100 then
-Multiple=math.floor(Number/100)*100
-elseif Number>20 then
-Multiple=math.floor(Number/10)*10
-elseif Number>=0 then
-Multiple=Number
-end
-Sentence=tostring(Multiple)
-if Speech[Sentence]then
-self:I({Speech=Speech[Sentence].Sentence,Data=Speech[Sentence].Data})
-self:NewTransmission(Speech[Sentence].Data[1]..".wav",Speech[Sentence].Data[2],Langauge.."/")
-end
-Number=Number-Multiple
-Number=(Number==0)and-1 or Number
-end
-return RemainderSentence
-end
-return OriginalSentence
-else
-return""
-end
-end
-function RADIOSPEECH:Speak(Sentence,Language)
-self:I({Sentence,Language})
-local Language=Language or"EN"
-self:I({Language=Language})
-local Speech=self.Speech[Language]
-self:I({Speech=Speech,Language=Language})
-self:NewTransmission("_In.wav",0.52,Language.."/")
-repeat
-Sentence=self:SpeakWords(Sentence,Speech,Language)
-self:I({Sentence=Sentence})
-Sentence=self:SpeakDigits(Sentence,Speech,Language)
-self:I({Sentence=Sentence})
-until not Sentence or Sentence==""
-self:NewTransmission("_Out.wav",0.28,Language.."/")
-end
 SPAWN={
 ClassName="SPAWN",
 SpawnTemplatePrefix=nil,
@@ -21745,39 +21133,59 @@ AIRBASE.Syria={
 ["Incirlik"]="Incirlik",
 ["Damascus"]="Damascus",
 ["Bassel_Al_Assad"]="Bassel Al-Assad",
+["Rosh_Pina"]="Rosh Pina",
 ["Aleppo"]="Aleppo",
-["Qabr_as_Sitt"]="Qabr as Sitt",
+["Al_Qusayr"]="Al Qusayr",
 ["Wujah_Al_Hajar"]="Wujah Al Hajar",
 ["Al_Dumayr"]="Al-Dumayr",
+["Gazipasa"]="Gazipasa",
+["Ru_Convoy_4"]="Ru Convoy-4",
 ["Hatay"]="Hatay",
+["Nicosia"]="Nicosia",
+["Pinarbashi"]="Pinarbashi",
+["Paphos"]="Paphos",
+["Kingsfield"]="Kingsfield",
+["Tha'lah"]="Tha'lah",
 ["Haifa"]="Haifa",
 ["Khalkhalah"]="Khalkhalah",
 ["Megiddo"]="Megiddo",
+["Lakatamia"]="Lakatamia",
 ["Rayak"]="Rayak",
+["Larnaca"]="Larnaca",
 ["Mezzeh"]="Mezzeh",
-["King_Hussein_Air_College"]="King Hussein Air College",
-["Jirah"]="Jirah",
+["Gecitkale"]="Gecitkale",
+["Akrotiri"]="Akrotiri",
+["Naqoura"]="Naqoura",
+["Gaziantep"]="Gaziantep",
+["CVN_71"]="CVN-71",
+["Sayqal"]="Sayqal",
+["Tiyas"]="Tiyas",
+["Shayrat"]="Shayrat",
 ["Taftanaz"]="Taftanaz",
+["H4"]="H4",
+["King_Hussein_Air_College"]="King Hussein Air College",
 ["Rene_Mouawad"]="Rene Mouawad",
+["Jirah"]="Jirah",
 ["Ramat_David"]="Ramat David",
+["Qabr_as_Sitt"]="Qabr as Sitt",
 ["Minakh"]="Minakh",
 ["Adana_Sakirpasa"]="Adana Sakirpasa",
-["Marj_as_Sultan_South"]="Marj as Sultan South",
-["Hama"]="Hama",
-["Al_Qusayr"]="Al Qusayr",
 ["Palmyra"]="Palmyra",
+["Hama"]="Hama",
+["Ercan"]="Ercan",
+["Marj_as_Sultan_South"]="Marj as Sultan South",
 ["Tabqa"]="Tabqa",
 ["Beirut_Rafic_Hariri"]="Beirut-Rafic Hariri",
 ["An_Nasiriyah"]="An Nasiriyah",
 ["Abu_al_Duhur"]="Abu al-Duhur",
-["H4"]="H4",
-["Gaziantep"]="Gaziantep",
-["Rosh_Pina"]="Rosh Pina",
-["Sayqal"]="Sayqal",
-["Shayrat"]="Shayrat",
-["Tiyas"]="Tiyas",
-["Tha_lah"]="Tha'lah",
-["Naqoura"]="Naqoura",
+}
+AIRBASE.MarianaIslands={
+["Rota_International_Airport"]="Rota International Airport",
+["Andersen"]="Andersen",
+["Northwest_Field"]="Northwest_Field",
+["Antonio_B_Won_Pat_International_Airport"]="Antonio B. Won Pat International Airport",
+["Saipan_International_Airport"]="Saipan International Airport",
+["Tinian_International_Airport"]="Tinian International Airport",
 }
 AIRBASE.TerminalType={
 Runway=16,
@@ -22260,7 +21668,8 @@ name==AIRBASE.Nevada.Creech_AFB or
 name==AIRBASE.PersianGulf.Abu_Dhabi_International_Airport or
 name==AIRBASE.PersianGulf.Dubai_Intl or
 name==AIRBASE.PersianGulf.Shiraz_International_Airport or
-name==AIRBASE.PersianGulf.Kish_International_Airport then
+name==AIRBASE.PersianGulf.Kish_International_Airport or
+name==AIRBASE.MarianaIslands.Andersen then
 exception=1
 elseif UTILS.GetDCSMap()==DCSMAP.Syria and N>=2 and
 name~=AIRBASE.Syria.Minakh and
@@ -54307,6 +53716,7 @@ Normandy=-10,
 PersianGulf=2,
 TheChannel=-10,
 Syria=5,
+MarianaIslands=2,
 }
 ATIS.ICAOPhraseology={
 Caucasus=true,
@@ -54315,6 +53725,7 @@ Normandy=true,
 PersianGulf=true,
 TheChannel=true,
 Syria=true,
+MarianaIslands=true,
 }
 ATIS.Sound={
 ActiveRunway={filename="ActiveRunway.ogg",duration=0.99},
@@ -54394,7 +53805,7 @@ RSBNChannel={filename="RSBNChannel.ogg",duration=1.14},
 Zulu={filename="Zulu.ogg",duration=0.62},
 }
 _ATIS={}
-ATIS.version="0.9.1"
+ATIS.version="0.9.5"
 function ATIS:New(airbasename,frequency,modulation)
 local self=BASE:Inherit(self,FSM:New())
 self.airbasename=airbasename
@@ -54416,6 +53827,7 @@ self:SetRadioPower()
 self:SetAltimeterQNH(true)
 self:SetMapMarks(false)
 self:SetRelativeHumidity()
+self:SetQueueUpdateTime()
 self:SetStartState("Stopped")
 self:AddTransition("Stopped","Start","Running")
 self:AddTransition("*","Status","*")
@@ -54606,6 +54018,21 @@ airbase:GetRunwayData(self.runwaym2t,true)
 end
 end
 end
+function ATIS:SetSRS(PathToSRS,Gender,Culture,Voice,Port)
+self.useSRS=true
+self.msrs=MSRS:New(PathToSRS,self.frequency,self.modulation)
+self.msrs:SetGender(Gender)
+self.msrs:SetCulture(Culture)
+self.msrs:SetVoice(Voice)
+self.msrs:SetPort(Port)
+if self.dTQueueCheck<=10 then
+self:SetQueueUpdateTime(90)
+end
+return self
+end
+function ATIS:SetQueueUpdateTime(TimeInterval)
+self.dTQueueCheck=TimeInterval or 5
+end
 function ATIS:onafterStart(From,Event,To)
 if self.airbase:GetAirbaseCategory()~=Airbase.Category.AIRDROME then
 self:E(self.lid..string.format("ERROR: Cannot start ATIS for airbase %s! Only AIRDROMES are supported but NOT FARPS or SHIPS.",self.airbasename))
@@ -54639,18 +54066,28 @@ if ru then
 relayunitstatus=tostring(ru:IsAlive())
 end
 end
-local text=string.format("State %s: Freq=%.3f MHz %s, Relay unit=%s (alive=%s)",fsmstate,self.frequency,UTILS.GetModulationName(self.modulation),tostring(self.relayunitname),relayunitstatus)
+local text=string.format("State %s: Freq=%.3f MHz %s",fsmstate,self.frequency,UTILS.GetModulationName(self.modulation))
+if self.useSRS then
+text=text..string.format(", SRS path=%s (%s), gender=%s, culture=%s, voice=%s",
+tostring(self.msrs.path),tostring(self.msrs.port),tostring(self.msrs.gender),tostring(self.msrs.culture),tostring(self.msrs.voice))
+else
+text=text..string.format(", Relay unit=%s (alive=%s)",tostring(self.relayunitname),relayunitstatus)
+end
 self:I(self.lid..text)
 self:__Status(-60)
 end
 function ATIS:onafterCheckQueue(From,Event,To)
+if self.useSRS then
+self:Broadcast()
+else
 if#self.radioqueue.queue==0 then
 self:T(self.lid..string.format("Radio queue empty. Repeating message."))
 self:Broadcast()
 else
 self:T2(self.lid..string.format("Radio queue %d transmissions queued.",#self.radioqueue.queue))
 end
-self:__CheckQueue(-5)
+end
+self:__CheckQueue(-math.abs(self.dTQueueCheck))
 end
 function ATIS:onafterBroadcast(From,Event,To)
 local coord=self.airbase:GetCoordinate()
@@ -54721,6 +54158,9 @@ end
 local clock=UTILS.SecondsToClock(time)
 local zulu=UTILS.Split(clock,":")
 local ZULU=string.format("%s%s",zulu[1],zulu[2])
+if self.useSRS then
+ZULU=string.format("%s hours",zulu[1])
+end
 local NATO=ATIS.Alphabet[tonumber(zulu[1])+1]
 self:T3(string.format("clock=%s",tostring(clock)))
 self:T3(string.format("zulu1=%s",tostring(zulu[1])))
@@ -54730,9 +54170,15 @@ self:T3(string.format("NATO =%s",tostring(NATO)))
 local sunrise=coord:GetSunrise()
 sunrise=UTILS.Split(sunrise,":")
 local SUNRISE=string.format("%s%s",sunrise[1],sunrise[2])
+if self.useSRS then
+SUNRISE=string.format("%s %s hours",sunrise[1],sunrise[2])
+end
 local sunset=coord:GetSunset()
 sunset=UTILS.Split(sunset,":")
 local SUNSET=string.format("%s%s",sunset[1],sunset[2])
+if self.useSRS then
+SUNSET=string.format("%s %s hours",sunset[1],sunset[2])
+end
 local temperature=coord:GetTemperature(height+5)
 local dewpoint=temperature-(100-self.relHumidity)/5
 if self.TDegF then
@@ -54880,27 +54326,37 @@ subtitle=string.format("%s",self.airbasename)
 if self.airbasename:find("AFB")==nil and self.airbasename:find("Airport")==nil and self.airbasename:find("Airstrip")==nil and self.airbasename:find("airfield")==nil and self.airbasename:find("AB")==nil then
 subtitle=subtitle.." Airport"
 end
+if not self.useSRS then
 self.radioqueue:NewTransmission(string.format("%s/%s.ogg",self.theatre,self.airbasename),3.0,self.soundpath,nil,nil,subtitle,self.subduration)
+end
 local alltext=subtitle
 subtitle=string.format("Information %s",NATO)
 local _INFORMATION=subtitle
+if not self.useSRS then
 self:Transmission(ATIS.Sound.Information,0.5,subtitle)
 self.radioqueue:NewTransmission(string.format("NATO Alphabet/%s.ogg",NATO),0.75,self.soundpath)
+end
 alltext=alltext..";\n"..subtitle
 subtitle=string.format("%s Zulu",ZULU)
+if not self.useSRS then
 self.radioqueue:Number2Transmission(ZULU,nil,0.5)
 self:Transmission(ATIS.Sound.Zulu,0.2,subtitle)
+end
 alltext=alltext..";\n"..subtitle
 if not self.zulutimeonly then
 subtitle=string.format("Sunrise at %s local time",SUNRISE)
+if not self.useSRS then
 self:Transmission(ATIS.Sound.SunriseAt,0.5,subtitle)
 self.radioqueue:Number2Transmission(SUNRISE,nil,0.2)
 self:Transmission(ATIS.Sound.TimeLocal,0.2)
+end
 alltext=alltext..";\n"..subtitle
 subtitle=string.format("Sunset at %s local time",SUNSET)
+if not self.useSRS then
 self:Transmission(ATIS.Sound.SunsetAt,0.5,subtitle)
 self.radioqueue:Number2Transmission(SUNSET,nil,0.5)
 self:Transmission(ATIS.Sound.TimeLocal,0.2)
+end
 alltext=alltext..";\n"..subtitle
 end
 if self.metric then
@@ -54912,6 +54368,7 @@ if turbulence>0 then
 subtitle=subtitle..", gusting"
 end
 local _WIND=subtitle
+if not self.useSRS then
 self:Transmission(ATIS.Sound.WindFrom,1.0,subtitle)
 self.radioqueue:Number2Transmission(WINDFROM)
 self:Transmission(ATIS.Sound.At,0.2)
@@ -54924,18 +54381,21 @@ end
 if turbulence>0 then
 self:Transmission(ATIS.Sound.Gusting,0.2)
 end
+end
 alltext=alltext..";\n"..subtitle
 if self.metric then
 subtitle=string.format("Visibility %s km",VISIBILITY)
 else
 subtitle=string.format("Visibility %s SM",VISIBILITY)
 end
+if not self.useSRS then
 self:Transmission(ATIS.Sound.Visibilty,1.0,subtitle)
 self.radioqueue:Number2Transmission(VISIBILITY)
 if self.metric then
 self:Transmission(ATIS.Sound.Kilometers,0.2)
 else
 self:Transmission(ATIS.Sound.StatuteMiles,0.2)
+end
 end
 alltext=alltext..";\n"..subtitle
 local wp=false
@@ -54972,6 +54432,7 @@ wp=true
 end
 if wp then
 subtitle=string.format("Weather phenomena:%s",wpsub)
+if not self.useSRS then
 self:Transmission(ATIS.Sound.WeatherPhenomena,1.0,subtitle)
 if precepitation==1 then
 self:Transmission(ATIS.Sound.Rain,0.5)
@@ -54988,15 +54449,21 @@ end
 if dust then
 self:Transmission(ATIS.Sound.Dust,0.5)
 end
+end
 alltext=alltext..";\n"..subtitle
 end
+if not self.useSRS then
 self:Transmission(CloudCover,1.0,CLOUDSsub)
-if CLOUDBASE and static then
-if self.metric then
-subtitle=string.format("Cloudbase %s, ceiling %s meters",CLOUDBASE,CLOUDCEIL)
-else
-subtitle=string.format("Cloudbase %s, ceiling %s ft",CLOUDBASE,CLOUDCEIL)
 end
+if CLOUDBASE and static then
+local cbase=tostring(tonumber(CLOUDBASE1000)*1000+tonumber(CLOUDBASE0100)*100)
+local cceil=tostring(tonumber(CLOUDCEIL1000)*1000+tonumber(CLOUDCEIL0100)*100)
+if self.metric then
+subtitle=string.format("Cloud base %s, ceiling %s meters",cbase,cceil)
+else
+subtitle=string.format("Cloud base %s, ceiling %s feet",cbase,cceil)
+end
+if not self.useSRS then
 self:Transmission(ATIS.Sound.CloudBase,1.0,subtitle)
 if tonumber(CLOUDBASE1000)>0 then
 self.radioqueue:Number2Transmission(CLOUDBASE1000)
@@ -55021,6 +54488,7 @@ else
 self:Transmission(ATIS.Sound.Feet,0.1)
 end
 end
+end
 alltext=alltext..";\n"..subtitle
 if self.TDegF then
 if temperature<0 then
@@ -55036,6 +54504,7 @@ subtitle=string.format("Temperature %s °C",TEMPERATURE)
 end
 end
 local _TEMPERATURE=subtitle
+if not self.useSRS then
 self:Transmission(ATIS.Sound.Temperature,1.0,subtitle)
 if temperature<0 then
 self:Transmission(ATIS.Sound.Minus,0.2)
@@ -55045,6 +54514,7 @@ if self.TDegF then
 self:Transmission(ATIS.Sound.DegreesFahrenheit,0.2)
 else
 self:Transmission(ATIS.Sound.DegreesCelsius,0.2)
+end
 end
 alltext=alltext..";\n"..subtitle
 if self.TDegF then
@@ -55061,6 +54531,7 @@ subtitle=string.format("Dew point %s °C",DEWPOINT)
 end
 end
 local _DEWPOINT=subtitle
+if not self.useSRS then
 self:Transmission(ATIS.Sound.DewPoint,1.0,subtitle)
 if dewpoint<0 then
 self:Transmission(ATIS.Sound.Minus,0.2)
@@ -55071,29 +54542,31 @@ self:Transmission(ATIS.Sound.DegreesFahrenheit,0.2)
 else
 self:Transmission(ATIS.Sound.DegreesCelsius,0.2)
 end
+end
 alltext=alltext..";\n"..subtitle
 if self.PmmHg then
 if self.qnhonly then
 subtitle=string.format("Altimeter %s.%s mmHg",QNH[1],QNH[2])
 else
-subtitle=string.format("Altimeter QNH %s.%s, QFE %s.%s mmHg",QNH[1],QNH[2],QFE[1],QFE[2])
+subtitle=string.format("Altimeter: QNH %s.%s, QFE %s.%s mmHg",QNH[1],QNH[2],QFE[1],QFE[2])
 end
 else
 if self.metric then
 if self.qnhonly then
 subtitle=string.format("Altimeter %s.%s hPa",QNH[1],QNH[2])
 else
-subtitle=string.format("Altimeter QNH %s.%s, QFE %s.%s hPa",QNH[1],QNH[2],QFE[1],QFE[2])
+subtitle=string.format("Altimeter: QNH %s.%s, QFE %s.%s hPa",QNH[1],QNH[2],QFE[1],QFE[2])
 end
 else
 if self.qnhonly then
 subtitle=string.format("Altimeter %s.%s inHg",QNH[1],QNH[2])
 else
-subtitle=string.format("Altimeter QNH %s.%s, QFE %s.%s inHg",QNH[1],QNH[2],QFE[1],QFE[2])
+subtitle=string.format("Altimeter: QNH %s.%s, QFE %s.%s inHg",QNH[1],QNH[2],QFE[1],QFE[2])
 end
 end
 end
 local _ALTIMETER=subtitle
+if not self.useSRS then
 self:Transmission(ATIS.Sound.Altimeter,1.0,subtitle)
 if not self.qnhonly then
 self:Transmission(ATIS.Sound.QNH,0.5)
@@ -55120,6 +54593,7 @@ else
 self:Transmission(ATIS.Sound.InchesOfMercury,0.1)
 end
 end
+end
 alltext=alltext..";\n"..subtitle
 local subtitle=string.format("Active runway %s",runway)
 if rwyLeft==true then
@@ -55128,12 +54602,14 @@ elseif rwyLeft==false then
 subtitle=subtitle.." Right"
 end
 local _RUNACT=subtitle
+if not self.useSRS then
 self:Transmission(ATIS.Sound.ActiveRunway,1.0,subtitle)
 self.radioqueue:Number2Transmission(runway)
 if rwyLeft==true then
 self:Transmission(ATIS.Sound.Left,0.2)
 elseif rwyLeft==false then
 self:Transmission(ATIS.Sound.Right,0.2)
+end
 end
 alltext=alltext..";\n"..subtitle
 if self.rwylength then
@@ -55149,6 +54625,7 @@ subtitle=subtitle.." meters"
 else
 subtitle=subtitle.." feet"
 end
+if not self.useSRS then
 self:Transmission(ATIS.Sound.RunwayLength,1.0,subtitle)
 if tonumber(L1000)>0 then
 self.radioqueue:Number2Transmission(L1000)
@@ -55162,6 +54639,7 @@ if self.metric then
 self:Transmission(ATIS.Sound.Meters,0.1)
 else
 self:Transmission(ATIS.Sound.Feet,0.1)
+end
 end
 alltext=alltext..";\n"..subtitle
 end
@@ -55177,6 +54655,7 @@ subtitle=subtitle.." meters"
 else
 subtitle=subtitle.." feet"
 end
+if not self.useSRS then
 self:Transmission(ATIS.Sound.Elevation,1.0,subtitle)
 if tonumber(L1000)>0 then
 self.radioqueue:Number2Transmission(L1000)
@@ -55191,6 +54670,7 @@ self:Transmission(ATIS.Sound.Meters,0.1)
 else
 self:Transmission(ATIS.Sound.Feet,0.1)
 end
+end
 alltext=alltext..";\n"..subtitle
 end
 if self.towerfrequency then
@@ -55202,6 +54682,7 @@ freqs=freqs..", "
 end
 end
 subtitle=string.format("Tower frequency %s",freqs)
+if not self.useSRS then
 self:Transmission(ATIS.Sound.TowerFrequency,1.0,subtitle)
 for _,freq in pairs(self.towerfrequency)do
 local f=string.format("%.3f",freq)
@@ -55213,11 +54694,13 @@ self.radioqueue:Number2Transmission(f[2])
 end
 self:Transmission(ATIS.Sound.MegaHertz,0.2)
 end
+end
 alltext=alltext..";\n"..subtitle
 end
 local ils=self:GetNavPoint(self.ils,runway,rwyLeft)
 if ils then
 subtitle=string.format("ILS frequency %.2f MHz",ils.frequency)
+if not self.useSRS then
 self:Transmission(ATIS.Sound.ILSFrequency,1.0,subtitle)
 local f=string.format("%.2f",ils.frequency)
 f=UTILS.Split(f,".")
@@ -55227,11 +54710,13 @@ self:Transmission(ATIS.Sound.Decimal,0.2)
 self.radioqueue:Number2Transmission(f[2])
 end
 self:Transmission(ATIS.Sound.MegaHertz,0.2)
+end
 alltext=alltext..";\n"..subtitle
 end
 local ndb=self:GetNavPoint(self.ndbouter,runway,rwyLeft)
 if ndb then
 subtitle=string.format("Outer NDB frequency %.2f MHz",ndb.frequency)
+if not self.useSRS then
 self:Transmission(ATIS.Sound.OuterNDBFrequency,1.0,subtitle)
 local f=string.format("%.2f",ndb.frequency)
 f=UTILS.Split(f,".")
@@ -55241,11 +54726,13 @@ self:Transmission(ATIS.Sound.Decimal,0.2)
 self.radioqueue:Number2Transmission(f[2])
 end
 self:Transmission(ATIS.Sound.MegaHertz,0.2)
+end
 alltext=alltext..";\n"..subtitle
 end
 local ndb=self:GetNavPoint(self.ndbinner,runway,rwyLeft)
 if ndb then
 subtitle=string.format("Inner NDB frequency %.2f MHz",ndb.frequency)
+if not self.useSRS then
 self:Transmission(ATIS.Sound.InnerNDBFrequency,1.0,subtitle)
 local f=string.format("%.2f",ndb.frequency)
 f=UTILS.Split(f,".")
@@ -55255,10 +54742,15 @@ self:Transmission(ATIS.Sound.Decimal,0.2)
 self.radioqueue:Number2Transmission(f[2])
 end
 self:Transmission(ATIS.Sound.MegaHertz,0.2)
+end
 alltext=alltext..";\n"..subtitle
 end
 if self.vor then
 subtitle=string.format("VOR frequency %.2f MHz",self.vor)
+if self.useSRS then
+subtitle=string.format("V O R frequency %.2f MHz",self.vor)
+end
+if not self.useSRS then
 self:Transmission(ATIS.Sound.VORFrequency,1.0,subtitle)
 local f=string.format("%.2f",self.vor)
 f=UTILS.Split(f,".")
@@ -55268,31 +54760,40 @@ self:Transmission(ATIS.Sound.Decimal,0.2)
 self.radioqueue:Number2Transmission(f[2])
 end
 self:Transmission(ATIS.Sound.MegaHertz,0.2)
+end
 alltext=alltext..";\n"..subtitle
 end
 if self.tacan then
 subtitle=string.format("TACAN channel %dX",self.tacan)
+if not self.useSRS then
 self:Transmission(ATIS.Sound.TACANChannel,1.0,subtitle)
 self.radioqueue:Number2Transmission(tostring(self.tacan),nil,0.2)
 self.radioqueue:NewTransmission("NATO Alphabet/Xray.ogg",0.75,self.soundpath,nil,0.2)
+end
 alltext=alltext..";\n"..subtitle
 end
 if self.rsbn then
 subtitle=string.format("RSBN channel %d",self.rsbn)
+if not self.useSRS then
 self:Transmission(ATIS.Sound.RSBNChannel,1.0,subtitle)
 self.radioqueue:Number2Transmission(tostring(self.rsbn),nil,0.2)
+end
 alltext=alltext..";\n"..subtitle
 end
 local ndb=self:GetNavPoint(self.prmg,runway,rwyLeft)
 if ndb then
 subtitle=string.format("PRMG channel %d",ndb.frequency)
+if not self.useSRS then
 self:Transmission(ATIS.Sound.PRMGChannel,1.0,subtitle)
 self.radioqueue:Number2Transmission(tostring(ndb.frequency),nil,0.5)
+end
 alltext=alltext..";\n"..subtitle
 end
 subtitle=string.format("Advise on initial contact, you have information %s",NATO)
+if not self.useSRS then
 self:Transmission(ATIS.Sound.AdviceOnInitial,0.5,subtitle)
 self.radioqueue:NewTransmission(string.format("NATO Alphabet/%s.ogg",NATO),0.75,self.soundpath)
+end
 alltext=alltext..";\n"..subtitle
 self:Report(alltext)
 if self.usemarker then
@@ -55301,6 +54802,19 @@ end
 end
 function ATIS:onafterReport(From,Event,To,Text)
 self:T(self.lid..string.format("Report:\n%s",Text))
+if self.useSRS and self.msrs then
+local text=string.gsub(Text,"[\r\n]","")
+local text=string.gsub(text,"SM","statute miles")
+local text=string.gsub(text,"°C","degrees Celsius")
+local text=string.gsub(text,"°F","degrees Fahrenheit")
+local text=string.gsub(text,"inHg","inches of Mercury")
+local text=string.gsub(text,"mmHg","millimeters of Mercury")
+local text=string.gsub(text,"hPa","hecto Pascals")
+local text=string.gsub(text,"m/s","meters per second")
+local text=string.gsub(text,";"," . ")
+self:T("SRS TTS: "..text)
+self.msrs:PlayText(text)
+end
 end
 function ATIS:UpdateMarker(information,runact,wind,altimeter,temperature)
 if self.markerid then
@@ -63771,6 +63285,1113 @@ end
 )
 end
 end
+do
+USERSOUND={
+ClassName="USERSOUND",
+}
+function USERSOUND:New(UserSoundFileName)
+local self=BASE:Inherit(self,BASE:New())
+self.UserSoundFileName=UserSoundFileName
+return self
+end
+function USERSOUND:SetFileName(UserSoundFileName)
+self.UserSoundFileName=UserSoundFileName
+return self
+end
+function USERSOUND:ToAll()
+trigger.action.outSound(self.UserSoundFileName)
+return self
+end
+function USERSOUND:ToCoalition(Coalition)
+trigger.action.outSoundForCoalition(Coalition,self.UserSoundFileName)
+return self
+end
+function USERSOUND:ToCountry(Country)
+trigger.action.outSoundForCountry(Country,self.UserSoundFileName)
+return self
+end
+function USERSOUND:ToGroup(Group,Delay)
+Delay=Delay or 0
+if Delay>0 then
+SCHEDULER:New(nil,USERSOUND.ToGroup,{self,Group},Delay)
+else
+trigger.action.outSoundForGroup(Group:GetID(),self.UserSoundFileName)
+end
+return self
+end
+end
+do
+SOUNDBASE={
+ClassName="SOUNDBASE",
+}
+function SOUNDBASE:New()
+local self=BASE:Inherit(self,BASE:New())
+return self
+end
+function SOUNDBASE:GetSpeechTime(length,speed,isGoogle)
+local maxRateRatio=3
+speed=speed or 1.0
+isGoogle=isGoogle or false
+local speedFactor=1.0
+if isGoogle then
+speedFactor=speed
+else
+if speed~=0 then
+speedFactor=math.abs(speed)*(maxRateRatio-1)/10+1
+end
+if speed<0 then
+speedFactor=1/speedFactor
+end
+end
+local wpm=math.ceil(100*speedFactor)
+local cps=math.floor((wpm*5)/60)
+if type(length)=="string"then
+length=string.len(length)
+end
+return math.ceil(length/cps)
+end
+end
+do
+SOUNDFILE={
+ClassName="SOUNDFILE",
+filename=nil,
+path="l10n/DEFAULT/",
+duration=3,
+subtitle=nil,
+subduration=0,
+useSRS=false,
+}
+function SOUNDFILE:New(FileName,Path,Duration)
+local self=BASE:Inherit(self,BASE:New())
+self:SetFileName(FileName)
+self:SetPath(Path)
+self:SetDuration(Duration)
+self:T(string.format("New SOUNDFILE: file name=%s, path=%s",self.filename,self.path))
+return self
+end
+function SOUNDFILE:SetPath(Path)
+self.path=Path or"l10n/DEFAULT/"
+local nmax=1000;local n=1
+while(self.path:sub(-1)=="/"or self.path:sub(-1)==[[\]])and n<=nmax do
+self.path=self.path:sub(1,#self.path-1)
+n=n+1
+end
+self.path=self.path.."/"
+return self
+end
+function SOUNDFILE:GetPath()
+local path=self.path or"l10n/DEFAULT/"
+return path
+end
+function SOUNDFILE:SetFileName(FileName)
+self.filename=FileName or"Hello World.mp3"
+return self
+end
+function SOUNDFILE:GetFileName()
+return self.filename
+end
+function SOUNDFILE:SetDuration(Duration)
+self.duration=Duration or 3
+return self
+end
+function SOUNDFILE:GetDuration()
+return self.duration or 3
+end
+function SOUNDFILE:GetName()
+local path=self:GetPath()
+local filename=self:GetFileName()
+local name=string.format("%s%s",path,filename)
+return name
+end
+function SOUNDFILE:SetPlayWithSRS(Switch)
+if Switch==true or Switch==nil then
+self.useSRS=true
+else
+self.useSRS=false
+end
+return self
+end
+end
+do
+SOUNDTEXT={
+ClassName="SOUNDTEXT",
+}
+function SOUNDTEXT:New(Text,Duration)
+local self=BASE:Inherit(self,BASE:New())
+self:SetText(Text)
+self:SetDuration(Duration or STTS.getSpeechTime(Text))
+self:T(string.format("New SOUNDTEXT: text=%s, duration=%.1f sec",self.text,self.duration))
+return self
+end
+function SOUNDTEXT:SetText(Text)
+self.text=Text or"Hello World!"
+return self
+end
+function SOUNDTEXT:SetDuration(Duration)
+self.duration=Duration or 3
+return self
+end
+function SOUNDTEXT:SetGender(Gender)
+self.gender=Gender or"female"
+return self
+end
+function SOUNDTEXT:SetCulture(Culture)
+self.culture=Culture or"en-GB"
+return self
+end
+function SOUNDTEXT:SetVoice(VoiceName)
+self.voice=VoiceName
+return self
+end
+end
+RADIO={
+ClassName="RADIO",
+FileName="",
+Frequency=0,
+Modulation=radio.modulation.AM,
+Subtitle="",
+SubtitleDuration=0,
+Power=100,
+Loop=false,
+alias=nil,
+}
+function RADIO:New(Positionable)
+local self=BASE:Inherit(self,BASE:New())
+self:F(Positionable)
+if Positionable:GetPointVec2()then
+self.Positionable=Positionable
+return self
+end
+self:E({error="The passed positionable is invalid, no RADIO created!",positionable=Positionable})
+return nil
+end
+function RADIO:SetAlias(alias)
+self.alias=tostring(alias)
+return self
+end
+function RADIO:GetAlias()
+return tostring(self.alias)
+end
+function RADIO:SetFileName(FileName)
+self:F2(FileName)
+if type(FileName)=="string"then
+if FileName:find(".ogg")or FileName:find(".wav")then
+if not FileName:find("l10n/DEFAULT/")then
+FileName="l10n/DEFAULT/"..FileName
+end
+self.FileName=FileName
+return self
+end
+end
+self:E({"File name invalid. Maybe something wrong with the extension?",FileName})
+return self
+end
+function RADIO:SetFrequency(Frequency)
+self:F2(Frequency)
+if type(Frequency)=="number"then
+if(Frequency>=30 and Frequency<=87.995)or(Frequency>=108 and Frequency<=173.995)or(Frequency>=225 and Frequency<=399.975)then
+self.Frequency=Frequency*1000000
+if self.Positionable.ClassName=="UNIT"or self.Positionable.ClassName=="GROUP"then
+local commandSetFrequency={
+id="SetFrequency",
+params={
+frequency=self.Frequency,
+modulation=self.Modulation,
+}
+}
+self:T2(commandSetFrequency)
+self.Positionable:SetCommand(commandSetFrequency)
+end
+return self
+end
+end
+self:E({"Frequency is outside of DCS Frequency ranges (30-80, 108-152, 225-400). Frequency unchanged.",Frequency})
+return self
+end
+function RADIO:SetModulation(Modulation)
+self:F2(Modulation)
+if type(Modulation)=="number"then
+if Modulation==radio.modulation.AM or Modulation==radio.modulation.FM then
+self.Modulation=Modulation
+return self
+end
+end
+self:E({"Modulation is invalid. Use DCS's enum radio.modulation. Modulation unchanged.",self.Modulation})
+return self
+end
+function RADIO:SetPower(Power)
+self:F2(Power)
+if type(Power)=="number"then
+self.Power=math.floor(math.abs(Power))
+else
+self:E({"Power is invalid. Power unchanged.",self.Power})
+end
+return self
+end
+function RADIO:SetLoop(Loop)
+self:F2(Loop)
+if type(Loop)=="boolean"then
+self.Loop=Loop
+return self
+end
+self:E({"Loop is invalid. Loop unchanged.",self.Loop})
+return self
+end
+function RADIO:SetSubtitle(Subtitle,SubtitleDuration)
+self:F2({Subtitle,SubtitleDuration})
+if type(Subtitle)=="string"then
+self.Subtitle=Subtitle
+else
+self.Subtitle=""
+self:E({"Subtitle is invalid. Subtitle reset.",self.Subtitle})
+end
+if type(SubtitleDuration)=="number"then
+self.SubtitleDuration=SubtitleDuration
+else
+self.SubtitleDuration=0
+self:E({"SubtitleDuration is invalid. SubtitleDuration reset.",self.SubtitleDuration})
+end
+return self
+end
+function RADIO:NewGenericTransmission(FileName,Frequency,Modulation,Power,Loop)
+self:F({FileName,Frequency,Modulation,Power})
+self:SetFileName(FileName)
+if Frequency then self:SetFrequency(Frequency)end
+if Modulation then self:SetModulation(Modulation)end
+if Power then self:SetPower(Power)end
+if Loop then self:SetLoop(Loop)end
+return self
+end
+function RADIO:NewUnitTransmission(FileName,Subtitle,SubtitleDuration,Frequency,Modulation,Loop)
+self:F({FileName,Subtitle,SubtitleDuration,Frequency,Modulation,Loop})
+self:SetFileName(FileName)
+if Modulation then
+self:SetModulation(Modulation)
+end
+if Frequency then
+self:SetFrequency(Frequency)
+end
+if Subtitle then
+self:SetSubtitle(Subtitle,SubtitleDuration or 0)
+end
+if Loop then
+self:SetLoop(Loop)
+end
+return self
+end
+function RADIO:Broadcast(viatrigger)
+self:F({viatrigger=viatrigger})
+if(self.Positionable.ClassName=="UNIT"or self.Positionable.ClassName=="GROUP")and(not viatrigger)then
+self:T("Broadcasting from a UNIT or a GROUP")
+local commandTransmitMessage={
+id="TransmitMessage",
+params={
+file=self.FileName,
+duration=self.SubtitleDuration,
+subtitle=self.Subtitle,
+loop=self.Loop,
+}}
+self:T3(commandTransmitMessage)
+self.Positionable:SetCommand(commandTransmitMessage)
+else
+self:T("Broadcasting from a POSITIONABLE")
+trigger.action.radioTransmission(self.FileName,self.Positionable:GetPositionVec3(),self.Modulation,self.Loop,self.Frequency,self.Power,tostring(self.ID))
+end
+return self
+end
+function RADIO:StopBroadcast()
+self:F()
+if self.Positionable.ClassName=="UNIT"or self.Positionable.ClassName=="GROUP"then
+local commandStopTransmission={id="StopTransmission",params={}}
+self.Positionable:SetCommand(commandStopTransmission)
+else
+trigger.action.stopRadioTransmission(tostring(self.ID))
+end
+return self
+end
+RADIOQUEUE={
+ClassName="RADIOQUEUE",
+Debugmode=nil,
+lid=nil,
+frequency=nil,
+modulation=nil,
+scheduler=nil,
+RQid=nil,
+queue={},
+alias=nil,
+dt=nil,
+delay=nil,
+Tlast=nil,
+sendercoord=nil,
+sendername=nil,
+senderinit=nil,
+power=nil,
+numbers={},
+checking=nil,
+schedonce=false,
+}
+function RADIOQUEUE:New(frequency,modulation,alias)
+local self=BASE:Inherit(self,BASE:New())
+self.alias=alias or"My Radio"
+self.lid=string.format("RADIOQUEUE %s | ",self.alias)
+if frequency==nil then
+self:E(self.lid.."ERROR: No frequency specified as first parameter!")
+return nil
+end
+self.frequency=frequency*1000000
+self.modulation=modulation or radio.modulation.AM
+self:SetRadioPower()
+self.scheduler=SCHEDULER:New()
+self.scheduler:NoTrace()
+return self
+end
+function RADIOQUEUE:Start(delay,dt)
+self.delay=delay or 1
+self.dt=dt or 0.01
+self:I(self.lid..string.format("Starting RADIOQUEUE %s on Frequency %.2f MHz [modulation=%d] in %.1f seconds (dt=%.3f sec)",self.alias,self.frequency/1000000,self.modulation,self.delay,self.dt))
+if self.schedonce then
+self:_CheckRadioQueueDelayed(self.delay)
+else
+self.RQid=self.scheduler:Schedule(nil,RADIOQUEUE._CheckRadioQueue,{self},self.delay,self.dt)
+end
+return self
+end
+function RADIOQUEUE:Stop()
+self:I(self.lid.."Stopping RADIOQUEUE.")
+self.scheduler:Stop(self.RQid)
+self.queue={}
+return self
+end
+function RADIOQUEUE:SetSenderCoordinate(coordinate)
+self.sendercoord=coordinate
+return self
+end
+function RADIOQUEUE:SetSenderUnitName(name)
+self.sendername=name
+return self
+end
+function RADIOQUEUE:SetRadioPower(power)
+self.power=power or 100
+return self
+end
+function RADIOQUEUE:SetSRS(PathToSRS,Port)
+self.msrs=MSRS:New(PathToSRS,self.frequency/1000000,self.modulation)
+self.msrs:SetPort(Port)
+return self
+end
+function RADIOQUEUE:SetDigit(digit,filename,duration,path,subtitle,subduration)
+local transmission={}
+transmission.filename=filename
+transmission.duration=duration
+transmission.path=path or"l10n/DEFAULT/"
+transmission.subtitle=nil
+transmission.subduration=nil
+if type(digit)=="number"then
+digit=tostring(digit)
+end
+self.numbers[digit]=transmission
+return self
+end
+function RADIOQUEUE:AddTransmission(transmission)
+self:F({transmission=transmission})
+transmission.isplaying=false
+transmission.Tstarted=nil
+table.insert(self.queue,transmission)
+if self.schedonce and not self.checking then
+self:_CheckRadioQueueDelayed()
+end
+return self
+end
+function RADIOQUEUE:NewTransmission(filename,duration,path,tstart,interval,subtitle,subduration)
+if not filename then
+self:E(self.lid.."ERROR: No filename specified.")
+return nil
+end
+if type(filename)~="string"then
+self:E(self.lid.."ERROR: Filename specified is NOT a string.")
+return nil
+end
+if not duration then
+self:E(self.lid.."ERROR: No duration of transmission specified.")
+return nil
+end
+if type(duration)~="number"then
+self:E(self.lid.."ERROR: Duration specified is NOT a number.")
+return nil
+end
+local transmission={}
+transmission.filename=filename
+transmission.duration=duration
+transmission.path=path or"l10n/DEFAULT/"
+transmission.Tplay=tstart or timer.getAbsTime()
+transmission.subtitle=subtitle
+transmission.interval=interval or 0
+if transmission.subtitle then
+transmission.subduration=subduration or 5
+else
+transmission.subduration=nil
+end
+self:AddTransmission(transmission)
+return transmission
+end
+function RADIOQUEUE:AddSoundFile(soundfile,tstart,interval)
+local transmission=self:NewTransmission(soundfile:GetFileName(),soundfile.duration,soundfile:GetPath(),tstart,interval,soundfile.subtitle,soundfile.subduration)
+transmission.soundfile=soundfile
+return self
+end
+function RADIOQUEUE:AddSoundText(soundtext,tstart,interval)
+local transmission=self:NewTransmission("SoundText.ogg",soundtext.duration,nil,tstart,interval,soundtext.subtitle,soundtext.subduration)
+transmission.soundtext=soundtext
+return self
+end
+function RADIOQUEUE:Number2Transmission(number,delay,interval)
+local numbers=UTILS.GetCharacters(number)
+local wait=0
+for i=1,#numbers do
+local n=numbers[i]
+local transmission=UTILS.DeepCopy(self.numbers[n])
+transmission.Tplay=timer.getAbsTime()+(delay or 0)
+if interval and i==1 then
+transmission.interval=interval
+end
+self:AddTransmission(transmission)
+wait=wait+transmission.duration
+end
+return wait
+end
+function RADIOQUEUE:Broadcast(transmission)
+if((transmission.soundfile and transmission.soundfile.useSRS)or transmission.soundtext)and self.msrs then
+self:_BroadcastSRS(transmission)
+return
+end
+local sender=self:_GetRadioSender()
+local filename=string.format("%s%s",transmission.path,transmission.filename)
+if sender then
+self:T(self.lid..string.format("Broadcasting from aircraft %s",sender:GetName()))
+if not self.senderinit then
+local commandFrequency={
+id="SetFrequency",
+params={
+frequency=self.frequency,
+modulation=self.modulation,
+}}
+sender:SetCommand(commandFrequency)
+self.senderinit=true
+end
+local subtitle=nil
+local duration=nil
+if transmission.subtitle and transmission.subduration and transmission.subduration>0 then
+subtitle=transmission.subtitle
+duration=transmission.subduration
+end
+local commandTransmit={
+id="TransmitMessage",
+params={
+file=filename,
+duration=duration,
+subtitle=subtitle,
+loop=false,
+}}
+sender:SetCommand(commandTransmit)
+if self.Debugmode then
+local text=string.format("file=%s, freq=%.2f MHz, duration=%.2f sec, subtitle=%s",filename,self.frequency/1000000,transmission.duration,transmission.subtitle or"")
+MESSAGE:New(text,2,"RADIOQUEUE "..self.alias):ToAll()
+end
+else
+self:T(self.lid..string.format("Broadcasting via trigger.action.radioTransmission()."))
+local vec3=nil
+if self.sendername then
+vec3=self:_GetRadioSenderCoord()
+end
+if self.sendercoord and not vec3 then
+vec3=self.sendercoord:GetVec3()
+end
+if vec3 then
+self:T("Sending")
+self:T({filename=filename,vec3=vec3,modulation=self.modulation,frequency=self.frequency,power=self.power})
+trigger.action.radioTransmission(filename,vec3,self.modulation,false,self.frequency,self.power)
+if self.Debugmode then
+local text=string.format("file=%s, freq=%.2f MHz, duration=%.2f sec, subtitle=%s",filename,self.frequency/1000000,transmission.duration,transmission.subtitle or"")
+MESSAGE:New(string.format(text,filename,transmission.duration,transmission.subtitle or""),5,"RADIOQUEUE "..self.alias):ToAll()
+end
+end
+end
+end
+function RADIOQUEUE:_BroadcastSRS(transmission)
+if transmission.soundfile and transmission.soundfile.useSRS then
+self.msrs:PlaySoundFile(transmission.soundfile)
+elseif transmission.soundtext then
+self.msrs:PlaySoundText(transmission.soundtext)
+end
+end
+function RADIOQUEUE:_CheckRadioQueueDelayed(delay)
+self.checking=true
+self:ScheduleOnce(delay or self.dt,RADIOQUEUE._CheckRadioQueue,self)
+end
+function RADIOQUEUE:_CheckRadioQueue()
+if#self.queue==0 then
+self.checking=false
+return
+end
+local time=timer.getAbsTime()
+local playing=false
+local next=nil
+local remove=nil
+for i,_transmission in ipairs(self.queue)do
+local transmission=_transmission
+if time>=transmission.Tplay then
+if transmission.isplaying then
+if time>=transmission.Tstarted+transmission.duration then
+transmission.isplaying=false
+remove=i
+self.Tlast=time
+else
+playing=true
+end
+else
+local Tlast=self.Tlast
+if transmission.interval==nil then
+if next==nil then
+next=transmission
+end
+else
+if Tlast==nil or time-Tlast>=transmission.interval then
+next=transmission
+else
+end
+end
+if next or Tlast then
+break
+end
+end
+else
+end
+end
+if next~=nil and not playing then
+self:Broadcast(next)
+next.isplaying=true
+next.Tstarted=time
+end
+if remove then
+table.remove(self.queue,remove)
+end
+if self.schedonce then
+self:_CheckRadioQueueDelayed()
+end
+end
+function RADIOQUEUE:_GetRadioSender()
+local sender=nil
+if self.sendername then
+sender=UNIT:FindByName(self.sendername)
+if sender and sender:IsAlive()and(sender:IsAir()or sender:IsGround())then
+return sender
+end
+end
+return nil
+end
+function RADIOQUEUE:_GetRadioSenderCoord()
+local vec3=nil
+if self.sendername then
+local sender=UNIT:FindByName(self.sendername)
+if sender and sender:IsAlive()then
+return sender:GetVec3()
+end
+local sender=STATIC:FindByName(self.sendername,false)
+if sender then
+return sender:GetVec3()
+end
+end
+return nil
+end
+RADIOSPEECH={
+ClassName="RADIOSPEECH",
+Vocabulary={
+EN={},
+DE={},
+RU={},
+}
+}
+RADIOSPEECH.Vocabulary.EN={
+["1"]={"1",0.25},
+["2"]={"2",0.25},
+["3"]={"3",0.30},
+["4"]={"4",0.35},
+["5"]={"5",0.35},
+["6"]={"6",0.42},
+["7"]={"7",0.38},
+["8"]={"8",0.20},
+["9"]={"9",0.32},
+["10"]={"10",0.35},
+["11"]={"11",0.40},
+["12"]={"12",0.42},
+["13"]={"13",0.38},
+["14"]={"14",0.42},
+["15"]={"15",0.42},
+["16"]={"16",0.52},
+["17"]={"17",0.59},
+["18"]={"18",0.40},
+["19"]={"19",0.47},
+["20"]={"20",0.38},
+["30"]={"30",0.29},
+["40"]={"40",0.35},
+["50"]={"50",0.32},
+["60"]={"60",0.44},
+["70"]={"70",0.48},
+["80"]={"80",0.26},
+["90"]={"90",0.36},
+["100"]={"100",0.55},
+["200"]={"200",0.55},
+["300"]={"300",0.61},
+["400"]={"400",0.60},
+["500"]={"500",0.61},
+["600"]={"600",0.65},
+["700"]={"700",0.70},
+["800"]={"800",0.54},
+["900"]={"900",0.60},
+["1000"]={"1000",0.60},
+["2000"]={"2000",0.61},
+["3000"]={"3000",0.64},
+["4000"]={"4000",0.62},
+["5000"]={"5000",0.69},
+["6000"]={"6000",0.69},
+["7000"]={"7000",0.75},
+["8000"]={"8000",0.59},
+["9000"]={"9000",0.65},
+["chevy"]={"chevy",0.35},
+["colt"]={"colt",0.35},
+["springfield"]={"springfield",0.65},
+["dodge"]={"dodge",0.35},
+["enfield"]={"enfield",0.5},
+["ford"]={"ford",0.32},
+["pontiac"]={"pontiac",0.55},
+["uzi"]={"uzi",0.28},
+["degrees"]={"degrees",0.5},
+["kilometers"]={"kilometers",0.65},
+["km"]={"kilometers",0.65},
+["miles"]={"miles",0.45},
+["meters"]={"meters",0.41},
+["mi"]={"miles",0.45},
+["feet"]={"feet",0.29},
+["br"]={"br",1.1},
+["bra"]={"bra",0.3},
+["returning to base"]={"returning_to_base",0.85},
+["on route to ground target"]={"on_route_to_ground_target",1.05},
+["intercepting bogeys"]={"intercepting_bogeys",1.00},
+["engaging ground target"]={"engaging_ground_target",1.20},
+["engaging bogeys"]={"engaging_bogeys",0.81},
+["wheels up"]={"wheels_up",0.42},
+["landing at base"]={"landing at base",0.8},
+["patrolling"]={"patrolling",0.55},
+["for"]={"for",0.31},
+["and"]={"and",0.31},
+["at"]={"at",0.3},
+["dot"]={"dot",0.26},
+["defender"]={"defender",0.45},
+}
+RADIOSPEECH.Vocabulary.RU={
+["1"]={"1",0.34},
+["2"]={"2",0.30},
+["3"]={"3",0.23},
+["4"]={"4",0.51},
+["5"]={"5",0.31},
+["6"]={"6",0.44},
+["7"]={"7",0.25},
+["8"]={"8",0.43},
+["9"]={"9",0.45},
+["10"]={"10",0.53},
+["11"]={"11",0.66},
+["12"]={"12",0.70},
+["13"]={"13",0.66},
+["14"]={"14",0.80},
+["15"]={"15",0.65},
+["16"]={"16",0.75},
+["17"]={"17",0.74},
+["18"]={"18",0.85},
+["19"]={"19",0.80},
+["20"]={"20",0.58},
+["30"]={"30",0.51},
+["40"]={"40",0.51},
+["50"]={"50",0.67},
+["60"]={"60",0.76},
+["70"]={"70",0.68},
+["80"]={"80",0.84},
+["90"]={"90",0.71},
+["100"]={"100",0.35},
+["200"]={"200",0.59},
+["300"]={"300",0.53},
+["400"]={"400",0.70},
+["500"]={"500",0.50},
+["600"]={"600",0.58},
+["700"]={"700",0.64},
+["800"]={"800",0.77},
+["900"]={"900",0.75},
+["1000"]={"1000",0.87},
+["2000"]={"2000",0.83},
+["3000"]={"3000",0.84},
+["4000"]={"4000",1.00},
+["5000"]={"5000",0.77},
+["6000"]={"6000",0.90},
+["7000"]={"7000",0.77},
+["8000"]={"8000",0.92},
+["9000"]={"9000",0.87},
+["Ñ�Ñ‚ÐµÐ¿ÐµÐ½Ð¸"]={"degrees",0.5},
+["ÐºÐ¸Ð»Ð¾Ð¼ÐµÑ‚Ñ€Ð¾Ð²"]={"kilometers",0.65},
+["km"]={"kilometers",0.65},
+["Ð¼Ð¸Ð»ÑŒ"]={"miles",0.45},
+["mi"]={"miles",0.45},
+["Ð¼ÐµÑ‚Ñ€Ñ‹"]={"meters",0.41},
+["m"]={"meters",0.41},
+["Ð½Ð¾Ð³Ð¸"]={"feet",0.37},
+["br"]={"br",1.1},
+["bra"]={"bra",0.3},
+["Ð²Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°Ñ�Ñ�ÑŒ Ð½Ð° Ð±Ð°Ð·Ñƒ"]={"returning_to_base",1.40},
+["Ð½Ð° Ð¿ÑƒÑ‚Ð¸ Ðº Ð½Ð°Ð·ÐµÐ¼Ð½Ð¾Ð¹ Ñ†ÐµÐ»Ð¸"]={"on_route_to_ground_target",1.45},
+["Ð¿ÐµÑ€ÐµÑ…Ð²Ð°Ñ‚ Ñ�Ð°Ð¼Ð¾Ð»ÐµÑ‚Ð¾Ð²"]={"intercepting_bogeys",1.22},
+["Ð¿Ð¾Ñ€Ð°Ð¶ÐµÐ½Ð¸Ðµ Ð½Ð°Ð·ÐµÐ¼Ð½Ð¾Ð¹ Ñ†ÐµÐ»Ð¸"]={"engaging_ground_target",1.53},
+["Ð·Ð°Ñ…Ð²Ð°Ñ‚Ñ‹Ð²Ð°ÑŽÑ‰Ð¸Ðµ Ñ�Ð°Ð¼Ð¾Ð»ÐµÑ‚Ñ‹"]={"engaging_bogeys",1.68},
+["ÐºÐ¾Ð»ÐµÑ�Ð° Ð²Ð²ÐµÑ€Ñ…"]={"wheels_up",0.92},
+["Ð¿Ð¾Ñ�Ð°Ð´ÐºÐ° Ð½Ð° Ð±Ð°Ð·Ñƒ"]={"landing at base",1.04},
+["Ð¿Ð°Ñ‚Ñ€ÑƒÐ»Ð¸Ñ€ÑƒÑŽÑ‰Ð¸Ð¹"]={"patrolling",0.96},
+["Ð·Ð°"]={"for",0.27},
+["Ð¸"]={"and",0.17},
+["Ð²"]={"at",0.19},
+["dot"]={"dot",0.51},
+["defender"]={"defender",0.45},
+}
+function RADIOSPEECH:New(frequency,modulation)
+local self=BASE:Inherit(self,RADIOQUEUE:New(frequency,modulation))
+self.Language="EN"
+self:BuildTree()
+return self
+end
+function RADIOSPEECH:SetLanguage(Langauge)
+self.Language=Langauge
+end
+function RADIOSPEECH:AddSentenceToSpeech(RemainingSentence,Speech,Sentence,Data)
+self:I({RemainingSentence,Speech,Sentence,Data})
+local Token,RemainingSentence=RemainingSentence:match("^ *([^ ]+)(.*)")
+self:I({Token=Token,RemainingSentence=RemainingSentence})
+if Token then
+if not Speech[Token]then
+Speech[Token]={}
+if RemainingSentence and RemainingSentence~=""then
+Speech[Token].Next={}
+self:AddSentenceToSpeech(RemainingSentence,Speech[Token].Next,Sentence,Data)
+else
+Speech[Token].Sentence=Sentence
+Speech[Token].Data=Data
+end
+end
+end
+end
+function RADIOSPEECH:BuildTree()
+self.Speech={}
+for Language,Sentences in pairs(self.Vocabulary)do
+self:I({Language=Language,Sentences=Sentences})
+self.Speech[Language]={}
+for Sentence,Data in pairs(Sentences)do
+self:I({Sentence=Sentence,Data=Data})
+self:AddSentenceToSpeech(Sentence,self.Speech[Language],Sentence,Data)
+end
+end
+self:I({Speech=self.Speech})
+return self
+end
+function RADIOSPEECH:SpeakWords(Sentence,Speech,Language)
+local OriginalSentence=Sentence
+local Word,RemainderSentence=Sentence:match("^[., ]*([^ .,]+)(.*)")
+self:I({Word=Word,Speech=Speech[Word],RemainderSentence=RemainderSentence})
+if Word then
+if Word~=""and tonumber(Word)==nil then
+Word=Word:lower()
+if Speech[Word]then
+if Speech[Word].Next==nil then
+self:I({Sentence=Speech[Word].Sentence,Data=Speech[Word].Data})
+self:NewTransmission(Speech[Word].Data[1]..".wav",Speech[Word].Data[2],Language.."/")
+else
+if RemainderSentence and RemainderSentence~=""then
+return self:SpeakWords(RemainderSentence,Speech[Word].Next,Language)
+end
+end
+end
+return RemainderSentence
+end
+return OriginalSentence
+else
+return""
+end
+end
+function RADIOSPEECH:SpeakDigits(Sentence,Speech,Langauge)
+local OriginalSentence=Sentence
+local Digits,RemainderSentence=Sentence:match("^[., ]*([^ .,]+)(.*)")
+self:I({Digits=Digits,Speech=Speech[Digits],RemainderSentence=RemainderSentence})
+if Digits then
+if Digits~=""and tonumber(Digits)~=nil then
+local Number=tonumber(Digits)
+local Multiple=nil
+while Number>=0 do
+if Number>1000 then
+Multiple=math.floor(Number/1000)*1000
+elseif Number>100 then
+Multiple=math.floor(Number/100)*100
+elseif Number>20 then
+Multiple=math.floor(Number/10)*10
+elseif Number>=0 then
+Multiple=Number
+end
+Sentence=tostring(Multiple)
+if Speech[Sentence]then
+self:I({Speech=Speech[Sentence].Sentence,Data=Speech[Sentence].Data})
+self:NewTransmission(Speech[Sentence].Data[1]..".wav",Speech[Sentence].Data[2],Langauge.."/")
+end
+Number=Number-Multiple
+Number=(Number==0)and-1 or Number
+end
+return RemainderSentence
+end
+return OriginalSentence
+else
+return""
+end
+end
+function RADIOSPEECH:Speak(Sentence,Language)
+self:I({Sentence,Language})
+local Language=Language or"EN"
+self:I({Language=Language})
+local Speech=self.Speech[Language]
+self:I({Speech=Speech,Language=Language})
+self:NewTransmission("_In.wav",0.52,Language.."/")
+repeat
+Sentence=self:SpeakWords(Sentence,Speech,Language)
+self:I({Sentence=Sentence})
+Sentence=self:SpeakDigits(Sentence,Speech,Language)
+self:I({Sentence=Sentence})
+until not Sentence or Sentence==""
+self:NewTransmission("_Out.wav",0.28,Language.."/")
+end
+MSRS={
+ClassName="MSRS",
+lid=nil,
+port=5002,
+name="MSRS",
+frequencies={},
+modulations={},
+coalition=0,
+gender="female",
+culture=nil,
+voice=nil,
+volume=1,
+speed=1,
+coordinate=nil,
+}
+MSRS.version="0.0.3"
+function MSRS:New(PathToSRS,Frequency,Modulation)
+Frequency=Frequency or 143
+Modulation=Modulation or radio.modulation.AM
+local self=BASE:Inherit(self,BASE:New())
+self:SetPath(PathToSRS)
+self:SetPort()
+self:SetFrequencies(Frequency)
+self:SetModulations(Modulation)
+self:SetGender()
+return self
+end
+function MSRS:SetPath(Path)
+if Path==nil then
+self:E("ERROR: No path to SRS directory specified!")
+return nil
+end
+self.path=Path
+local n=1;local nmax=1000
+while(self.path:sub(-1)=="/"or self.path:sub(-1)==[[\]])and n<=nmax do
+self.path=self.path:sub(1,#self.path-1)
+n=n+1
+end
+self:T(string.format("SRS path=%s",self:GetPath()))
+return self
+end
+function MSRS:GetPath()
+return self.path
+end
+function MSRS:SetPort(Port)
+self.port=Port or 5002
+end
+function MSRS:GetPort()
+return self.port
+end
+function MSRS:SetFrequencies(Frequencies)
+if type(Frequencies)~="table"then
+Frequencies={Frequencies}
+end
+self.frequencies=Frequencies
+return self
+end
+function MSRS:GetFrequencies()
+return self.frequencies
+end
+function MSRS:SetModulations(Modulations)
+if type(Modulations)~="table"then
+Modulations={Modulations}
+end
+self.modulations=Modulations
+return self
+end
+function MSRS:GetModulations()
+return self.modulations
+end
+function MSRS:SetGender(Gender)
+Gender=Gender or"female"
+self.gender=Gender:lower()
+self:T("Setting gender to "..tostring(self.gender))
+return self
+end
+function MSRS:SetCulture(Culture)
+self.culture=Culture
+return self
+end
+function MSRS:SetVoice(Voice)
+self.voice=Voice
+return self
+end
+function MSRS:SetCoordinate(Coordinate)
+self.coordinate=Coordinate
+return self
+end
+function MSRS:SetGoogle(PathToCredentials)
+self.google=PathToCredentials
+return self
+end
+function MSRS:Help()
+local path=self:GetPath()or STTS.DIRECTORY
+local exe=STTS.EXECUTABLE or"DCS-SR-ExternalAudio.exe"
+local filename=os.getenv('TMP').."\\MSRS-help-"..STTS.uuid()..".txt"
+local command=string.format("%s/%s --help > %s",path,exe,filename)
+os.execute(command)
+local f=assert(io.open(filename,"rb"))
+local data=f:read("*all")
+f:close()
+env.info("SRS STTS help output:")
+env.info("======================================================================")
+env.info(data)
+env.info("======================================================================")
+return self
+end
+function MSRS:PlaySoundFile(Soundfile,Delay)
+if Delay and Delay>0 then
+self:ScheduleOnce(Delay,MSRS.PlaySoundFile,self,Soundfile,0)
+else
+local soundfile=Soundfile:GetName()
+local command=self:_GetCommand()
+command=command.." --file="..tostring(soundfile)
+self:_ExecCommand(command)
+end
+return self
+end
+function MSRS:PlaySoundText(SoundText,Delay)
+if Delay and Delay>0 then
+self:ScheduleOnce(Delay,MSRS.PlaySoundText,self,SoundText,0)
+else
+local command=self:_GetCommand(nil,nil,nil,SoundText.gender,SoundText.voice,SoundText.culture,SoundText.volume,SoundText.speed)
+command=command..string.format(" --text=\"%s\"",tostring(SoundText.text))
+self:_ExecCommand(command)
+end
+return self
+end
+function MSRS:PlayText(Text,Delay)
+if Delay and Delay>0 then
+self:ScheduleOnce(Delay,MSRS.PlayText,self,Text,0)
+else
+local command=self:_GetCommand()
+command=command..string.format(" --text=\"%s\"",tostring(Text))
+self:_ExecCommand(command)
+end
+return self
+end
+function MSRS:PlayTextFile(TextFile,Delay)
+if Delay and Delay>0 then
+self:ScheduleOnce(Delay,MSRS.PlayTextFile,self,TextFile,0)
+else
+local exists=UTILS.FileExists(TextFile)
+if not exists then
+self:E("ERROR: MSRS Text file does not exist! File="..tostring(TextFile))
+return self
+end
+local command=self:_GetCommand()
+command=command..string.format(" --textFile=\"%s\"",tostring(TextFile))
+self:T(string.format("MSRS TextFile command=%s",command))
+local l=string.len(command)
+self:_ExecCommand(command)
+end
+return self
+end
+function MSRS:_ExecCommand(command)
+local filename=os.getenv('TMP').."\\MSRS-"..STTS.uuid()..".bat"
+local script=io.open(filename,"w+")
+script:write(command.." && exit")
+script:close()
+command=string.format('start /b "" "%s"',filename)
+local res=nil
+if true then
+local filenvbs=os.getenv('TMP').."\\MSRS-"..STTS.uuid()..".vbs"
+local script=io.open(filenvbs,"w+")
+script:write(string.format('Dim WinScriptHost\n'))
+script:write(string.format('Set WinScriptHost = CreateObject("WScript.Shell")\n'))
+script:write(string.format('WinScriptHost.Run Chr(34) & "%s" & Chr(34), 0\n',filename))
+script:write(string.format('Set WinScriptHost = Nothing'))
+script:close()
+local runvbs=string.format('cscript.exe //Nologo //B "%s"',filenvbs)
+self:T("MSRS execute command="..command)
+self:T("MSRS execute VBS command="..runvbs)
+res=os.execute(runvbs)
+timer.scheduleFunction(os.remove,filename,timer.getTime()+1)
+timer.scheduleFunction(os.remove,filenvbs,timer.getTime()+1)
+else
+self:T("MSRS execute command="..command)
+res=os.execute(command)
+timer.scheduleFunction(os.remove,filename,timer.getTime()+1)
+end
+return res
+end
+function MSRS:_GetLatLongAlt(Coordinate)
+local lat,lon,alt=coord.LOtoLL(Coordinate)
+return lat,lon,math.floor(alt)
+end
+function MSRS:_GetCommand(freqs,modus,coal,gender,voice,culture,volume,speed,port)
+local path=self:GetPath()or STTS.DIRECTORY
+local exe=STTS.EXECUTABLE or"DCS-SR-ExternalAudio.exe"
+freqs=table.concat(freqs or self.frequencies,",")
+modus=table.concat(modus or self.modulations,",")
+coal=coal or self.coalition
+gender=gender or self.gender
+voice=voice or self.voice
+culture=culture or self.culture
+volume=volume or self.volume
+speed=speed or self.speed
+port=port or self.port
+modus=modus:gsub("0","AM")
+modus=modus:gsub("1","FM")
+local command=string.format("start /min \"\" /d \"%s\" /b \"%s\" -f %s -m %s -c %s -p %s -n \"%s\" -h",path,exe,freqs,modus,coal,port,"ROBOT")
+local command=string.format('%s/%s -f %s -m %s -c %s -p %s -n "%s"',path,exe,freqs,modus,coal,port,"ROBOT")
+if voice then
+command=command..string.format(" --voice=\"%s\"",tostring(voice))
+else
+if gender and gender~="female"then
+command=command..string.format(" --gender=%s",tostring(gender))
+end
+if culture and culture~="en-GB"then
+command=command..string.format(" -l %s",tostring(culture))
+end
+end
+if self.coordinate then
+local lat,lon,alt=self:_GetLatLongAlt(self.coordinate)
+command=command..string.format(" -L %.4f -O %.4f -A %d",lat,lon,alt)
+end
+if self.google then
+command=command..string.format(' -G "%s"',self.google)
+end
+self:T("MSRS command="..command)
+return command
+end
 COMMANDCENTER={
 ClassName="COMMANDCENTER",
 CommandCenterName="",
@@ -67853,5 +68474,28 @@ _SETTINGS=SETTINGS:Set()
 _SETTINGS:SetPlayerMenuOn()
 _DATABASE:_RegisterCargos()
 _DATABASE:_RegisterZones()
+BASE:I("Checking de-sanitization of os, io and lfs:")
+local __na=false
+if os then
+BASE:I("- os available")
+else
+BASE:I("- os NOT available! Some functions may not work.")
+__na=true
+end
+if io then
+BASE:I("- io available")
+else
+BASE:I("- io NOT available! Some functions may not work.")
+__na=true
+end
+if lfs then
+BASE:I("- lfs available")
+else
+BASE:I("- lfs NOT available! Some functions may not work.")
+__na=true
+end
+if __na then
+BASE:I("Check <DCS install folder>/Scripts/MissionScripting.lua and comment out the lines with sanitizeModule(''). Use at your own risk!)")
+end
 BASE:TraceOnOff(false)
 env.info('*** MOOSE INCLUDE END *** ')
