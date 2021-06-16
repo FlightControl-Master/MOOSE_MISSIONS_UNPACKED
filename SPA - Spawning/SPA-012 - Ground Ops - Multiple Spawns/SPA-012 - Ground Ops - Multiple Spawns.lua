@@ -1,6 +1,7 @@
 -- Name: SPA-012 - Ground Ops - Multiple Spawns
 -- Author: FlightControl
 -- Date Created: 10 Jan 2017
+-- Checked in 15 dez 2020 by ZERO
 --
 -- # Situation:
 --
