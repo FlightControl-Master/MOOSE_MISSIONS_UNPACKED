@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-06-23T07:47:05.0000000Z-5123ab0720d5efb27dd93a0518fec501d47a40c8 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-06-25T10:39:02.0000000Z-2ff128f184b7a83b4834c6ee68c4003d8d696e40 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -65961,10 +65961,10 @@ CSAR.AircraftType["SA342Minigun"]=2
 CSAR.AircraftType["SA342L"]=4
 CSAR.AircraftType["SA342M"]=4
 CSAR.AircraftType["UH-1H"]=8
-CSAR.AircraftType["Mi-8MT"]=12
+CSAR.AircraftType["Mi-8MTV2"]=12
 CSAR.AircraftType["Mi-24P"]=8
 CSAR.AircraftType["Mi-24V"]=8
-CSAR.version="0.1.4r1"
+CSAR.version="0.1.4r4"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
@@ -66194,6 +66194,10 @@ else
 _country=country.id.UN_PEACEKEEPERS
 end
 self:_AddCsar(_coalition,_country,pos,"PoW","Unknown",nil,freq,_nomessage,_description)
+end
+function CSAR:SpawnCSARAtZone(Zone,Coalition,Description,RandomPoint,Nomessage)
+self:_SpawnCsarAtZone(Zone,Coalition,Description,RandomPoint,Nomessage)
+return self
 end
 function CSAR:_EventHandler(EventData)
 self:T(self.lid.." _EventHandler")
@@ -66978,7 +66982,7 @@ local PilotTable=self.downedPilots
 for _,_pilot in pairs(PilotTable)do
 local pilot=_pilot
 local group=pilot.group
-local frequency=pilot.frequency
+local frequency=pilot.frequency or 0
 if frequency and frequency>0 then
 self:_AddBeaconToGroup(group,frequency)
 end
@@ -67236,7 +67240,7 @@ CTLD.SkipFrequencies={
 905,907,920,935,942,950,995,
 1000,1025,1030,1050,1065,1116,1175,1182,1210
 }
-CTLD.version="0.1.1b1"
+CTLD.version="0.1.1b2"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
