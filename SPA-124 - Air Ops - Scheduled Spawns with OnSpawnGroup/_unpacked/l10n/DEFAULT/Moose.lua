@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-06-19T20:27:12.0000000Z-0e8732fd449a3eecac3dacb0b462432a24be15d4 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-07-02T06:51:51.0000000Z-353d6dfec0ed1d574945c537ca6c3e7b87e9f3ea ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -21145,7 +21145,7 @@ AIRBASE.Syria={
 ["Pinarbashi"]="Pinarbashi",
 ["Paphos"]="Paphos",
 ["Kingsfield"]="Kingsfield",
-["Tha'lah"]="Tha'lah",
+["Thalah"]="Tha'lah",
 ["Haifa"]="Haifa",
 ["Khalkhalah"]="Khalkhalah",
 ["Megiddo"]="Megiddo",
@@ -21157,7 +21157,6 @@ AIRBASE.Syria={
 ["Akrotiri"]="Akrotiri",
 ["Naqoura"]="Naqoura",
 ["Gaziantep"]="Gaziantep",
-["CVN_71"]="CVN-71",
 ["Sayqal"]="Sayqal",
 ["Tiyas"]="Tiyas",
 ["Shayrat"]="Shayrat",
@@ -21180,12 +21179,12 @@ AIRBASE.Syria={
 ["Abu_al_Duhur"]="Abu al-Duhur",
 }
 AIRBASE.MarianaIslands={
-["Rota_International_Airport"]="Rota International Airport",
-["Andersen"]="Andersen",
-["Northwest_Field"]="Northwest_Field",
-["Antonio_B_Won_Pat_International_Airport"]="Antonio B. Won Pat International Airport",
-["Saipan_International_Airport"]="Saipan International Airport",
-["Tinian_International_Airport"]="Tinian International Airport",
+["Rota_Intl"]="Rota Intl",
+["Andersen_AFB"]="Andersen AFB",
+["Antonio_B_Won_Pat_Intl"]="Antonio B. Won Pat Intl",
+["Saipan_Intl"]="Saipan Intl",
+["Tinian_Intl"]="Tinian Intl",
+["Olf_Orote"]="Olf Orote",
 }
 AIRBASE.TerminalType={
 Runway=16,
@@ -51243,8 +51242,12 @@ end
 function AIRBOSS:_MarshalCallRecoveryStart(case)
 local radial=self:GetRadial(case,true,true,false)
 local text=string.format("Starting aircraft recovery Case %d ops.",case)
-if case>1 then
-text=text..string.format(" Marshal radial %03d°.",radial)
+if case==1 then
+text=text..string.format(" BRC %03d°.",self:GetBRC())
+elseif case==2 then
+text=text..string.format(" Marshal radial %03d°. BRC %03d°.",radial,self:GetBRC())
+elseif case==3 then
+text=text..string.format(" Marshal radial %03d°. Final heading %03d°.",radial,self:GetFinalBearing(false))
 end
 self:T(self.lid..text)
 local call=self:_NewRadioCall(self.MarshalCall.STARTINGRECOVERY,"AIRBOSS",text,self.Tmessage,"99")
