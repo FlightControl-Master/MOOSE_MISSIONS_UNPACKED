@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-07-16T12:00:21.0000000Z-0db35a0e9fa575f757dbbb59aa62540afad04a14 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-07-18T12:54:37.0000000Z-277c26821e27a47358f1131c91e223951c677e93 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -55334,12 +55334,13 @@ CTLD.UnitTypes={
 ["SA342Minigun"]={type="SA342Minigun",crates=false,troops=true,cratelimit=0,trooplimit=2},
 ["UH-1H"]={type="UH-1H",crates=true,troops=true,cratelimit=1,trooplimit=8},
 ["Mi-8MTV2"]={type="Mi-8MTV2",crates=true,troops=true,cratelimit=2,trooplimit=12},
+["Mi-8MT"]={type="Mi-8MTV2",crates=true,troops=true,cratelimit=2,trooplimit=12},
 ["Ka-50"]={type="Ka-50",crates=false,troops=false,cratelimit=0,trooplimit=0},
 ["Mi-24P"]={type="Mi-24P",crates=true,troops=true,cratelimit=2,trooplimit=8},
 ["Mi-24V"]={type="Mi-24V",crates=true,troops=true,cratelimit=2,trooplimit=8},
 ["Hercules"]={type="Hercules",crates=true,troops=true,cratelimit=7,trooplimit=64},
 }
-CTLD.version="0.1.4r1"
+CTLD.version="0.1.4r2"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -55377,6 +55378,7 @@ self:SetStartState("Stopped")
 self:AddTransition("Stopped","Start","Running")
 self:AddTransition("*","Status","*")
 self:AddTransition("*","TroopsPickedUp","*")
+self:AddTransition("*","TroopsExtracted","*")
 self:AddTransition("*","CratesPickedUp","*")
 self:AddTransition("*","TroopsDeployed","*")
 self:AddTransition("*","TroopsRTB","*")
@@ -55480,6 +55482,7 @@ self.Loaded_Cargo[unitname]=nil
 self:_RefreshF10Menus()
 end
 if _unit:GetTypeName()=="Hercules"and self.enableHercules then
+self.Loaded_Cargo[unitname]=nil
 self:_RefreshF10Menus()
 end
 return
@@ -55542,6 +55545,77 @@ table.insert(loaded.Cargo,loadcargotype)
 self.Loaded_Cargo[unitname]=loaded
 self:_SendMessage("Troops boarded!",10,false,Group)
 self:__TroopsPickedUp(1,Group,Unit,Cargotype)
+end
+return self
+end
+function CTLD:_ExtractTroops(Group,Unit)
+self:T(self.lid.." _ExtractTroops")
+local grounded=not self:IsUnitInAir(Unit)
+local hoverload=self:CanHoverLoad(Unit)
+if not grounded and not hoverload then
+self:_SendMessage("You need to land or hover in position to load!",10,false,Group)
+if not self.debug then return self end
+end
+local unit=Unit
+local unitname=unit:GetName()
+local unittype=unit:GetTypeName()
+local capabilities=self:_GetUnitCapabilities(Unit)
+local cantroops=capabilities.troops
+local trooplimit=capabilities.trooplimit
+local unitcoord=unit:GetCoordinate()
+local nearestGroup=nil
+local nearestGroupIndex=-1
+local nearestDistance=10000000
+for k,v in pairs(self.DroppedTroops)do
+local distance=self:_GetDistance(v:GetCoordinate(),unitcoord)
+if distance<nearestDistance then
+nearestGroup=v
+nearestGroupIndex=k
+nearestDistance=distance
+end
+end
+if nearestGroup==nil or nearestDistance>self.CrateDistance then
+self:_SendMessage("No units close enough to extract!",10,false,Group)
+return self
+end
+local groupType=string.match(nearestGroup:GetName(),"(.+)-(.+)$")
+local Cargotype=nil
+for k,v in pairs(self.Cargo_Troops)do
+if v.Name==groupType then
+Cargotype=v
+break
+end
+end
+if Cargotype==nil then
+self:_SendMessage("Can't find a matching cargo type for "..groupType,10,false,Group)
+return self
+end
+local troopsize=Cargotype:GetCratesNeeded()
+local numberonboard=0
+local loaded={}
+if self.Loaded_Cargo[unitname]then
+loaded=self.Loaded_Cargo[unitname]
+numberonboard=loaded.Troopsloaded or 0
+else
+loaded={}
+loaded.Troopsloaded=0
+loaded.Cratesloaded=0
+loaded.Cargo={}
+end
+if troopsize+numberonboard>trooplimit then
+self:_SendMessage("Sorry, we\'re crammed already!",10,false,Group)
+return
+else
+self.CargoCounter=self.CargoCounter+1
+local loadcargotype=CTLD_CARGO:New(self.CargoCounter,Cargotype.Name,Cargotype.Templates,CTLD_CARGO.Enum.TROOPS,true,true,Cargotype.CratesNeeded)
+self:T({cargotype=loadcargotype})
+loaded.Troopsloaded=loaded.Troopsloaded+troopsize
+table.insert(loaded.Cargo,loadcargotype)
+self.Loaded_Cargo[unitname]=loaded
+self:_SendMessage("Troops boarded!",10,false,Group)
+self:__TroopsExtracted(1,Group,Unit,nearestGroup)
+table.remove(self.DroppedTroops,nearestGroupIndex)
+nearestGroup:Destroy()
 end
 return self
 end
@@ -56145,6 +56219,7 @@ menucount=menucount+1
 menus[menucount]=MENU_GROUP_COMMAND:New(_group,entry.Name,troopsmenu,self._LoadTroops,self,_group,_unit,entry)
 end
 local unloadmenu1=MENU_GROUP_COMMAND:New(_group,"Drop troops",toptroops,self._UnloadTroops,self,_group,_unit):Refresh()
+local extractMenu1=MENU_GROUP_COMMAND:New(_group,"Extract troops",toptroops,self._ExtractTroops,self,_group,_unit):Refresh()
 end
 local rbcns=MENU_GROUP_COMMAND:New(_group,"List active zone beacons",topmenu,self._ListRadioBeacons,self,_group,_unit)
 if unittype=="Hercules"then
@@ -56621,6 +56696,10 @@ function CTLD:onbeforeCratesPickedUp(From,Event,To,Group,Unit,Cargo)
 self:T({From,Event,To})
 return self
 end
+function CTLD:onbeforeTroopsExtracted(From,Event,To,Group,Unit,Troops)
+self:T({From,Event,To})
+return self
+end
 function CTLD:onbeforeTroopsDeployed(From,Event,To,Group,Unit,Troops)
 self:T({From,Event,To})
 return self
@@ -56678,9 +56757,10 @@ CSAR.AircraftType["SA342L"]=4
 CSAR.AircraftType["SA342M"]=4
 CSAR.AircraftType["UH-1H"]=8
 CSAR.AircraftType["Mi-8MTV2"]=12
+CSAR.AircraftType["Mi-8MT"]=12
 CSAR.AircraftType["Mi-24P"]=8
 CSAR.AircraftType["Mi-24V"]=8
-CSAR.version="0.1.8r2"
+CSAR.version="0.1.8r3"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
@@ -56721,6 +56801,7 @@ self:AddTransition("*","Approach","*")
 self:AddTransition("*","Boarded","*")
 self:AddTransition("*","Returning","*")
 self:AddTransition("*","Rescued","*")
+self:AddTransition("*","KIA","*")
 self:AddTransition("*","Stop","Stopped")
 self.addedTo={}
 self.allheligroupset={}
@@ -56787,6 +56868,7 @@ DownedPilot.side=Side or 0
 DownedPilot.typename=Typename or""
 DownedPilot.group=Group
 DownedPilot.timestamp=0
+DownedPilot.alive=true
 local PilotTable=self.downedPilots
 local counter=self.downedpilotcounter
 PilotTable[counter]={}
@@ -57068,7 +57150,7 @@ local PilotTable=self.downedPilots
 local found=false
 local table=nil
 for _,_pilot in pairs(PilotTable)do
-if _pilot.name==name then
+if _pilot.name==name and _pilot.alive==true then
 found=true
 table=_pilot
 break
@@ -57079,24 +57161,9 @@ end
 function CSAR:_RemoveNameFromDownedPilots(name,force)
 local PilotTable=self.downedPilots
 local found=false
-for _,_pilot in pairs(PilotTable)do
+for _index,_pilot in pairs(PilotTable)do
 if _pilot.name==name then
-local group=_pilot.group
-if group then
-if(not group:IsAlive())or(force==true)then
-found=true
-_pilot.desc=nil
-_pilot.frequency=nil
-_pilot.index=nil
-_pilot.name=nil
-_pilot.originalUnit=nil
-_pilot.player=nil
-_pilot.side=nil
-_pilot.typename=nil
-_pilot.group=nil
-_pilot.timestamp=nil
-end
-end
+self.downedPilots[_index].alive=false
 end
 end
 return found
@@ -57112,7 +57179,7 @@ self:T("...not found in list!")
 return
 end
 local _woundedGroup=_downedpilot.group
-if _woundedGroup~=nil then
+if _woundedGroup~=nil and _woundedGroup:IsAlive()then
 local _heliUnit=self:_GetSARHeli(_heliName)
 local _lookupKeyHeli=_heliName.."_".._woundedGroupName
 if _heliUnit==nil then
@@ -57137,7 +57204,9 @@ self:__Approach(-10,heliname,woundedgroupname)
 end
 else
 self:T("...Downed Pilot KIA?!")
-self:_RemoveNameFromDownedPilots(_downedpilot.name)
+if not _downedpilot.alive then
+self:_RemoveNameFromDownedPilots(_downedpilot.name,true)
+end
 end
 return self
 end
@@ -57333,24 +57402,6 @@ else
 return false
 end
 end
-function CSAR:_CheckGroupNotKIA(_woundedGroup,_woundedGroupName,_heliUnit,_heliName)
-self:T(self.lid.." _CheckGroupNotKIA")
-local inTransit=false
-if _woundedGroup and _heliUnit then
-for _currentHeli,_groups in pairs(self.inTransitGroups)do
-if _groups[_woundedGroupName]then
-inTransit=true
-self:_DisplayToAllSAR(string.format("%s has been picked up by %s",_woundedGroupName,_currentHeli),self.coalition,self.messageTime)
-break
-end
-end
-if not inTransit then
-self:_DisplayToAllSAR(string.format("%s is KIA ",_woundedGroupName),self.coalition,self.messageTime)
-end
-self:_RemoveNameFromDownedPilots(_woundedGroupName)
-end
-return inTransit
-end
 function CSAR:_ScheduledSARFlight(heliname,groupname)
 self:T(self.lid.." _ScheduledSARFlight")
 self:T({heliname,groupname})
@@ -57450,7 +57501,7 @@ local _groupName=_value.name
 self:T(string.format("Display Active Pilot: %s",tostring(_groupName)))
 self:T({Table=_value})
 local _woundedGroup=_value.group
-if _woundedGroup then
+if _woundedGroup and _value.alive then
 local _coordinatesText=self:_GetPositionOfWounded(_woundedGroup)
 local _helicoord=_heli:GetCoordinate()
 local _woundcoord=_woundedGroup:GetCoordinate()
@@ -57745,8 +57796,8 @@ function CSAR:_CountActiveDownedPilots()
 self:T(self.lid.." _CountActiveDownedPilots")
 local PilotsInFieldN=0
 for _,_unitName in pairs(self.downedPilots)do
-self:T({_unitName})
-if _unitName.name~=nil then
+self:T({_unitName.desc})
+if _unitName.alive==true then
 PilotsInFieldN=PilotsInFieldN+1
 end
 end
@@ -57781,19 +57832,39 @@ end
 self:__Status(-10)
 return self
 end
+function CSAR:_CheckDownedPilotTable()
+local pilots=self.downedPilots
+for _,_entry in pairs(pilots)do
+self:T("Checking for ".._entry.name)
+self:T({entry=_entry})
+local group=_entry.group
+if not group:IsAlive()then
+self:T("Group is dead")
+if _entry.alive==true then
+self:T("Switching .alive to false")
+self:__KIA(1,_entry.desc)
+self:_RemoveNameFromDownedPilots(_entry.name,true)
+end
+end
+end
+return self
+end
 function CSAR:onbeforeStatus(From,Event,To)
 self:T({From,Event,To})
 self:_AddMedevacMenuItem()
 self:_RefreshRadioBeacons()
+self:_CheckDownedPilotTable()
 for _,_sar in pairs(self.csarUnits)do
 local PilotTable=self.downedPilots
 for _,_entry in pairs(PilotTable)do
+if _entry.alive then
 local entry=_entry
 local name=entry.name
 local timestamp=entry.timestamp or 0
 local now=timer.getAbsTime()
 if now-timestamp>17 then
 self:_CheckWoundedGroupStatus(_sar,name)
+end
 end
 end
 end
