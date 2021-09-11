@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-09-02T16:48:40.0000000Z-db5797bb4ec586f462a1444005ca1bc1f511d49f ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-09-07T17:52:14.0000000Z-8873504daf8f829fe9024c9a13d9d1e1950bbf6f ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -50064,11 +50064,20 @@ elseif t<19 then
 grade="OK Groove"
 elseif t<=24 then
 grade="(LIG)"
+elseif playerData.actype==AIRBOSS.AircraftCarrier.AV8B and t<55 then
+grade="FAST V/STOL Groove"
+elseif playerData.actype==AIRBOSS.AircraftCarrier.AV8B and t<90 then
+grade="OK V/STOL Groove"
+elseif playerData.actype==AIRBOSS.AircraftCarrier.AV8B and t>=91 then
+grade="SLOW V/STOL Groove"
 else
 grade="LIG"
 end
 if t>=16.4 and t<=16.6 then
 grade="_OK_"
+end
+if playerData.actype==AIRBOSS.AircraftCarrier.AV8B and(t>=65.0 and t<=75.0)then
+grade="_OK_ V/STOL"
 end
 return grade
 end
@@ -50087,14 +50096,21 @@ local nS=count(G,'%(')
 local nN=N-nS-nL
 local Tgroove=playerData.Tgroove
 local TgrooveUnicorn=Tgroove and(Tgroove>=15.0 and Tgroove<=18.99)or false
+local TgrooveVstolUnicorn=Tgroove and(Tgroove>=65.0 and Tgroove<=70.0)and playerData.actype==AIRBOSS.AircraftCarrier.AV8B or false
 local grade
 local points
-if N==0 and TgrooveUnicorn then
+if N==0 and(TgrooveUnicorn or TgrooveVstolUnicorn)then
 grade="_OK_"
 points=5.0
 G="Unicorn"
 else
-if nL>0 then
+if nL>3 and playerData.actype==AIRBOSS.AircraftCarrier.AV8B then
+grade="--"
+points=2.0
+elseif nN>2 and playerData.actype==AIRBOSS.AircraftCarrier.AV8B then
+grade="(OK)"
+points=3.0
+elseif nL>0 then
 grade="--"
 points=2.0
 elseif nN>0 then
@@ -55883,19 +55899,19 @@ MOVE="move",
 SHIP="ship",
 }
 CTLD.UnitTypes={
-["SA342Mistral"]={type="SA342Mistral",crates=false,troops=true,cratelimit=0,trooplimit=4},
-["SA342L"]={type="SA342L",crates=false,troops=true,cratelimit=0,trooplimit=2},
-["SA342M"]={type="SA342M",crates=false,troops=true,cratelimit=0,trooplimit=4},
-["SA342Minigun"]={type="SA342Minigun",crates=false,troops=true,cratelimit=0,trooplimit=2},
-["UH-1H"]={type="UH-1H",crates=true,troops=true,cratelimit=1,trooplimit=8},
-["Mi-8MTV2"]={type="Mi-8MTV2",crates=true,troops=true,cratelimit=2,trooplimit=12},
-["Mi-8MT"]={type="Mi-8MTV2",crates=true,troops=true,cratelimit=2,trooplimit=12},
-["Ka-50"]={type="Ka-50",crates=false,troops=false,cratelimit=0,trooplimit=0},
-["Mi-24P"]={type="Mi-24P",crates=true,troops=true,cratelimit=2,trooplimit=8},
-["Mi-24V"]={type="Mi-24V",crates=true,troops=true,cratelimit=2,trooplimit=8},
-["Hercules"]={type="Hercules",crates=true,troops=true,cratelimit=7,trooplimit=64},
+["SA342Mistral"]={type="SA342Mistral",crates=false,troops=true,cratelimit=0,trooplimit=4,length=12},
+["SA342L"]={type="SA342L",crates=false,troops=true,cratelimit=0,trooplimit=2,length=12},
+["SA342M"]={type="SA342M",crates=false,troops=true,cratelimit=0,trooplimit=4,length=12},
+["SA342Minigun"]={type="SA342Minigun",crates=false,troops=true,cratelimit=0,trooplimit=2,length=12},
+["UH-1H"]={type="UH-1H",crates=true,troops=true,cratelimit=1,trooplimit=8,length=15},
+["Mi-8MTV2"]={type="Mi-8MTV2",crates=true,troops=true,cratelimit=2,trooplimit=12,length=15},
+["Mi-8MT"]={type="Mi-8MTV2",crates=true,troops=true,cratelimit=2,trooplimit=12,length=15},
+["Ka-50"]={type="Ka-50",crates=false,troops=false,cratelimit=0,trooplimit=0,length=15},
+["Mi-24P"]={type="Mi-24P",crates=true,troops=true,cratelimit=2,trooplimit=8,length=18},
+["Mi-24V"]={type="Mi-24V",crates=true,troops=true,cratelimit=2,trooplimit=8,length=18},
+["Hercules"]={type="Hercules",crates=true,troops=true,cratelimit=7,trooplimit=64,length=25},
 }
-CTLD.version="0.1.7a3"
+CTLD.version="0.1.7a5"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -55968,7 +55984,7 @@ self.TroopCounter=0
 self.Engineers=0
 self.EngineersInField={}
 self.EngineerSearch=2000
-self.CrateDistance=30
+self.CrateDistance=35
 self.ExtractFactor=3.33
 self.prefixes=Prefixes or{"Cargoheli"}
 self.useprefix=true
@@ -55986,6 +56002,7 @@ self.HercMaxAngels=2000
 self.HercMaxSpeed=77
 self.suppressmessages=false
 self.repairtime=300
+self.cratecountry=country.id.GERMANY
 for i=1,100 do
 math.random()
 end
@@ -56006,6 +56023,7 @@ capabilities.crates=false
 capabilities.cratelimit=0
 capabilities.trooplimit=0
 capabilities.type="generic"
+capabilities.length=20
 end
 return capabilities
 end
@@ -56358,19 +56376,15 @@ local height=Unit:GetHeight()
 local droppedcargo={}
 for i=1,number do
 local cratealias=string.format("%s-%d",cratetemplate,math.random(1,100000))
-local cratedistance=i*4+8
+local cratedistance=(i-1)*2.5+capabilities.length
+if cratedistance>self.CrateDistance then cratedistance=self.CrateDistance end
+local addon=0
 if IsHerc then
-cratedistance=i*4+12
+addon=180
 end
-for i=1,50 do
-math.random(90,270)
-end
-local rheading=math.floor(((math.random(90,270)*heading)+1)/360)
-if not IsHerc then
-rheading=rheading+180
-end
-if rheading>360 then rheading=rheading-360 end
-local cratecoord=position:Translate(cratedistance,rheading)
+local randomheading=UTILS.RandomGaussian(0,30,-90,90,100)
+randomheading=math.fmod((heading+randomheading+addon),360)
+local cratecoord=position:Translate(cratedistance,randomheading)
 local cratevec2=cratecoord:GetVec2()
 self.CrateCounter=self.CrateCounter+1
 if type(ship)=="string"then
@@ -56382,11 +56396,11 @@ local dist=shipcoord:Get2DDistance(unitcoord)
 dist=dist-(20+math.random(1,10))
 local width=width/2
 local Offy=math.random(-width,width)
-self.Spawned_Crates[self.CrateCounter]=SPAWNSTATIC:NewFromType("container_cargo","Cargos",country.id.GERMANY)
+self.Spawned_Crates[self.CrateCounter]=SPAWNSTATIC:NewFromType("container_cargo","Cargos",self.cratecountry)
 :InitLinkToUnit(Ship,dist,Offy,0)
 :Spawn(270,cratealias)
 else
-self.Spawned_Crates[self.CrateCounter]=SPAWNSTATIC:NewFromType("container_cargo","Cargos",country.id.GERMANY)
+self.Spawned_Crates[self.CrateCounter]=SPAWNSTATIC:NewFromType("container_cargo","Cargos",self.cratecountry)
 :InitCoordinate(cratecoord)
 :Spawn(270,cratealias)
 end
@@ -57257,8 +57271,8 @@ function CTLD:_ListRadioBeacons(Group,Unit)
 self:T(self.lid.." _ListRadioBeacons")
 local report=REPORT:New("Active Zone Beacons")
 report:Add("------------------------------------------------------------")
-local zones={[1]=self.pickupZones,[2]=self.wpZones,[3]=self.dropOffZones}
-for i=1,3 do
+local zones={[1]=self.pickupZones,[2]=self.wpZones,[3]=self.dropOffZones,[4]=self.shipZones}
+for i=1,4 do
 for index,cargozone in pairs(zones[i])do
 local czone=cargozone
 if czone.active and czone.hasbeacon then
@@ -57280,9 +57294,14 @@ report:Add("------------------------------------------------------------")
 self:_SendMessage(report:Text(),30,true,Group)
 return self
 end
-function CTLD:_AddRadioBeacon(Name,Sound,Mhz,Modulation)
+function CTLD:_AddRadioBeacon(Name,Sound,Mhz,Modulation,IsShip)
 self:T(self.lid.." _AddRadioBeacon")
-local Zone=ZONE:FindByName(Name)
+local Zone=nil
+if IsShip then
+Zone=UNIT:FindByName(Name)
+else
+Zone=ZONE:FindByName(Name)
+end
 local Sound=Sound or"beacon.ogg"
 if Zone then
 local ZoneCoord=Zone:GetCoordinate()
@@ -57295,8 +57314,10 @@ return self
 end
 function CTLD:_RefreshRadioBeacons()
 self:T(self.lid.." _RefreshRadioBeacons")
-local zones={[1]=self.pickupZones,[2]=self.wpZones,[3]=self.dropOffZones}
-for i=1,3 do
+local zones={[1]=self.pickupZones,[2]=self.wpZones,[3]=self.dropOffZones,[4]=self.shipZones}
+for i=1,4 do
+local IsShip=false
+if i==4 then IsShip=true end
 for index,cargozone in pairs(zones[i])do
 local czone=cargozone
 local Sound=self.RadioSound
@@ -57308,9 +57329,9 @@ local Name=czone.name
 local FM=FMbeacon.frequency
 local VHF=VHFbeacon.frequency
 local UHF=UHFbeacon.frequency
-self:_AddRadioBeacon(Name,Sound,FM,radio.modulation.FM)
-self:_AddRadioBeacon(Name,Sound,VHF,radio.modulation.FM)
-self:_AddRadioBeacon(Name,Sound,UHF,radio.modulation.AM)
+self:_AddRadioBeacon(Name,Sound,FM,radio.modulation.FM,IsShip)
+self:_AddRadioBeacon(Name,Sound,VHF,radio.modulation.FM,IsShip)
+self:_AddRadioBeacon(Name,Sound,UHF,radio.modulation.AM,IsShip)
 end
 end
 end
@@ -57382,12 +57403,17 @@ local unitcoord=Unit:GetCoordinate()
 local Group=Unit:GetGroup()
 local smokedistance=self.smokedistance
 local smoked=false
-local zones={[1]=self.pickupZones,[2]=self.wpZones,[3]=self.dropOffZones}
-for i=1,3 do
+local zones={[1]=self.pickupZones,[2]=self.wpZones,[3]=self.dropOffZones,[4]=self.shipZones}
+for i=1,4 do
 for index,cargozone in pairs(zones[i])do
 local CZone=cargozone
 local zonename=CZone.name
-local zone=ZONE:FindByName(zonename)
+local zone=nil
+if i==4 then
+zone=UNIT:FindByName(zonename)
+else
+zone=ZONE:FindByName(zonename)
+end
 local zonecoord=zone:GetCoordinate()
 local active=CZone.active
 local color=CZone.color
@@ -57412,7 +57438,7 @@ self:_SendMessage(string.format("Negative, need to be closer than %dnm to a zone
 end
 return self
 end
-function CTLD:UnitCapabilities(Unittype,Cancrates,Cantroops,Cratelimit,Trooplimit)
+function CTLD:UnitCapabilities(Unittype,Cancrates,Cantroops,Cratelimit,Trooplimit,Length)
 self:T(self.lid.." UnitCapabilities")
 local unittype=nil
 local unit=nil
@@ -57430,6 +57456,7 @@ capabilities.crates=Cancrates or false
 capabilities.troops=Cantroops or false
 capabilities.cratelimit=Cratelimit or 0
 capabilities.trooplimit=Trooplimit or 0
+capabilities.length=Length or 20
 self.UnitTypes[unittype]=capabilities
 return self
 end
@@ -57825,7 +57852,7 @@ CSAR.AircraftType["Mi-8MTV2"]=12
 CSAR.AircraftType["Mi-8MT"]=12
 CSAR.AircraftType["Mi-24P"]=8
 CSAR.AircraftType["Mi-24V"]=8
-CSAR.version="0.1.10r3"
+CSAR.version="0.1.10r5"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
@@ -57906,7 +57933,6 @@ self.useprefix=true
 self.csarPrefix={"helicargo","MEDEVAC"}
 self.template=Template or"generic"
 self.mashprefix={"MASH"}
-self.mash=SET_GROUP:New():FilterCoalitions(self.coalition):FilterPrefixes(self.mashprefix):FilterOnce()
 self.autosmoke=false
 self.autosmokedistance=2000
 self.limitmaxdownedpilots=true
@@ -58124,7 +58150,6 @@ if self.takenOff[_event.IniUnitName]==true or _group:IsAirborne()then
 if self:_DoubleEjection(_unitname)then
 return
 end
-self:_DisplayToAllSAR("MAYDAY MAYDAY! ".._unit:GetTypeName().." shot down. No Chute!",self.coalition,self.messageTime)
 else
 self:T(self.lid.." Pilot has not taken off, ignore")
 end
@@ -58208,7 +58233,7 @@ end
 for _,_heliName in pairs(self.csarUnits)do
 self:_CheckWoundedGroupStatus(_heliName,_groupName)
 end
-self:__PilotDown(2,_downedGroup,_freqk,_leadername,_coordinatesText)
+self:__PilotDown(2,_downedGroup,_freqk,_groupName,_coordinatesText)
 return self
 end
 function CSAR:_CheckNameInDownedPilots(name)
@@ -58902,6 +58927,7 @@ self.allheligroupset=SET_GROUP:New():FilterCoalitions(self.coalitiontxt):FilterP
 else
 self.allheligroupset=SET_GROUP:New():FilterCoalitions(self.coalitiontxt):FilterCategoryHelicopter():FilterStart()
 end
+self.mash=SET_GROUP:New():FilterCoalitions(self.coalitiontxt):FilterPrefixes(self.mashprefix):FilterStart()
 self:__Status(-10)
 return self
 end
