@@ -10,13 +10,13 @@
 -- Load and fly over 5 ammunition crates to the trucks waiting at the farm at waypoint 1. 
 -- Once dropped, the trucks will drive to the artillery, so Kobuleti can be shelled!
 -------------------------------------------------------------------------
--- Date: 23 June 2021
+-- Date: 24 September 2021
 -------------------------------------------------------------------------
 
 -- Set up CTLD
 local myctld = CTLD:New(coalition.side.BLUE,{"Player"},"LtRg II")
-myctld.allowcratepickupagain = false
-myctld.dropcratesanywhere = false
+myctld.allowcratepickupagain = false 
+myctld.dropcratesanywhere = false -- we only need to ammo crates to be dropped in one place
 myctld.forcehoverload = false
 myctld.smokedistance = UTILS.NMToMeters(3)
 myctld.verbose = 2
@@ -26,7 +26,7 @@ myctld:__Start(5)
 myctld:AddCTLDZone("PickupZone",CTLD.CargoZoneType.LOAD,SMOKECOLOR.Blue,true,true)
 
 -- define a drop zone
-myctld:AddCTLDZone("DropZone",CTLD.CargoZoneType.LOAD,SMOKECOLOR.Red,true,true)
+myctld:AddCTLDZone("DropZone",CTLD.CargoZoneType.DROP,SMOKECOLOR.Red,true,true)
 
 -- define statics cargo
 myctld:AddStaticsCargo("Ammunition",50,25) -- ammuntion weight 50kg ;) stock 25 pc

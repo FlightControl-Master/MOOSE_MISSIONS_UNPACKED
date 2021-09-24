@@ -274,9 +274,9 @@ mission =
     }, -- end of ["triggers"]
     ["map"] = 
     {
-        ["centerY"] = 633491.60164978,
-        ["zoom"] = 26281.593841601,
-        ["centerX"] = -326248.57854932,
+        ["centerY"] = 634908.2764302,
+        ["zoom"] = 39513.532308644,
+        ["centerX"] = -327713.98972886,
     }, -- end of ["map"]
     ["coalitions"] = 
     {
@@ -3083,12 +3083,846 @@ mission =
             ["predicate"] = "triggerStart",
         }, -- end of [4]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 2735,
+    ["currentKey"] = 3527,
     ["start_time"] = 28800,
     ["forcedOptions"] = 
     {
     }, -- end of ["forcedOptions"]
     ["failures"] = 
     {
+        ["UNCR_LH_STRUT_UP_LOCK_JAMMED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "UNCR_LH_STRUT_UP_LOCK_JAMMED",
+            ["mm"] = 0,
+        }, -- end of ["UNCR_LH_STRUT_UP_LOCK_JAMMED"]
+        ["GUN_LEFT_MG131_AMMUN_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "GUN_LEFT_MG131_AMMUN_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_LEFT_MG131_AMMUN_FAULT"]
+        ["GUN_RIGHT_MG131_BARREL_WORN"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "GUN_RIGHT_MG131_BARREL_WORN",
+            ["mm"] = 0,
+        }, -- end of ["GUN_RIGHT_MG131_BARREL_WORN"]
+        ["BOMBS_DAMAGE_LINKAGE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "BOMBS_DAMAGE_LINKAGE",
+            ["mm"] = 0,
+        }, -- end of ["BOMBS_DAMAGE_LINKAGE"]
+        ["FUEL_TANK_01_FIRE"] = 
+        {
+            ["hh"] = 0,
+            ["id"] = "FUEL_TANK_01_FIRE",
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["FUEL_TANK_01_FIRE"]
+        ["EZ42_FIXED_LAMP_DEFECTIVE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "EZ42_FIXED_LAMP_DEFECTIVE",
+            ["mm"] = 0,
+        }, -- end of ["EZ42_FIXED_LAMP_DEFECTIVE"]
+        ["MW_50_VALVE_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "MW_50_VALVE_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["MW_50_VALVE_FAULT"]
+        ["FUEL_TANK_00_FIRE"] = 
+        {
+            ["hh"] = 0,
+            ["id"] = "FUEL_TANK_00_FIRE",
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["FUEL_TANK_00_FIRE"]
+        ["ELEC_BOMBABWGERAT_RELEASE_MALFUNCTION"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_BOMBABWGERAT_RELEASE_MALFUNCTION",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_BOMBABWGERAT_RELEASE_MALFUNCTION"]
+        ["OXYN_LEFT_CONTAINER_PERFORATED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "OXYN_LEFT_CONTAINER_PERFORATED",
+            ["mm"] = 0,
+        }, -- end of ["OXYN_LEFT_CONTAINER_PERFORATED"]
+        ["TACH_BREAK_CIRCUIT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "TACH_BREAK_CIRCUIT",
+            ["mm"] = 0,
+        }, -- end of ["TACH_BREAK_CIRCUIT"]
+        ["UNCR_RH_STRUT_UP_LOCK_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "UNCR_RH_STRUT_UP_LOCK_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["UNCR_RH_STRUT_UP_LOCK_FAILURE"]
+        ["ELEC_BOOSTER_FUEL_PUMP_0_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_BOOSTER_FUEL_PUMP_0_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_BOOSTER_FUEL_PUMP_0_FAILURE"]
+        ["ELEC_BOMBABWGERAT_RELEASE_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_BOMBABWGERAT_RELEASE_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_BOMBABWGERAT_RELEASE_FAILURE"]
+        ["UNCR_LH_STRUT_UP_LOCK_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "UNCR_LH_STRUT_UP_LOCK_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["UNCR_LH_STRUT_UP_LOCK_FAILURE"]
+        ["UNCR_C_STRUT_DOWN_LOCK_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "UNCR_C_STRUT_DOWN_LOCK_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["UNCR_C_STRUT_DOWN_LOCK_FAILURE"]
+        ["ELEC_BOOSTER_FUEL_PUMP_1_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_BOOSTER_FUEL_PUMP_1_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_BOOSTER_FUEL_PUMP_1_FAILURE"]
+        ["COMPASS_ERRATIC_OPERATION"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "COMPASS_ERRATIC_OPERATION",
+            ["mm"] = 0,
+        }, -- end of ["COMPASS_ERRATIC_OPERATION"]
+        ["BOMBS_DAMAGE_ELINKAGE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "BOMBS_DAMAGE_ELINKAGE",
+            ["mm"] = 0,
+        }, -- end of ["BOMBS_DAMAGE_ELINKAGE"]
+        ["ELEC_BATTERY_OVERHEAT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_BATTERY_OVERHEAT",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_BATTERY_OVERHEAT"]
+        ["GUN_RIGHT_MG151_OPEN_CIRCUIT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "GUN_RIGHT_MG151_OPEN_CIRCUIT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_RIGHT_MG151_OPEN_CIRCUIT"]
+        ["ELEC_DROPTANK_FUEL_PUMP_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_DROPTANK_FUEL_PUMP_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_DROPTANK_FUEL_PUMP_FAILURE"]
+        ["ENG0_GOVERNOR_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ENG0_GOVERNOR_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["ENG0_GOVERNOR_FAILURE"]
+        ["FUEL_TANK_01_MEDIUM_LEAK"] = 
+        {
+            ["hh"] = 0,
+            ["id"] = "FUEL_TANK_01_MEDIUM_LEAK",
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["FUEL_TANK_01_MEDIUM_LEAK"]
+        ["GUN_LEFT_MG151_BARREL_WORN"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "GUN_LEFT_MG151_BARREL_WORN",
+            ["mm"] = 0,
+        }, -- end of ["GUN_LEFT_MG151_BARREL_WORN"]
+        ["FUEL_TANK_01_EXPLODED"] = 
+        {
+            ["hh"] = 0,
+            ["id"] = "FUEL_TANK_01_EXPLODED",
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["FUEL_TANK_01_EXPLODED"]
+        ["FUEL_DROPTANK_MINOR_LEAK"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "FUEL_DROPTANK_MINOR_LEAK",
+            ["mm"] = 0,
+        }, -- end of ["FUEL_DROPTANK_MINOR_LEAK"]
+        ["ELEC_RH_GEAR_DRIVE_WIRE_SEVERED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_RH_GEAR_DRIVE_WIRE_SEVERED",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_RH_GEAR_DRIVE_WIRE_SEVERED"]
+        ["FUEL_TANK_01_MINOR_LEAK"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "FUEL_TANK_01_MINOR_LEAK",
+            ["mm"] = 0,
+        }, -- end of ["FUEL_TANK_01_MINOR_LEAK"]
+        ["INSUF_FUEL_PRES"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "INSUF_FUEL_PRES",
+            ["mm"] = 0,
+        }, -- end of ["INSUF_FUEL_PRES"]
+        ["CTRL_ELEVATOR_TRIM_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "CTRL_ELEVATOR_TRIM_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["CTRL_ELEVATOR_TRIM_FAILURE"]
+        ["ELEC_LH_JUNCTION_BOX_DESTROYED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_LH_JUNCTION_BOX_DESTROYED",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_LH_JUNCTION_BOX_DESTROYED"]
+        ["GUN_RIGHT_MG151_AMMUN_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "GUN_RIGHT_MG151_AMMUN_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_RIGHT_MG151_AMMUN_FAULT"]
+        ["FUEL_GAUGE_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "FUEL_GAUGE_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["FUEL_GAUGE_FAULT"]
+        ["FUEL_NITRO_TANK_00_LEAK_STOPPED"] = 
+        {
+            ["hh"] = 0,
+            ["id"] = "FUEL_NITRO_TANK_00_LEAK_STOPPED",
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["FUEL_NITRO_TANK_00_LEAK_STOPPED"]
+        ["INST_COMPASS_MALFUNCTION"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "INST_COMPASS_MALFUNCTION",
+            ["mm"] = 0,
+        }, -- end of ["INST_COMPASS_MALFUNCTION"]
+        ["FUEL_TANK_00_MINOR_LEAK"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "FUEL_TANK_00_MINOR_LEAK",
+            ["mm"] = 0,
+        }, -- end of ["FUEL_TANK_00_MINOR_LEAK"]
+        ["ENG0_OIL_RADIATOR_0_PIERCED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ENG0_OIL_RADIATOR_0_PIERCED",
+            ["mm"] = 0,
+        }, -- end of ["ENG0_OIL_RADIATOR_0_PIERCED"]
+        ["EZ42_MOTOR_DEFECTIVE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "EZ42_MOTOR_DEFECTIVE",
+            ["mm"] = 0,
+        }, -- end of ["EZ42_MOTOR_DEFECTIVE"]
+        ["FUEL_TANK_00_MEDIUM_LEAK"] = 
+        {
+            ["hh"] = 0,
+            ["id"] = "FUEL_TANK_00_MEDIUM_LEAK",
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["FUEL_TANK_00_MEDIUM_LEAK"]
+        ["ELEC_MAIN_FUEL_PUMP_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_MAIN_FUEL_PUMP_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_MAIN_FUEL_PUMP_FAILURE"]
+        ["GUN_LEFT_MG151_AMMUN_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "GUN_LEFT_MG151_AMMUN_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_LEFT_MG151_AMMUN_FAULT"]
+        ["GUN_RIGHT_MG131_OPEN_CIRCUIT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "GUN_RIGHT_MG131_OPEN_CIRCUIT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_RIGHT_MG131_OPEN_CIRCUIT"]
+        ["ELEC_MASTER_COMPASS_HARNESS_CUT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_MASTER_COMPASS_HARNESS_CUT",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_MASTER_COMPASS_HARNESS_CUT"]
+        ["ELEC_LH_FLAPS_DRIVE_WIRE_SEVERED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_LH_FLAPS_DRIVE_WIRE_SEVERED",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_LH_FLAPS_DRIVE_WIRE_SEVERED"]
+        ["ENG0_JAMMED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ENG0_JAMMED",
+            ["mm"] = 0,
+        }, -- end of ["ENG0_JAMMED"]
+        ["HORIZON_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "HORIZON_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["HORIZON_FAULT"]
+        ["FUEL_TANK_00_FIRE_STOPPED"] = 
+        {
+            ["hh"] = 0,
+            ["id"] = "FUEL_TANK_00_FIRE_STOPPED",
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["FUEL_TANK_00_FIRE_STOPPED"]
+        ["OXYN_TOP_CONTAINER_PERFORATED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "OXYN_TOP_CONTAINER_PERFORATED",
+            ["mm"] = 0,
+        }, -- end of ["OXYN_TOP_CONTAINER_PERFORATED"]
+        ["CTRL_LANDING_FLAPS_LH_DRIVE_DAMAGED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "CTRL_LANDING_FLAPS_LH_DRIVE_DAMAGED",
+            ["mm"] = 0,
+        }, -- end of ["CTRL_LANDING_FLAPS_LH_DRIVE_DAMAGED"]
+        ["GUN_RIGHT_MG151_BARREL_WORN"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "GUN_RIGHT_MG151_BARREL_WORN",
+            ["mm"] = 0,
+        }, -- end of ["GUN_RIGHT_MG151_BARREL_WORN"]
+        ["ELEC_GENERATOR_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_GENERATOR_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_GENERATOR_FAILURE"]
+        ["UNCR_RH_STRUT_UP_LOCK_JAMMED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "UNCR_RH_STRUT_UP_LOCK_JAMMED",
+            ["mm"] = 0,
+        }, -- end of ["UNCR_RH_STRUT_UP_LOCK_JAMMED"]
+        ["ELEC_RH_JUNCTION_BOX_DESTROYED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_RH_JUNCTION_BOX_DESTROYED",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_RH_JUNCTION_BOX_DESTROYED"]
+        ["GUN_LEFT_MG131_OPEN_CIRCUIT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "GUN_LEFT_MG131_OPEN_CIRCUIT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_LEFT_MG131_OPEN_CIRCUIT"]
+        ["CTRL_LANDING_FLAPS_RH_DRIVE_DAMAGED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "CTRL_LANDING_FLAPS_RH_DRIVE_DAMAGED",
+            ["mm"] = 0,
+        }, -- end of ["CTRL_LANDING_FLAPS_RH_DRIVE_DAMAGED"]
+        ["ELEC_STARTER_BURNOUT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_STARTER_BURNOUT",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_STARTER_BURNOUT"]
+        ["ENG0_MAGNETO1"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ENG0_MAGNETO1",
+            ["mm"] = 0,
+        }, -- end of ["ENG0_MAGNETO1"]
+        ["FUEL_TANK_00_EXPLODED"] = 
+        {
+            ["hh"] = 0,
+            ["id"] = "FUEL_TANK_00_EXPLODED",
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["FUEL_TANK_00_EXPLODED"]
+        ["ENG0_MAGNETO0"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ENG0_MAGNETO0",
+            ["mm"] = 0,
+        }, -- end of ["ENG0_MAGNETO0"]
+        ["ELEC_LH_GEAR_DRIVE_WIRE_SEVERED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_LH_GEAR_DRIVE_WIRE_SEVERED",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_LH_GEAR_DRIVE_WIRE_SEVERED"]
+        ["ELEC_BOMBABWGERAT_CHARGING_MALFUNCTION"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_BOMBABWGERAT_CHARGING_MALFUNCTION",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_BOMBABWGERAT_CHARGING_MALFUNCTION"]
+        ["FUEL_TANK_01_MAJOR_LEAK"] = 
+        {
+            ["hh"] = 0,
+            ["id"] = "FUEL_TANK_01_MAJOR_LEAK",
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["FUEL_TANK_01_MAJOR_LEAK"]
+        ["EZ42_NO_POWER_SUPPLY"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "EZ42_NO_POWER_SUPPLY",
+            ["mm"] = 0,
+        }, -- end of ["EZ42_NO_POWER_SUPPLY"]
+        ["ELEC_BOMBABWGERAT_CHARGING_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_BOMBABWGERAT_CHARGING_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_BOMBABWGERAT_CHARGING_FAILURE"]
+        ["COOLANT_T_IND_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "COOLANT_T_IND_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["COOLANT_T_IND_FAULT"]
+        ["GUN_RIGHT_MG131_AMMUN_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "GUN_RIGHT_MG131_AMMUN_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_RIGHT_MG131_AMMUN_FAULT"]
+        ["VHF_ANTENNA_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "VHF_ANTENNA_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["VHF_ANTENNA_FAULT"]
+        ["OIL_T_IND_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "OIL_T_IND_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["OIL_T_IND_FAULT"]
+        ["FUEL_TANK_00_MAJOR_LEAK"] = 
+        {
+            ["hh"] = 0,
+            ["id"] = "FUEL_TANK_00_MAJOR_LEAK",
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["FUEL_TANK_00_MAJOR_LEAK"]
+        ["OXYN_RIGHT_CONTAINER_PERFORATED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "OXYN_RIGHT_CONTAINER_PERFORATED",
+            ["mm"] = 0,
+        }, -- end of ["OXYN_RIGHT_CONTAINER_PERFORATED"]
+        ["FUEL_NITRO_TANK_00_MINOR_LEAK"] = 
+        {
+            ["hh"] = 0,
+            ["id"] = "FUEL_NITRO_TANK_00_MINOR_LEAK",
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["FUEL_NITRO_TANK_00_MINOR_LEAK"]
+        ["ELEC_RH_FLAPS_DRIVE_WIRE_SEVERED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ELEC_RH_FLAPS_DRIVE_WIRE_SEVERED",
+            ["mm"] = 0,
+        }, -- end of ["ELEC_RH_FLAPS_DRIVE_WIRE_SEVERED"]
+        ["UNCR_LH_WHEEL_BRAKE_DAMAGED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "UNCR_LH_WHEEL_BRAKE_DAMAGED",
+            ["mm"] = 0,
+        }, -- end of ["UNCR_LH_WHEEL_BRAKE_DAMAGED"]
+        ["STARTER_RELAY_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "STARTER_RELAY_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["STARTER_RELAY_FAULT"]
+        ["UNCR_RH_STRUT_DRIVE_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "UNCR_RH_STRUT_DRIVE_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["UNCR_RH_STRUT_DRIVE_FAILURE"]
+        ["VHF_TOTAL_DAMAGE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "VHF_TOTAL_DAMAGE",
+            ["mm"] = 0,
+        }, -- end of ["VHF_TOTAL_DAMAGE"]
+        ["FUEL_TANK_01_LEAK_STOPPED"] = 
+        {
+            ["hh"] = 0,
+            ["id"] = "FUEL_TANK_01_LEAK_STOPPED",
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["FUEL_TANK_01_LEAK_STOPPED"]
+        ["INST_MASTER_COMPASS_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "INST_MASTER_COMPASS_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["INST_MASTER_COMPASS_FAILURE"]
+        ["GUN_LEFT_MG131_BARREL_WORN"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "GUN_LEFT_MG131_BARREL_WORN",
+            ["mm"] = 0,
+        }, -- end of ["GUN_LEFT_MG131_BARREL_WORN"]
+        ["FUEL_TANK_01_FIRE_STOPPED"] = 
+        {
+            ["hh"] = 0,
+            ["id"] = "FUEL_TANK_01_FIRE_STOPPED",
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["FUEL_TANK_01_FIRE_STOPPED"]
+        ["UNCR_RH_WHEEL_BRAKE_DAMAGED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "UNCR_RH_WHEEL_BRAKE_DAMAGED",
+            ["mm"] = 0,
+        }, -- end of ["UNCR_RH_WHEEL_BRAKE_DAMAGED"]
+        ["FUEL_NITRO_TANK_00_MAJOR_LEAK"] = 
+        {
+            ["hh"] = 0,
+            ["id"] = "FUEL_NITRO_TANK_00_MAJOR_LEAK",
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["FUEL_NITRO_TANK_00_MAJOR_LEAK"]
+        ["BAT_SOLENOID_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "BAT_SOLENOID_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["BAT_SOLENOID_FAULT"]
+        ["PITOT_HEAT_FAULT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "PITOT_HEAT_FAULT",
+            ["mm"] = 0,
+        }, -- end of ["PITOT_HEAT_FAULT"]
+        ["GUN_LEFT_MG151_OPEN_CIRCUIT"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "GUN_LEFT_MG151_OPEN_CIRCUIT",
+            ["mm"] = 0,
+        }, -- end of ["GUN_LEFT_MG151_OPEN_CIRCUIT"]
+        ["MANIFOLD_LINE_LEAK"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "MANIFOLD_LINE_LEAK",
+            ["mm"] = 0,
+        }, -- end of ["MANIFOLD_LINE_LEAK"]
+        ["UNCR_LH_STRUT_DRIVE_FAILURE"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "UNCR_LH_STRUT_DRIVE_FAILURE",
+            ["mm"] = 0,
+        }, -- end of ["UNCR_LH_STRUT_DRIVE_FAILURE"]
+        ["ENG0_WATER_RADIATOR_0_PIERCED"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "ENG0_WATER_RADIATOR_0_PIERCED",
+            ["mm"] = 0,
+        }, -- end of ["ENG0_WATER_RADIATOR_0_PIERCED"]
+        ["BOMBS_ARMING_BROKEN_WIRING"] = 
+        {
+            ["hh"] = 0,
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["id"] = "BOMBS_ARMING_BROKEN_WIRING",
+            ["mm"] = 0,
+        }, -- end of ["BOMBS_ARMING_BROKEN_WIRING"]
+        ["FUEL_TANK_00_LEAK_STOPPED"] = 
+        {
+            ["hh"] = 0,
+            ["id"] = "FUEL_TANK_00_LEAK_STOPPED",
+            ["prob"] = 100,
+            ["enable"] = false,
+            ["mmint"] = 1,
+            ["hidden"] = true,
+            ["mm"] = 0,
+        }, -- end of ["FUEL_TANK_00_LEAK_STOPPED"]
     }, -- end of ["failures"]
 } -- end of mission
