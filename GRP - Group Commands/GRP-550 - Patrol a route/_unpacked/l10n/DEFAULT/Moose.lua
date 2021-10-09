@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-10-01T12:54:31.0000000Z-3c477b872af532c6c04a2c58d6b88f63cbca164f ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-10-07T16:14:29.0000000Z-de9b173d9bcef905426b8539276662cb295e05a0 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -2999,6 +2999,18 @@ ret_val=true
 end
 if string.find(type_name,"SA342")and unit:getDrawArgumentValue(34)==1 or unit:getDrawArgumentValue(38)==1 then
 BASE:T(unit_name.." front door(s) are open")
+ret_val=true
+end
+if string.find(type_name,"Hercules")and unit:getDrawArgumentValue(1215)==1 and unit:getDrawArgumentValue(1216)==1 then
+BASE:T(unit_name.." rear doors are open")
+ret_val=true
+end
+if string.find(type_name,"Hercules")and(unit:getDrawArgumentValue(1220)==1 or unit:getDrawArgumentValue(1221)==1)then
+BASE:T(unit_name.." para doors are open")
+ret_val=true
+end
+if string.find(type_name,"Hercules")and unit:getDrawArgumentValue(1217)==1 then
+BASE:T(unit_name.." side door is open")
 ret_val=true
 end
 if ret_val==false then
@@ -35418,11 +35430,13 @@ end
 function ZONE_CAPTURE_COALITION:OnEventHit(EventData)
 if self.HitsOn then
 local UnitHit=EventData.TgtUnit
+if UnitHit.ClassName~="SCENERY"then
 if UnitHit and UnitHit:IsInZone(self)and UnitHit:GetCoalition()==self.Coalition then
 self.HitTimeLast=timer.getTime()
 if self:GetState()~="Attacked"then
 self:F2("Hit ==> Attack")
 self:Attack()
+end
 end
 end
 end
@@ -35505,12 +35519,14 @@ nBlue=nBlue+1
 end
 end
 end
+if false then
 local text=string.format("CAPTURE ZONE %s: Owner=%s (Previous=%s): #blue=%d, #red=%d, Status %s",self:GetZoneName(),self:GetCoalitionName(),UTILS.GetCoalitionName(self:GetPreviousCoalition()),nBlue,nRed,State)
 local NewState=self:GetState()
 if NewState~=State then
 text=text..string.format(" --> %s",NewState)
 end
 self:I(text)
+end
 end
 function ZONE_CAPTURE_COALITION:Mark()
 if self.MarkOn then
