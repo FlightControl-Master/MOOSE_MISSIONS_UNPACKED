@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-10-12T20:16:18.0000000Z-67f847dd16c1467af77c01458fd537b05ceca64c ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-10-22T15:04:23.0000000Z-fe3079caad397cbf93e291f978d4e0d46b33b974 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -3011,6 +3011,10 @@ ret_val=true
 end
 if string.find(type_name,"Hercules")and unit:getDrawArgumentValue(1217)==1 then
 BASE:T(unit_name.." side door is open")
+ret_val=true
+end
+if string.find(type_name,"Bell-47")then
+BASE:T(unit_name.." door is open")
 ret_val=true
 end
 if ret_val==false then
@@ -44712,6 +44716,7 @@ LINCOLN="CVN_72",
 WASHINGTON="CVN_73",
 TRUMAN="CVN_75",
 STENNIS="Stennis",
+FORRESTAL="Forrestal",
 VINSON="VINSON",
 TARAWA="LHA_Tarawa",
 AMERICA="USS America LHA-6",
@@ -44766,7 +44771,7 @@ HARD="TOPGUN Graduate",
 }
 AIRBOSS.MenuF10={}
 AIRBOSS.MenuF10Root=nil
-AIRBOSS.version="1.1.6"
+AIRBOSS.version="1.2.0"
 function AIRBOSS:New(carriername,alias)
 local self=BASE:Inherit(self,FSM:New())
 self:F2({carriername=carriername,alias=alias})
@@ -44839,6 +44844,8 @@ elseif self.carriertype==AIRBOSS.CarrierType.WASHINGTON then
 self:_InitNimitz()
 elseif self.carriertype==AIRBOSS.CarrierType.TRUMAN then
 self:_InitNimitz()
+elseif self.carriertype==AIRBOSS.CarrierType.FORRESTAL then
+self:_InitForrestal()
 elseif self.carriertype==AIRBOSS.CarrierType.VINSON then
 self:_InitStennis()
 elseif self.carriertype==AIRBOSS.CarrierType.TARAWA then
@@ -44883,26 +44890,22 @@ if false then
 local FB=self:GetFinalBearing(false)
 local hdg=self:GetHeading(false)
 local stern=self:_GetSternCoord()
-local bow=stern:Translate(self.carrierparam.totlength,hdg)
+local bow=stern:Translate(self.carrierparam.totlength,hdg,true)
 local rwy=stern:Translate(self.carrierparam.rwylength,FB,true)
 local function flareme()
 self:GetCoordinate():FlareYellow()
 stern:FlareYellow()
 bow:FlareYellow()
-local r1=stern:Translate(self.carrierparam.rwywidth*0.5,FB+90)
-local r2=stern:Translate(self.carrierparam.rwywidth*0.5,FB-90)
-r1:FlareWhite()
-r2:FlareWhite()
+local r1=stern:Translate(self.carrierparam.rwywidth*0.5,FB+90,true)
+local r2=stern:Translate(self.carrierparam.rwywidth*0.5,FB-90,true)
 rwy:FlareRed()
-local cR=stern:Translate(self.carrierparam.totwidthstarboard,hdg+90)
-cR:FlareYellow()
-local cL=stern:Translate(self.carrierparam.totwidthport,hdg-90)
-cL:FlareYellow()
+local cR=stern:Translate(self.carrierparam.totwidthstarboard,hdg+90,true)
+local cL=stern:Translate(self.carrierparam.totwidthport,hdg-90,true)
 if self.carrier:GetTypeName()~=AIRBOSS.CarrierType.TARAWA or self.carrier:GetTypeName()~=AIRBOSS.CarrierType.AMERICA or self.carrier:GetTypeName()~=AIRBOSS.CarrierType.JCARLOS then
-local w1=stern:Translate(self.carrierparam.wire1,FB)
-local w2=stern:Translate(self.carrierparam.wire2,FB)
-local w3=stern:Translate(self.carrierparam.wire3,FB)
-local w4=stern:Translate(self.carrierparam.wire4,FB)
+local w1=stern:Translate(self.carrierparam.wire1,FB,true)
+local w2=stern:Translate(self.carrierparam.wire2,FB,true)
+local w3=stern:Translate(self.carrierparam.wire3,FB,true)
+local w4=stern:Translate(self.carrierparam.wire4,FB,true)
 w1:FlareWhite()
 w2:FlareYellow()
 w3:FlareWhite()
@@ -45935,6 +45938,21 @@ self.carrierparam.wire1=55
 self.carrierparam.wire2=67
 self.carrierparam.wire3=79
 self.carrierparam.wire4=92
+end
+function AIRBOSS:_InitForrestal()
+self:_InitNimitz()
+self.carrierparam.sterndist=-135.5
+self.carrierparam.deckheight=20
+self.carrierparam.totlength=315
+self.carrierparam.totwidthport=45
+self.carrierparam.totwidthstarboard=35
+self.carrierparam.rwyangle=-9.1359
+self.carrierparam.rwylength=212
+self.carrierparam.rwywidth=25
+self.carrierparam.wire1=42
+self.carrierparam.wire2=51.5
+self.carrierparam.wire3=62
+self.carrierparam.wire4=72.5
 end
 function AIRBOSS:_InitTarawa()
 self:_InitStennis()
@@ -49432,6 +49450,8 @@ if self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.Car
 self.sterncoord:Translate(self.carrierparam.sterndist,hdg,true,true):Translate(8,FB-90,true,true)
 elseif self.carriertype==AIRBOSS.CarrierType.STENNIS then
 self.sterncoord:Translate(self.carrierparam.sterndist,hdg,true,true):Translate(7,FB+90,true,true)
+elseif self.carriertype==AIRBOSS.CarrierType.FORRESTAL then
+self.sterncoord:Translate(self.carrierparam.sterndist,hdg,true,true):Translate(7.5,FB+90,true,true)
 else
 self.sterncoord:Translate(self.carrierparam.sterndist,hdg,true,true):Translate(9.5,FB+90,true,true)
 end
@@ -58514,7 +58534,8 @@ CSAR.AircraftType["Mi-8MTV2"]=12
 CSAR.AircraftType["Mi-8MT"]=12
 CSAR.AircraftType["Mi-24P"]=8
 CSAR.AircraftType["Mi-24V"]=8
-CSAR.version="0.1.11r1"
+CSAR.AircraftType["Bell-47"]=2
+CSAR.version="0.1.11r2"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
