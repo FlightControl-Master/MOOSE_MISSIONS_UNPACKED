@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-10-22T15:04:23.0000000Z-fe3079caad397cbf93e291f978d4e0d46b33b974 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-10-29T16:32:13.0000000Z-98c6c88391e524d6ceca4b827156feaff1e20fdf ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -8894,14 +8894,12 @@ end
 return intersection
 end
 function SET_BASE:GetSetComplement(SetB)
-local complement=SET_BASE:New()
-local union=self:GetSetUnion(SetA,SetB)
-for _,Object in pairs(union.Set)do
-if SetA:IsIncludeObject(Object)and SetB:IsIncludeObject(Object)then
-intersection:Add(intersection)
+local complement=self:GetSetUnion(SetB)
+local intersection=self:GetSetIntersection(SetB)
+for _,Object in pairs(intersection.Set)do
+complement:Remove(Object.ObjectName,true)
 end
-end
-return intersection
+return complement
 end
 function SET_BASE:CompareSets(SetA,SetB)
 for _,ObjectB in pairs(SetB.Set)do
@@ -45949,10 +45947,10 @@ self.carrierparam.totwidthstarboard=35
 self.carrierparam.rwyangle=-9.1359
 self.carrierparam.rwylength=212
 self.carrierparam.rwywidth=25
-self.carrierparam.wire1=42
-self.carrierparam.wire2=51.5
-self.carrierparam.wire3=62
-self.carrierparam.wire4=72.5
+self.carrierparam.wire1=44
+self.carrierparam.wire2=54
+self.carrierparam.wire3=64
+self.carrierparam.wire4=74
 end
 function AIRBOSS:_InitTarawa()
 self:_InitStennis()
