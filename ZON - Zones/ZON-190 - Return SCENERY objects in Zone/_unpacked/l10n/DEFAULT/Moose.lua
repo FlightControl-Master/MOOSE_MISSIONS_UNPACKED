@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-10-31T10:51:31.0000000Z-ab6cd2b751c990a28c12f693d2089dfd0c4c7de9 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-11-11T15:02:13.0000000Z-0e9076efa33ddb615d3cb928af85665f3bebf593 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -25019,6 +25019,8 @@ SEADGroupPrefixes={},
 SuppressedGroups={},
 EngagementRange=75,
 Padding=10,
+CallBack=nil,
+UseCallBack=false,
 }
 SEAD.Harms={
 ["AGM_88"]="AGM_88",
@@ -25060,8 +25062,11 @@ end
 local padding=Padding or 10
 if padding<10 then padding=10 end
 self.Padding=padding
+self.UseEmissionsOnOff=false
+self.CallBack=nil
+self.UseCallBack=false
 self:HandleEvent(EVENTS.Shot,self.HandleEventShot)
-self:I("*** SEAD - Started Version 0.3.1")
+self:I("*** SEAD - Started Version 0.3.3")
 return self
 end
 function SEAD:UpdateSet(SEADGroupPrefixes)
@@ -25090,6 +25095,17 @@ self:T({Padding})
 local padding=Padding or 10
 if padding<10 then padding=10 end
 self.Padding=padding
+return self
+end
+function SEAD:SwitchEmissions(Switch)
+self:T({Switch})
+self.UseEmissionsOnOff=Switch
+return self
+end
+function SEAD:AddCallBack(Object)
+self:T({Class=Object.ClassName})
+self.CallBack=Object
+self.UseCallBack=true
 return self
 end
 function SEAD:_CheckHarms(WeaponName)
@@ -25150,7 +25166,7 @@ _targetskill=_targetUnit:GetSkill()
 end
 local SEADGroupFound=false
 for SEADGroupPrefixID,SEADGroupPrefix in pairs(self.SEADGroupPrefixes)do
-self:T(SEADGroupPrefix)
+self:T(_targetgroupname,SEADGroupPrefix)
 if string.find(_targetgroupname,SEADGroupPrefix,1,true)then
 SEADGroupFound=true
 self:T('*** SEAD - Group Match Found')
@@ -25189,15 +25205,31 @@ self:T("*** SEAD - Shot in Reach")
 local function SuppressionStart(args)
 self:T(string.format("*** SEAD - %s Radar Off & Relocating",args[2]))
 local grp=args[1]
+local name=args[2]
+if self.UseEmissionsOnOff then
+grp:EnableEmission(false)
+end
 grp:OptionAlarmStateGreen()
 grp:RelocateGroundRandomInRadius(20,300,false,false,"Diamond")
+if self.UseCallBack then
+local object=self.CallBack
+object:SeadSuppressionStart(grp,name)
+end
 end
 local function SuppressionStop(args)
 self:T(string.format("*** SEAD - %s Radar On",args[2]))
 local grp=args[1]
-grp:OptionAlarmStateRed()
+local name=args[2]
+if self.UseEmissionsOnOff then
+grp:EnableEmission(true)
+end
+grp:OptionAlarmStateAuto()
 grp:OptionEngageRange(self.EngagementRange)
-self.SuppressedGroups[args[2]]=false
+self.SuppressedGroups[name]=false
+if self.UseCallBack then
+local object=self.CallBack
+object:SeadSuppressionEnd(grp,name)
+end
 end
 local delay=math.random(self.TargetSkill[_targetskill].DelayOn[1],self.TargetSkill[_targetskill].DelayOn[2])
 if delay>_tti then delay=delay/2 end
@@ -25209,12 +25241,17 @@ self:T(string.format("*** SEAD - %s | Parameters TTI %ds | Switch-Off in %ds",_t
 timer.scheduleFunction(SuppressionStart,{_targetgroup,_targetgroupname},SuppressionStartTime)
 timer.scheduleFunction(SuppressionStop,{_targetgroup,_targetgroupname},SuppressionEndTime)
 self.SuppressedGroups[_targetgroupname]=true
+if self.UseCallBack then
+local object=self.CallBack
+object:SeadSuppressionPlanned(_targetgroup,_targetgroupname,SuppressionStartTime,SuppressionEndTime)
 end
 end
 end
 end
 end
 end
+end
+return self
 end
 ESCORT={
 ClassName="ESCORT",
@@ -43618,6 +43655,7 @@ SamStateTracker={},
 DLink=false,
 DLTimeStamp=0,
 Padding=10,
+SuppressedGroups={},
 }
 MANTIS.AdvancedState={
 GREEN=0,
@@ -43657,6 +43695,7 @@ self.state2flag=false
 self.SamStateTracker={}
 self.DLink=false
 self.Padding=Padding or 10
+self.SuppressedGroups={}
 if EmOnOff then
 if EmOnOff==false then
 self.UseEmOnOff=false
@@ -43686,7 +43725,7 @@ end
 if self.HQ_Template_CC then
 self.HQ_CC=GROUP:FindByName(self.HQ_Template_CC)
 end
-self.version="0.6.2"
+self.version="0.7.1"
 self:I(string.format("***** Starting MANTIS Version %s *****",self.version))
 self:SetStartState("Stopped")
 self:AddTransition("Stopped","Start","Running")
@@ -43696,6 +43735,9 @@ self:AddTransition("*","GreenState","*")
 self:AddTransition("*","RedState","*")
 self:AddTransition("*","AdvStateChange","*")
 self:AddTransition("*","ShoradActivated","*")
+self:AddTransition("*","SeadSuppressionStart","*")
+self:AddTransition("*","SeadSuppressionEnd","*")
+self:AddTransition("*","SeadSuppressionPlanned","*")
 self:AddTransition("*","Stop","Stopped")
 return self
 end
@@ -44008,6 +44050,7 @@ local engagerange=self.engagerange
 for _i,_group in pairs(SAM_Grps)do
 local group=_group
 if self.UseEmOnOff then
+group:OptionAlarmStateRed()
 group:EnableEmission(false)
 else
 group:OptionAlarmStateGreen()
@@ -44024,6 +44067,10 @@ end
 self.SAM_Table=SAM_Tbl
 local mysead=SEAD:New(SEAD_Grps,self.Padding)
 mysead:SetEngagementRange(engagerange)
+mysead:AddCallBack(self)
+if self.UseEmOnOff then
+mysead:SwitchEmissions(true)
+end
 self.mysead=mysead
 return self
 end
@@ -44082,24 +44129,26 @@ local samcoordinate=_data[2]
 local name=_data[1]
 local samgroup=GROUP:FindByName(name)
 local IsInZone,Distance=self:CheckObjectInZone(detset,samcoordinate)
+local suppressed=self.SuppressedGroups[name]or false
 if IsInZone then
 if samgroup:IsAlive()then
-if self.UseEmOnOff then
+if self.UseEmOnOff and not suppressed then
 samgroup:EnableEmission(true)
-end
+elseif not self.UseEmOnOff and not suppressed then
 samgroup:OptionAlarmStateRed()
-if self.SamStateTracker[name]~="RED"then
+end
+if self.SamStateTracker[name]~="RED"and not suppressed then
 self:__RedState(1,samgroup)
 self.SamStateTracker[name]="RED"
 end
-if self.ShoradLink and Distance<self.ShoradActDistance then
+if self.ShoradLink and(Distance<self.ShoradActDistance or suppressed)then
 local Shorad=self.Shorad
 local radius=self.checkradius
 local ontime=self.ShoradTime
 Shorad:WakeUpShorad(name,radius,ontime)
 self:__ShoradActivated(1,name,radius,ontime)
 end
-if self.debug or self.verbose then
+if self.debug or self.verbose and not suppressed then
 local text=string.format("SAM %s switched to alarm state RED!",name)
 local m=MESSAGE:New(text,10,"MANTIS"):ToAllIf(self.debug)
 if self.verbose then self:I(self.lid..text)end
@@ -44107,15 +44156,16 @@ end
 end
 else
 if samgroup:IsAlive()then
-if self.UseEmOnOff then
+if self.UseEmOnOff and not suppressed then
 samgroup:EnableEmission(false)
-end
+elseif not self.UseEmOnOff and not suppressed then
 samgroup:OptionAlarmStateGreen()
-if self.SamStateTracker[name]~="GREEN"then
+end
+if self.SamStateTracker[name]~="GREEN"and not suppressed then
 self:__GreenState(1,samgroup)
 self.SamStateTracker[name]="GREEN"
 end
-if self.debug or self.verbose then
+if self.debug or self.verbose and not suppressed then
 local text=string.format("SAM %s switched to alarm state GREEN!",name)
 local m=MESSAGE:New(text,10,"MANTIS"):ToAllIf(self.debug)
 if self.verbose then self:I(self.lid..text)end
@@ -44240,6 +44290,20 @@ return self
 end
 function MANTIS:onafterShoradActivated(From,Event,To,Name,Radius,Ontime)
 self:T({From,Event,To,Name,Radius,Ontime})
+return self
+end
+function MANTIS:onafterSeadSuppressionStart(From,Event,To,Group,Name)
+self:T({From,Event,To,Name})
+self.SuppressedGroups[Name]=true
+return self
+end
+function MANTIS:onafterSeadSuppressionEnd(From,Event,To,Group,Name)
+self:T({From,Event,To,Name})
+self.SuppressedGroups[Name]=false
+return self
+end
+function MANTIS:onafterSeadSuppressionPlanned(From,Event,To,Group,Name,SuppressionStartTime,SuppressionEndTime)
+self:T({From,Event,To,Name})
 return self
 end
 end
@@ -58557,7 +58621,7 @@ CSAR.AircraftType["Mi-8MT"]=12
 CSAR.AircraftType["Mi-24P"]=8
 CSAR.AircraftType["Mi-24V"]=8
 CSAR.AircraftType["Bell-47"]=2
-CSAR.version="0.1.11r2"
+CSAR.version="0.1.12r2"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
@@ -58652,6 +58716,7 @@ self.rescuehoverdistance=10
 self.countryblue=country.id.USA
 self.countryred=country.id.RUSSIA
 self.countryneutral=country.id.UN_PEACEKEEPERS
+self.csarUsePara=true
 self.useSRS=false
 self.SRSPath="E:\\Progra~1\\DCS-SimpleRadio-Standalone\\"
 self.SRSchannel=300
@@ -58761,24 +58826,36 @@ end
 local _spawnedGroup,_alias=self:_SpawnPilotInField(_country,_point,_freq)
 local _typeName=_typeName or"Pilot"
 if not noMessage then
+if _freq~=0 then
 self:_DisplayToAllSAR("MAYDAY MAYDAY! ".._typeName.." is down. ",self.coalition,self.messageTime)
+else
+self:_DisplayToAllSAR("Troops In Contact. ".._typeName.." requests CASEVAC. ",self.coalition,self.messageTime)
 end
-if _freq then
+end
+if(_freq and _freq~=0)then
 self:_AddBeaconToGroup(_spawnedGroup,_freq)
 end
 self:_AddSpecialOptions(_spawnedGroup)
 local _text=_description
 if not forcedesc then
 if _playerName~=nil then
+if _freq~=0 then
 _text="Pilot ".._playerName
+else
+_text="TIC - ".._playerName
+end
 elseif _unitName~=nil then
+if _freq~=0 then
 _text="AI Pilot of ".._unitName
+else
+_text="TIC - ".._unitName
+end
 end
 end
 self:T({_spawnedGroup,_alias})
 local _GroupName=_spawnedGroup:GetName()or _alias
 self:_CreateDownedPilotTrack(_spawnedGroup,_GroupName,_coalition,_unitName,_text,_typeName,_freq,_playerName)
-self:_InitSARForPilot(_spawnedGroup,_GroupName,_freq,noMessage)
+self:_InitSARForPilot(_spawnedGroup,_unitName,_freq,noMessage)
 return self
 end
 function CSAR:_SpawnCsarAtZone(_zone,_coalition,_description,_randomPoint,_nomessage,unitname,typename,forcedesc)
@@ -58812,6 +58889,28 @@ return self
 end
 function CSAR:SpawnCSARAtZone(Zone,Coalition,Description,RandomPoint,Nomessage,Unitname,Typename,Forcedesc)
 self:_SpawnCsarAtZone(Zone,Coalition,Description,RandomPoint,Nomessage,Unitname,Typename,Forcedesc)
+return self
+end
+function CSAR:_SpawnCASEVAC(_Point,_coalition,_description,_nomessage,unitname,typename,forcedesc)
+self:T(self.lid.." _SpawnCASEVAC")
+local _description=_description or"CASEVAC"
+local unitname=unitname or"CASEVAC"
+local typename=typename or"Ground Commander"
+local pos={}
+pos=_Point
+local _country=0
+if _coalition==coalition.side.BLUE then
+_country=self.countryblue
+elseif _coalition==coalition.side.RED then
+_country=self.countryred
+else
+_country=self.countryneutral
+end
+self:_AddCsar(_coalition,_country,pos,typename,unitname,_description,0,_nomessage,_description,forcedesc)
+return self
+end
+function CSAR:SpawnCASEVAC(Point,Coalition,Description,Nomessage,Unitname,Typename,Forcedesc)
+self:_SpawnCASEVAC(Point,Coalition,Description,Nomessage,Unitname,Typename,Forcedesc)
 return self
 end
 function CSAR:_EventHandler(EventData)
@@ -58893,8 +58992,22 @@ end
 if self.limitmaxdownedpilots and self:_ReachedPilotLimit()then
 return
 end
+if self.csarUsePara==false then
 local _freq=self:_GenerateADFFrequency()
 self:_AddCsar(_coalition,_unit:GetCountry(),_unit:GetCoordinate(),_unit:GetTypeName(),_unit:GetName(),_event.IniPlayerName,_freq,false,"none")
+return true
+end
+elseif(_event.id==EVENTS.LandingAfterEjection and self.csarUsePara==true)then
+self:I({EVENT=_event})
+local _LandingPos=COORDINATE:NewFromVec3(_event.initiator:getPosition().p)
+local _unitname="Aircraft"
+local _typename="Ejected Pilot"
+local _country=_event.initiator:getCountry()
+local _coalition=coalition.getCountryCoalition(_country)
+local _freq=self:_GenerateADFFrequency()
+self:I({coalition=_coalition,country=_country,coord=_LandingPos,name=_unitname,player=_event.IniPlayerName,freq=_freq})
+self:_AddCsar(_coalition,_country,_LandingPos,nil,_unitname,_event.IniPlayerName,_freq,false,"none")
+Unit.destroy(_event.initiator)
 return true
 elseif _event.id==EVENTS.Land then
 self:T(self.lid.." Landing")
@@ -58938,8 +59051,13 @@ local _freqk=_freq/1000
 local _coordinatesText=self:_GetPositionOfWounded(_downedGroup)
 local _leadername=_leader:GetName()
 if not _nomessage then
-local _text=string.format("%s requests SAR at %s, beacon at %.2f KHz",_leadername,_coordinatesText,_freqk)
+if _freq~=0 then
+local _text=string.format("%s requests SAR at %s, beacon at %.2f KHz",_groupName,_coordinatesText,_freqk)
 self:_DisplayToAllSAR(_text,self.coalition,self.messageTime)
+else
+local _text=string.format("Pickup Zone at %s.",_coordinatesText)
+self:_DisplayToAllSAR(_text,self.coalition,self.messageTime)
+end
 end
 for _,_heliName in pairs(self.csarUnits)do
 self:_CheckWoundedGroupStatus(_heliName,_groupName)
@@ -59036,7 +59154,7 @@ self:T(self.lid.." _PopSmokeForGroup")
 local _lastSmoke=self.smokeMarkers[_woundedGroupName]
 if _lastSmoke==nil or timer.getTime()>_lastSmoke then
 local _smokecolor=self.smokecolor
-local _smokecoord=_woundedLeader:GetCoordinate()
+local _smokecoord=_woundedLeader:GetCoordinate():Translate(6,math.random(1,360))
 _smokecoord:Smoke(_smokecolor)
 self.smokeMarkers[_woundedGroupName]=timer.getTime()+300
 end
@@ -59300,7 +59418,11 @@ distancetext=string.format("%.1fnm",UTILS.MetersToNM(_distance))
 else
 distancetext=string.format("%.1fkm",_distance/1000.0)
 end
+if _value.frequency==0 then
+table.insert(_csarList,{dist=_distance,msg=string.format("%s at %s - %s ",_value.desc,_coordinatesText,distancetext)})
+else
 table.insert(_csarList,{dist=_distance,msg=string.format("%s at %s - %.2f KHz ADF - %s ",_value.desc,_coordinatesText,_value.frequency/1000,distancetext)})
+end
 end
 end
 local function sortDistance(a,b)
@@ -59629,6 +59751,7 @@ self:I(self.lid.."Started.")
 self:HandleEvent(EVENTS.Takeoff,self._EventHandler)
 self:HandleEvent(EVENTS.Land,self._EventHandler)
 self:HandleEvent(EVENTS.Ejection,self._EventHandler)
+self:HandleEvent(EVENTS.LandingAfterEjection,self._EventHandler)
 self:HandleEvent(EVENTS.PlayerEnterAircraft,self._EventHandler)
 self:HandleEvent(EVENTS.PlayerEnterUnit,self._EventHandler)
 self:HandleEvent(EVENTS.PilotDead,self._EventHandler)
@@ -59711,6 +59834,7 @@ self:T({From,Event,To})
 self:UnHandleEvent(EVENTS.Takeoff)
 self:UnHandleEvent(EVENTS.Land)
 self:UnHandleEvent(EVENTS.Ejection)
+self:UnHandleEvent(EVENTS.LandingAfterEjection)
 self:UnHandleEvent(EVENTS.PlayerEnterUnit)
 self:UnHandleEvent(EVENTS.PlayerEnterAircraft)
 self:UnHandleEvent(EVENTS.PilotDead)
