@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-11-11T15:02:13.0000000Z-0e9076efa33ddb615d3cb928af85665f3bebf593 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-11-14T12:34:23.0000000Z-9c5b5d4633e292a0d4225b4678d71fdf630623d6 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -20466,8 +20466,6 @@ local weapons=#ammotable
 for w=1,weapons do
 local Nammo=ammotable[w]["count"]
 local Tammo=ammotable[w]["desc"]["typeName"]
-local _weaponString=UTILS.Split(Tammo,"%.")
-local _weaponName=_weaponString[#_weaponString]
 local Category=ammotable[w].desc.category
 local MissileCategory=nil
 if Category==Weapon.Category.MISSILE then
@@ -20487,6 +20485,10 @@ nmissiles=nmissiles+Nammo
 elseif MissileCategory==Weapon.MissileCategory.BM then
 nmissiles=nmissiles+Nammo
 elseif MissileCategory==Weapon.MissileCategory.OTHER then
+nmissiles=nmissiles+Nammo
+elseif MissileCategory==Weapon.MissileCategory.SAM then
+nmissiles=nmissiles+Nammo
+elseif MissileCategory==Weapon.MissileCategory.CRUISE then
 nmissiles=nmissiles+Nammo
 end
 end
@@ -58621,7 +58623,7 @@ CSAR.AircraftType["Mi-8MT"]=12
 CSAR.AircraftType["Mi-24P"]=8
 CSAR.AircraftType["Mi-24V"]=8
 CSAR.AircraftType["Bell-47"]=2
-CSAR.version="0.1.12r2"
+CSAR.version="0.1.12r3"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
@@ -58716,7 +58718,7 @@ self.rescuehoverdistance=10
 self.countryblue=country.id.USA
 self.countryred=country.id.RUSSIA
 self.countryneutral=country.id.UN_PEACEKEEPERS
-self.csarUsePara=true
+self.csarUsePara=false
 self.useSRS=false
 self.SRSPath="E:\\Progra~1\\DCS-SimpleRadio-Standalone\\"
 self.SRSchannel=300
@@ -58917,6 +58919,9 @@ function CSAR:_EventHandler(EventData)
 self:T(self.lid.." _EventHandler")
 self:T({Event=EventData.id})
 local _event=EventData
+if self.enableForAI==false and _event.IniPlayerName==nil then
+return
+end
 if _event==nil or _event.initiator==nil then
 return false
 elseif _event.id==EVENTS.Takeoff then
@@ -58979,9 +58984,6 @@ local _coalition=_unit:GetCoalition()
 if _coalition~=self.coalition then
 return
 end
-if self.enableForAI==false and _event.IniPlayerName==nil then
-return
-end
 if not self.takenOff[_event.IniUnitName]and not _group:IsAirborne()then
 self:T(self.lid.." Pilot has not taken off, ignore")
 return
@@ -59004,10 +59006,12 @@ local _unitname="Aircraft"
 local _typename="Ejected Pilot"
 local _country=_event.initiator:getCountry()
 local _coalition=coalition.getCountryCoalition(_country)
+if _coalition==self.coalition then
 local _freq=self:_GenerateADFFrequency()
 self:I({coalition=_coalition,country=_country,coord=_LandingPos,name=_unitname,player=_event.IniPlayerName,freq=_freq})
 self:_AddCsar(_coalition,_country,_LandingPos,nil,_unitname,_event.IniPlayerName,_freq,false,"none")
 Unit.destroy(_event.initiator)
+end
 return true
 elseif _event.id==EVENTS.Land then
 self:T(self.lid.." Landing")
