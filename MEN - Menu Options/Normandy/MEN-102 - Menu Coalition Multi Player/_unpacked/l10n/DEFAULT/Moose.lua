@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-11-14T12:34:23.0000000Z-9c5b5d4633e292a0d4225b4678d71fdf630623d6 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-12-02T18:25:42.0000000Z-2ba52150360bdb8273ddee990381e24d35def399 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -2646,8 +2646,14 @@ end
 function UTILS.VecDot(a,b)
 return a.x*b.x+a.y*b.y+a.z*b.z
 end
+function UTILS.Vec2Dot(a,b)
+return a.x*b.x+a.y*b.y
+end
 function UTILS.VecNorm(a)
 return math.sqrt(UTILS.VecDot(a,a))
+end
+function UTILS.Vec2Norm(a)
+return math.sqrt(UTILS.Vec2Dot(a,a))
 end
 function UTILS.VecDist2D(a,b)
 local c={x=b.x-a.x,y=b.y-a.y}
@@ -2687,6 +2693,13 @@ h=h+360
 end
 return h
 end
+function UTILS.Vec2Hdg(a)
+local h=math.deg(math.atan2(a.y,a.x))
+if h<0 then
+h=h+360
+end
+return h
+end
 function UTILS.HdgDiff(h1,h2)
 local alpha=math.rad(tonumber(h1))
 local beta=math.rad(tonumber(h2))
@@ -2703,6 +2716,14 @@ local TX=distance*math.cos(Radians)+SX
 local TY=distance*math.sin(Radians)+SY
 return{x=TX,y=a.y,z=TY}
 end
+function UTILS.Vec2Translate(a,distance,angle)
+local SX=a.x
+local SY=a.y
+local Radians=math.rad(angle or 0)
+local TX=distance*math.cos(Radians)+SX
+local TY=distance*math.sin(Radians)+SY
+return{x=TX,y=TY}
+end
 function UTILS.Rotate2D(a,angle)
 local phi=math.rad(angle)
 local x=a.z
@@ -2711,6 +2732,15 @@ local Z=x*math.cos(phi)-y*math.sin(phi)
 local X=x*math.sin(phi)+y*math.cos(phi)
 local Y=a.y
 local A={x=X,y=Y,z=Z}
+return A
+end
+function UTILS.Vec2Rotate2D(a,angle)
+local phi=math.rad(angle)
+local x=a.x
+local y=a.y
+local X=x*math.cos(phi)-y*math.sin(phi)
+local Y=x*math.sin(phi)+y*math.cos(phi)
+local A={x=X,y=Y}
 return A
 end
 function UTILS.TACANToFrequency(TACANChannel,TACANMode)
@@ -3135,6 +3165,289 @@ end
 _count=_count+1
 end
 return jtacGeneratedLaserCodes
+end
+function UTILS.SaveToFile(Path,Filename,Data)
+if not io then
+BASE:E("ERROR: io not desanitized. Can't save current file.")
+return false
+end
+if Path==nil and not lfs then
+BASE:E("WARNING: lfs not desanitized. File will be saved in DCS installation root directory rather than your \"Saved Games\\DCS\" folder.")
+end
+local path=nil
+if lfs then
+path=Path or lfs.writedir()
+end
+local filename=Filename
+if path~=nil then
+filename=path.."\\"..filename
+end
+local f=assert(io.open(filename,"wb"))
+f:write(Data)
+f:close()
+return true
+end
+function UTILS.LoadFromFile(Path,Filename)
+if not io then
+BASE:E("ERROR: io not desanitized. Can't save current state.")
+return false
+end
+if Path==nil and not lfs then
+BASE:E("WARNING: lfs not desanitized. Loading will look into your DCS installation root directory rather than your \"Saved Games\\DCS\" folder.")
+end
+local path=nil
+if lfs then
+path=Path or lfs.writedir()
+end
+local filename=Filename
+if path~=nil then
+filename=path.."\\"..filename
+end
+local exists=UTILS.CheckFileExists(Path,Filename)
+if not exists then
+BASE:E(string.format("ERROR: File %s does not exist!",filename))
+return false
+end
+local file=assert(io.open(filename,"rb"))
+local loadeddata={}
+for line in file:lines()do
+loadeddata[#loadeddata+1]=line
+end
+file:close()
+return true,loadeddata
+end
+function UTILS.CheckFileExists(Path,Filename)
+local function _fileexists(name)
+local f=io.open(name,"r")
+if f~=nil then
+io.close(f)
+return true
+else
+return false
+end
+end
+if not io then
+BASE:E("ERROR: io not desanitized. Can't save current state.")
+return false
+end
+if Path==nil and not lfs then
+BASE:E("WARNING: lfs not desanitized. Loading will look into your DCS installation root directory rather than your \"Saved Games\\DCS\" folder.")
+end
+local path=nil
+if lfs then
+path=Path or lfs.writedir()
+end
+local filename=Filename
+if path~=nil then
+filename=path.."\\"..filename
+end
+local exists=_fileexists(filename)
+if not exists then
+BASE:E(string.format("ERROR: File %s does not exist!",filename))
+return false
+else
+return true
+end
+end
+function UTILS.SaveStationaryListOfGroups(List,Path,Filename)
+local filename=Filename or"StateListofGroups"
+local data="--Save Stationary List of Groups: "..Filename.."\n"
+for _,_group in pairs(List)do
+local group=GROUP:FindByName(_group)
+if group and group:IsAlive()then
+local units=group:CountAliveUnits()
+local position=group:GetVec3()
+data=string.format("%s%s,%d,%d,%d,%d\n",data,_group,units,position.x,position.y,position.z)
+else
+data=string.format("%s%s,0,0,0,0\n",data,_group)
+end
+end
+local outcome=UTILS.SaveToFile(Path,Filename,data)
+return outcome
+end
+function UTILS.SaveSetOfGroups(Set,Path,Filename)
+local filename=Filename or"SetOfGroups"
+local data="--Save SET of groups: "..Filename.."\n"
+local List=Set:GetSetObjects()
+for _,_group in pairs(List)do
+local group=_group
+if group and group:IsAlive()then
+local name=group:GetName()
+local template=string.gsub(name,"-(.+)$","")
+if string.find(template,"#")then
+template=string.gsub(name,"#(%d+)$","")
+end
+local units=group:CountAliveUnits()
+local position=group:GetVec3()
+data=string.format("%s%s,%s,%d,%d,%d,%d\n",data,name,template,units,position.x,position.y,position.z)
+end
+end
+local outcome=UTILS.SaveToFile(Path,Filename,data)
+return outcome
+end
+function UTILS.SaveSetOfStatics(Set,Path,Filename)
+local filename=Filename or"SetOfStatics"
+local data="--Save SET of statics: "..Filename.."\n"
+local List=Set:GetSetObjects()
+for _,_group in pairs(List)do
+local group=_group
+if group and group:IsAlive()then
+local name=group:GetName()
+local position=group:GetVec3()
+data=string.format("%s%s,%d,%d,%d\n",data,name,position.x,position.y,position.z)
+end
+end
+local outcome=UTILS.SaveToFile(Path,Filename,data)
+return outcome
+end
+function UTILS.SaveStationaryListOfStatics(List,Path,Filename)
+local filename=Filename or"StateListofStatics"
+local data="--Save Stationary List of Statics: "..Filename.."\n"
+for _,_group in pairs(List)do
+local group=STATIC:FindByName(_group,false)
+if group and group:IsAlive()then
+local position=group:GetVec3()
+data=string.format("%s%s,1,%d,%d,%d\n",data,_group,position.x,position.y,position.z)
+else
+data=string.format("%s%s,0,0,0,0\n",data,_group)
+end
+end
+local outcome=UTILS.SaveToFile(Path,Filename,data)
+return outcome
+end
+function UTILS.LoadStationaryListOfGroups(Path,Filename,Reduce)
+local reduce=Reduce==false and false or true
+local filename=Filename or"StateListofGroups"
+local datatable={}
+if UTILS.CheckFileExists(Path,filename)then
+local outcome,loadeddata=UTILS.LoadFromFile(Path,Filename)
+table.remove(loadeddata,1)
+for _id,_entry in pairs(loadeddata)do
+local dataset=UTILS.Split(_entry,",")
+local groupname=dataset[1]
+local size=tonumber(dataset[2])
+local posx=tonumber(dataset[3])
+local posy=tonumber(dataset[4])
+local posz=tonumber(dataset[5])
+local coordinate=COORDINATE:NewFromVec3({x=posx,y=posy,z=posz})
+local data={groupname=groupname,size=size,coordinate=coordinate,group=GROUP:FindByName(groupname)}
+if reduce then
+local actualgroup=GROUP:FindByName(groupname)
+local actualsize=actualgroup:CountAliveUnits()
+if actualsize>size then
+local reduction=actualsize-size
+BASE:I("Reducing groupsize by "..reduction.." units!")
+local units=actualgroup:GetUnits()
+local units2=UTILS.ShuffleTable(units)
+for i=1,reduction do
+units2[i]:Destroy(false)
+end
+end
+end
+table.insert(datatable,data)
+end
+else
+return nil
+end
+return datatable
+end
+function UTILS.LoadSetOfGroups(Path,Filename,Spawn)
+local spawn=SPAWN==false and false or true
+local filename=Filename or"SetOfGroups"
+local setdata=SET_GROUP:New()
+local datatable={}
+if UTILS.CheckFileExists(Path,filename)then
+local outcome,loadeddata=UTILS.LoadFromFile(Path,Filename)
+table.remove(loadeddata,1)
+for _id,_entry in pairs(loadeddata)do
+local dataset=UTILS.Split(_entry,",")
+local groupname=dataset[1]
+local template=dataset[2]
+local size=tonumber(dataset[3])
+local posx=tonumber(dataset[4])
+local posy=tonumber(dataset[5])
+local posz=tonumber(dataset[6])
+local coordinate=COORDINATE:NewFromVec3({x=posx,y=posy,z=posz})
+local group=nil
+local data={groupname=groupname,size=size,coordinate=coordinate}
+table.insert(datatable,data)
+if spawn then
+local group=SPAWN:New(groupname)
+:InitDelayOff()
+:OnSpawnGroup(
+function(spwndgrp)
+setdata:AddObject(spwndgrp)
+local actualsize=spwndgrp:CountAliveUnits()
+if actualsize>size then
+local reduction=actualsize-size
+local units=spwndgrp:GetUnits()
+local units2=UTILS.ShuffleTable(units)
+for i=1,reduction do
+units2[i]:Destroy(false)
+end
+end
+end
+)
+:SpawnFromCoordinate(coordinate)
+end
+end
+else
+return nil
+end
+if spawn then
+return setdata
+else
+return datatable
+end
+end
+function UTILS.LoadSetOfStatics(Path,Filename)
+local filename=Filename or"SetOfStatics"
+local datatable=SET_STATIC:New()
+if UTILS.CheckFileExists(Path,filename)then
+local outcome,loadeddata=UTILS.LoadFromFile(Path,Filename)
+table.remove(loadeddata,1)
+for _id,_entry in pairs(loadeddata)do
+local dataset=UTILS.Split(_entry,",")
+local staticname=dataset[1]
+local posx=tonumber(dataset[2])
+local posy=tonumber(dataset[3])
+local posz=tonumber(dataset[4])
+local coordinate=COORDINATE:NewFromVec3({x=posx,y=posy,z=posz})
+datatable:AddObject(STATIC:FindByName(staticname,false))
+end
+else
+return nil
+end
+return datatable
+end
+function UTILS.LoadStationaryListOfStatics(Path,Filename,Reduce)
+local reduce=Reduce==false and false or true
+local filename=Filename or"StateListofStatics"
+local datatable={}
+if UTILS.CheckFileExists(Path,filename)then
+local outcome,loadeddata=UTILS.LoadFromFile(Path,Filename)
+table.remove(loadeddata,1)
+for _id,_entry in pairs(loadeddata)do
+local dataset=UTILS.Split(_entry,",")
+local staticname=dataset[1]
+local size=tonumber(dataset[2])
+local posx=tonumber(dataset[3])
+local posy=tonumber(dataset[4])
+local posz=tonumber(dataset[5])
+local coordinate=COORDINATE:NewFromVec3({x=posx,y=posy,z=posz})
+local data={staticname=staticname,size=size,coordinate=coordinate,static=STATIC:FindByName(staticname,false)}
+table.insert(datatable,data)
+if size==0 and reduce then
+local static=STATIC:FindByName(staticname,false)
+if static then
+static:Destroy(false)
+end
+end
+end
+else
+return nil
+end
+return datatable
 end
 PROFILER={
 ClassName="PROFILER",
@@ -20024,36 +20337,36 @@ local aircraftcarrier=self:HasAttribute("Aircraft Carriers")
 local warship=self:HasAttribute("Heavy armed ships")
 local armedship=self:HasAttribute("Armed ships")
 local unarmedship=self:HasAttribute("Unarmed ships")
-if transportplane then
-attribute=GROUP.Attribute.AIR_TRANSPORTPLANE
-elseif awacs then
-attribute=GROUP.Attribute.AIR_AWACS
-elseif fighter then
+if fighter then
 attribute=GROUP.Attribute.AIR_FIGHTER
 elseif bomber then
 attribute=GROUP.Attribute.AIR_BOMBER
+elseif awacs then
+attribute=GROUP.Attribute.AIR_AWACS
+elseif transportplane then
+attribute=GROUP.Attribute.AIR_TRANSPORTPLANE
 elseif tanker then
 attribute=GROUP.Attribute.AIR_TANKER
-elseif transporthelo then
-attribute=GROUP.Attribute.AIR_TRANSPORTHELO
 elseif attackhelicopter then
 attribute=GROUP.Attribute.AIR_ATTACKHELO
+elseif transporthelo then
+attribute=GROUP.Attribute.AIR_TRANSPORTHELO
 elseif uav then
 attribute=GROUP.Attribute.AIR_UAV
-elseif apc then
-attribute=GROUP.Attribute.GROUND_APC
-elseif infantry then
-attribute=GROUP.Attribute.GROUND_INFANTRY
-elseif artillery then
-attribute=GROUP.Attribute.GROUND_ARTILLERY
-elseif tank then
-attribute=GROUP.Attribute.GROUND_TANK
-elseif aaa then
-attribute=GROUP.Attribute.GROUND_AAA
 elseif ewr then
 attribute=GROUP.Attribute.GROUND_EWR
 elseif sam then
 attribute=GROUP.Attribute.GROUND_SAM
+elseif aaa then
+attribute=GROUP.Attribute.GROUND_AAA
+elseif artillery then
+attribute=GROUP.Attribute.GROUND_ARTILLERY
+elseif tank then
+attribute=GROUP.Attribute.GROUND_TANK
+elseif apc then
+attribute=GROUP.Attribute.GROUND_APC
+elseif infantry then
+attribute=GROUP.Attribute.GROUND_INFANTRY
 elseif truck then
 attribute=GROUP.Attribute.GROUND_TRUCK
 elseif train then
@@ -33562,7 +33875,6 @@ TdelaySmoke=3.0,
 boxlength=3000,
 boxwidth=300,
 goodpass=20,
-goodhitrange=25,
 foulline=610,
 }
 RANGE.TargetType={
@@ -33906,7 +34218,7 @@ end
 if heading<0 then
 heading=heading+360
 end
-if heading>360 then
+if heading>=360 then
 heading=heading-360
 end
 goodpass=goodpass or RANGE.Defaults.goodpass
@@ -35270,7 +35582,6 @@ function RANGE:_myname(unitname)
 self:F2(unitname)
 local unit=UNIT:FindByName(unitname)
 local pname=unit:GetPlayerName()
-local csign=unit:GetCallsign()
 return string.format("%s",pname)
 end
 do
@@ -58623,7 +58934,7 @@ CSAR.AircraftType["Mi-8MT"]=12
 CSAR.AircraftType["Mi-24P"]=8
 CSAR.AircraftType["Mi-24V"]=8
 CSAR.AircraftType["Bell-47"]=2
-CSAR.version="0.1.12r3"
+CSAR.version="0.1.12r4"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
@@ -59134,9 +59445,9 @@ if _SETTINGS:IsImperial()then
 local dist=UTILS.MetersToNM(self.autosmokedistance)
 disttext=string.format("%.0fnm",dist)
 end
-self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. I hear you! Damn, that thing is loud!\nI'll pop a smoke when you are %s away.\nLand or hover by the smoke.",_heliName,_pilotName,disttext),self.messageTime,false,true)
+self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. I hear you! Finally, that is music in my ears!\nI'll pop a smoke when you are %s away.\nLand or hover by the smoke.",_heliName,_pilotName,disttext),self.messageTime,false,true)
 else
-self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. I hear you! Damn, that thing is loud!\nRequest a flare or smoke if you need.",_heliName,_pilotName),self.messageTime,false,true)
+self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. I hear you! Finally, that is music in my ears!\nRequest a flare or smoke if you need.",_heliName,_pilotName),self.messageTime,false,true)
 end
 self.heliVisibleMessage[_lookupKeyHeli]=true
 end
@@ -59476,7 +59787,7 @@ end
 local _closest=self:_GetClosestDownedPilot(_heli)
 local smokedist=8000
 if self.approachdist_far>smokedist then smokedist=self.approachdist_far end
-if _closest~=nil and _closest.pilot~=nil and _closest.distance<smokedist then
+if _closest~=nil and _closest.pilot~=nil and _closest.distance>0 and _closest.distance<smokedist then
 local _clockDir=self:_GetClockDirection(_heli,_closest.pilot)
 local _distance=0
 if _SETTINGS:IsImperial()then
@@ -59519,7 +59830,7 @@ end
 local smokedist=8000
 if smokedist<self.approachdist_far then smokedist=self.approachdist_far end
 local _closest=self:_GetClosestDownedPilot(_heli)
-if _closest~=nil and _closest.pilot~=nil and _closest.distance<smokedist then
+if _closest~=nil and _closest.pilot~=nil and _closest.distance>0 and _closest.distance<smokedist then
 local _clockDir=self:_GetClockDirection(_heli,_closest.pilot)
 local _distance=0
 if _SETTINGS:IsImperial()then
@@ -59527,7 +59838,7 @@ _distance=string.format("%.1fnm",UTILS.MetersToNM(_closest.distance))
 else
 _distance=string.format("%.1fkm",_closest.distance)
 end
-local _msg=string.format("%s - Popping signal smoke at your %s o\'clock. Distance %s",_unitName,_clockDir,_distance)
+local _msg=string.format("%s - Popping smoke at your %s o\'clock. Distance %s",_unitName,_clockDir,_distance)
 self:_DisplayMessageToSAR(_heli,_msg,self.messageTime,false,true)
 local _coord=_closest.pilot:GetCoordinate()
 local color=self.smokecolor
@@ -63774,7 +64085,7 @@ local PlayersNearBy=self.Detection:GetPlayersNearBy(DetectedItem)
 local PlayerTypes={}
 local PlayersCount=0
 if PlayersNearBy then
-local DetectedTreatLevel=DetectedSet:CalculateThreatLevelA2G()
+local DetectedThreatLevel=DetectedSet:CalculateThreatLevelA2G()
 for PlayerUnitName,PlayerUnitData in pairs(PlayersNearBy)do
 local PlayerUnit=PlayerUnitData
 local PlayerName=PlayerUnit:GetPlayerName()
@@ -63783,7 +64094,7 @@ local FriendlyUnitThreatLevel=PlayerUnit:GetThreatLevel()
 PlayersCount=PlayersCount+1
 local PlayerType=PlayerUnit:GetTypeName()
 PlayerTypes[PlayerName]=PlayerType
-if DetectedTreatLevel<FriendlyUnitThreatLevel+2 then
+if DetectedThreatLevel<FriendlyUnitThreatLevel+2 then
 end
 end
 end
@@ -63804,7 +64115,7 @@ local FriendlyUnitsNearBy=self.Detection:GetFriendliesNearBy(DetectedItem)
 local FriendlyTypes={}
 local FriendliesCount=0
 if FriendlyUnitsNearBy then
-local DetectedTreatLevel=DetectedSet:CalculateThreatLevelA2G()
+local DetectedThreatLevel=DetectedSet:CalculateThreatLevelA2G()
 for FriendlyUnitName,FriendlyUnitData in pairs(FriendlyUnitsNearBy)do
 local FriendlyUnit=FriendlyUnitData
 if FriendlyUnit:IsAirPlane()then
@@ -63812,7 +64123,7 @@ local FriendlyUnitThreatLevel=FriendlyUnit:GetThreatLevel()
 FriendliesCount=FriendliesCount+1
 local FriendlyType=FriendlyUnit:GetTypeName()
 FriendlyTypes[FriendlyType]=FriendlyTypes[FriendlyType]and(FriendlyTypes[FriendlyType]+1)or 1
-if DetectedTreatLevel<FriendlyUnitThreatLevel+2 then
+if DetectedThreatLevel<FriendlyUnitThreatLevel+2 then
 end
 end
 end
