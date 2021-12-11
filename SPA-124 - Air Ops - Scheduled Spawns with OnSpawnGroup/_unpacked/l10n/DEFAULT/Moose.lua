@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2021-12-02T18:25:42.0000000Z-2ba52150360bdb8273ddee990381e24d35def399 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2021-12-10T11:02:50.0000000Z-2138a332921e9e00655a509781c015ea7f0d23c0 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -472,8 +472,7 @@ routines.tostringMGRS=function(MGRS,acc)
 if acc==0 then
 return MGRS.UTMZone..' '..MGRS.MGRSDigraph
 else
-return MGRS.UTMZone..' '..MGRS.MGRSDigraph..' '..string.format('%0'..acc..'d',routines.utils.round(MGRS.Easting/(10^(5-acc)),0))
-..' '..string.format('%0'..acc..'d',routines.utils.round(MGRS.Northing/(10^(5-acc)),0))
+return MGRS.UTMZone..' '..MGRS.MGRSDigraph..' '..string.format('%0'..acc..'d',routines.utils.round(MGRS.Easting/(10^(5-acc)),0))..' '..string.format('%0'..acc..'d',routines.utils.round(MGRS.Northing/(10^(5-acc)),0))
 end
 end
 routines.tostringLL=function(lat,lon,acc,DMS)
@@ -516,8 +515,7 @@ else
 local width=3+acc
 secFrmtStr='%0'..width..'.'..acc..'f'
 end
-return string.format('%02d',latDeg)..' '..string.format('%02d',latMin)..'\' '..string.format(secFrmtStr,latSec)..'"'..latHemi..'   '
-..string.format('%02d',lonDeg)..' '..string.format('%02d',lonMin)..'\' '..string.format(secFrmtStr,lonSec)..'"'..lonHemi
+return string.format('%02d',latDeg)..' '..string.format('%02d',latMin)..'\' '..string.format(secFrmtStr,latSec)..'"'..latHemi..'   '..string.format('%02d',lonDeg)..' '..string.format('%02d',lonMin)..'\' '..string.format(secFrmtStr,lonSec)..'"'..lonHemi
 else
 latMin=routines.utils.round(latMin,acc)
 lonMin=routines.utils.round(lonMin,acc)
@@ -536,8 +534,7 @@ else
 local width=3+acc
 minFrmtStr='%0'..width..'.'..acc..'f'
 end
-return string.format('%02d',latDeg)..' '..string.format(minFrmtStr,latMin)..'\''..latHemi..'   '
-..string.format('%02d',lonDeg)..' '..string.format(minFrmtStr,lonMin)..'\''..lonHemi
+return string.format('%02d',latDeg)..' '..string.format(minFrmtStr,latMin)..'\''..latHemi..'   '..string.format('%02d',lonDeg)..' '..string.format(minFrmtStr,lonMin)..'\''..lonHemi
 end
 end
 routines.tostringBR=function(az,dist,alt,metric)
@@ -612,14 +609,7 @@ end
 return rndCoord
 end
 routines.goRoute=function(group,path)
-local misTask={
-id='Mission',
-params={
-route={
-points=routines.utils.deepCopy(path),
-},
-},
-}
+local misTask={id='Mission',params={route={points=routines.utils.deepCopy(path)}}}
 if type(group)=='string'then
 group=Group.getByName(group)
 end
@@ -818,7 +808,6 @@ end
 path[#path+1]=routines.ground.buildWP(offset,form,speed)
 path[#path+1]=routines.ground.buildWP(rndCoord,form,speed)
 routines.goRoute(group,path)
-return
 end
 routines.groupRandomDistSelf=function(gpData,dist,form,heading,speed)
 local pos=routines.getLeadPos(gpData)
@@ -826,7 +815,6 @@ local fakeZone={}
 fakeZone.radius=dist or math.random(300,1000)
 fakeZone.point={x=pos.x,y,pos.y,z=pos.z}
 routines.groupToRandomZone(gpData,fakeZone,form,heading,speed)
-return
 end
 routines.groupToRandomZone=function(gpData,zone,form,heading,speed)
 if type(gpData)=='string'then
@@ -848,7 +836,6 @@ vars.headingDegrees=heading
 vars.speed=speed
 vars.point=routines.utils.zoneToVec3(zone)
 routines.groupToRandomPoint(vars)
-return
 end
 routines.isTerrainValid=function(coord,terrainTypes)
 if coord.z then
@@ -892,7 +879,6 @@ vars.speed=speed
 vars.disableRoads=useRoads
 vars.point=routines.utils.zoneToVec3(point)
 routines.groupToRandomPoint(vars)
-return
 end
 routines.getLeadPos=function(group)
 if type(group)=='string'then
@@ -1051,11 +1037,7 @@ newText=string.format(text,s)
 else
 newText=text..s
 end
-routines.message.add{
-text=newText,
-displayTime=displayTime,
-msgFor=msgFor
-}
+routines.message.add{text=newText,displayTime=displayTime,msgFor=msgFor}
 end
 routines.msgLL=function(vars)
 local units=vars.units
@@ -1071,11 +1053,7 @@ newText=string.format(text,s)
 else
 newText=text..s
 end
-routines.message.add{
-text=newText,
-displayTime=displayTime,
-msgFor=msgFor
-}
+routines.message.add{text=newText,displayTime=displayTime,msgFor=msgFor}
 end
 routines.msgBR=function(vars)
 local units=vars.units
@@ -1092,11 +1070,7 @@ newText=string.format(text,s)
 else
 newText=text..s
 end
-routines.message.add{
-text=newText,
-displayTime=displayTime,
-msgFor=msgFor
-}
+routines.message.add{text=newText,displayTime=displayTime,msgFor=msgFor}
 end
 routines.msgBullseye=function(vars)
 if string.lower(vars.ref)=='red'then
@@ -1132,11 +1106,7 @@ newText=string.format(text,s)
 else
 newText=text..s
 end
-routines.message.add{
-text=newText,
-displayTime=displayTime,
-msgFor=msgFor
-}
+routines.message.add{text=newText,displayTime=displayTime,msgFor=msgFor}
 end
 routines.msgLeadingLL=function(vars)
 local units=vars.units
@@ -1155,11 +1125,7 @@ newText=string.format(text,s)
 else
 newText=text..s
 end
-routines.message.add{
-text=newText,
-displayTime=displayTime,
-msgFor=msgFor
-}
+routines.message.add{text=newText,displayTime=displayTime,msgFor=msgFor}
 end
 routines.msgLeadingBR=function(vars)
 local units=vars.units
@@ -1179,17 +1145,17 @@ newText=string.format(text,s)
 else
 newText=text..s
 end
-routines.message.add{
-text=newText,
-displayTime=displayTime,
-msgFor=msgFor
-}
+routines.message.add{text=newText,displayTime=displayTime,msgFor=msgFor}
 end
 function spairs(t,order)
 local keys={}
-for k in pairs(t)do keys[#keys+1]=k end
+for k in pairs(t)do
+keys[#keys+1]=k
+end
 if order then
-table.sort(keys,function(a,b)return order(t,a,b)end)
+table.sort(keys,function(a,b)
+return order(t,a,b)
+end)
 else
 table.sort(keys)
 end
@@ -1514,20 +1480,9 @@ cTask3[#cTask3+1]='routines.ground.patrolRoute('
 cTask3[#cTask3+1]=routines.utils.oneLineSerialize(newPatrol)
 cTask3[#cTask3+1]=')'
 cTask3=table.concat(cTask3)
-local tempTask={
-id='WrappedAction',
-params={
-action={
-id='Script',
-params={
-command=cTask3,
-},
-},
-},
-}
+local tempTask={id='WrappedAction',params={action={id='Script',params={command=cTask3}}}}
 useRoute[#useRoute].task=tempTask
 routines.goRoute(gpData,useRoute)
-return
 end
 routines.ground.patrol=function(gpData,pType,form,speed)
 local vars={}
@@ -1540,7 +1495,6 @@ vars.pType=pType
 vars.offRoadForm=form
 vars.speed=speed
 routines.ground.patrolRoute(vars)
-return
 end
 function routines.GetUnitHeight(CheckUnit)
 local UnitPoint=CheckUnit:getPoint()
@@ -1703,58 +1657,17 @@ trigger.action.activateGroup(Group.getByName(groupName))
 end
 function Su34Menu(groupName)
 local groupSu34=Group.getByName(groupName)
-if Su34Status.status[groupName]==1 or
-Su34Status.status[groupName]==2 or
-Su34Status.status[groupName]==3 or
-Su34Status.status[groupName]==4 or
-Su34Status.status[groupName]==5 then
+if Su34Status.status[groupName]==1 or Su34Status.status[groupName]==2 or Su34Status.status[groupName]==3 or Su34Status.status[groupName]==4 or Su34Status.status[groupName]==5 then
 if Su34MenuPath[groupName]==nil then
 if planeMenuPath==nil then
-planeMenuPath=missionCommands.addSubMenuForCoalition(
-coalition.side.RED,
-"SU-34 anti-ship flights",
-nil
-)
+planeMenuPath=missionCommands.addSubMenuForCoalition(coalition.side.RED,"SU-34 anti-ship flights",nil)
 end
-Su34MenuPath[groupName]=missionCommands.addSubMenuForCoalition(
-coalition.side.RED,
-"Flight "..groupName,
-planeMenuPath
-)
-missionCommands.addCommandForCoalition(
-coalition.side.RED,
-"Attack carrier Carl Vinson",
-Su34MenuPath[groupName],
-Su34AttackCarlVinson,
-groupName
-)
-missionCommands.addCommandForCoalition(
-coalition.side.RED,
-"Attack ships in the west",
-Su34MenuPath[groupName],
-Su34AttackWest,
-groupName
-)
-missionCommands.addCommandForCoalition(
-coalition.side.RED,
-"Attack ships in the north",
-Su34MenuPath[groupName],
-Su34AttackNorth,
-groupName
-)
-missionCommands.addCommandForCoalition(
-coalition.side.RED,
-"Hold position and await instructions",
-Su34MenuPath[groupName],
-Su34Orbit,
-groupName
-)
-missionCommands.addCommandForCoalition(
-coalition.side.RED,
-"Report status",
-Su34MenuPath[groupName],
-Su34OverviewStatus
-)
+Su34MenuPath[groupName]=missionCommands.addSubMenuForCoalition(coalition.side.RED,"Flight "..groupName,planeMenuPath)
+missionCommands.addCommandForCoalition(coalition.side.RED,"Attack carrier Carl Vinson",Su34MenuPath[groupName],Su34AttackCarlVinson,groupName)
+missionCommands.addCommandForCoalition(coalition.side.RED,"Attack ships in the west",Su34MenuPath[groupName],Su34AttackWest,groupName)
+missionCommands.addCommandForCoalition(coalition.side.RED,"Attack ships in the north",Su34MenuPath[groupName],Su34AttackNorth,groupName)
+missionCommands.addCommandForCoalition(coalition.side.RED,"Hold position and await instructions",Su34MenuPath[groupName],Su34Orbit,groupName)
+missionCommands.addCommandForCoalition(coalition.side.RED,"Report status",Su34MenuPath[groupName],Su34OverviewStatus)
 end
 else
 if Su34MenuPath[groupName]then
@@ -1857,31 +1770,23 @@ for u=1,EscortUnits do
 EscortMission.units[u].name=string.format(EscortPrefix..'#Escort %s %02d',CarrierName,u)
 EscortMission.units[u].unitId=nil
 end
-EscortMission.route.points[1].task={id="ComboTask",
-params=
-{
-tasks=
-{
-[1]=
-{
+EscortMission.route.points[1].task={
+id="ComboTask",
+params={
+tasks={
+[1]={
 enabled=true,
 auto=false,
 id="Escort",
 number=1,
-params=
-{
+params={
 lastWptIndexFlagChangedManually=false,
 groupId=CarrierGroup:getID(),
 lastWptIndex=nil,
 lastWptIndexFlag=false,
 engagementDistMax=EscortEngagementDistanceMax,
 targetTypes=EscortTargetTypes,
-pos=
-{
-y=20,
-x=20,
-z=0,
-}
+pos={y=20,x=20,z=0}
 }
 }
 }
@@ -2069,7 +1974,7 @@ Normandy="Normandy",
 PersianGulf="PersianGulf",
 TheChannel="TheChannel",
 Syria="Syria",
-MarianaIslands="MarianaIslands"
+MarianaIslands="MarianaIslands",
 }
 CALLSIGN={
 Aircraft={
@@ -2304,8 +2209,8 @@ end
 UTILS.KnotsToMps=function(knots)
 return knots/1.94384
 end
-UTILS.CelciusToFarenheit=function(Celcius)
-return Celcius*9/5+32
+UTILS.CelsiusToFahrenheit=function(Celsius)
+return Celsius*9/5+32
 end
 UTILS.hPa2inHg=function(hPa)
 return hPa*0.0295299830714
@@ -2360,8 +2265,7 @@ else
 local width=3+acc
 secFrmtStr='%0'..width..'.'..acc..'f'
 end
-return string.format('%03d°',latDeg)..string.format('%02d',latMin)..'\''..string.format(secFrmtStr,latSec)..'"'..latHemi..' '
-..string.format('%03d°',lonDeg)..string.format('%02d',lonMin)..'\''..string.format(secFrmtStr,lonSec)..'"'..lonHemi
+return string.format('%03d°',latDeg)..string.format('%02d',latMin)..'\''..string.format(secFrmtStr,latSec)..'"'..latHemi..' '..string.format('%03d°',lonDeg)..string.format('%02d',lonMin)..'\''..string.format(secFrmtStr,lonSec)..'"'..lonHemi
 else
 latMin=UTILS.Round(latMin,acc)
 lonMin=UTILS.Round(lonMin,acc)
@@ -2380,8 +2284,7 @@ else
 local width=3+acc
 minFrmtStr='%0'..width..'.'..acc..'f'
 end
-return string.format('%03d°',latDeg)..' '..string.format(minFrmtStr,latMin)..'\''..latHemi..'   '
-..string.format('%03d°',lonDeg)..' '..string.format(minFrmtStr,lonMin)..'\''..lonHemi
+return string.format('%03d°',latDeg)..' '..string.format(minFrmtStr,latMin)..'\''..latHemi..'   '..string.format('%03d°',lonDeg)..' '..string.format(minFrmtStr,lonMin)..'\''..lonHemi
 end
 end
 UTILS.tostringMGRS=function(MGRS,acc)
@@ -2392,8 +2295,12 @@ local Easting=tostring(MGRS.Easting)
 local Northing=tostring(MGRS.Northing)
 local nE=5-string.len(Easting)
 local nN=5-string.len(Northing)
-for i=1,nE do Easting="0"..Easting end
-for i=1,nN do Northing="0"..Northing end
+for i=1,nE do
+Easting="0"..Easting
+end
+for i=1,nN do
+Northing="0"..Northing
+end
 return string.format("%s %s %s %s",MGRS.UTMZone,MGRS.MGRSDigraph,string.sub(Easting,1,acc),string.sub(Northing,1,acc))
 end
 end
@@ -2411,9 +2318,13 @@ end
 end
 function UTILS.spairs(t,order)
 local keys={}
-for k in pairs(t)do keys[#keys+1]=k end
+for k in pairs(t)do
+keys[#keys+1]=k
+end
 if order then
-table.sort(keys,function(a,b)return order(t,a,b)end)
+table.sort(keys,function(a,b)
+return order(t,a,b)
+end)
 else
 table.sort(keys)
 end
@@ -2428,9 +2339,14 @@ end
 function UTILS.kpairs(t,getkey,order)
 local keys={}
 local keyso={}
-for k,o in pairs(t)do keys[#keys+1]=k keyso[#keyso+1]=getkey(o)end
+for k,o in pairs(t)do
+keys[#keys+1]=k
+keyso[#keyso+1]=getkey(o)
+end
 if order then
-table.sort(keys,function(a,b)return order(t,a,b)end)
+table.sort(keys,function(a,b)
+return order(t,a,b)
+end)
 else
 table.sort(keys)
 end
@@ -2444,7 +2360,9 @@ end
 end
 function UTILS.rpairs(t)
 local keys={}
-for k in pairs(t)do keys[#keys+1]=k end
+for k in pairs(t)do
+keys[#keys+1]=k
+end
 local random={}
 local j=#keys
 for i=1,j do
@@ -2927,13 +2845,27 @@ Tlocal=Tlocal or 0
 local rad=math.rad
 local deg=math.deg
 local floor=math.floor
-local frac=function(n)return n-floor(n)end
-local cos=function(d)return math.cos(rad(d))end
-local acos=function(d)return deg(math.acos(d))end
-local sin=function(d)return math.sin(rad(d))end
-local asin=function(d)return deg(math.asin(d))end
-local tan=function(d)return math.tan(rad(d))end
-local atan=function(d)return deg(math.atan(d))end
+local frac=function(n)
+return n-floor(n)
+end
+local cos=function(d)
+return math.cos(rad(d))
+end
+local acos=function(d)
+return deg(math.acos(d))
+end
+local sin=function(d)
+return math.sin(rad(d))
+end
+local asin=function(d)
+return deg(math.asin(d))
+end
+local tan=function(d)
+return math.tan(rad(d))
+end
+local atan=function(d)
+return deg(math.atan(d))
+end
 local function fit_into_range(val,min,max)
 local range=max-min
 local count
@@ -3155,9 +3087,7 @@ local _count=1
 while _code<1777 and _count<30 do
 while true do
 _code=_code+1
-if not ContainsDigit(_code,8)
-and not ContainsDigit(_code,9)
-and not ContainsDigit(_code,0)then
+if not ContainsDigit(_code,8)and not ContainsDigit(_code,9)and not ContainsDigit(_code,0)then
 table.insert(jtacGeneratedLaserCodes,_code)
 break
 end
@@ -3316,7 +3246,10 @@ local outcome=UTILS.SaveToFile(Path,Filename,data)
 return outcome
 end
 function UTILS.LoadStationaryListOfGroups(Path,Filename,Reduce)
-local reduce=Reduce==false and false or true
+local reduce=true
+if Reduce==false then
+reduce=false
+end
 local filename=Filename or"StateListofGroups"
 local datatable={}
 if UTILS.CheckFileExists(Path,filename)then
@@ -3352,7 +3285,11 @@ end
 return datatable
 end
 function UTILS.LoadSetOfGroups(Path,Filename,Spawn)
-local spawn=SPAWN==false and false or true
+local spawn=true
+if Spawn==false then
+spawn=false
+end
+BASE:I("Spawn = "..tostring(spawn))
 local filename=Filename or"SetOfGroups"
 local setdata=SET_GROUP:New()
 local datatable={}
@@ -3372,10 +3309,7 @@ local group=nil
 local data={groupname=groupname,size=size,coordinate=coordinate}
 table.insert(datatable,data)
 if spawn then
-local group=SPAWN:New(groupname)
-:InitDelayOff()
-:OnSpawnGroup(
-function(spwndgrp)
+local group=SPAWN:New(groupname):InitDelayOff():OnSpawnGroup(function(spwndgrp)
 setdata:AddObject(spwndgrp)
 local actualsize=spwndgrp:CountAliveUnits()
 if actualsize>size then
@@ -3386,9 +3320,7 @@ for i=1,reduction do
 units2[i]:Destroy(false)
 end
 end
-end
-)
-:SpawnFromCoordinate(coordinate)
+end):SpawnFromCoordinate(coordinate)
 end
 end
 else
@@ -3421,7 +3353,10 @@ end
 return datatable
 end
 function UTILS.LoadStationaryListOfStatics(Path,Filename,Reduce)
-local reduce=Reduce==false and false or true
+local reduce=true
+if Reduce==false then
+reduce=false
+end
 local filename=Filename or"StateListofStatics"
 local datatable={}
 if UTILS.CheckFileExists(Path,filename)then
@@ -3465,15 +3400,15 @@ fileNameSuffix="txt"
 function PROFILER.Start(Delay,Duration)
 local go=true
 if not os then
-env.error("ERROR: Profiler needs os to be desanitized!")
+env.error("ERROR: Profiler needs os to be de-sanitized!")
 go=false
 end
 if not io then
-env.error("ERROR: Profiler needs io to be desanitized!")
+env.error("ERROR: Profiler needs io to be de-sanitized!")
 go=false
 end
 if not lfs then
-env.error("ERROR: Profiler needs lfs to be desanitized!")
+env.error("ERROR: Profiler needs lfs to be de-sanitized!")
 go=false
 end
 if not go then
@@ -3603,16 +3538,12 @@ local tpairs=nil
 for func,count in pairs(PROFILER.Counters)do
 local s,src,line,tm=PROFILER.getData(func)
 if PROFILER.logUnknown==true then
-if s==nil then s="<Unknown>"end
+if s==nil then
+s="<Unknown>"
+end
 end
 if s~=nil then
-local T=
-{func=s,
-src=src,
-line=line,
-count=count,
-tm=tm,
-}
+local T={func=s,src=src,line=line,count=count,tm=tm}
 if s=="_copy"then
 if tcopy==nil then
 tcopy=T
@@ -3669,7 +3600,9 @@ env.info(string.format("* Total func calls : %d",Calls))
 env.info(string.format("* Writing to file  : \"%s\"",file))
 env.info(string.format("* Writing to file  : \"%s\"",PROFILER.getfilename("csv")))
 env.info("##############################################################################")
-table.sort(t,function(a,b)return a.tm>b.tm end)
+table.sort(t,function(a,b)
+return a.tm>b.tm
+end)
 PROFILER._flog(f,"")
 PROFILER._flog(f,"************************************************************************************************************************")
 PROFILER._flog(f,"************************************************************************************************************************")
@@ -3692,7 +3625,9 @@ PROFILER._flog(f,"")
 PROFILER._flog(f,"************************************************************************************************************************")
 PROFILER._flog(f,"")
 PROFILER.showTable(t,f,runTimeGame)
-table.sort(t,function(a,b)return a.tm/a.count>b.tm/b.count end)
+table.sort(t,function(a,b)
+return a.tm/a.count>b.tm/b.count
+end)
 PROFILER._flog(f,"")
 PROFILER._flog(f,"************************************************************************************************************************")
 PROFILER._flog(f,"")
@@ -3701,7 +3636,9 @@ PROFILER._flog(f,"---- Data Sorted by Time per Call ----")
 PROFILER._flog(f,"--------------------------------------")
 PROFILER._flog(f,"")
 PROFILER.showTable(t,f,runTimeGame)
-table.sort(t,function(a,b)return a.count>b.count end)
+table.sort(t,function(a,b)
+return a.count>b.count
+end)
 PROFILER._flog(f,"")
 PROFILER._flog(f,"************************************************************************************************************************")
 PROFILER._flog(f,"")
@@ -4096,7 +4033,7 @@ ClassName="STTS",
 DIRECTORY="",
 SRS_PORT=5002,
 GOOGLE_CREDENTIALS="C:\\Users\\Ciaran\\Downloads\\googletts.json",
-EXECUTABLE="DCS-SR-ExternalAudio.exe",
+EXECUTABLE="DCS-SR-ExternalAudio.exe"
 }
 STTS.DIRECTORY="D:/DCS/_SRS"
 STTS.SRS_PORT=5002
@@ -4113,7 +4050,11 @@ end
 function STTS.round(x,n)
 n=math.pow(10,n or 0)
 x=x*n
-if x>=0 then x=math.floor(x+0.5)else x=math.ceil(x-0.5)end
+if x>=0 then
+x=math.floor(x+0.5)
+else
+x=math.ceil(x-0.5)
+end
 return x/n
 end
 function STTS.getSpeechTime(length,speed,isGoogle)
@@ -4196,8 +4137,7 @@ os.execute(cmd)
 return STTS.getSpeechTime(message,speed,googleTTS)
 end
 function STTS.PlayMP3(pathToMP3,freqs,modulations,volume,name,coalition,point)
-local cmd=string.format("start \"\" /d \"%s\" /b /min \"%s\" -i \"%s\" -f %s -m %s -c %s -p %s -n \"%s\" -v %s -h",
-STTS.DIRECTORY,STTS.EXECUTABLE,pathToMP3,freqs or"305",modulations or"AM",coalition or"0",STTS.SRS_PORT,name or"ROBOT",volume or"1")
+local cmd=string.format("start \"\" /d \"%s\" /b /min \"%s\" -i \"%s\" -f %s -m %s -c %s -p %s -n \"%s\" -v %s -h",STTS.DIRECTORY,STTS.EXECUTABLE,pathToMP3,freqs or"305",modulations or"AM",coalition or"0",STTS.SRS_PORT,name or"ROBOT",volume or"1")
 if point and type(point)=="table"and point.x then
 local lat,lon,alt=coord.LOtoLL(point)
 lat=STTS.round(lat,4)
@@ -9157,6 +9097,10 @@ return Objects
 end
 function SET_BASE:Remove(ObjectName,NoTriggerEvent)
 self:F2({ObjectName=ObjectName})
+local TriggerEvent=true
+if NoTriggerEvent==false then
+TriggerEvent=false
+end
 local Object=self.Set[ObjectName]
 if Object then
 for Index,Key in ipairs(self.Index)do
@@ -9166,7 +9110,7 @@ self.Set[ObjectName]=nil
 break
 end
 end
-if not NoTriggerEvent then
+if TriggerEvent then
 self:Removed(ObjectName,Object)
 end
 end
@@ -11703,13 +11647,12 @@ end
 end
 do
 SET_ZONE={
-ClassName="SET_ZONE",
+lassName="SET_ZONE",
 Zones={},
 Filter={
 Prefixes=nil,
 },
-FilterMeta={
-},
+FilterMeta={},
 }
 function SET_ZONE:New()
 local self=BASE:Inherit(self,SET_BASE:New(_DATABASE.ZONES))
@@ -11858,8 +11801,7 @@ Zones={},
 Filter={
 Prefixes=nil,
 },
-FilterMeta={
-},
+FilterMeta={},
 }
 function SET_ZONE_GOAL:New()
 local self=BASE:Inherit(self,SET_BASE:New(_DATABASE.ZONES_GOAL))
@@ -12092,7 +12034,7 @@ id=world.VolumeType.SPHERE,
 params={
 point=self:GetVec3(),
 radius=radius,
-}
+},
 }
 radius=radius or 100
 if scanunits==nil then
@@ -12300,13 +12242,13 @@ local T,P=atmosphere.getTemperatureAndPressure(point)
 return T-273.15
 end
 function COORDINATE:GetTemperatureText(height,Settings)
-local DegreesCelcius=self:GetTemperature(height)
+local DegreesCelsius=self:GetTemperature(height)
 local Settings=Settings or _SETTINGS
-if DegreesCelcius then
+if DegreesCelsius then
 if Settings:IsMetric()then
-return string.format(" %-2.2f °C",DegreesCelcius)
+return string.format(" %-2.2f °C",DegreesCelsius)
 else
-return string.format(" %-2.2f °F",UTILS.CelciusToFarenheit(DegreesCelcius))
+return string.format(" %-2.2f °F",UTILS.CelsiusToFahrenheit(DegreesCelsius))
 end
 else
 return" no temperature"
@@ -13463,7 +13405,7 @@ self.z=self.z+y
 return self
 end
 function POINT_VEC2:AddAlt(Altitude)
-self.y=land.getHeight({x=self.x,y=self.z})+Altitude or 0
+self.y=land.getHeight({x=self.x,y=self.z})+(Altitude or 0)
 return self
 end
 function POINT_VEC2:GetRandomPointVec2InRadius(OuterRadius,InnerRadius)
@@ -16414,7 +16356,7 @@ local PositionablePosition=DCSPositionable:getPosition()
 self:T3(PositionablePosition)
 return PositionablePosition
 end
-BASE:E({"Cannot GetPositionVec3",Positionable=self,Alive=self:IsAlive()})
+BASE:E({"Cannot GetPosition",Positionable=self,Alive=self:IsAlive()})
 return nil
 end
 function POSITIONABLE:GetOrientation()
@@ -16516,13 +16458,11 @@ end
 function POSITIONABLE:GetCoord()
 local DCSPositionable=self:GetDCSObject()
 if DCSPositionable then
-local Vec3=self:GetVec3()
+local PositionableVec3=self:GetVec3()
 if self.coordinate then
-self.coordinate.x=Vec3.x
-self.coordinate.y=Vec3.y
-self.coordinate.z=Vec3.z
+self.coordinate:UpdateFromVec3(PositionableVec3)
 else
-self.coordinate=COORDINATE:NewFromVec3(Vec3)
+self.coordinate=COORDINATE:NewFromVec3(PositionableVec3)
 end
 return self.coordinate
 end
@@ -16671,6 +16611,7 @@ local IsAirResult=(UnitDescriptor.category==Unit.Category.AIRPLANE)or(UnitDescri
 self:T3(IsAirResult)
 return IsAirResult
 end
+self:E({"Cannot check IsAir",Positionable=self,Alive=self:IsAlive()})
 return nil
 end
 function POSITIONABLE:IsGround()
@@ -16683,6 +16624,7 @@ local IsGroundResult=(UnitDescriptor.category==Unit.Category.GROUND_UNIT)
 self:T3(IsGroundResult)
 return IsGroundResult
 end
+self:E({"Cannot check IsGround",Positionable=self,Alive=self:IsAlive()})
 return nil
 end
 function POSITIONABLE:IsShip()
@@ -16690,9 +16632,12 @@ self:F2()
 local DCSUnit=self:GetDCSObject()
 if DCSUnit then
 local UnitDescriptor=DCSUnit:getDesc()
-local IsShip=(UnitDescriptor.category==Unit.Category.SHIP)
-return IsShip
+self:T3({UnitDescriptor.category,Unit.Category.SHIP})
+local IsShipResult=(UnitDescriptor.category==Unit.Category.SHIP)
+self:T3(IsShipResult)
+return IsShipResult
 end
+self:E({"Cannot check IsShip",Positionable=self,Alive=self:IsAlive()})
 return nil
 end
 function POSITIONABLE:IsSubmarine()
@@ -16706,6 +16651,7 @@ else
 return false
 end
 end
+self:E({"Cannot check IsSubmarine",Positionable=self,Alive=self:IsAlive()})
 return nil
 end
 function POSITIONABLE:InAir()
@@ -16743,7 +16689,7 @@ end
 function POSITIONABLE:GetHeight()
 self:F2(self.PositionableName)
 local DCSPositionable=self:GetDCSObject()
-if DCSPositionable then
+if DCSPositionable and DCSPositionable:isExist()then
 local PositionablePosition=DCSPositionable:getPosition()
 if PositionablePosition then
 local PositionableHeight=PositionablePosition.p.y
@@ -16833,6 +16779,7 @@ Roll=-Roll
 end
 return math.deg(Roll)
 end
+return nil
 end
 function POSITIONABLE:GetYaw()
 local unitpos=self:GetPosition()
@@ -16850,6 +16797,7 @@ end
 return Yaw
 end
 end
+return nil
 end
 function POSITIONABLE:GetMessageText(Message,Name)
 local DCSObject=self:GetDCSObject()
@@ -16937,7 +16885,12 @@ else
 BASE:E({"Message not sent to Group; Group is not alive...",Message=Message,MessageGroup=MessageGroup})
 end
 else
-BASE:E({"Message not sent to Group; Positionable is not alive ...",Message=Message,Positionable=self,MessageGroup=MessageGroup})
+BASE:E({
+"Message not sent to Group; Positionable is not alive ...",
+Message=Message,
+Positionable=self,
+MessageGroup=MessageGroup
+})
 end
 end
 return nil
@@ -16957,11 +16910,9 @@ self:F2({Message,Duration})
 local DCSObject=self:GetDCSObject()
 if DCSObject then
 if DCSObject:isExist()then
-MessageSetGroup:ForEachGroupAlive(
-function(MessageGroup)
+MessageSetGroup:ForEachGroupAlive(function(MessageGroup)
 self:GetMessage(Message,Duration,Name):ToGroup(MessageGroup)
-end
-)
+end)
 end
 end
 return nil
@@ -16987,7 +16938,7 @@ self:F2()
 LaserCode=LaserCode or math.random(1000,9999)
 local RecceDcsUnit=self:GetDCSObject()
 local TargetVec3=Target:GetVec3()
-self:F("bulding spot")
+self:F("building spot")
 self.Spot=SPOT:New(self)
 self.Spot:LaseOn(Target,LaserCode,Duration)
 self.LaserCode=LaserCode
@@ -17090,7 +17041,7 @@ local Weights={
 ["Dry-cargo ship-2"]=70000,
 ["Higgins_boat"]=3700,
 ["USS_Samuel_Chase"]=25000,
-["LST_Mk2"]=2100000,
+["LST_Mk2"]=2100000
 }
 self.__.CargoBayWeightLimit=(Weights[Desc.typeName]or 50000)
 else
@@ -17137,7 +17088,7 @@ local Weights={
 ["Ural-4320 APA-5D"]=10,
 ["Ural-4320T"]=14,
 ["ZBD04A"]=7,
-["VAB_Mephisto"]=8,
+["VAB_Mephisto"]=8
 }
 local CargoBayWeightLimit=(Weights[Desc.typeName]or 0)*95
 self.__.CargoBayWeightLimit=CargoBayWeightLimit
@@ -21456,9 +21407,7 @@ MESSAGE:New(Message,MessageDuration,MessageCategory):ToClient(self)
 end
 end
 end
-STATIC={
-ClassName="STATIC",
-}
+STATIC={ClassName="STATIC"}
 function STATIC:Register(StaticName)
 local self=BASE:Inherit(self,POSITIONABLE:New(StaticName))
 self.StaticName=StaticName
@@ -33862,7 +33811,7 @@ instructorfreq=nil,
 instructor=nil,
 rangecontrolfreq=nil,
 rangecontrol=nil,
-soundpath="Range Soundfiles/"
+soundpath="Range Soundfiles/",
 }
 RANGE.Defaults={
 goodhitrange=25,
@@ -34079,7 +34028,7 @@ self.rangeradius=radius*1000 or RANGE.Defaults.rangeradius
 return self
 end
 function RANGE:SetDefaultPlayerSmokeBomb(switch)
-if switch==true or switch==nil then
+if switch==nil or switch==true then
 self.defaultsmokebomb=true
 else
 self.defaultsmokebomb=false
@@ -34539,8 +34488,7 @@ local playerData=self.PlayerSettings[_playername]
 self:T(self.id..string.format("RANGE %s: Tracking %s - %s.",self.rangename,_weapon,EventData.weapon:getName()))
 local _lastBombPos={x=0,y=0,z=0}
 local function trackBomb(_ordnance)
-local _status,_bombPos=pcall(
-function()
+local _status,_bombPos=pcall(function()
 return _ordnance:getPoint()
 end)
 self:T2(self.id..string.format("Range %s: Bomb still in air: %s",self.rangename,tostring(_status)))
@@ -34665,13 +34613,9 @@ self.instructor:NewTransmission(RANGE.Sound.IRExitRange.filename,RANGE.Sound.IRE
 end
 end
 function RANGE:onafterImpact(From,Event,To,result,player)
-local targetname=nil
+local text=string.format("%s, impact %03d° for %d m (%d ft)",player.playername,result.radial,result.distance,UTILS.MetersToFeet(result.distance))
 if#self.bombingTargets>1 then
-local targetname=result.name
-end
-local text=string.format("%s, impact %03d° for %d ft",player.playername,result.radial,UTILS.MetersToFeet(result.distance))
-if targetname then
-text=text..string.format(" from bulls of target %s.")
+text=text..string.format(" from bulls of target %s.",result.name)
 else
 text=text.."."
 end
@@ -34800,7 +34744,9 @@ local _results=self.strafePlayerResults[_playername]
 if _results==nil then
 _message=string.format("%s: No Score yet.",_playername)
 else
-local _sort=function(a,b)return a.hits>b.hits end
+local _sort=function(a,b)
+return a.hits>b.hits
+end
 table.sort(_results,_sort)
 local _bestMsg=""
 local _count=1
@@ -34837,7 +34783,9 @@ local text=string.format("%s: Hits %i - %s - %s",_playerName,_best.hits,_best.zo
 table.insert(_playerResults,{msg=text,hits=_best.hits})
 end
 end
-local _sort=function(a,b)return a.hits>b.hits end
+local _sort=function(a,b)
+return a.hits>b.hits
+end
 table.sort(_playerResults,_sort)
 for _i=1,math.min(#_playerResults,self.ndisplayresult)do
 _message=_message..string.format("\n[%d] %s",_i,_playerResults[_i].msg)
@@ -34857,7 +34805,9 @@ local _results=self.bombPlayerResults[_playername]
 if _results==nil then
 _message=_playername..": No Score yet."
 else
-local _sort=function(a,b)return a.distance<b.distance end
+local _sort=function(a,b)
+return a.distance<b.distance
+end
 table.sort(_results,_sort)
 local _bestMsg=""
 for i,_result in pairs(_results)do
@@ -34893,7 +34843,9 @@ local bestres=string.format("%s: %d m - %s - %s - %s hit",_playerName,_best.dist
 table.insert(_playerResults,{msg=bestres,distance=_best.distance})
 end
 end
-local _sort=function(a,b)return a.distance<b.distance end
+local _sort=function(a,b)
+return a.distance<b.distance
+end
 table.sort(_playerResults,_sort)
 for _i=1,math.min(#_playerResults,self.ndisplayresult)do
 _message=_message..string.format("\n[%d] %s",_i,_playerResults[_i].msg)
@@ -34920,7 +34872,7 @@ local rangealt=position:GetLandHeight()
 local vec3=coord:GetDirectionVec3(position)
 local angle=coord:GetAngleDegrees(vec3)
 local range=coord:Get2DDistance(position)
-local Bs=string.format('%03d°',angle)
+local Bs=string.format("%03d°",angle)
 local texthit
 if self.PlayerSettings[playername].flaredirecthits then
 texthit=string.format("Flare direct hits: ON (flare color %s)\n",self:_flarecolor2text(self.PlayerSettings[playername].flarecolor))
@@ -35021,7 +34973,7 @@ local T=position:GetTemperature()
 local P=position:GetPressure()
 local Wd,Ws=position:GetWind()
 local Bn,Bd=UTILS.BeaufortScale(Ws)
-local WD=string.format('%03d°',Wd)
+local WD=string.format("%03d°",Wd)
 local Ts=string.format("%d°C",T)
 local hPa2inHg=0.0295299830714
 local hPa2mmHg=0.7500615613030
@@ -35126,7 +35078,9 @@ local shots=_result.ammo-_ammo
 local accur=0
 if shots>0 then
 accur=_result.hits/shots*100
-if accur>100 then accur=100 end
+if accur>100 then
+accur=100
+end
 end
 local _text=string.format("%s, hits on target %s: %d",self:_myname(_unitName),_result.zone.name,_result.hits)
 if shots and accur then
@@ -39578,7 +39532,7 @@ end
 text=text..string.format("QFE %.1f hPa = %s.\n",Pqfe,_Pqfe)
 text=text..string.format("QNH %.1f hPa = %s.\n",Pqnh,_Pqnh)
 local T=position:GetTemperature()
-local _T=string.format('%d°F',UTILS.CelciusToFarenheit(T))
+local _T=string.format('%d°F',UTILS.CelsiusToFahrenheit(T))
 if settings:IsMetric()then
 _T=string.format('%d°C',T)
 end
@@ -54857,7 +54811,7 @@ Normandy=true,
 PersianGulf=true,
 TheChannel=true,
 Syria=true,
-MarianaIslands=true,
+MarianaIslands=true
 }
 ATIS.Sound={
 ActiveRunway={filename="ActiveRunway.ogg",duration=0.99},
@@ -55206,8 +55160,7 @@ end
 end
 local text=string.format("State %s: Freq=%.3f MHz %s",fsmstate,self.frequency,UTILS.GetModulationName(self.modulation))
 if self.useSRS then
-text=text..string.format(", SRS path=%s (%s), gender=%s, culture=%s, voice=%s",
-tostring(self.msrs.path),tostring(self.msrs.port),tostring(self.msrs.gender),tostring(self.msrs.culture),tostring(self.msrs.voice))
+text=text..string.format(", SRS path=%s (%s), gender=%s, culture=%s, voice=%s",tostring(self.msrs.path),tostring(self.msrs.port),tostring(self.msrs.gender),tostring(self.msrs.culture),tostring(self.msrs.voice))
 else
 text=text..string.format(", Relay unit=%s (alive=%s)",tostring(self.relayunitname),relayunitstatus)
 end
@@ -55320,8 +55273,8 @@ end
 local temperature=coord:GetTemperature(height+5)
 local dewpoint=temperature-(100-self.relHumidity)/5
 if self.TDegF then
-temperature=UTILS.CelciusToFarenheit(temperature)
-dewpoint=UTILS.CelciusToFarenheit(dewpoint)
+temperature=UTILS.CelsiusToFahrenheit(temperature)
+dewpoint=UTILS.CelsiusToFahrenheit(dewpoint)
 end
 local TEMPERATURE=string.format("%d",math.abs(temperature))
 local DEWPOINT=string.format("%d",math.abs(dewpoint))
@@ -55968,7 +55921,7 @@ local text=string.gsub(text,"°C","degrees Celsius")
 local text=string.gsub(text,"°F","degrees Fahrenheit")
 local text=string.gsub(text,"inHg","inches of Mercury")
 local text=string.gsub(text,"mmHg","millimeters of Mercury")
-local text=string.gsub(text,"hPa","hecto Pascals")
+local text=string.gsub(text,"hPa","hectopascals")
 local text=string.gsub(text,"m/s","meters per second")
 local text=string.gsub(text,";"," . ")
 self:T("SRS TTS: "..text)
@@ -58934,7 +58887,7 @@ CSAR.AircraftType["Mi-8MT"]=12
 CSAR.AircraftType["Mi-24P"]=8
 CSAR.AircraftType["Mi-24V"]=8
 CSAR.AircraftType["Bell-47"]=2
-CSAR.version="0.1.12r4"
+CSAR.version="0.1.12r5"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
@@ -59836,7 +59789,7 @@ local _distance=0
 if _SETTINGS:IsImperial()then
 _distance=string.format("%.1fnm",UTILS.MetersToNM(_closest.distance))
 else
-_distance=string.format("%.1fkm",_closest.distance)
+_distance=string.format("%.1fkm",_closest.distance/1000)
 end
 local _msg=string.format("%s - Popping smoke at your %s o\'clock. Distance %s",_unitName,_clockDir,_distance)
 self:_DisplayMessageToSAR(_heli,_msg,self.messageTime,false,true)
@@ -71512,7 +71465,7 @@ TASK_A2G_DISPATCHER={
 ClassName="TASK_A2G_DISPATCHER",
 Mission=nil,
 Detection=nil,
-Tasks={},
+Tasks={}
 }
 function TASK_A2G_DISPATCHER:New(Mission,SetGroup,Detection)
 local self=BASE:Inherit(self,DETECTION_MANAGER:New(SetGroup,Detection))
@@ -71770,7 +71723,7 @@ end
 end
 do
 TASK_A2G={
-ClassName="TASK_A2G",
+ClassName="TASK_A2G"
 }
 function TASK_A2G:New(Mission,SetGroup,TaskName,TargetSetUnit,TaskType,TaskBriefing)
 local self=BASE:Inherit(self,TASK:New(Mission,SetGroup,TaskName,TaskType,TaskBriefing))
@@ -71959,16 +71912,13 @@ end
 end
 do
 TASK_A2G_SEAD={
-ClassName="TASK_A2G_SEAD",
+ClassName="TASK_A2G_SEAD"
 }
 function TASK_A2G_SEAD:New(Mission,SetGroup,TaskName,TargetSetUnit,TaskBriefing)
 local self=BASE:Inherit(self,TASK_A2G:New(Mission,SetGroup,TaskName,TargetSetUnit,"SEAD",TaskBriefing))
 self:F()
 Mission:AddTask(self)
-self:SetBriefing(
-TaskBriefing or
-"Execute a Suppression of Enemy Air Defenses."
-)
+self:SetBriefing(TaskBriefing or"Execute a Suppression of Enemy Air Defenses.")
 return self
 end
 function TASK_A2G_SEAD:SetScoreOnProgress(PlayerName,Score,TaskUnit)
@@ -71991,17 +71941,12 @@ return self
 end
 end
 do
-TASK_A2G_BAI={
-ClassName="TASK_A2G_BAI",
-}
+TASK_A2G_BAI={ClassName="TASK_A2G_BAI"}
 function TASK_A2G_BAI:New(Mission,SetGroup,TaskName,TargetSetUnit,TaskBriefing)
 local self=BASE:Inherit(self,TASK_A2G:New(Mission,SetGroup,TaskName,TargetSetUnit,"BAI",TaskBriefing))
 self:F()
 Mission:AddTask(self)
-self:SetBriefing(
-TaskBriefing or
-"Execute a Battlefield Air Interdiction of a group of enemy targets."
-)
+self:SetBriefing(TaskBriefing or"Execute a Battlefield Air Interdiction of a group of enemy targets.")
 return self
 end
 function TASK_A2G_BAI:SetScoreOnProgress(PlayerName,Score,TaskUnit)
@@ -72024,18 +71969,12 @@ return self
 end
 end
 do
-TASK_A2G_CAS={
-ClassName="TASK_A2G_CAS",
-}
+TASK_A2G_CAS={ClassName="TASK_A2G_CAS"}
 function TASK_A2G_CAS:New(Mission,SetGroup,TaskName,TargetSetUnit,TaskBriefing)
 local self=BASE:Inherit(self,TASK_A2G:New(Mission,SetGroup,TaskName,TargetSetUnit,"CAS",TaskBriefing))
 self:F()
 Mission:AddTask(self)
-self:SetBriefing(
-TaskBriefing or
-"Execute a Close Air Support for a group of enemy targets. "..
-"Beware of friendlies at the vicinity! "
-)
+self:SetBriefing(TaskBriefing or("Execute a Close Air Support for a group of enemy targets. ".."Beware of friendlies at the vicinity! "))
 return self
 end
 function TASK_A2G_CAS:SetScoreOnProgress(PlayerName,Score,TaskUnit)
@@ -72316,7 +72255,7 @@ end
 end
 do
 TASK_A2A={
-ClassName="TASK_A2A",
+ClassName="TASK_A2A"
 }
 function TASK_A2A:New(Mission,SetAttack,TaskName,TargetSetUnit,TaskType,TaskBriefing)
 local self=BASE:Inherit(self,TASK:New(Mission,SetAttack,TaskName,TaskType,TaskBriefing))
@@ -72501,16 +72440,13 @@ end
 end
 do
 TASK_A2A_INTERCEPT={
-ClassName="TASK_A2A_INTERCEPT",
+ClassName="TASK_A2A_INTERCEPT"
 }
 function TASK_A2A_INTERCEPT:New(Mission,SetGroup,TaskName,TargetSetUnit,TaskBriefing)
 local self=BASE:Inherit(self,TASK_A2A:New(Mission,SetGroup,TaskName,TargetSetUnit,"INTERCEPT",TaskBriefing))
 self:F()
 Mission:AddTask(self)
-self:SetBriefing(
-TaskBriefing or
-"Intercept incoming intruders.\n"
-)
+self:SetBriefing(TaskBriefing or"Intercept incoming intruders.\n")
 return self
 end
 function TASK_A2A_INTERCEPT:SetScoreOnProgress(PlayerName,Score,TaskUnit)
@@ -72534,16 +72470,13 @@ end
 end
 do
 TASK_A2A_SWEEP={
-ClassName="TASK_A2A_SWEEP",
+ClassName="TASK_A2A_SWEEP"
 }
 function TASK_A2A_SWEEP:New(Mission,SetGroup,TaskName,TargetSetUnit,TaskBriefing)
 local self=BASE:Inherit(self,TASK_A2A:New(Mission,SetGroup,TaskName,TargetSetUnit,"SWEEP",TaskBriefing))
 self:F()
 Mission:AddTask(self)
-self:SetBriefing(
-TaskBriefing or
-"Perform a fighter sweep. Incoming intruders were detected and could be hiding at the location.\n"
-)
+self:SetBriefing(TaskBriefing or"Perform a fighter sweep. Incoming intruders were detected and could be hiding at the location.\n")
 return self
 end
 function TASK_A2A_SWEEP:onafterGoal(TaskUnit,From,Event,To)
@@ -72574,16 +72507,13 @@ end
 end
 do
 TASK_A2A_ENGAGE={
-ClassName="TASK_A2A_ENGAGE",
+ClassName="TASK_A2A_ENGAGE"
 }
 function TASK_A2A_ENGAGE:New(Mission,SetGroup,TaskName,TargetSetUnit,TaskBriefing)
 local self=BASE:Inherit(self,TASK_A2A:New(Mission,SetGroup,TaskName,TargetSetUnit,"ENGAGE",TaskBriefing))
 self:F()
 Mission:AddTask(self)
-self:SetBriefing(
-TaskBriefing or
-"Bogeys are nearby! Players close by are ordered to ENGAGE the intruders!\n"
-)
+self:SetBriefing(TaskBriefing or"Bogeys are nearby! Players close by are ordered to ENGAGE the intruders!\n")
 return self
 end
 function TASK_A2A_ENGAGE:SetScoreOnProgress(PlayerName,Score,TaskUnit)
