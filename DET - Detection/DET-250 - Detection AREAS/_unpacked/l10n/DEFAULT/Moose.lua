@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-02-08T06:49:04.0000000Z-a4163017d5290f476a18c51bd50ab60a60a47fa6 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-02-18T07:22:47.0000000Z-84f231ea08decd2b50ed3ea661e574f1996c951d ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -21011,6 +21011,24 @@ local unit=self:GetUnit(1)
 local name=unit:GetName()
 local skill=_DATABASE.Templates.Units[name].Template.skill or"Random"
 return skill
+end
+function GROUP:GetHighestThreat()
+local units=self:GetUnits()
+if units then
+local threat=nil;local maxtl=0
+for _,_unit in pairs(units or{})do
+local unit=_unit
+if unit and unit:IsAlive()then
+local tl=unit:GetThreatLevel()
+if tl>maxtl then
+maxtl=tl
+threat=unit
+end
+end
+end
+return threat,maxtl
+end
+return nil,nil
 end
 UNIT={
 ClassName="UNIT",
@@ -56455,7 +56473,7 @@ CTLD.UnitTypes={
 ["Hercules"]={type="Hercules",crates=true,troops=true,cratelimit=7,trooplimit=64,length=25,cargoweightlimit=19000},
 ["UH-60L"]={type="UH-60L",crates=true,troops=true,cratelimit=2,trooplimit=20,length=16,cargoweightlimit=3500},
 }
-CTLD.version="1.0.6"
+CTLD.version="1.0.9"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -56546,6 +56564,7 @@ self.dropcratesanywhere=false
 self.smokedistance=2000
 self.movetroopstowpzone=true
 self.movetroopsdistance=5000
+self.troopdropzoneradius=100
 self.enableHercules=false
 self.HercMinAngels=165
 self.HercMaxAngels=2000
@@ -56613,6 +56632,13 @@ self:T(self.lid.." _GenerateVHFrequencies")
 self.FreeVHFFrequencies={}
 self.UsedVHFFrequencies={}
 self.FreeVHFFrequencies=UTILS.GenerateVHFrequencies()
+return self
+end
+function CTLD:SetTroopDropZoneRadius(Radius)
+self:T(self.lid.." SetTroopDropZoneRadius")
+local tradius=Radius or 100
+if tradius<25 then tradius=25 end
+self.troopdropzoneradius=tradius
 return self
 end
 function CTLD:_EventHandler(EventData)
@@ -56933,7 +56959,7 @@ end
 local capabilities=self:_GetUnitCapabilities(Unit)
 local canloadcratesno=capabilities.cratelimit
 local loaddist=self.CrateDistance or 35
-local nearcrates,numbernearby=self:_FindCratesNearby(Group,Unit,loaddist)
+local nearcrates,numbernearby=self:_FindCratesNearby(Group,Unit,loaddist,true)
 if numbernearby>=canloadcratesno and not drop then
 self:_SendMessage("There are enough crates nearby already! Take care of those first!",10,false,Group)
 return self
@@ -57085,7 +57111,7 @@ end
 function CTLD:_ListCratesNearby(_group,_unit)
 self:T(self.lid.." _ListCratesNearby")
 local finddist=self.CrateDistance or 35
-local crates,number=self:_FindCratesNearby(_group,_unit,finddist)
+local crates,number=self:_FindCratesNearby(_group,_unit,finddist,true)
 if number>0 then
 local text=REPORT:New("Crates Found Nearby:")
 text:Add("------------------------------------------------------------")
@@ -57129,7 +57155,7 @@ self:E({_point1,_point2})
 return-1
 end
 end
-function CTLD:_FindCratesNearby(_group,_unit,_dist)
+function CTLD:_FindCratesNearby(_group,_unit,_dist,_ignoreweight)
 self:T(self.lid.." _FindCratesNearby")
 local finddist=_dist
 local location=_group:GetCoordinate()
@@ -57151,7 +57177,7 @@ self:T(self.lid.." Found cargo mass: "..weight)
 if static and static:IsAlive()then
 local staticpos=static:GetCoordinate()
 local distance=self:_GetDistance(location,staticpos)
-if distance<=finddist and static and weight<=maxloadable then
+if distance<=finddist and static and(weight<=maxloadable or _ignoreweight)then
 index=index+1
 table.insert(found,staticid,cargo)
 maxloadable=maxloadable-weight
@@ -57192,7 +57218,7 @@ loaded.Cratesloaded=0
 loaded.Cargo={}
 end
 local finddist=self.CrateDistance or 35
-local nearcrates,number=self:_FindCratesNearby(Group,Unit,finddist)
+local nearcrates,number=self:_FindCratesNearby(Group,Unit,finddist,false)
 self:T(self.lid.." Crates found: "..number)
 if number==0 and self.hoverautoloading then
 return self
@@ -57465,7 +57491,7 @@ if(type==CTLD_CARGO.Enum.TROOPS or type==CTLD_CARGO.Enum.ENGINEERS)and not cargo
 local name=cargo:GetName()or"none"
 local temptable=cargo:GetTemplates()or{}
 local position=Group:GetCoordinate()
-local zoneradius=100
+local zoneradius=self.troopdropzoneradius or 100
 local factor=1
 if IsHerc then
 factor=cargo:GetCratesNeeded()or 1
@@ -57604,7 +57630,7 @@ return self
 end
 end
 local finddist=self.CrateDistance or 35
-local crates,number=self:_FindCratesNearby(Group,Unit,finddist)
+local crates,number=self:_FindCratesNearby(Group,Unit,finddist,true)
 local buildables={}
 local foundbuilds=false
 local canbuild=false
@@ -57676,7 +57702,7 @@ end
 function CTLD:_RepairCrates(Group,Unit,Engineering)
 self:T(self.lid.." _RepairCrates")
 local finddist=self.CrateDistance or 35
-local crates,number=self:_FindCratesNearby(Group,Unit,finddist)
+local crates,number=self:_FindCratesNearby(Group,Unit,finddist,true)
 local buildables={}
 local foundbuilds=false
 local canbuild=false
@@ -58400,14 +58426,21 @@ unittype=unit:GetTypeName()
 else
 return self
 end
+local length=20
+local maxcargo=500
+local existingcaps=self.UnitTypes[unittype]
+if existingcaps then
+length=existingcaps.length or 20
+maxcargo=existingcaps.cargoweightlimit or 500
+end
 local capabilities={}
 capabilities.type=unittype
 capabilities.crates=Cancrates or false
 capabilities.troops=Cantroops or false
 capabilities.cratelimit=Cratelimit or 0
 capabilities.trooplimit=Trooplimit or 0
-capabilities.length=Length or 20
-capabilities.cargoweightlimit=Maxcargoweight or 0
+capabilities.length=Length or length
+capabilities.cargoweightlimit=Maxcargoweight or maxcargo
 self.UnitTypes[unittype]=capabilities
 return self
 end
@@ -58611,7 +58644,7 @@ local wrenches=engineers.Group
 self:T(_engineers.lid.._engineers:GetStatus())
 if wrenches and wrenches:IsAlive()then
 if engineers:IsStatus("Running")or engineers:IsStatus("Searching")then
-local crates,number=self:_FindCratesNearby(wrenches,nil,self.EngineerSearch)
+local crates,number=self:_FindCratesNearby(wrenches,nil,self.EngineerSearch,true)
 engineers:Search(crates,number)
 elseif engineers:IsStatus("Moving")then
 engineers:Move()
@@ -59527,7 +59560,7 @@ CSAR.AircraftType["Mi-24P"]=8
 CSAR.AircraftType["Mi-24V"]=8
 CSAR.AircraftType["Bell-47"]=2
 CSAR.AircraftType["UH-60L"]=10
-CSAR.version="1.0.3"
+CSAR.version="1.0.4a"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
@@ -59624,13 +59657,15 @@ self.countryblue=country.id.USA
 self.countryred=country.id.RUSSIA
 self.countryneutral=country.id.UN_PEACEKEEPERS
 self.csarUsePara=false
+self.wetfeettemplate=nil
+self.usewetfeet=false
 self.useSRS=false
 self.SRSPath="E:\\Progra~1\\DCS-SimpleRadio-Standalone\\"
 self.SRSchannel=300
 self.SRSModulation=radio.modulation.AM
 return self
 end
-function CSAR:_CreateDownedPilotTrack(Group,Groupname,Side,OriginalUnit,Description,Typename,Frequency,Playername)
+function CSAR:_CreateDownedPilotTrack(Group,Groupname,Side,OriginalUnit,Description,Typename,Frequency,Playername,Wetfeet)
 self:T({"_CreateDownedPilotTrack",Groupname,Side,OriginalUnit,Description,Typename,Frequency,Playername})
 local DownedPilot={}
 DownedPilot.desc=Description or""
@@ -59644,6 +59679,7 @@ DownedPilot.typename=Typename or""
 DownedPilot.group=Group
 DownedPilot.timestamp=0
 DownedPilot.alive=true
+DownedPilot.wetfeet=Wetfeet or false
 local PilotTable=self.downedPilots
 local counter=self.downedpilotcounter
 PilotTable[counter]={}
@@ -59674,15 +59710,20 @@ end
 self.lastCrash[_unitname]=timer.getTime()
 return false
 end
-function CSAR:_SpawnPilotInField(country,point,frequency)
-self:T({country,point,frequency})
+function CSAR:_SpawnPilotInField(country,point,frequency,wetfeet)
+self:T({country,point,frequency,tostring(wetfeet)})
 local freq=frequency or 1000
 local freq=freq/1000
 for i=1,10 do
 math.random(i,10000)
 end
-if point:IsSurfaceTypeWater()then point.y=0 end
+if point:IsSurfaceTypeWater()or wetfeet then
+point.y=0
+end
 local template=self.template
+if self.usewetfeet and wetfeet then
+template=self.wetfeettemplate
+end
 local alias=string.format("Pilot %.2fkHz-%d",freq,math.random(1,99))
 local coalition=self.coalition
 local pilotcacontrol=self.allowDownedPilotCAcontrol
@@ -59726,11 +59767,16 @@ function CSAR:_AddCsar(_coalition,_country,_point,_typeName,_unitName,_playerNam
 self:T(self.lid.." _AddCsar")
 self:T({_coalition,_country,_point,_typeName,_unitName,_playerName,_freq,noMessage,_description})
 local template=self.template
+local wetfeet=false
+local surface=_point:GetSurfaceType()
+if surface==land.SurfaceType.WATER then
+wetfeet=true
+end
 if not _freq then
 _freq=self:_GenerateADFFrequency()
 if not _freq then _freq=333000 end
 end
-local _spawnedGroup,_alias=self:_SpawnPilotInField(_country,_point,_freq)
+local _spawnedGroup,_alias=self:_SpawnPilotInField(_country,_point,_freq,wetfeet)
 local _typeName=_typeName or"Pilot"
 if not noMessage then
 if _freq~=0 then
@@ -59761,7 +59807,7 @@ end
 end
 self:T({_spawnedGroup,_alias})
 local _GroupName=_spawnedGroup:GetName()or _alias
-self:_CreateDownedPilotTrack(_spawnedGroup,_GroupName,_coalition,_unitName,_text,_typeName,_freq,_playerName)
+self:_CreateDownedPilotTrack(_spawnedGroup,_GroupName,_coalition,_unitName,_text,_typeName,_freq,_playerName,wetfeet)
 self:_InitSARForPilot(_spawnedGroup,_unitName,_freq,noMessage)
 return self
 end
@@ -59906,7 +59952,12 @@ end
 if self.limitmaxdownedpilots and self:_ReachedPilotLimit()then
 return
 end
-if self.csarUsePara==false then
+local wetfeet=false
+local surface=_unit:GetCoordinate():GetSurfaceType()
+if surface==land.SurfaceType.WATER then
+wetfeet=true
+end
+if self.csarUsePara==false or(self.csarUsePara and wetfeet)then
 local _freq=self:_GenerateADFFrequency()
 self:_AddCsar(_coalition,_unit:GetCountry(),_unit:GetCoordinate(),_unit:GetTypeName(),_unit:GetName(),_event.IniPlayerName,_freq,false,"none")
 return true
@@ -60678,6 +60729,9 @@ else
 self.allheligroupset=SET_GROUP:New():FilterCoalitions(self.coalitiontxt):FilterCategoryHelicopter():FilterStart()
 end
 self.mash=SET_GROUP:New():FilterCoalitions(self.coalitiontxt):FilterPrefixes(self.mashprefix):FilterStart()
+if self.wetfeettemplate then
+self.usewetfeet=true
+end
 self:__Status(-10)
 return self
 end
