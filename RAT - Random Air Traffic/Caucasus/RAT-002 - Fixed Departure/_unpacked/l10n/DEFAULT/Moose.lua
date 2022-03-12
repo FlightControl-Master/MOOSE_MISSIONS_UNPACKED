@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-03-03T11:34:43.0000000Z-ae7a3630123bed276c666d744dbe655767b00ef6 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-03-11T09:18:59.0000000Z-85a7e18fae670e91485e0a39d0a62ef2086c6ec7 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -25381,7 +25381,7 @@ local ReportMissions,ScoreMissions,PenaltyMissions=self:ReportDetailedPlayerMiss
 ReportMissions=ReportMissions~=""and"\n- "..ReportMissions or ReportMissions
 self:F({ReportMissions,ScoreMissions,PenaltyMissions})
 local PlayerScore=ScoreHits+ScoreDestroys+ScoreCoalitionChanges+ScoreGoals+ScoreMissions
-local PlayerPenalty=PenaltyHits+PenaltyDestroys+PenaltyCoalitionChanges+ScoreGoals+PenaltyMissions
+local PlayerPenalty=PenaltyHits+PenaltyDestroys+PenaltyCoalitionChanges+PenaltyGoals+PenaltyMissions
 PlayerMessage=string.format("Player '%s' Score = %d ( %d Score, -%d Penalties )%s%s%s%s%s",
 PlayerName,
 PlayerScore-PlayerPenalty,
@@ -25419,7 +25419,7 @@ local ReportMissions,ScoreMissions,PenaltyMissions=self:ReportDetailedPlayerMiss
 ReportMissions=ReportMissions~=""and"\n- "..ReportMissions or ReportMissions
 self:F({ReportMissions,ScoreMissions,PenaltyMissions})
 local PlayerScore=ScoreHits+ScoreDestroys+ScoreCoalitionChanges+ScoreGoals+ScoreMissions
-local PlayerPenalty=PenaltyHits+PenaltyDestroys+PenaltyCoalitionChanges+ScoreGoals+PenaltyMissions
+local PlayerPenalty=PenaltyHits+PenaltyDestroys+PenaltyCoalitionChanges+PenaltyGoals+PenaltyMissions
 PlayerMessage=string.format("Player '%s' Score = %d ( %d Score, -%d Penalties )",
 PlayerName,
 PlayerScore-PlayerPenalty,
@@ -57270,7 +57270,7 @@ if not _ignoreweight then
 loadedmass=self:_GetUnitCargoMass(_unit)
 unittype=_unit:GetTypeName()
 capabilities=self:_GetUnitCapabilities(_unit)
-maxmass=capabilities.cargoweightlimit
+maxmass=capabilities.cargoweightlimit or 2000
 maxloadable=maxmass-loadedmass
 end
 self:T(self.lid.." Max loadable mass: "..maxloadable)
