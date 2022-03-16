@@ -24,6 +24,9 @@ my_scoring = SCORING:New("CSAR")
 
 local BlueCsar = CSAR:New(coalition.side.BLUE,"Downed Pilot","Luftrettung")
 BlueCsar.coordtype = 2
+BlueCsar.SRSPath = "E:\\Progra~1\\DCS-SimpleRadio-Standalone\\" -- adjust your own path in your SRS installation -- server(!)
+BlueCsar.SRSchannel = 243 -- radio channel
+BlueCsar.SRSModulation = radio.modulation.AM -- modulation
 BlueCsar:__Start(5)
 
 function BlueCsar:OnAfterRescued(From, Event, To, HeliUnit, HeliName, NumberSaved)

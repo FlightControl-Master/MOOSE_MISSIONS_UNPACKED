@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------
--- CSAR 100 - Nevasa - Test Mission
+-- CSAR 100 - Nevada - Test Mission
 -------------------------------------------------------------------------
 -- Documentation
 -- 
@@ -20,10 +20,16 @@ _SETTINGS:SetA2G_BR()
 _SETTINGS:SetA2A_BULLS()
 _SETTINGS:SetImperial()
 
+BASE:TraceOn()
+BASE:TraceClass("CSAR")
+
 my_scoring = SCORING:New("CSAR")
 
 local BlueCsar = CSAR:New(coalition.side.BLUE,"Downed Pilot","Luftrettung")
 BlueCsar.coordtype = 2
+BlueCsar.SRSPath = "E:\\Progra~1\\DCS-SimpleRadio-Standalone\\" -- adjust your own path in your SRS installation -- server(!)
+BlueCsar.SRSchannel = 243 -- radio channel
+BlueCsar.SRSModulation = radio.modulation.AM -- modulation
 BlueCsar:__Start(5)
 
 function BlueCsar:OnAfterRescued(From, Event, To, HeliUnit, HeliName, NumberSaved)
@@ -36,10 +42,10 @@ function BlueCsar:OnAfterRescued(From, Event, To, HeliUnit, HeliName, NumberSave
 end
 
 function Spawn_CSAR(BlueCSAR)
-  BlueCSAR:SpawnCSARAtZone( "CSAR_Start_1", coalition.side.BLUE,"Pilot Maulwurf", true )
-  BlueCSAR:SpawnCSARAtZone( "CSAR_Start_2", coalition.side.BLUE,"Pilot Schnake", true )
-  BlueCSAR:SpawnCSARAtZone( "CSAR_Start_3", coalition.side.BLUE,"Pilot Chickendog", true )
-  BlueCSAR:SpawnCSARAtZone( "CSAR_Start_4", coalition.side.BLUE,"Pilot Wagner", true )
+  BlueCSAR:_SpawnCsarAtZone( "CSAR_Start_1", coalition.side.BLUE,"Pilot Maulwurf", true )
+  BlueCSAR:_SpawnCsarAtZone( "CSAR_Start_2", coalition.side.BLUE,"Pilot Schnake", true )
+  BlueCSAR:_SpawnCsarAtZone( "CSAR_Start_3", coalition.side.BLUE,"Pilot Chickendog", true )
+  BlueCSAR:_SpawnCsarAtZone( "CSAR_Start_4", coalition.side.BLUE,"Pilot Wagner", true )
 end
 
 local maulwuerfe = TIMER:New(Spawn_CSAR,BlueCsar)

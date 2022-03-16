@@ -350,9 +350,9 @@ mission =
     }, -- end of ["triggers"]
     ["map"] = 
     {
-        ["centerY"] = 17332.714386204,
-        ["zoom"] = 579151.79254843,
-        ["centerX"] = -258811.5851638,
+        ["centerY"] = 131350.4813295,
+        ["zoom"] = 13075.431276148,
+        ["centerX"] = -295912.39086546,
     }, -- end of ["map"]
     ["coalitions"] = 
     {
@@ -438,6 +438,10 @@ mission =
             [47] = 49,
             [48] = 48,
             [49] = 67,
+            [50] = 86,
+            [51] = 87,
+            [52] = 88,
+            [53] = 89,
         }, -- end of ["neutrals"]
         ["red"] = 
         {
@@ -1929,8 +1933,12 @@ mission =
                                         ["speed"] = 133.90145630276,
                                         ["AddPropAircraft"] = 
                                         {
+                                            ["ReadyALCM"] = true,
+                                            ["InitHotDrift"] = 0,
                                             ["ForceINSRules"] = false,
+                                            ["EnableTAF"] = true,
                                             ["LaserCode100"] = 6,
+                                            ["DisableVTBExport"] = false,
                                             ["NoDDMSensor"] = false,
                                             ["LaserCode1"] = 8,
                                             ["WpBullseye"] = 0,
@@ -2010,8 +2018,12 @@ mission =
                                         ["speed"] = 133.90145630276,
                                         ["AddPropAircraft"] = 
                                         {
+                                            ["ReadyALCM"] = true,
+                                            ["InitHotDrift"] = 0,
                                             ["ForceINSRules"] = false,
+                                            ["EnableTAF"] = true,
                                             ["LaserCode100"] = 6,
+                                            ["DisableVTBExport"] = false,
                                             ["NoDDMSensor"] = false,
                                             ["LaserCode1"] = 8,
                                             ["WpBullseye"] = 0,
@@ -2091,8 +2103,12 @@ mission =
                                         ["speed"] = 133.90145630276,
                                         ["AddPropAircraft"] = 
                                         {
+                                            ["ReadyALCM"] = true,
+                                            ["InitHotDrift"] = 0,
                                             ["ForceINSRules"] = false,
+                                            ["EnableTAF"] = true,
                                             ["LaserCode100"] = 6,
+                                            ["DisableVTBExport"] = false,
                                             ["NoDDMSensor"] = false,
                                             ["LaserCode1"] = 8,
                                             ["WpBullseye"] = 0,
@@ -2172,8 +2188,12 @@ mission =
                                         ["speed"] = 133.90145630276,
                                         ["AddPropAircraft"] = 
                                         {
+                                            ["ReadyALCM"] = true,
+                                            ["InitHotDrift"] = 0,
                                             ["ForceINSRules"] = false,
+                                            ["EnableTAF"] = true,
                                             ["LaserCode100"] = 6,
+                                            ["DisableVTBExport"] = false,
                                             ["NoDDMSensor"] = false,
                                             ["LaserCode1"] = 8,
                                             ["WpBullseye"] = 0,
@@ -2373,8 +2393,12 @@ mission =
                                         ["speed"] = 251.80555555556,
                                         ["AddPropAircraft"] = 
                                         {
+                                            ["ReadyALCM"] = true,
+                                            ["InitHotDrift"] = 0,
                                             ["ForceINSRules"] = false,
+                                            ["EnableTAF"] = true,
                                             ["NoDDMSensor"] = false,
+                                            ["DisableVTBExport"] = false,
                                             ["LaserCode100"] = 6,
                                             ["LaserCode1"] = 8,
                                             ["WpBullseye"] = 0,
@@ -2687,6 +2711,694 @@ mission =
                                 ["name"] = "Static Windsock-1",
                                 ["dead"] = false,
                             }, -- end of [3]
+                            [4] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 131675.37669545,
+                                            ["speed"] = 0,
+                                            ["x"] = -295584.2379498,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 33,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["mass"] = 1500,
+                                        ["category"] = "Cargos",
+                                        ["canCargo"] = true,
+                                        ["shape_name"] = "ammo_box_cargo",
+                                        ["type"] = "ammo_cargo",
+                                        ["unitId"] = 112,
+                                        ["rate"] = 100,
+                                        ["y"] = 131675.37669545,
+                                        ["x"] = -295584.2379498,
+                                        ["name"] = "Static Ammo-1-1",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 131675.37669545,
+                                ["x"] = -295584.2379498,
+                                ["name"] = "Static Ammo-1",
+                                ["dead"] = false,
+                            }, -- end of [4]
+                            [5] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 132005.72878528,
+                                            ["speed"] = 0,
+                                            ["x"] = -295584.2379498,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 34,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["mass"] = 480,
+                                        ["category"] = "Cargos",
+                                        ["canCargo"] = true,
+                                        ["shape_name"] = "barrels_cargo",
+                                        ["type"] = "barrels_cargo",
+                                        ["unitId"] = 113,
+                                        ["rate"] = 100,
+                                        ["y"] = 132005.72878528,
+                                        ["x"] = -295584.2379498,
+                                        ["name"] = "Static Barrels-1",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 132005.72878528,
+                                ["x"] = -295584.2379498,
+                                ["name"] = "Static Barrels-1",
+                                ["dead"] = false,
+                            }, -- end of [5]
+                            [6] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 131619.27917076,
+                                            ["speed"] = 0,
+                                            ["x"] = -295783.69581536,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 35,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["mass"] = 1200,
+                                        ["category"] = "Cargos",
+                                        ["canCargo"] = true,
+                                        ["shape_name"] = "bw_container_cargo",
+                                        ["type"] = "container_cargo",
+                                        ["unitId"] = 114,
+                                        ["rate"] = 100,
+                                        ["y"] = 131619.27917076,
+                                        ["x"] = -295783.69581536,
+                                        ["name"] = "Static Container-1",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 131619.27917076,
+                                ["x"] = -295783.69581536,
+                                ["name"] = "Static Container-1",
+                                ["dead"] = false,
+                            }, -- end of [6]
+                            [7] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 131868.60150271,
+                                            ["speed"] = 0,
+                                            ["x"] = -295802.39499026,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 36,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["mass"] = 823,
+                                        ["category"] = "Cargos",
+                                        ["canCargo"] = true,
+                                        ["shape_name"] = "f_bar_cargo",
+                                        ["type"] = "f_bar_cargo",
+                                        ["unitId"] = 115,
+                                        ["rate"] = 100,
+                                        ["y"] = 131868.60150271,
+                                        ["x"] = -295802.39499026,
+                                        ["name"] = "Static F-shape barrier-1",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 131868.60150271,
+                                ["x"] = -295802.39499026,
+                                ["name"] = "Static F-shape barrier-1",
+                                ["dead"] = false,
+                            }, -- end of [7]
+                            [8] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 132099.22465976,
+                                            ["speed"] = 0,
+                                            ["x"] = -295827.32722345,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 37,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["mass"] = 2400,
+                                        ["category"] = "Cargos",
+                                        ["canCargo"] = true,
+                                        ["shape_name"] = "fueltank_cargo",
+                                        ["type"] = "fueltank_cargo",
+                                        ["unitId"] = 116,
+                                        ["rate"] = 100,
+                                        ["y"] = 132099.22465976,
+                                        ["x"] = -295827.32722345,
+                                        ["name"] = "Static Fueltank-1",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 132099.22465976,
+                                ["x"] = -295827.32722345,
+                                ["name"] = "Static Fueltank-1",
+                                ["dead"] = false,
+                            }, -- end of [8]
+                            [9] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 132286.21640872,
+                                            ["speed"] = 0,
+                                            ["x"] = -295708.89911578,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 38,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["mass"] = 4500,
+                                        ["category"] = "Cargos",
+                                        ["canCargo"] = true,
+                                        ["shape_name"] = "iso_container_cargo",
+                                        ["type"] = "iso_container",
+                                        ["unitId"] = 117,
+                                        ["rate"] = 100,
+                                        ["y"] = 132286.21640872,
+                                        ["x"] = -295708.89911578,
+                                        ["name"] = "Static ISO container-1",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 132286.21640872,
+                                ["x"] = -295708.89911578,
+                                ["name"] = "Static ISO container-1",
+                                ["dead"] = false,
+                            }, -- end of [9]
+                            [10] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 132292.44946702,
+                                            ["speed"] = 0,
+                                            ["x"] = -295846.02639835,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 39,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["mass"] = 3200,
+                                        ["category"] = "Cargos",
+                                        ["canCargo"] = true,
+                                        ["shape_name"] = "iso_container_small_cargo",
+                                        ["type"] = "iso_container_small",
+                                        ["unitId"] = 118,
+                                        ["rate"] = 100,
+                                        ["y"] = 132292.44946702,
+                                        ["x"] = -295846.02639835,
+                                        ["name"] = "Static ISO container small-1",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 132292.44946702,
+                                ["x"] = -295846.02639835,
+                                ["name"] = "Static ISO container small-1",
+                                ["dead"] = false,
+                            }, -- end of [10]
+                            [11] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 132554.23791557,
+                                            ["speed"] = 0,
+                                            ["x"] = -295659.03464939,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 40,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["mass"] = 840,
+                                        ["category"] = "Cargos",
+                                        ["canCargo"] = true,
+                                        ["shape_name"] = "m117_cargo",
+                                        ["type"] = "m117_cargo",
+                                        ["unitId"] = 119,
+                                        ["rate"] = 100,
+                                        ["y"] = 132554.23791557,
+                                        ["x"] = -295659.03464939,
+                                        ["name"] = "Static M117 bombs-1",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 132554.23791557,
+                                ["x"] = -295659.03464939,
+                                ["name"] = "Static M117 bombs-1",
+                                ["dead"] = false,
+                            }, -- end of [11]
+                            [12] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 132367.24616661,
+                                            ["speed"] = 0,
+                                            ["x"] = -295372.31396765,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 41,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["mass"] = 2300,
+                                        ["category"] = "Cargos",
+                                        ["canCargo"] = true,
+                                        ["shape_name"] = "oiltank_cargo",
+                                        ["type"] = "oiltank_cargo",
+                                        ["unitId"] = 120,
+                                        ["rate"] = 100,
+                                        ["y"] = 132367.24616661,
+                                        ["x"] = -295372.31396765,
+                                        ["name"] = "Static Oiltank-1",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 132367.24616661,
+                                ["x"] = -295372.31396765,
+                                ["name"] = "Static Oiltank-1",
+                                ["dead"] = false,
+                            }, -- end of [12]
+                            [13] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 132373.47922491,
+                                            ["speed"] = 0,
+                                            ["x"] = -295553.07265831,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 42,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["mass"] = 4815,
+                                        ["category"] = "Cargos",
+                                        ["canCargo"] = true,
+                                        ["shape_name"] = "pipes_big_cargo",
+                                        ["type"] = "pipes_big_cargo",
+                                        ["unitId"] = 121,
+                                        ["rate"] = 100,
+                                        ["y"] = 132373.47922491,
+                                        ["x"] = -295553.07265831,
+                                        ["name"] = "Static Pipes big-1",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 132373.47922491,
+                                ["x"] = -295553.07265831,
+                                ["name"] = "Static Pipes big-1",
+                                ["dead"] = false,
+                            }, -- end of [13]
+                            [14] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 132142.85606785,
+                                            ["speed"] = 0,
+                                            ["x"] = -295409.71231744,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 43,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["mass"] = 4350,
+                                        ["category"] = "Cargos",
+                                        ["canCargo"] = true,
+                                        ["shape_name"] = "pipes_small_cargo",
+                                        ["type"] = "pipes_small_cargo",
+                                        ["unitId"] = 122,
+                                        ["rate"] = 100,
+                                        ["y"] = 132142.85606785,
+                                        ["x"] = -295409.71231744,
+                                        ["name"] = "Static Pipes small-1",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 132142.85606785,
+                                ["x"] = -295409.71231744,
+                                ["name"] = "Static Pipes small-1",
+                                ["dead"] = false,
+                            }, -- end of [14]
+                            [15] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 132591.63626536,
+                                            ["speed"] = 0,
+                                            ["x"] = -295484.50901702,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 44,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["mass"] = 5000,
+                                        ["category"] = "Cargos",
+                                        ["canCargo"] = true,
+                                        ["shape_name"] = "tetrapod_cargo",
+                                        ["type"] = "tetrapod_cargo",
+                                        ["unitId"] = 123,
+                                        ["rate"] = 100,
+                                        ["y"] = 132591.63626536,
+                                        ["x"] = -295484.50901702,
+                                        ["name"] = "Static Tetrapod-1",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 132591.63626536,
+                                ["x"] = -295484.50901702,
+                                ["name"] = "Static Tetrapod-1",
+                                ["dead"] = false,
+                            }, -- end of [15]
+                            [16] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 132510.60650748,
+                                            ["speed"] = 0,
+                                            ["x"] = -295864.72557324,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 45,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["mass"] = 4747,
+                                        ["category"] = "Cargos",
+                                        ["canCargo"] = true,
+                                        ["shape_name"] = "trunks_long_cargo",
+                                        ["type"] = "trunks_long_cargo",
+                                        ["unitId"] = 124,
+                                        ["rate"] = 100,
+                                        ["y"] = 132510.60650748,
+                                        ["x"] = -295864.72557324,
+                                        ["name"] = "Static Trunks long-1",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 132510.60650748,
+                                ["x"] = -295864.72557324,
+                                ["name"] = "Static Trunks long-1",
+                                ["dead"] = false,
+                            }, -- end of [16]
+                            [17] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 132666.43296494,
+                                            ["speed"] = 0,
+                                            ["x"] = -295846.02639835,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 46,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["mass"] = 5000,
+                                        ["category"] = "Cargos",
+                                        ["canCargo"] = true,
+                                        ["shape_name"] = "trunks_small_cargo",
+                                        ["type"] = "trunks_small_cargo",
+                                        ["unitId"] = 125,
+                                        ["rate"] = 100,
+                                        ["y"] = 132666.43296494,
+                                        ["x"] = -295846.02639835,
+                                        ["name"] = "Static Trunks short-1",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 132666.43296494,
+                                ["x"] = -295846.02639835,
+                                ["name"] = "Static Trunks short-1",
+                                ["dead"] = false,
+                            }, -- end of [17]
+                            [18] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 132672.66602324,
+                                            ["speed"] = 0,
+                                            ["x"] = -295690.19994088,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 47,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["mass"] = 1000,
+                                        ["category"] = "Cargos",
+                                        ["canCargo"] = true,
+                                        ["shape_name"] = "ab-212_cargo",
+                                        ["type"] = "uh1h_cargo",
+                                        ["unitId"] = 126,
+                                        ["rate"] = 100,
+                                        ["y"] = 132672.66602324,
+                                        ["x"] = -295690.19994088,
+                                        ["name"] = "Static UH-1H cargo-1",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 132672.66602324,
+                                ["x"] = -295690.19994088,
+                                ["name"] = "Static UH-1H cargo-1",
+                                ["dead"] = false,
+                            }, -- end of [18]
+                            [19] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 132697.59825644,
+                                            ["speed"] = 0,
+                                            ["x"] = -295565.53877491,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 48,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["mass"] = 1000,
+                                        ["category"] = "Cargos",
+                                        ["canCargo"] = true,
+                                        ["shape_name"] = "ab-212_cargo",
+                                        ["type"] = "uh1h_cargo",
+                                        ["unitId"] = 127,
+                                        ["rate"] = 100,
+                                        ["y"] = 132697.59825644,
+                                        ["x"] = -295565.53877491,
+                                        ["name"] = "Static UH-1H cargo-2-1",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 132697.59825644,
+                                ["x"] = -295565.53877491,
+                                ["name"] = "Static UH-1H cargo-2",
+                                ["dead"] = false,
+                            }, -- end of [19]
                         }, -- end of ["group"]
                     }, -- end of ["static"]
                 }, -- end of [1]
@@ -3723,7 +4435,7 @@ mission =
         }, -- end of ["red"]
     }, -- end of ["coalition"]
     ["sortie"] = "DictKey_sortie_5",
-    ["version"] = 19,
+    ["version"] = 20,
     ["trigrules"] = 
     {
         [1] = 
@@ -3796,7 +4508,7 @@ mission =
                     ["zone"] = 47,
                 }, -- end of [1]
             }, -- end of ["rules"]
-            ["comment"] = "Moose",
+            ["comment"] = "Mission",
             ["actions"] = 
             {
                 [1] = 
@@ -3822,7 +4534,7 @@ mission =
             ["eventlist"] = "",
         }, -- end of [3]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 11492,
+    ["currentKey"] = 13040,
     ["start_time"] = 28800,
     ["forcedOptions"] = 
     {
