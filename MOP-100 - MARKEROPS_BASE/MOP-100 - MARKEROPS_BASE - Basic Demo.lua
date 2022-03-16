@@ -6,10 +6,10 @@
 -- MARKEROPS_BASE: https://flightcontrol-master.github.io/MOOSE_DOCS_DEVELOP/Documentation/Core.MarkerOps_Base.html
 -- 
 -------------------------------------------------------------------------
--- On the F10, call a tanker to start from the carrier. It will fly to
+-- On the radio menu, call a tanker to start from the carrier. It will fly to
 -- an initial zone. Set a marker on the F10 map with keyword "TankerDemo".
 -- The Tanker will fly there. Set a marker on the F10 map with keywords 
--- "TankerDemo RTB". The tanke will RTB to the carrier.
+-- "TankerDemo RTB". The tanker will RTB to the carrier.
 -------------------------------------------------------------------------
 -- Date: May 2021
 -------------------------------------------------------------------------
