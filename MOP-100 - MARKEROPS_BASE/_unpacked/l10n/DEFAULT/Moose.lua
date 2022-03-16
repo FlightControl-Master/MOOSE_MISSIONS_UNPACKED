@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-03-10T09:05:21.0000000Z-5dae9a197a54d620d7b52b6d55952d15248b3e8d ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-03-14T08:12:06.0000000Z-e1ab6b6c937f0e572e9e2b6a05843f0f2a89cfcd ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -26073,7 +26073,7 @@ local ReportMissions,ScoreMissions,PenaltyMissions=self:ReportDetailedPlayerMiss
 ReportMissions=ReportMissions~=""and"\n- "..ReportMissions or ReportMissions
 self:F({ReportMissions,ScoreMissions,PenaltyMissions})
 local PlayerScore=ScoreHits+ScoreDestroys+ScoreCoalitionChanges+ScoreGoals+ScoreMissions
-local PlayerPenalty=PenaltyHits+PenaltyDestroys+PenaltyCoalitionChanges+ScoreGoals+PenaltyMissions
+local PlayerPenalty=PenaltyHits+PenaltyDestroys+PenaltyCoalitionChanges+PenaltyGoals+PenaltyMissions
 PlayerMessage=
 string.format("Player '%s' Score = %d ( %d Score, -%d Penalties )%s%s%s%s%s",
 PlayerName,
@@ -26112,7 +26112,7 @@ local ReportMissions,ScoreMissions,PenaltyMissions=self:ReportDetailedPlayerMiss
 ReportMissions=ReportMissions~=""and"\n- "..ReportMissions or ReportMissions
 self:F({ReportMissions,ScoreMissions,PenaltyMissions})
 local PlayerScore=ScoreHits+ScoreDestroys+ScoreCoalitionChanges+ScoreGoals+ScoreMissions
-local PlayerPenalty=PenaltyHits+PenaltyDestroys+PenaltyCoalitionChanges+ScoreGoals+PenaltyMissions
+local PlayerPenalty=PenaltyHits+PenaltyDestroys+PenaltyCoalitionChanges+PenaltyGoals+PenaltyMissions
 PlayerMessage=
 string.format("Player '%s' Score = %d ( %d Score, -%d Penalties )",
 PlayerName,
@@ -59823,7 +59823,7 @@ end
 mission:_TargetFromObject(mission.transportGroupSet)
 mission.transportPickup=PickupCoordinate or mission:GetTargetCoordinate()
 mission.transportDropoff=DropoffCoordinate
-mission.transportPickupRadius=PickupRadius or 500
+mission.transportPickupRadius=PickupRadius or 100
 mission.missionTask=mission:GetMissionTaskforMissionType(AUFTRAG.Type.TROOPTRANSPORT)
 mission.optionROE=ENUMS.ROE.ReturnFire
 mission.optionROT=ENUMS.ROT.PassiveDefense
@@ -63434,6 +63434,13 @@ end
 function OPSGROUP:GetWaypointCurrent()
 return self.waypoints[self.currentwp]
 end
+function OPSGROUP:GetWaypointCurrentUID()
+local wp=self:GetWaypointCurrent()
+if wp then
+return wp.uid
+end
+return nil
+end
 function OPSGROUP:GetNextWaypointCoordinate(cyclic)
 local waypoint=self:GetWaypointNext(cyclic)
 return waypoint.coordinate
@@ -64394,7 +64401,7 @@ end
 local SpeedToMission=mission.missionSpeed and UTILS.KmphToKnots(mission.missionSpeed)or self:GetSpeedCruise()
 if mission.type==AUFTRAG.Type.TROOPTRANSPORT then
 mission.DCStask=mission:GetDCSMissionTask(self.group)
-local pradius=500
+local pradius=mission.transportPickupRadius
 local pickupZone=ZONE_RADIUS:New("Pickup Zone",mission.transportPickup:GetVec2(),pradius)
 for _,_group in pairs(mission.transportGroupSet.Set)do
 local group=_group
@@ -65068,6 +65075,13 @@ end
 function OPSGROUP:onbeforeDead(From,Event,To)
 if self.Ndestroyed==#self.elements then
 self:Destroyed()
+end
+end
+function OPSGROUP:CancelAllMissions()
+for _,_mission in pairs(self.missionqueue)do
+local mission=_mission
+self:T(self.lid.."Cancelling mission "..tostring(mission:GetName()))
+self:MissionCancel(mission)
 end
 end
 function OPSGROUP:onafterDead(From,Event,To)
@@ -66018,6 +66032,10 @@ OpsGroup:_RemoveMyCarrier()
 end
 function OPSGROUP:onafterUnloaded(From,Event,To,OpsGroupCargo)
 self:T(self.lid..string.format("Unloaded OPSGROUP %s",OpsGroupCargo:GetName()))
+if OpsGroupCargo.legion and OpsGroupCargo:IsInZone(OpsGroupCargo.legion.spawnzone)then
+self:T(self.lid..string.format("Unloaded group %s returned to legion",OpsGroupCargo:GetName()))
+OpsGroupCargo:Returned()
+end
 end
 function OPSGROUP:onafterUnloadingDone(From,Event,To)
 self:T(self.lid.."Cargo unloading done..")
@@ -66273,6 +66291,10 @@ return
 end
 if self:IsRearming()then
 self:T(self.lid.."Rearming! Group NOT done...")
+return
+end
+if self:IsRetreating()then
+self:T(self.lid.."Retreating! Group NOT done...")
 return
 end
 if self:IsWaiting()then
@@ -70507,6 +70529,7 @@ self:SetRetreatZones()
 self:AddTransition("*","FullStop","Holding")
 self:AddTransition("*","Cruise","Cruising")
 self:AddTransition("*","RTZ","Returning")
+self:AddTransition("Holding","Returned","Returned")
 self:AddTransition("Returning","Returned","Returned")
 self:AddTransition("*","Detour","OnDetour")
 self:AddTransition("OnDetour","DetourReached","Cruising")
@@ -70800,24 +70823,8 @@ local formation0=wp.action==ENUMS.Formation.Vehicle.OnRoad and ENUMS.Formation.V
 local current=self:GetCoordinate():WaypointGround(UTILS.MpsToKmph(self.speedWp),formation0)
 table.insert(waypoints,1,current)
 if wp.action==ENUMS.Formation.Vehicle.OnRoad and(wp.coordinate or wp.roadcoord)then
-local wptable,length,valid=self:GetCoordinate():GetPathOnRoad(wp.coordinate or wp.roadcoord,true,false,false,false)or{}
-local lenghtdirect=self:GetCoordinate():Get2DDistance(wp.coordinate)or 100000
-if valid and length then
-if length>lenghtdirect*8 then
-valid=false
-end
-end
-local count=2
-if valid then
-for _,_coord in ipairs(wptable)do
-local current=_coord:WaypointGround(UTILS.MpsToKmph(self.speedWp),ENUMS.Formation.Vehicle.OnRoad)
-table.insert(waypoints,count,current)
-count=count+1
-end
-else
 current=self:GetClosestRoad():WaypointGround(UTILS.MpsToKmph(self.speedWp),ENUMS.Formation.Vehicle.OnRoad)
-table.insert(waypoints,count,current)
-end
+table.insert(waypoints,2,current)
 end
 if self.verbose>=10 then
 for i,_wp in pairs(waypoints)do
@@ -70861,13 +70868,6 @@ end
 end
 function ARMYGROUP:onafterOutOfAmmo(From,Event,To)
 self:T(self.lid..string.format("Group is out of ammo at t=%.3f",timer.getTime()))
-local task=self:GetTaskCurrent()
-if task then
-if task.dcstask.id=="FireAtPoint"or task.dcstask.id==AUFTRAG.SpecialTask.BARRAGE then
-self:T(self.lid..string.format("Cancelling current %s task because out of ammo!",task.dcstask.id))
-self:TaskCancel(task)
-end
-end
 if self.rearmOnOutOfAmmo then
 local truck,dist=self:FindNearestAmmoSupply(30)
 if truck then
@@ -70883,6 +70883,13 @@ return
 end
 if self.rtzOnOutOfAmmo then
 self:__RTZ(-1)
+end
+local task=self:GetTaskCurrent()
+if task then
+if task.dcstask.id=="FireAtPoint"or task.dcstask.id==AUFTRAG.SpecialTask.BARRAGE then
+self:T(self.lid..string.format("Cancelling current %s task because out of ammo!",task.dcstask.id))
+self:TaskCancel(task)
+end
 end
 end
 function ARMYGROUP:onbeforeRearm(From,Event,To,Coordinate,Formation)
@@ -70918,7 +70925,6 @@ self:T(self.lid.."Group rearmed")
 self:_CheckGroupDone(1)
 end
 function ARMYGROUP:onafterRTZ(From,Event,To,Zone,Formation)
-local uid=self:GetWaypointCurrent().uid
 local zone=Zone or self.homezone
 if zone then
 if self:IsInZone(zone)then
@@ -70926,6 +70932,7 @@ self:Returned()
 else
 self:T(self.lid..string.format("RTZ to Zone %s",zone:GetName()))
 local Coordinate=zone:GetRandomCoordinate()
+local uid=self:GetWaypointCurrentUID()
 local wp=self:AddWaypoint(Coordinate,nil,uid,Formation,true)
 wp.detour=0
 end
@@ -70971,6 +70978,7 @@ local uid=self:GetWaypointCurrent().uid
 local Coordinate=Zone:GetRandomCoordinate()
 local wp=self:AddWaypoint(Coordinate,nil,uid,Formation,true)
 wp.detour=0
+self:CancelAllMissions()
 end
 function ARMYGROUP:onafterRetreated(From,Event,To)
 local pos=self:GetCoordinate()
@@ -76059,7 +76067,7 @@ CSAR.AircraftType["Mi-24P"]=8
 CSAR.AircraftType["Mi-24V"]=8
 CSAR.AircraftType["Bell-47"]=2
 CSAR.AircraftType["UH-60L"]=10
-CSAR.version="1.0.4a"
+CSAR.version="1.0.4c"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
@@ -76700,7 +76708,7 @@ else
 _time=self.landedStatus[_lookupKeyHeli]-10
 self.landedStatus[_lookupKeyHeli]=_time
 end
-if _time<=0 or _distance<self.loadDistance then
+if _distance<self.loadDistance+5 or _distance<=13 then
 if self.pilotmustopendoors and not self:_IsLoadingDoorOpen(_heliName)then
 self:_DisplayMessageToSAR(_heliUnit,"Open the door to let me in!",self.messageTime,true)
 return true
