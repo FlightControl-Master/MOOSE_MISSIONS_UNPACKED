@@ -25,6 +25,10 @@ my_scoring = SCORING:New("CSAR")
 local RedCsar = CSAR:New("red","Downed Pilot","Blue Cross")
 RedCsar.coordtype = 4
 RedCsar.verbose = 2
+RedCsar.useSRS = true
+RedCsar.SRSPath = "E:\\Progra~1\\DCS-SimpleRadio-Standalone\\" -- adjust your own path in your SRS installation -- server(!)
+RedCsar.SRSchannel = 243 -- radio channel
+RedCsar.SRSModulation = radio.modulation.AM -- modulation
 RedCsar:__Start(5)
 
 function RedCsar:OnAfterRescued(From, Event, To, HeliUnit, HeliName, NumberSaved)
