@@ -40,8 +40,8 @@ mission =
     }, -- end of ["requiredModules"]
     ["date"] = 
     {
-        ["Day"] = 21,
         ["Year"] = 2016,
+        ["Day"] = 21,
         ["Month"] = 6,
     }, -- end of ["date"]
     ["result"] = 
@@ -133,20 +133,23 @@ mission =
                 ["speed"] = 0,
                 ["dir"] = 0,
             }, -- end of ["at8000"]
-            ["at2000"] = 
-            {
-                ["speed"] = 0,
-                ["dir"] = 0,
-            }, -- end of ["at2000"]
             ["atGround"] = 
             {
                 ["speed"] = 0,
                 ["dir"] = 0,
             }, -- end of ["atGround"]
+            ["at2000"] = 
+            {
+                ["speed"] = 0,
+                ["dir"] = 0,
+            }, -- end of ["at2000"]
         }, -- end of ["wind"]
         ["enable_fog"] = false,
         ["groundTurbulence"] = 0,
-        ["enable_dust"] = false,
+        ["visibility"] = 
+        {
+            ["distance"] = 80000,
+        }, -- end of ["visibility"]
         ["season"] = 
         {
             ["temperature"] = 20,
@@ -180,12 +183,9 @@ mission =
             ["thickness"] = 0,
             ["visibility"] = 0,
         }, -- end of ["fog"]
-        ["dust_density"] = 0,
         ["qnh"] = 760,
-        ["visibility"] = 
-        {
-            ["distance"] = 80000,
-        }, -- end of ["visibility"]
+        ["dust_density"] = 0,
+        ["enable_dust"] = false,
         ["clouds"] = 
         {
             ["thickness"] = 200,
@@ -230,6 +230,37 @@ mission =
     }, -- end of ["map"]
     ["coalitions"] = 
     {
+        ["blue"] = 
+        {
+            [1] = 21,
+            [2] = 23,
+            [3] = 11,
+            [4] = 25,
+            [5] = 8,
+            [6] = 80,
+            [7] = 28,
+            [8] = 26,
+            [9] = 13,
+            [10] = 30,
+            [11] = 5,
+            [12] = 16,
+            [13] = 6,
+            [14] = 31,
+            [15] = 32,
+            [16] = 15,
+            [17] = 20,
+            [18] = 12,
+            [19] = 40,
+            [20] = 41,
+            [21] = 44,
+            [22] = 9,
+            [23] = 46,
+            [24] = 10,
+            [25] = 3,
+            [26] = 4,
+            [27] = 1,
+            [28] = 2,
+        }, -- end of ["blue"]
         ["neutrals"] = 
         {
             [1] = 70,
@@ -281,38 +312,11 @@ mission =
             [47] = 49,
             [48] = 48,
             [49] = 67,
+            [50] = 86,
+            [51] = 87,
+            [52] = 88,
+            [53] = 89,
         }, -- end of ["neutrals"]
-        ["blue"] = 
-        {
-            [1] = 21,
-            [2] = 23,
-            [3] = 11,
-            [4] = 25,
-            [5] = 8,
-            [6] = 80,
-            [7] = 28,
-            [8] = 26,
-            [9] = 13,
-            [10] = 30,
-            [11] = 5,
-            [12] = 16,
-            [13] = 6,
-            [14] = 31,
-            [15] = 32,
-            [16] = 15,
-            [17] = 20,
-            [18] = 12,
-            [19] = 40,
-            [20] = 41,
-            [21] = 44,
-            [22] = 9,
-            [23] = 46,
-            [24] = 10,
-            [25] = 3,
-            [26] = 4,
-            [27] = 1,
-            [28] = 2,
-        }, -- end of ["blue"]
         ["red"] = 
         {
             [1] = 18,
@@ -336,21 +340,6 @@ mission =
     }, -- end of ["pictureFileNameB"]
     ["coalition"] = 
     {
-        ["neutrals"] = 
-        {
-            ["bullseye"] = 
-            {
-                ["y"] = 0,
-                ["x"] = 0,
-            }, -- end of ["bullseye"]
-            ["nav_points"] = 
-            {
-            }, -- end of ["nav_points"]
-            ["name"] = "neutrals",
-            ["country"] = 
-            {
-            }, -- end of ["country"]
-        }, -- end of ["neutrals"]
         ["blue"] = 
         {
             ["bullseye"] = 
@@ -384,7 +373,7 @@ mission =
                                     {
                                         [1] = 
                                         {
-                                            ["alt"] = -0,
+                                            ["alt"] = 0,
                                             ["type"] = "Turning Point",
                                             ["ETA"] = 0,
                                             ["alt_type"] = "BARO",
@@ -569,20 +558,20 @@ mission =
                                                     {
                                                         [1] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 1,
                                                             ["auto"] = true,
                                                             ["id"] = "Tanker",
-                                                            ["number"] = 1,
+                                                            ["enabled"] = true,
                                                             ["params"] = 
                                                             {
                                                             }, -- end of ["params"]
                                                         }, -- end of [1]
                                                         [2] = 
                                                         {
-                                                            ["enabled"] = true,
+                                                            ["number"] = 2,
                                                             ["auto"] = true,
                                                             ["id"] = "WrappedAction",
-                                                            ["number"] = 2,
+                                                            ["enabled"] = true,
                                                             ["params"] = 
                                                             {
                                                                 ["action"] = 
@@ -643,7 +632,7 @@ mission =
                                             ["gun"] = 100,
                                         }, -- end of ["payload"]
                                         ["y"] = 568499.96883698,
-                                        ["heading"] = 25.132741228719,
+                                        ["heading"] = 31.415926535899,
                                         ["callsign"] = 
                                         {
                                             [1] = 1,
@@ -667,6 +656,21 @@ mission =
                 }, -- end of [1]
             }, -- end of ["country"]
         }, -- end of ["blue"]
+        ["neutrals"] = 
+        {
+            ["bullseye"] = 
+            {
+                ["y"] = 0,
+                ["x"] = 0,
+            }, -- end of ["bullseye"]
+            ["nav_points"] = 
+            {
+            }, -- end of ["nav_points"]
+            ["name"] = "neutrals",
+            ["country"] = 
+            {
+            }, -- end of ["country"]
+        }, -- end of ["neutrals"]
         ["red"] = 
         {
             ["bullseye"] = 
@@ -684,7 +688,7 @@ mission =
         }, -- end of ["red"]
     }, -- end of ["coalition"]
     ["sortie"] = "DictKey_sortie_5",
-    ["version"] = 19,
+    ["version"] = 20,
     ["trigrules"] = 
     {
         [1] = 
@@ -699,19 +703,19 @@ mission =
                     ["zone"] = 165,
                 }, -- end of [1]
             }, -- end of ["rules"]
-            ["comment"] = "Moose",
             ["eventlist"] = "",
             ["actions"] = 
             {
                 [1] = 
                 {
-                    ["meters"] = 1000,
                     ["file"] = "ResKey_Action_6",
+                    ["meters"] = 1000,
                     ["predicate"] = "a_do_script_file",
                     ["zone"] = 165,
                 }, -- end of [1]
             }, -- end of ["actions"]
             ["predicate"] = "triggerOnce",
+            ["comment"] = "Moose",
         }, -- end of [1]
         [2] = 
         {
@@ -725,33 +729,33 @@ mission =
                     ["zone"] = 165,
                 }, -- end of [1]
             }, -- end of ["rules"]
+            ["comment"] = "Mission",
             ["eventlist"] = "",
-            ["predicate"] = "triggerOnce",
             ["actions"] = 
             {
                 [1] = 
                 {
-                    ["file"] = "ResKey_Action_7",
                     ["meters"] = 1000,
+                    ["file"] = "ResKey_Action_7",
                     ["predicate"] = "a_do_script_file",
                     ["zone"] = 165,
                 }, -- end of [1]
                 [2] = 
                 {
-                    ["meters"] = 1000,
+                    ["text"] = "DictKey_ActionText_8",
                     ["seconds"] = 10,
                     ["start_delay"] = 0,
                     ["zone"] = 165,
-                    ["predicate"] = "a_out_text_delay",
-                    ["text"] = "DictKey_ActionText_8",
                     ["KeyDict_text"] = "DictKey_ActionText_8",
+                    ["meters"] = 1000,
+                    ["predicate"] = "a_out_text_delay",
                     ["clearview"] = false,
                 }, -- end of [2]
             }, -- end of ["actions"]
-            ["comment"] = "Mission",
+            ["predicate"] = "triggerOnce",
         }, -- end of [2]
     }, -- end of ["trigrules"]
-    ["currentKey"] = 642,
+    ["currentKey"] = 676,
     ["start_time"] = 28800,
     ["forcedOptions"] = 
     {
