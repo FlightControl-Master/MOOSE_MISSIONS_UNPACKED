@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-03-16T07:45:27.0000000Z-57de0b7351b7b139aa874532d7cdcbbf9ded9e75 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-03-18T08:48:50.0000000Z-b0e3f82d27095d0681013fff3eefb868a51e5f30 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -19660,6 +19660,32 @@ end
 end
 return nil
 end
+function CONTROLLABLE:SetSpeed(Speed,Keep)
+self:F2({self.ControllableName})
+local speed=Speed or 5
+local DCSControllable=self:GetDCSObject()
+if DCSControllable then
+local Controller=self:_GetController()
+if Controller then
+Controller:setSpeed(speed,Keep)
+end
+end
+return self
+end
+function CONTROLLABLE:SetAltitude(Altitude,Keep,AltType)
+self:F2({self.ControllableName})
+local altitude=Altitude or 1000
+local DCSControllable=self:GetDCSObject()
+if DCSControllable then
+local Controller=self:_GetController()
+if Controller then
+if self:IsAir()then
+Controller:setAltitude(altitude,Keep,AltType)
+end
+end
+end
+return self
+end
 GROUP={
 ClassName="GROUP",
 }
@@ -22264,6 +22290,16 @@ AIRBASE.Syria={
 ["Beirut_Rafic_Hariri"]="Beirut-Rafic Hariri",
 ["An_Nasiriyah"]="An Nasiriyah",
 ["Abu_al_Duhur"]="Abu al-Duhur",
+["At_Tanf"]="At Tanf",
+["H3"]="H3",
+["H3_Northwest"]="H3 Northwest",
+["H3_Southwest"]="H3 Southwest",
+["Kharab_Ishk"]="Kharab Ishk",
+["Raj_al_Issa_East"]="Raj al Issa East",
+["Raj_al_Issa_West"]="Raj al Issa West",
+["Ruwayshid"]="Ruwayshid",
+["Sanliurfa"]="Sanliurfa",
+["Tal_Siman"]="Tal Siman",
 }
 AIRBASE.MarianaIslands={
 ["Rota_Intl"]="Rota Intl",
