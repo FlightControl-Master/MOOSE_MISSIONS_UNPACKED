@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-03-23T06:56:52.0000000Z-ca8b0899d0640dbe7687668eee5ffe221a6bdb87 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-03-30T10:06:25.0000000Z-d2a5144a23fd42a811a47e67be68539769d48a72 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -1974,7 +1974,7 @@ Normandy="Normandy",
 PersianGulf="PersianGulf",
 TheChannel="TheChannel",
 Syria="Syria",
-MarianaIslands="MarianaIslands",
+MarianaIslands="MarianaIslands"
 }
 CALLSIGN={
 Aircraft={
@@ -2269,8 +2269,8 @@ else
 return 0
 end
 end
-UTILS.CelsiusToFahrenheit=function(Celsius)
-return Celsius*9/5+32
+UTILS.CelsiusToFahrenheit=function(Celcius)
+return Celcius*9/5+32
 end
 UTILS.hPa2inHg=function(hPa)
 return hPa*0.0295299830714
@@ -2325,7 +2325,8 @@ else
 local width=3+acc
 secFrmtStr='%0'..width..'.'..acc..'f'
 end
-return string.format('%03d°',latDeg)..string.format('%02d',latMin)..'\''..string.format(secFrmtStr,latSec)..'"'..latHemi..' '..string.format('%03d°',lonDeg)..string.format('%02d',lonMin)..'\''..string.format(secFrmtStr,lonSec)..'"'..lonHemi
+return string.format('%03d°',latDeg)..string.format('%02d',latMin)..'\''..string.format(secFrmtStr,latSec)..'"'..latHemi..' '
+..string.format('%03d°',lonDeg)..string.format('%02d',lonMin)..'\''..string.format(secFrmtStr,lonSec)..'"'..lonHemi
 else
 latMin=UTILS.Round(latMin,acc)
 lonMin=UTILS.Round(lonMin,acc)
@@ -2344,7 +2345,8 @@ else
 local width=3+acc
 minFrmtStr='%0'..width..'.'..acc..'f'
 end
-return string.format('%03d°',latDeg)..' '..string.format(minFrmtStr,latMin)..'\''..latHemi..'   '..string.format('%03d°',lonDeg)..' '..string.format(minFrmtStr,lonMin)..'\''..lonHemi
+return string.format('%03d°',latDeg)..' '..string.format(minFrmtStr,latMin)..'\''..latHemi..'   '
+..string.format('%03d°',lonDeg)..' '..string.format(minFrmtStr,lonMin)..'\''..lonHemi
 end
 end
 UTILS.tostringMGRS=function(MGRS,acc)
@@ -2355,12 +2357,8 @@ local Easting=tostring(MGRS.Easting)
 local Northing=tostring(MGRS.Northing)
 local nE=5-string.len(Easting)
 local nN=5-string.len(Northing)
-for i=1,nE do
-Easting="0"..Easting
-end
-for i=1,nN do
-Northing="0"..Northing
-end
+for i=1,nE do Easting="0"..Easting end
+for i=1,nN do Northing="0"..Northing end
 return string.format("%s %s %s %s",MGRS.UTMZone,MGRS.MGRSDigraph,string.sub(Easting,1,acc),string.sub(Northing,1,acc))
 end
 end
@@ -2378,13 +2376,9 @@ end
 end
 function UTILS.spairs(t,order)
 local keys={}
-for k in pairs(t)do
-keys[#keys+1]=k
-end
+for k in pairs(t)do keys[#keys+1]=k end
 if order then
-table.sort(keys,function(a,b)
-return order(t,a,b)
-end)
+table.sort(keys,function(a,b)return order(t,a,b)end)
 else
 table.sort(keys)
 end
@@ -2399,14 +2393,9 @@ end
 function UTILS.kpairs(t,getkey,order)
 local keys={}
 local keyso={}
-for k,o in pairs(t)do
-keys[#keys+1]=k
-keyso[#keyso+1]=getkey(o)
-end
+for k,o in pairs(t)do keys[#keys+1]=k keyso[#keyso+1]=getkey(o)end
 if order then
-table.sort(keys,function(a,b)
-return order(t,a,b)
-end)
+table.sort(keys,function(a,b)return order(t,a,b)end)
 else
 table.sort(keys)
 end
@@ -2420,9 +2409,7 @@ end
 end
 function UTILS.rpairs(t)
 local keys={}
-for k in pairs(t)do
-keys[#keys+1]=k
-end
+for k in pairs(t)do keys[#keys+1]=k end
 local random={}
 local j=#keys
 for i=1,j do
@@ -2649,8 +2636,14 @@ end
 function UTILS.VecSubstract(a,b)
 return{x=a.x-b.x,y=a.y-b.y,z=a.z-b.z}
 end
+function UTILS.Vec2Substract(a,b)
+return{x=a.x-b.x,y=a.y-b.y}
+end
 function UTILS.VecAdd(a,b)
 return{x=a.x+b.x,y=a.y+b.y,z=a.z+b.z}
+end
+function UTILS.Vec2Add(a,b)
+return{x=a.x+b.x,y=a.y+b.y}
 end
 function UTILS.VecAngle(a,b)
 local cosalpha=UTILS.VecDot(a,b)/(UTILS.VecNorm(a)*UTILS.VecNorm(b))
@@ -2764,13 +2757,6 @@ function UTILS.GetMissionDayOfYear(Time)
 local Date,Year,Month,Day=UTILS.GetDCSMissionDate()
 local d=UTILS.GetMissionDay(Time)
 return UTILS.GetDayOfYear(Year,Month,Day)+d
-end
-function UTILS.GetDate()
-local date,year,month,day=UTILS.GetDCSMissionDate()
-local time=timer.getAbsTime()
-local clock=UTILS.SecondsToClock(time,false)
-local x=tonumber(UTILS.Split(clock,"+")[2])
-local day=day+x
 end
 function UTILS.GetMagneticDeclination(map)
 map=map or UTILS.GetDCSMap()
@@ -2905,27 +2891,13 @@ Tlocal=Tlocal or 0
 local rad=math.rad
 local deg=math.deg
 local floor=math.floor
-local frac=function(n)
-return n-floor(n)
-end
-local cos=function(d)
-return math.cos(rad(d))
-end
-local acos=function(d)
-return deg(math.acos(d))
-end
-local sin=function(d)
-return math.sin(rad(d))
-end
-local asin=function(d)
-return deg(math.asin(d))
-end
-local tan=function(d)
-return math.tan(rad(d))
-end
-local atan=function(d)
-return deg(math.atan(d))
-end
+local frac=function(n)return n-floor(n)end
+local cos=function(d)return math.cos(rad(d))end
+local acos=function(d)return deg(math.acos(d))end
+local sin=function(d)return math.sin(rad(d))end
+local asin=function(d)return deg(math.asin(d))end
+local tan=function(d)return math.tan(rad(d))end
+local atan=function(d)return deg(math.atan(d))end
 local function fit_into_range(val,min,max)
 local range=max-min
 local count
@@ -3159,7 +3131,9 @@ local _count=1
 while _code<1777 and _count<30 do
 while true do
 _code=_code+1
-if not ContainsDigit(_code,8)and not ContainsDigit(_code,9)and not ContainsDigit(_code,0)then
+if not ContainsDigit(_code,8)
+and not ContainsDigit(_code,9)
+and not ContainsDigit(_code,0)then
 table.insert(jtacGeneratedLaserCodes,_code)
 break
 end
@@ -3319,9 +3293,7 @@ return outcome
 end
 function UTILS.LoadStationaryListOfGroups(Path,Filename,Reduce)
 local reduce=true
-if Reduce==false then
-reduce=false
-end
+if Reduce==false then reduce=false end
 local filename=Filename or"StateListofGroups"
 local datatable={}
 if UTILS.CheckFileExists(Path,filename)then
@@ -3338,9 +3310,8 @@ local coordinate=COORDINATE:NewFromVec3({x=posx,y=posy,z=posz})
 local data={groupname=groupname,size=size,coordinate=coordinate,group=GROUP:FindByName(groupname)}
 if reduce then
 local actualgroup=GROUP:FindByName(groupname)
-local actualsize=actualgroup:CountAliveUnits()
-if actualsize>size then
-local reduction=actualsize-size
+if actualgroup and actualgroup:IsAlive()and actualgroup:CountAliveUnits()>size then
+local reduction=actualgroup:CountAliveUnits()-size
 BASE:I("Reducing groupsize by "..reduction.." units!")
 local units=actualgroup:GetUnits()
 local units2=UTILS.ShuffleTable(units)
@@ -3358,9 +3329,7 @@ return datatable
 end
 function UTILS.LoadSetOfGroups(Path,Filename,Spawn)
 local spawn=true
-if Spawn==false then
-spawn=false
-end
+if Spawn==false then spawn=false end
 BASE:I("Spawn = "..tostring(spawn))
 local filename=Filename or"SetOfGroups"
 local setdata=SET_GROUP:New()
@@ -3381,7 +3350,10 @@ local group=nil
 local data={groupname=groupname,size=size,coordinate=coordinate}
 table.insert(datatable,data)
 if spawn then
-local group=SPAWN:New(groupname):InitDelayOff():OnSpawnGroup(function(spwndgrp)
+local group=SPAWN:New(groupname)
+:InitDelayOff()
+:OnSpawnGroup(
+function(spwndgrp)
 setdata:AddObject(spwndgrp)
 local actualsize=spwndgrp:CountAliveUnits()
 if actualsize>size then
@@ -3392,7 +3364,9 @@ for i=1,reduction do
 units2[i]:Destroy(false)
 end
 end
-end):SpawnFromCoordinate(coordinate)
+end
+)
+:SpawnFromCoordinate(coordinate)
 end
 end
 else
@@ -3426,9 +3400,7 @@ return datatable
 end
 function UTILS.LoadStationaryListOfStatics(Path,Filename,Reduce)
 local reduce=true
-if Reduce==false then
-reduce=false
-end
+if Reduce==false then reduce=false end
 local filename=Filename or"StateListofStatics"
 local datatable={}
 if UTILS.CheckFileExists(Path,filename)then
@@ -12828,7 +12800,7 @@ if DegreesCelcius then
 if Settings:IsMetric()then
 return string.format(" %-2.2f °C",DegreesCelcius)
 else
-return string.format(" %-2.2f °F",UTILS.CelciusToFarenheit(DegreesCelcius))
+return string.format(" %-2.2f °F",UTILS.CelsiusToFahrenheit(DegreesCelcius))
 end
 else
 return" no temperature"
@@ -22278,6 +22250,9 @@ AIRBASE.TheChannel={
 ["Lympne"]="Lympne",
 ["Detling"]="Detling",
 ["High_Halden"]="High Halden",
+["Biggin_Hill"]="Biggin Hill",
+["Eastchurch"]="Eastchurch",
+["Headcorn"]="Headcorn",
 }
 AIRBASE.Syria={
 ["Kuweires"]="Kuweires",
@@ -22294,7 +22269,6 @@ AIRBASE.Syria={
 ["Wujah_Al_Hajar"]="Wujah Al Hajar",
 ["Al_Dumayr"]="Al-Dumayr",
 ["Gazipasa"]="Gazipasa",
-["Ru_Convoy_4"]="Ru Convoy-4",
 ["Hatay"]="Hatay",
 ["Nicosia"]="Nicosia",
 ["Pinarbashi"]="Pinarbashi",
@@ -22342,6 +22316,7 @@ AIRBASE.Syria={
 ["Ruwayshid"]="Ruwayshid",
 ["Sanliurfa"]="Sanliurfa",
 ["Tal_Siman"]="Tal Siman",
+["Deir_ez-Zor"]="Deir ez-Zor",
 }
 AIRBASE.MarianaIslands={
 ["Rota_Intl"]="Rota Intl",
@@ -45951,6 +45926,7 @@ TRUMAN="CVN_75",
 STENNIS="Stennis",
 FORRESTAL="Forrestal",
 VINSON="VINSON",
+HERMES="HERMES81",
 TARAWA="LHA_Tarawa",
 AMERICA="USS America LHA-6",
 JCARLOS="L61",
@@ -46082,6 +46058,8 @@ elseif self.carriertype==AIRBOSS.CarrierType.FORRESTAL then
 self:_InitForrestal()
 elseif self.carriertype==AIRBOSS.CarrierType.VINSON then
 self:_InitStennis()
+elseif self.carriertype==AIRBOSS.CarrierType.HERMES then
+self:_InitHermes()
 elseif self.carriertype==AIRBOSS.CarrierType.TARAWA then
 self:_InitTarawa()
 elseif self.carriertype==AIRBOSS.CarrierType.AMERICA then
@@ -46137,7 +46115,7 @@ local r2=stern:Translate(self.carrierparam.rwywidth*0.5,FB-90,true)
 rwy:FlareRed()
 local cR=stern:Translate(self.carrierparam.totwidthstarboard,hdg+90,true)
 local cL=stern:Translate(self.carrierparam.totwidthport,hdg-90,true)
-if self.carrier:GetTypeName()~=AIRBOSS.CarrierType.TARAWA or self.carrier:GetTypeName()~=AIRBOSS.CarrierType.AMERICA or self.carrier:GetTypeName()~=AIRBOSS.CarrierType.JCARLOS or self.carrier:GetTypeName()~=AIRBOSS.CarrierType.CANBERRA then
+if self.carrier:GetTypeName()~=AIRBOSS.CarrierType.HERMES or self.carrier:GetTypeName()~=AIRBOSS.CarrierType.TARAWA or self.carrier:GetTypeName()~=AIRBOSS.CarrierType.AMERICA or self.carrier:GetTypeName()~=AIRBOSS.CarrierType.JCARLOS or self.carrier:GetTypeName()~=AIRBOSS.CarrierType.CANBERRA then
 local w1=stern:Translate(self.carrierparam.wire1,FB,true)
 local w2=stern:Translate(self.carrierparam.wire2,FB,true)
 local w3=stern:Translate(self.carrierparam.wire3,FB,true)
@@ -47191,6 +47169,30 @@ self.carrierparam.wire2=54
 self.carrierparam.wire3=64
 self.carrierparam.wire4=74
 end
+function AIRBOSS:_InitHermes()
+self:_InitStennis()
+self.carrierparam.sterndist=-105
+self.carrierparam.deckheight=12
+self.carrierparam.totlength=228.19
+self.carrierparam.totwidthport=20.5
+self.carrierparam.totwidthstarboard=24.5
+self.carrierparam.rwyangle=0
+self.carrierparam.rwylength=215
+self.carrierparam.rwywidth=13
+self.carrierparam.wire1=nil
+self.carrierparam.wire2=nil
+self.carrierparam.wire3=nil
+self.carrierparam.wire4=nil
+self.BreakLate.name="Late Break"
+self.BreakLate.Xmin=-UTILS.NMToMeters(1)
+self.BreakLate.Xmax=UTILS.NMToMeters(5)
+self.BreakLate.Zmin=-UTILS.NMToMeters(0.25)
+self.BreakLate.Zmax=UTILS.NMToMeters(0.5)
+self.BreakLate.LimitXmin=0
+self.BreakLate.LimitXmax=nil
+self.BreakLate.LimitZmin=-UTILS.NMToMeters(0.5)
+self.BreakLate.LimitZmax=nil
+end
 function AIRBOSS:_InitTarawa()
 self:_InitStennis()
 self.carrierparam.sterndist=-125
@@ -48207,7 +48209,7 @@ angels0=2
 local hdg=self.carrier:GetHeading()
 p1=Carrier
 p2=Carrier:Translate(UTILS.NMToMeters(1.5),hdg)
-if self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
+if self.carriertype==AIRBOSS.CarrierType.HERMES or self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
 p1=Carrier:Translate(UTILS.NMToMeters(1.0),hdg+90)
 p2=p1:Translate(2.5,hdg)
 end
@@ -49124,7 +49126,7 @@ self:_SetTimeInGroove(playerData)
 local text=string.format("Player %s AC type %s landed at dist=%.1f m. Tgroove=%.1f sec.",playerData.name,playerData.actype,dist,self:_GetTimeInGroove(playerData))
 text=text..string.format(" X=%.1f m, Z=%.1f m, rho=%.1f m.",X,Z,rho)
 self:T(self.lid..text)
-if self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
+if self.carriertype==AIRBOSS.CarrierType.HERMES or self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
 self:RadioTransmission(self.LSORadio,self.LSOCall.IDLE,false,1,nil,true)
 self:_SetPlayerStep(playerData,AIRBOSS.PatternStep.DEBRIEF)
 else
@@ -49138,7 +49140,7 @@ self:E(self.lid..string.format("Player %s did not land in carrier box zone. Mayb
 end
 end
 else
-if self.carriertype~=AIRBOSS.CarrierType.TARAWA or self.carriertype~=AIRBOSS.CarrierType.AMERICA or self.carriertype~=AIRBOSS.CarrierType.JCARLOS or self.carriertype~=AIRBOSS.CarrierType.CANBERRA then
+if self.carriertype~=AIRBOSS.CarrierType.HERMES or self.carriertype~=AIRBOSS.CarrierType.TARAWA or self.carriertype~=AIRBOSS.CarrierType.AMERICA or self.carriertype~=AIRBOSS.CarrierType.JCARLOS or self.carriertype~=AIRBOSS.CarrierType.CANBERRA then
 local coord=EventData.IniUnit:GetCoordinate()
 local dist=coord:Get2DDistance(self:GetCoordinate())
 local wire=self:_GetWire(coord,0)
@@ -49673,7 +49675,7 @@ end
 function AIRBOSS:_CheckForLongDownwind(playerData)
 local X,Z=self:_GetDistances(playerData.unit)
 local limit=UTILS.NMToMeters(-1.6)
-if self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
+if self.carriertype==AIRBOSS.CarrierType.HERMES or self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
 limit=UTILS.NMToMeters(-2.0)
 end
 if X<limit then
@@ -49713,7 +49715,7 @@ end
 local relheading=self:_GetRelativeHeading(playerData.unit,false)
 if relheading<=90 then
 self:_PlayerHint(playerData)
-if self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
+if self.carriertype==AIRBOSS.CarrierType.HERMES or self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
 self:_SetPlayerStep(playerData,AIRBOSS.PatternStep.FINAL)
 else
 self:_SetPlayerStep(playerData,AIRBOSS.PatternStep.WAKE)
@@ -49945,7 +49947,7 @@ local glMin=-1.2
 local luAbs=3.0
 if playerData.actype==AIRBOSS.AircraftCarrier.AV8B then
 glMax=2.6
-glMin=-2.0
+glMin=-2.6
 luAbs=4.1
 end
 if glideslopeError>glMax then
@@ -50046,7 +50048,7 @@ function AIRBOSS:_GetSternCoord()
 local hdg=self.carrier:GetHeading()
 local FB=self:GetFinalBearing()
 self.sterncoord:UpdateFromCoordinate(self:GetCoordinate())
-if self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
+if self.carriertype==AIRBOSS.CarrierType.HERMES or self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
 self.sterncoord:Translate(self.carrierparam.sterndist,hdg,true,true):Translate(8,FB-90,true,true)
 elseif self.carriertype==AIRBOSS.CarrierType.STENNIS then
 self.sterncoord:Translate(self.carrierparam.sterndist,hdg,true,true):Translate(7,FB+90,true,true)
@@ -50366,7 +50368,7 @@ local hdg=self:GetHeading()
 local D=UTILS.NMToMeters(2.5)
 local Post=self:GetCoordinate():Translate(D,hdg+270)
 self.zoneHolding=ZONE_RADIUS:New("CASE I Holding Zone",Post:GetVec2(),self.marshalradius)
-if self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
+if self.carriertype==AIRBOSS.CarrierType.HERMES or self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
 self.zoneHolding=ZONE_RADIUS:New("CASE I Holding Zone",self.carrier:GetVec2(),UTILS.NMToMeters(5))
 end
 else
@@ -50388,7 +50390,7 @@ local hdg=self:GetHeading()
 local D=UTILS.NMToMeters(4.75)
 local R=UTILS.NMToMeters(1)
 local Three=self:GetCoordinate():Translate(D,hdg+275)
-if self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
+if self.carriertype==AIRBOSS.CarrierType.HERMES or self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
 local Dx=UTILS.NMToMeters(2.25)
 local Dz=UTILS.NMToMeters(2.25)
 R=UTILS.NMToMeters(1)
@@ -50540,7 +50542,10 @@ end
 function AIRBOSS:_GetOptLandingCoordinate()
 self.landingcoord:UpdateFromCoordinate(self:_GetSternCoord())
 local FB=self:GetFinalBearing(false)
-if self.carriertype==AIRBOSS.CarrierType.TARAWA then
+if self.carriertype==AIRBOSS.CarrierType.HERMES then
+self.landingcoord:UpdateFromCoordinate(self:_GetLandingSpotCoordinate()):Translate(25,FB-90,true,true)
+self.landingcoord:SetAltitude(UTILS.FeetToMeters(100))
+elseif self.carriertype==AIRBOSS.CarrierType.TARAWA then
 self.landingcoord:UpdateFromCoordinate(self:_GetLandingSpotCoordinate()):Translate(35,FB-90,true,true)
 self.landingcoord:SetAltitude(UTILS.FeetToMeters(120))
 elseif self.carriertype==AIRBOSS.CarrierType.AMERICA then
@@ -50563,7 +50568,10 @@ return self.landingcoord
 end
 function AIRBOSS:_GetLandingSpotCoordinate()
 self.landingspotcoord:UpdateFromCoordinate(self:_GetSternCoord())
-if self.carriertype==AIRBOSS.CarrierType.TARAWA then
+if self.carriertype==AIRBOSS.CarrierType.HERMES then
+local hdg=self:GetHeading()
+self.landingspotcoord:Translate(69,hdg,true,true):SetAltitude(self.carrierparam.deckheight)
+elseif self.carriertype==AIRBOSS.CarrierType.TARAWA then
 local hdg=self:GetHeading()
 self.landingspotcoord:Translate(57,hdg,true,true):SetAltitude(self.carrierparam.deckheight)
 elseif self.carriertype==AIRBOSS.CarrierType.AMERICA then
@@ -51067,7 +51075,7 @@ gp=AIRBOSS.GroovePos.AR
 if n==-1 then
 gp=AIRBOSS.GroovePos.IC
 elseif n==1 then
-if self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
+if self.carriertype==AIRBOSS.CarrierType.HERMES or self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
 gp=AIRBOSS.GroovePos.AL
 else
 gp=AIRBOSS.GroovePos.IW
@@ -51964,13 +51972,13 @@ end
 function AIRBOSS:_IsCarrierAircraft(unit)
 local aircrafttype=unit:GetTypeName()
 if aircrafttype==AIRBOSS.AircraftCarrier.AV8B then
-if self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
+if self.carriertype==AIRBOSS.CarrierType.HERMES or self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
 return true
 else
 return false
 end
 end
-if self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
+if self.carriertype==AIRBOSS.CarrierType.HERMES or self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
 if aircrafttype~=AIRBOSS.AircraftCarrier.AV8B then
 return false
 end
@@ -53667,7 +53675,7 @@ if case==3 then
 text=text.."\n* bullseye with GREEN flares"
 self:_GetZoneBullseye(case):FlareZone(FLARECOLOR.Green,45)
 end
-if self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
+if self.carriertype==AIRBOSS.CarrierType.HERMES or self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
 text=text.."\n* abeam landing stop with RED flares"
 local ALSPT=self:_GetZoneAbeamLandingSpot()
 ALSPT:FlareZone(FLARECOLOR.Red,5,nil,UTILS.FeetToMeters(110))
@@ -58666,8 +58674,8 @@ local uheight=Unit:GetHeight()
 local ucoord=Unit:GetCoordinate()
 local gheight=ucoord:GetLandHeight()
 local aheight=uheight-gheight
-local maxh=self.HercMinAngels
-local minh=self.HercMaxAngels
+local minh=self.HercMinAngels
+local maxh=self.HercMaxAngels
 local maxspeed=self.HercMaxSpeed
 local kmspeed=uspeed*3.6
 local knspeed=kmspeed/1.86
