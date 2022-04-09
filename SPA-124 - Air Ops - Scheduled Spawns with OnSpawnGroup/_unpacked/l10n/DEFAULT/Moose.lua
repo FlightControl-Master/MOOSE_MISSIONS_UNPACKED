@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-03-30T10:06:25.0000000Z-d2a5144a23fd42a811a47e67be68539769d48a72 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-04-08T09:27:31.0000000Z-f7e14bb60c9f32372ac5511437257b1a195ebf67 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -8628,12 +8628,13 @@ return GroupTemplate
 end
 function DATABASE:_RegisterStaticTemplate(StaticTemplate,CoalitionID,CategoryID,CountryID)
 local StaticTemplate=UTILS.DeepCopy(StaticTemplate)
-local StaticTemplateName=env.getValueDictByKey(StaticTemplate.name)
+local StaticTemplateGroupName=env.getValueDictByKey(StaticTemplate.name)
+local StaticTemplateName=StaticTemplate.units[1].name
 self.Templates.Statics[StaticTemplateName]=self.Templates.Statics[StaticTemplateName]or{}
 StaticTemplate.CategoryID=CategoryID
 StaticTemplate.CoalitionID=CoalitionID
 StaticTemplate.CountryID=CountryID
-self.Templates.Statics[StaticTemplateName].StaticName=StaticTemplateName
+self.Templates.Statics[StaticTemplateName].StaticName=StaticTemplateGroupName
 self.Templates.Statics[StaticTemplateName].GroupTemplate=StaticTemplate
 self.Templates.Statics[StaticTemplateName].UnitTemplate=StaticTemplate.units[1]
 self.Templates.Statics[StaticTemplateName].CategoryID=CategoryID
@@ -9165,7 +9166,7 @@ end
 function SET_BASE:Remove(ObjectName,NoTriggerEvent)
 self:F2({ObjectName=ObjectName})
 local TriggerEvent=true
-if NoTriggerEvent==false then
+if NoTriggerEvent then
 TriggerEvent=false
 end
 local Object=self.Set[ObjectName]
@@ -16402,11 +16403,15 @@ self.InitFarpModu=Modulation or 0
 return self
 end
 function SPAWNSTATIC:InitCargoMass(Mass)
-self.InitCargoMass=Mass
+self.InitStaticCargoMass=Mass
 return self
 end
 function SPAWNSTATIC:InitCargo(IsCargo)
-self.InitCargo=IsCargo
+self.InitStaticCargo=IsCargo
+return self
+end
+function SPAWNSTATIC:InitDead(IsDead)
+self.InitStaticDead=IsDead
 return self
 end
 function SPAWNSTATIC:InitCountry(CountryID)
@@ -16475,14 +16480,14 @@ end
 if self.InitStaticLivery then
 Template.livery_id=self.InitStaticLivery
 end
-if self.InitDead~=nil then
-Template.dead=self.InitDead
+if self.InitStaticDead~=nil then
+Template.dead=self.InitStaticDead
 end
-if self.InitCargo~=nil then
-Template.canCargo=self.InitCargo
+if self.InitStaticCargo~=nil then
+Template.canCargo=self.InitStaticCargo
 end
-if self.InitCargoMass~=nil then
-Template.mass=self.InitCargoMass
+if self.InitStaticCargoMass~=nil then
+Template.mass=self.InitStaticCargoMass
 end
 if self.InitLinkUnit then
 Template.linkUnit=self.InitLinkUnit:GetID()
@@ -16517,6 +16522,8 @@ self:T({Template=Template})
 self:T({TemplateGroup=TemplateGroup})
 Static=coalition.addGroup(CountryID,-1,TemplateGroup)
 else
+self:T("Spawning Static")
+self:T2({Template=Template})
 Static=coalition.addStaticObject(CountryID,Template)
 end
 return mystatic
@@ -46374,15 +46381,34 @@ self.Tmessage=Duration or 10
 return self
 end
 function AIRBOSS:SetGlideslopeErrorThresholds(_max,_min,High,HIGH,Low,LOW)
+if self.carriertype==AIRBOSS.CarrierType.HERMES or self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
+self.gle._max=_max or 0.7
+self.gle.High=High or 1.4
+self.gle.HIGH=HIGH or 1.9
+self.gle._min=_min or-0.5
+self.gle.Low=Low or-1.2
+self.gle.LOW=LOW or-1.5
+else
 self.gle._max=_max or 0.4
 self.gle.High=High or 0.8
 self.gle.HIGH=HIGH or 1.5
 self.gle._min=_min or-0.3
 self.gle.Low=Low or-0.6
 self.gle.LOW=LOW or-0.9
+end
 return self
 end
 function AIRBOSS:SetLineupErrorThresholds(_max,_min,Left,LeftMed,LEFT,Right,RightMed,RIGHT)
+if self.carriertype==AIRBOSS.CarrierType.HERMES or self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
+self.lue._max=_max or 1.8
+self.lue._min=_min or-1.8
+self.lue.Left=Left or-2.8
+self.lue.LeftMed=LeftMed or-3.8
+self.lue.LEFT=LEFT or-4.5
+self.lue.Right=Right or 2.8
+self.lue.RightMed=RightMed or 3.8
+self.lue.RIGHT=RIGHT or 4.5
+else
 self.lue._max=_max or 0.5
 self.lue._min=_min or-0.5
 self.lue.Left=Left or-1.0
@@ -46391,6 +46417,7 @@ self.lue.LEFT=LEFT or-3.0
 self.lue.Right=Right or 1.0
 self.lue.RightMed=RightMed or 2.0
 self.lue.RIGHT=RIGHT or 3.0
+end
 return self
 end
 function AIRBOSS:SetMarshalRadius(Radius)
@@ -47666,11 +47693,11 @@ aoa.OnSpeedMin=8.50
 aoa.Fast=8.25
 aoa.FAST=8.00
 elseif harrier then
-aoa.SLOW=14.0
-aoa.Slow=13.0
-aoa.OnSpeedMax=12.0
-aoa.OnSpeed=11.0
-aoa.OnSpeedMin=10.0
+aoa.SLOW=16.0
+aoa.Slow=13.5
+aoa.OnSpeedMax=12.5
+aoa.OnSpeed=10.0
+aoa.OnSpeedMin=9.5
 aoa.Fast=8.0
 aoa.FAST=7.5
 end
@@ -47807,7 +47834,7 @@ alt=UTILS.FeetToMeters(360)
 elseif skyhawk then
 alt=UTILS.FeetToMeters(300)
 elseif harrier then
-alt=UTILS.FeetToMeters(300)
+alt=UTILS.FeetToMeters(312)
 end
 aoa=aoaac.OnSpeed
 end
@@ -49836,7 +49863,7 @@ local ZoneALS=self:_GetZoneAbeamLandingSpot()
 local vplayer=playerData.unit:GetVelocityKMH()
 local vcarrier=self.carrier:GetVelocityKMH()
 local dv=math.abs(vplayer-vcarrier)
-local stable=dv<20
+local stable=dv<30
 if playerData.unit:IsInZone(ZoneALS)and stable then
 self:RadioTransmission(self.LSORadio,self.LSOCall.CLEAREDTOLAND,nil,nil,nil,true)
 self:_SetPlayerStep(playerData,AIRBOSS.PatternStep.GROOVE_LC)
@@ -49849,7 +49876,7 @@ local ZoneLS=self:_GetZoneLandingSpot()
 local vplayer=playerData.unit:GetVelocityKMH()
 local vcarrier=self.carrier:GetVelocityKMH()
 local dv=math.abs(vplayer-vcarrier)
-local stable=dv<10
+local stable=dv<15
 if playerData.unit:IsInZone(ZoneLS)and stable and playerData.stable==true then
 self:RadioTransmission(self.LSORadio,self.LSOCall.STABILIZED,nil,nil,nil,false)
 playerData.stable=false
@@ -49947,7 +49974,7 @@ local glMin=-1.2
 local luAbs=3.0
 if playerData.actype==AIRBOSS.AircraftCarrier.AV8B then
 glMax=2.6
-glMin=-2.6
+glMin=-2.2
 luAbs=4.1
 end
 if glideslopeError>glMax then
@@ -50047,9 +50074,14 @@ end
 function AIRBOSS:_GetSternCoord()
 local hdg=self.carrier:GetHeading()
 local FB=self:GetFinalBearing()
+local case=self.case
 self.sterncoord:UpdateFromCoordinate(self:GetCoordinate())
 if self.carriertype==AIRBOSS.CarrierType.HERMES or self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
+if case==3 then
 self.sterncoord:Translate(self.carrierparam.sterndist,hdg,true,true):Translate(8,FB-90,true,true)
+elseif case==2 or case==1 then
+self.sterncoord:Translate(self.carrierparam.sterndist,hdg,true,true):Translate(8,FB-90,true,true)
+end
 elseif self.carriertype==AIRBOSS.CarrierType.STENNIS then
 self.sterncoord:Translate(self.carrierparam.sterndist,hdg,true,true):Translate(7,FB+90,true,true)
 elseif self.carriertype==AIRBOSS.CarrierType.FORRESTAL then
@@ -50542,21 +50574,15 @@ end
 function AIRBOSS:_GetOptLandingCoordinate()
 self.landingcoord:UpdateFromCoordinate(self:_GetSternCoord())
 local FB=self:GetFinalBearing(false)
-if self.carriertype==AIRBOSS.CarrierType.HERMES then
-self.landingcoord:UpdateFromCoordinate(self:_GetLandingSpotCoordinate()):Translate(25,FB-90,true,true)
-self.landingcoord:SetAltitude(UTILS.FeetToMeters(100))
-elseif self.carriertype==AIRBOSS.CarrierType.TARAWA then
+local case=self.case
+if self.carriertype==AIRBOSS.CarrierType.HERMES or self.carriertype==AIRBOSS.CarrierType.TARAWA or self.carriertype==AIRBOSS.CarrierType.AMERICA or self.carriertype==AIRBOSS.CarrierType.JCARLOS or self.carriertype==AIRBOSS.CarrierType.CANBERRA then
+if case==3 then
+self.landingcoord:UpdateFromCoordinate(self:_GetLandingSpotCoordinate())
+self.landingcoord:SetAltitude(UTILS.FeetToMeters(120))
+elseif case==2 or case==1 then
 self.landingcoord:UpdateFromCoordinate(self:_GetLandingSpotCoordinate()):Translate(35,FB-90,true,true)
 self.landingcoord:SetAltitude(UTILS.FeetToMeters(120))
-elseif self.carriertype==AIRBOSS.CarrierType.AMERICA then
-self.landingcoord:UpdateFromCoordinate(self:_GetLandingSpotCoordinate()):Translate(35,FB-90,true,true)
-self.landingcoord:SetAltitude(UTILS.FeetToMeters(120))
-elseif self.carriertype==AIRBOSS.CarrierType.JCARLOS then
-self.landingcoord:UpdateFromCoordinate(self:_GetLandingSpotCoordinate()):Translate(35,FB-90,true,true)
-self.landingcoord:SetAltitude(UTILS.FeetToMeters(120))
-elseif self.carriertype==AIRBOSS.CarrierType.CANBERRA then
-self.landingcoord:UpdateFromCoordinate(self:_GetLandingSpotCoordinate()):Translate(35,FB-90,true,true)
-self.landingcoord:SetAltitude(UTILS.FeetToMeters(120))
+end
 else
 if self.carrierparam.wire3 then
 local w3=self.carrierparam.wire3
@@ -50822,9 +50848,11 @@ local GIC,nIC=self:_Flightdata2Text(playerData,AIRBOSS.GroovePos.IC)
 local GAR,nAR=self:_Flightdata2Text(playerData,AIRBOSS.GroovePos.AR)
 local G=GXX.." "..GIM.." ".." "..GIC.." "..GAR
 local N=nXX+nIM+nIC+nAR
+local Nv=nXX+nIM
 local nL=count(G,'_')/2
 local nS=count(G,'%(')
 local nN=N-nS-nL
+local nNv=Nv-nS-nL
 local Tgroove=playerData.Tgroove
 local TgrooveUnicorn=Tgroove and(Tgroove>=15.0 and Tgroove<=18.99)or false
 local TgrooveVstolUnicorn=Tgroove and(Tgroove>=60.0 and Tgroove<=65.0)and playerData.actype==AIRBOSS.AircraftCarrier.AV8B or false
@@ -50835,12 +50863,15 @@ grade="_OK_"
 points=5.0
 G="Unicorn"
 else
-if nL>3 and playerData.actype==AIRBOSS.AircraftCarrier.AV8B then
+if nL>1 and playerData.actype==AIRBOSS.AircraftCarrier.AV8B then
 grade="--"
 points=2.0
-elseif nN>2 and playerData.actype==AIRBOSS.AircraftCarrier.AV8B then
+elseif nNv>=1 and playerData.actype==AIRBOSS.AircraftCarrier.AV8B then
 grade="(OK)"
 points=3.0
+elseif nNv<1 and playerData.actype==AIRBOSS.AircraftCarrier.AV8B then
+grade="OK"
+points=4.0
 elseif nL>0 then
 grade="--"
 points=2.0
@@ -56634,7 +56665,6 @@ FreeVHFFrequencies={},
 FreeUHFFrequencies={},
 FreeFMFrequencies={},
 CargoCounter=0,
-wpZones={},
 Cargo_Troops={},
 Cargo_Crates={},
 Loaded_Cargo={},
@@ -57135,6 +57165,8 @@ local inzone=false
 local drop=drop or false
 local ship=nil
 local width=20
+local distance=nil
+local zone=nil
 if not drop then
 inzone=self:IsUnitInZone(Unit,CTLD.CargoZoneType.LOAD)
 if not inzone then
@@ -57845,6 +57877,7 @@ local name=Crate:GetName()
 local required=Crate:GetCratesNeeded()
 local template=Crate:GetTemplates()
 local ctype=Crate:GetType()
+local ccoord=Crate:GetPositionable():GetCoordinate()
 if not buildables[name]then
 local object={}
 object.Name=name
@@ -57853,6 +57886,7 @@ object.Found=1
 object.Template=template
 object.CanBuild=false
 object.Type=ctype
+object.Coord=ccoord:GetVec2()
 buildables[name]=object
 foundbuilds=true
 else
@@ -57990,7 +58024,7 @@ if type(temptable)=="string"then
 temptable={temptable}
 end
 local zone=ZONE_GROUP:New(string.format("Unload zone-%s",unitname),Group,100)
-local randomcoord=zone:GetRandomCoordinate(35):GetVec2()
+local randomcoord=Build.Coord or zone:GetRandomCoordinate(35):GetVec2()
 if Repair then
 randomcoord=RepairLocation:GetVec2()
 end
@@ -57999,7 +58033,6 @@ self.TroopCounter=self.TroopCounter+1
 local alias=string.format("%s-%d",_template,math.random(1,100000))
 if canmove then
 self.DroppedTroops[self.TroopCounter]=SPAWN:NewWithAlias(_template,alias)
-:InitRandomizeUnits(true,20,2)
 :InitDelayOff()
 :SpawnFromVec2(randomcoord)
 else
@@ -59513,7 +59546,7 @@ self:Soldier_SpawnGroup(Cargo_Drop_initiator,Cargo_Content_position,Cargo_Type_n
 self:Soldier_SpawnGroup(Cargo_Drop_initiator,Cargo_Content_position,Cargo_Type_name,CargoHeading,Cargo_Country,5)
 self:Soldier_SpawnGroup(Cargo_Drop_initiator,Cargo_Content_position,Cargo_Type_name,CargoHeading,Cargo_Country,10)
 else
-self:Cargo_SpawnGroup(Cargo_Drop_initiator,Cargo_Content_position,Cargo_Type_name,CargoHeading,Cargo_Country,0)
+self:Cargo_SpawnGroup(Cargo_Drop_initiator,Cargo_Content_position,Cargo_Type_name,CargoHeading,Cargo_Country)
 end
 else
 if all_cargo_gets_destroyed==true or Cargo_over_water==true then
@@ -62608,7 +62641,14 @@ local AttackerCount=AttackerSet:Count()
 local DefenderFriendlies=self:GetAIFriendliesNearBy(AttackerDetection)
 for FriendlyDistance,AIFriendly in UTILS.spairs(DefenderFriendlies or{})do
 if AttackerCount>DefenderCount then
-local Friendly=AIFriendly:GetGroup()
+if AIFriendly then
+local classname=AIFriendly.ClassName or"No Class Name"
+local unitname=AIFriendly.IdentifiableName or"No Unit Name"
+end
+local Friendly=nil
+if AIFriendly and AIFriendly:IsAlive()then
+Friendly=AIFriendly:GetGroup()
+end
 if Friendly and Friendly:IsAlive()then
 local DefenderTask=self:GetDefenderTask(Friendly)
 if DefenderTask then
