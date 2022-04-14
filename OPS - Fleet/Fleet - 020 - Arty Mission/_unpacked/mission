@@ -1,0 +1,2985 @@
+mission = 
+{
+    ["trig"] = 
+    {
+        ["actions"] = 
+        {
+            [1] = "a_do_script_file(getValueResourceByKey(\"ResKey_Action_6\"));",
+            [2] = "a_do_script(\"assert(loadfile(\\\"D:/DCS/Scripts/My_Missions/_Ops/Fleet/Fleet_Syria.lua\\\"))();\");",
+        }, -- end of ["actions"]
+        ["events"] = 
+        {
+        }, -- end of ["events"]
+        ["custom"] = 
+        {
+        }, -- end of ["custom"]
+        ["func"] = 
+        {
+        }, -- end of ["func"]
+        ["flag"] = 
+        {
+            [1] = true,
+            [2] = true,
+        }, -- end of ["flag"]
+        ["conditions"] = 
+        {
+            [1] = "return(true)",
+            [2] = "return(true)",
+        }, -- end of ["conditions"]
+        ["customStartup"] = 
+        {
+        }, -- end of ["customStartup"]
+        ["funcStartup"] = 
+        {
+            [1] = "if mission.trig.conditions[1]() then mission.trig.actions[1]() end",
+            [2] = "if mission.trig.conditions[2]() then mission.trig.actions[2]() end",
+        }, -- end of ["funcStartup"]
+    }, -- end of ["trig"]
+    ["requiredModules"] = 
+    {
+    }, -- end of ["requiredModules"]
+    ["date"] = 
+    {
+        ["Day"] = 21,
+        ["Year"] = 2016,
+        ["Month"] = 6,
+    }, -- end of ["date"]
+    ["result"] = 
+    {
+        ["offline"] = 
+        {
+            ["conditions"] = 
+            {
+            }, -- end of ["conditions"]
+            ["actions"] = 
+            {
+            }, -- end of ["actions"]
+            ["func"] = 
+            {
+            }, -- end of ["func"]
+        }, -- end of ["offline"]
+        ["total"] = 0,
+        ["blue"] = 
+        {
+            ["conditions"] = 
+            {
+            }, -- end of ["conditions"]
+            ["actions"] = 
+            {
+            }, -- end of ["actions"]
+            ["func"] = 
+            {
+            }, -- end of ["func"]
+        }, -- end of ["blue"]
+        ["red"] = 
+        {
+            ["conditions"] = 
+            {
+            }, -- end of ["conditions"]
+            ["actions"] = 
+            {
+            }, -- end of ["actions"]
+            ["func"] = 
+            {
+            }, -- end of ["func"]
+        }, -- end of ["red"]
+    }, -- end of ["result"]
+    ["groundControl"] = 
+    {
+        ["isPilotControlVehicles"] = false,
+        ["roles"] = 
+        {
+            ["artillery_commander"] = 
+            {
+                ["neutrals"] = 0,
+                ["blue"] = 0,
+                ["red"] = 0,
+            }, -- end of ["artillery_commander"]
+            ["instructor"] = 
+            {
+                ["neutrals"] = 0,
+                ["blue"] = 0,
+                ["red"] = 0,
+            }, -- end of ["instructor"]
+            ["observer"] = 
+            {
+                ["neutrals"] = 0,
+                ["blue"] = 1,
+                ["red"] = 0,
+            }, -- end of ["observer"]
+            ["forward_observer"] = 
+            {
+                ["neutrals"] = 0,
+                ["blue"] = 0,
+                ["red"] = 0,
+            }, -- end of ["forward_observer"]
+        }, -- end of ["roles"]
+    }, -- end of ["groundControl"]
+    ["maxDictId"] = 9,
+    ["pictureFileNameN"] = 
+    {
+    }, -- end of ["pictureFileNameN"]
+    ["goals"] = 
+    {
+    }, -- end of ["goals"]
+    ["descriptionNeutralsTask"] = "DictKey_descriptionNeutralsTask_4",
+    ["weather"] = 
+    {
+        ["atmosphere_type"] = 0,
+        ["wind"] = 
+        {
+            ["at8000"] = 
+            {
+                ["speed"] = 0,
+                ["dir"] = 0,
+            }, -- end of ["at8000"]
+            ["at2000"] = 
+            {
+                ["speed"] = 0,
+                ["dir"] = 0,
+            }, -- end of ["at2000"]
+            ["atGround"] = 
+            {
+                ["speed"] = 0,
+                ["dir"] = 0,
+            }, -- end of ["atGround"]
+        }, -- end of ["wind"]
+        ["enable_fog"] = false,
+        ["groundTurbulence"] = 0,
+        ["enable_dust"] = false,
+        ["season"] = 
+        {
+            ["temperature"] = 20,
+        }, -- end of ["season"]
+        ["type_weather"] = 0,
+        ["modifiedTime"] = false,
+        ["cyclones"] = 
+        {
+        }, -- end of ["cyclones"]
+        ["name"] = "Winter, clean sky",
+        ["fog"] = 
+        {
+            ["thickness"] = 0,
+            ["visibility"] = 0,
+        }, -- end of ["fog"]
+        ["dust_density"] = 0,
+        ["qnh"] = 760,
+        ["visibility"] = 
+        {
+            ["distance"] = 80000,
+        }, -- end of ["visibility"]
+        ["clouds"] = 
+        {
+            ["thickness"] = 200,
+            ["density"] = 0,
+            ["preset"] = "Preset2",
+            ["base"] = 2500,
+            ["iprecptns"] = 0,
+        }, -- end of ["clouds"]
+    }, -- end of ["weather"]
+    ["theatre"] = "Syria",
+    ["triggers"] = 
+    {
+        ["zones"] = 
+        {
+            [1] = 
+            {
+                ["radius"] = 3000,
+                ["zoneId"] = 85,
+                ["color"] = 
+                {
+                    [1] = 0.50196078431373,
+                    [2] = 0,
+                    [3] = 0.50196078431373,
+                    [4] = 0.47058823529412,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["y"] = -262308.59623099,
+                ["x"] = -29457.774656602,
+                ["name"] = "Akrotiri Port Zone",
+                ["type"] = 2,
+                ["verticies"] = 
+                {
+                    [1] = 
+                    {
+                        ["y"] = -264660.22245638,
+                        ["x"] = -29818.346874544,
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["y"] = -263941.71024035,
+                        ["x"] = -33981.491185083,
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["y"] = -257715.67853034,
+                        ["x"] = -26780.538228941,
+                    }, -- end of [3]
+                    [4] = 
+                    {
+                        ["y"] = -262916.77369689,
+                        ["x"] = -27250.722337841,
+                    }, -- end of [4]
+                }, -- end of ["verticies"]
+            }, -- end of [1]
+            [2] = 
+            {
+                ["radius"] = 3000,
+                ["zoneId"] = 86,
+                ["color"] = 
+                {
+                    [1] = 0,
+                    [2] = 0,
+                    [3] = 1,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["y"] = -270925.83270504,
+                ["x"] = -35183.954683678,
+                ["name"] = "Akrotiri Spawn Zone",
+                ["type"] = 2,
+                ["verticies"] = 
+                {
+                    [1] = 
+                    {
+                        ["y"] = -271143.72579611,
+                        ["x"] = -35382.179797469,
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["y"] = -270804.87464482,
+                        ["x"] = -35365.321531236,
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["y"] = -270621.11954288,
+                        ["x"] = -34984.324714367,
+                    }, -- end of [3]
+                    [4] = 
+                    {
+                        ["y"] = -271133.61083637,
+                        ["x"] = -35003.992691639,
+                    }, -- end of [4]
+                }, -- end of ["verticies"]
+            }, -- end of [2]
+            [3] = 
+            {
+                ["radius"] = 30480,
+                ["zoneId"] = 87,
+                ["color"] = 
+                {
+                    [1] = 0.50196078431373,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["y"] = -191546.38105892,
+                ["x"] = -48111.879417998,
+                ["name"] = "Patrol Zone Alpha",
+                ["type"] = 0,
+            }, -- end of [3]
+            [4] = 
+            {
+                ["radius"] = 3000,
+                ["zoneId"] = 172,
+                ["color"] = 
+                {
+                    [1] = 0.50196078431373,
+                    [2] = 0,
+                    [3] = 1,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["y"] = -138727.25696446,
+                ["x"] = 17991.735274752,
+                ["name"] = "Engage Zone Alpha",
+                ["type"] = 0,
+            }, -- end of [4]
+            [5] = 
+            {
+                ["radius"] = 609.6,
+                ["zoneId"] = 257,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 0,
+                    [3] = 0,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["y"] = -169147.29098408,
+                ["x"] = 42942.358908242,
+                ["name"] = "Target Zone Alpha",
+                ["type"] = 0,
+            }, -- end of [5]
+            [6] = 
+            {
+                ["radius"] = 304.8,
+                ["zoneId"] = 258,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 0,
+                    [3] = 0,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["y"] = 6149.9471319609,
+                ["x"] = 42548.757932047,
+                ["name"] = "Target Zone Delta",
+                ["type"] = 0,
+            }, -- end of [6]
+            [7] = 
+            {
+                ["radius"] = 3000,
+                ["zoneId"] = 343,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 0,
+                    [3] = 0.50196078431373,
+                    [4] = 1,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["y"] = -204541.0145223,
+                ["x"] = -2102.3120057482,
+                ["name"] = "Larnaca Port Zone",
+                ["type"] = 2,
+                ["verticies"] = 
+                {
+                    [1] = 
+                    {
+                        ["y"] = -206155.01871278,
+                        ["x"] = -3261.9708037107,
+                    }, -- end of [1]
+                    [2] = 
+                    {
+                        ["y"] = -204161.02076407,
+                        ["x"] = -6193.3182154921,
+                    }, -- end of [2]
+                    [3] = 
+                    {
+                        ["y"] = -202081.80922781,
+                        ["x"] = 1850.8444493964,
+                    }, -- end of [3]
+                    [4] = 
+                    {
+                        ["y"] = -205766.20938455,
+                        ["x"] = -804.80345318646,
+                    }, -- end of [4]
+                }, -- end of ["verticies"]
+            }, -- end of [7]
+            [8] = 
+            {
+                ["radius"] = 3000,
+                ["zoneId"] = 344,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 0,
+                    [3] = 0.50196078431373,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["y"] = -14470.310623161,
+                ["x"] = 56177.330447501,
+                ["name"] = "Bassel Al-Assad Port Zone",
+                ["type"] = 0,
+            }, -- end of [8]
+            [9] = 
+            {
+                ["radius"] = 3000,
+                ["zoneId"] = 345,
+                ["color"] = 
+                {
+                    [1] = 0,
+                    [2] = 1,
+                    [3] = 0.50196078431373,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["y"] = -227296.41182139,
+                ["x"] = -28241.952063016,
+                ["name"] = "Recon Zone Alpha-1",
+                ["type"] = 0,
+            }, -- end of [9]
+            [10] = 
+            {
+                ["radius"] = 30480,
+                ["zoneId"] = 346,
+                ["color"] = 
+                {
+                    [1] = 0.50196078431373,
+                    [2] = 1,
+                    [3] = 1,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["y"] = -77217.338073067,
+                ["x"] = 29467.772221592,
+                ["name"] = "Patrol Zone Bravo",
+                ["type"] = 0,
+            }, -- end of [10]
+            [11] = 
+            {
+                ["radius"] = 3000,
+                ["zoneId"] = 347,
+                ["color"] = 
+                {
+                    [1] = 0,
+                    [2] = 1,
+                    [3] = 0.50196078431373,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["y"] = -162667.96616769,
+                ["x"] = -3337.411437724,
+                ["name"] = "Recon Zone Alpha-2",
+                ["type"] = 0,
+            }, -- end of [11]
+            [12] = 
+            {
+                ["radius"] = 3000,
+                ["zoneId"] = 348,
+                ["color"] = 
+                {
+                    [1] = 0,
+                    [2] = 1,
+                    [3] = 0.50196078431373,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["y"] = -106879.5101243,
+                ["x"] = 78773.766823318,
+                ["name"] = "Recon Zone Alpha-3",
+                ["type"] = 0,
+            }, -- end of [12]
+            [13] = 
+            {
+                ["radius"] = 3000,
+                ["zoneId"] = 349,
+                ["color"] = 
+                {
+                    [1] = 0,
+                    [2] = 1,
+                    [3] = 0.50196078431373,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["y"] = -262262.14649867,
+                ["x"] = 64630.214586966,
+                ["name"] = "Recon Zone Alpha-4",
+                ["type"] = 0,
+            }, -- end of [13]
+            [14] = 
+            {
+                ["radius"] = 3000,
+                ["zoneId"] = 350,
+                ["color"] = 
+                {
+                    [1] = 0,
+                    [2] = 1,
+                    [3] = 0.50196078431373,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["y"] = -334747.85170997,
+                ["x"] = -21802.604635183,
+                ["name"] = "Recon Zone Alpha-5",
+                ["type"] = 0,
+            }, -- end of [14]
+            [15] = 
+            {
+                ["radius"] = 304.8,
+                ["zoneId"] = 351,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 0,
+                    [3] = 0,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["y"] = -166537.95668765,
+                ["x"] = -422.96318029956,
+                ["name"] = "Target Zone Bravo",
+                ["type"] = 0,
+            }, -- end of [15]
+            [16] = 
+            {
+                ["radius"] = 3048,
+                ["zoneId"] = 352,
+                ["color"] = 
+                {
+                    [1] = 1,
+                    [2] = 0,
+                    [3] = 0,
+                    [4] = 0.14901960784314,
+                }, -- end of ["color"]
+                ["properties"] = 
+                {
+                }, -- end of ["properties"]
+                ["hidden"] = false,
+                ["y"] = -92945.929243594,
+                ["x"] = -29492.167795736,
+                ["name"] = "Target Zone Charlie",
+                ["type"] = 0,
+            }, -- end of [16]
+        }, -- end of ["zones"]
+    }, -- end of ["triggers"]
+    ["map"] = 
+    {
+        ["centerY"] = -165721.08938452,
+        ["zoom"] = 597166.9706445,
+        ["centerX"] = 4614.597077739,
+    }, -- end of ["map"]
+    ["coalitions"] = 
+    {
+        ["neutrals"] = 
+        {
+            [1] = 70,
+            [2] = 83,
+            [3] = 23,
+            [4] = 65,
+            [5] = 86,
+            [6] = 64,
+            [7] = 25,
+            [8] = 63,
+            [9] = 76,
+            [10] = 84,
+            [11] = 29,
+            [12] = 62,
+            [13] = 30,
+            [14] = 78,
+            [15] = 87,
+            [16] = 31,
+            [17] = 61,
+            [18] = 32,
+            [19] = 33,
+            [20] = 60,
+            [21] = 17,
+            [22] = 35,
+            [23] = 69,
+            [24] = 36,
+            [25] = 59,
+            [26] = 71,
+            [27] = 79,
+            [28] = 58,
+            [29] = 57,
+            [30] = 56,
+            [31] = 55,
+            [32] = 88,
+            [33] = 73,
+            [34] = 39,
+            [35] = 89,
+            [36] = 54,
+            [37] = 77,
+            [38] = 72,
+            [39] = 41,
+            [40] = 42,
+            [41] = 44,
+            [42] = 85,
+            [43] = 75,
+            [44] = 53,
+            [45] = 22,
+            [46] = 52,
+            [47] = 66,
+            [48] = 51,
+            [49] = 74,
+            [50] = 82,
+            [51] = 7,
+            [52] = 68,
+            [53] = 50,
+            [54] = 49,
+            [55] = 48,
+            [56] = 67,
+        }, -- end of ["neutrals"]
+        ["blue"] = 
+        {
+            [1] = 21,
+            [2] = 11,
+            [3] = 8,
+            [4] = 80,
+            [5] = 28,
+            [6] = 26,
+            [7] = 13,
+            [8] = 5,
+            [9] = 16,
+            [10] = 6,
+            [11] = 15,
+            [12] = 20,
+            [13] = 12,
+            [14] = 40,
+            [15] = 45,
+            [16] = 9,
+            [17] = 46,
+            [18] = 10,
+            [19] = 3,
+            [20] = 4,
+            [21] = 1,
+            [22] = 2,
+        }, -- end of ["blue"]
+        ["red"] = 
+        {
+            [1] = 18,
+            [2] = 24,
+            [3] = 27,
+            [4] = 81,
+            [5] = 34,
+            [6] = 37,
+            [7] = 38,
+            [8] = 0,
+            [9] = 43,
+            [10] = 19,
+            [11] = 47,
+        }, -- end of ["red"]
+    }, -- end of ["coalitions"]
+    ["descriptionText"] = "DictKey_descriptionText_1",
+    ["pictureFileNameR"] = 
+    {
+        [1] = "ResKey_ImageBriefing_9",
+    }, -- end of ["pictureFileNameR"]
+    ["descriptionBlueTask"] = "DictKey_descriptionBlueTask_3",
+    ["descriptionRedTask"] = "DictKey_descriptionRedTask_2",
+    ["pictureFileNameB"] = 
+    {
+        [1] = "ResKey_ImageBriefing_8",
+    }, -- end of ["pictureFileNameB"]
+    ["coalition"] = 
+    {
+        ["neutrals"] = 
+        {
+            ["bullseye"] = 
+            {
+                ["y"] = 0,
+                ["x"] = 0,
+            }, -- end of ["bullseye"]
+            ["nav_points"] = 
+            {
+            }, -- end of ["nav_points"]
+            ["name"] = "neutrals",
+            ["country"] = 
+            {
+            }, -- end of ["country"]
+        }, -- end of ["neutrals"]
+        ["blue"] = 
+        {
+            ["bullseye"] = 
+            {
+                ["y"] = 0,
+                ["x"] = 0,
+            }, -- end of ["bullseye"]
+            ["nav_points"] = 
+            {
+            }, -- end of ["nav_points"]
+            ["name"] = "blue",
+            ["country"] = 
+            {
+                [1] = 
+                {
+                    ["name"] = "USA",
+                    ["ship"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -268976.31697826,
+                                            ["x"] = -42902.660245998,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 2,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "TICONDEROG",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 2,
+                                        ["skill"] = "Average",
+                                        ["y"] = -268976.31697826,
+                                        ["x"] = -42902.660245998,
+                                        ["name"] = "CG Ticonderoga Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -268976.31697826,
+                                ["x"] = -42902.660245998,
+                                ["name"] = "CG Ticonderoga Template",
+                                ["start_time"] = 0,
+                            }, -- end of [1]
+                            [2] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -267584.80633267,
+                                            ["x"] = -42906.496420076,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 4,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "PERRY",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 8,
+                                        ["skill"] = "Average",
+                                        ["y"] = -267584.80633267,
+                                        ["x"] = -42906.496420076,
+                                        ["name"] = "FFG Oliver Hazard Perry Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -267584.80633267,
+                                ["x"] = -42906.496420076,
+                                ["name"] = "FFG Oliver Hazard Perry Template",
+                                ["start_time"] = 0,
+                            }, -- end of [2]
+                            [3] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -266528.41572861,
+                                            ["x"] = -42861.261093018,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 5,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "Stennis",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 9,
+                                        ["skill"] = "Average",
+                                        ["y"] = -266528.41572861,
+                                        ["x"] = -42861.261093018,
+                                        ["name"] = "CVN-74 Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -266528.41572861,
+                                ["x"] = -42861.261093018,
+                                ["name"] = "CVN-74 Template",
+                                ["start_time"] = 0,
+                            }, -- end of [3]
+                            [4] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -263269.60897846,
+                                            ["x"] = -42890.79047704,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 21,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "HandyWind",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 25,
+                                        ["skill"] = "Average",
+                                        ["y"] = -263269.60897846,
+                                        ["x"] = -42890.79047704,
+                                        ["name"] = "Bulker Handy Wind Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -263269.60897846,
+                                ["x"] = -42890.79047704,
+                                ["name"] = "Bulker Handy Wind Template",
+                                ["start_time"] = 0,
+                            }, -- end of [4]
+                        }, -- end of ["group"]
+                    }, -- end of ["ship"]
+                    ["id"] = 2,
+                    ["static"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["heading"] = 0,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = -270838.16996518,
+                                            ["speed"] = 0,
+                                            ["x"] = -35442.718197475,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 1,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Warehouses",
+                                        ["shape_name"] = "sklad",
+                                        ["type"] = "Warehouse",
+                                        ["unitId"] = 1,
+                                        ["rate"] = 100,
+                                        ["y"] = -270838.16996518,
+                                        ["x"] = -35442.718197475,
+                                        ["name"] = "Warehouse Akrotiri",
+                                        ["heading"] = 0,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -270838.16996518,
+                                ["x"] = -35442.718197475,
+                                ["name"] = "Warehouse Akrotiri",
+                                ["dead"] = false,
+                            }, -- end of [1]
+                        }, -- end of ["group"]
+                    }, -- end of ["static"]
+                }, -- end of [1]
+                [2] = 
+                {
+                    ["id"] = 80,
+                    ["name"] = "CJTF Blue",
+                    ["ship"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -265507.30275478,
+                                            ["x"] = -42906.496420076,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 6,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "speedboat",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 10,
+                                        ["skill"] = "Average",
+                                        ["y"] = -265507.30275478,
+                                        ["x"] = -42906.496420076,
+                                        ["name"] = "Boat Armed Hi-speed Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -265507.30275478,
+                                ["x"] = -42906.496420076,
+                                ["name"] = "Boat Armed Hi-speed Template",
+                                ["start_time"] = 0,
+                            }, -- end of [1]
+                            [2] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -264276.11467612,
+                                            ["x"] = -42918.789016119,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 7,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "La_Combattante_II",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 11,
+                                        ["skill"] = "Average",
+                                        ["y"] = -264276.11467612,
+                                        ["x"] = -42918.789016119,
+                                        ["name"] = "FAC La Combattante IIa Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -264276.11467612,
+                                ["x"] = -42918.789016119,
+                                ["name"] = "FAC La Combattante IIa Template",
+                                ["start_time"] = 0,
+                            }, -- end of [2]
+                        }, -- end of ["group"]
+                    }, -- end of ["ship"]
+                }, -- end of [2]
+            }, -- end of ["country"]
+        }, -- end of ["blue"]
+        ["red"] = 
+        {
+            ["bullseye"] = 
+            {
+                ["y"] = 0,
+                ["x"] = 0,
+            }, -- end of ["bullseye"]
+            ["nav_points"] = 
+            {
+            }, -- end of ["nav_points"]
+            ["name"] = "red",
+            ["country"] = 
+            {
+                [1] = 
+                {
+                    ["name"] = "Russia",
+                    ["ship"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -168420.03963408,
+                                            ["x"] = -41093.40189067,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["enabled"] = true,
+                                                            ["auto"] = false,
+                                                            ["id"] = "WrappedAction",
+                                                            ["number"] = 1,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "Option",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["value"] = 4,
+                                                                        ["name"] = 0,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                        [2] = 
+                                                        {
+                                                            ["enabled"] = true,
+                                                            ["auto"] = false,
+                                                            ["id"] = "WrappedAction",
+                                                            ["number"] = 2,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "Option",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["value"] = 0,
+                                                                        ["name"] = 9,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [2]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                        [2] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 1707.0823739346,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -194583.27916648,
+                                            ["x"] = -27957.047313736,
+                                            ["ETA_locked"] = false,
+                                            ["speed"] = 13.88888,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [2]
+                                        [3] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 3771.8328241699,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -216586.67308284,
+                                            ["x"] = -46347.943721443,
+                                            ["ETA_locked"] = false,
+                                            ["speed"] = 13.88888,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [3]
+                                        [4] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 5374.4023482865,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -204545.01472065,
+                                            ["x"] = -65067.248993573,
+                                            ["ETA_locked"] = false,
+                                            ["speed"] = 13.88888,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [4]
+                                        [5] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 7527.0622829233,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -174659.80805813,
+                                            ["x"] = -65943.005965368,
+                                            ["ETA_locked"] = false,
+                                            ["speed"] = 13.88888,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [5]
+                                        [6] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 8849.3532076514,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -166887.46493344,
+                                            ["x"] = -49303.623501253,
+                                            ["ETA_locked"] = false,
+                                            ["speed"] = 13.88888,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [6]
+                                        [7] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 11311.232402149,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -200932.51721199,
+                                            ["x"] = -46129.004478494,
+                                            ["ETA_locked"] = false,
+                                            ["speed"] = 13.88888,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [7]
+                                        [8] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 13318.389571292,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -181775.33345397,
+                                            ["x"] = -25877.124505722,
+                                            ["ETA_locked"] = false,
+                                            ["speed"] = 13.88888,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [8]
+                                        [9] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 15723.777802233,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -187905.63225653,
+                                            ["x"] = -58718.010948055,
+                                            ["ETA_locked"] = false,
+                                            ["speed"] = 13.88888,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [9]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 22,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "MOSCOW",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 26,
+                                        ["skill"] = "Average",
+                                        ["y"] = -168420.03963408,
+                                        ["x"] = -41093.40189067,
+                                        ["name"] = "Ru Cruiser Alpha-1",
+                                        ["heading"] = 5.1777088286293,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -168420.03963408,
+                                ["x"] = -41093.40189067,
+                                ["name"] = "Ru Cruiser Alpha-1",
+                                ["start_time"] = 0,
+                            }, -- end of [1]
+                        }, -- end of ["group"]
+                    }, -- end of ["ship"]
+                    ["id"] = 0,
+                    ["vehicle"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["route"] = 
+                                {
+                                    ["spans"] = 
+                                    {
+                                    }, -- end of ["spans"]
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 65,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -169166.43846394,
+                                            ["x"] = 43009.739766658,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Off Road",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 3,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "BTR-80",
+                                        ["unitId"] = 7,
+                                        ["skill"] = "Average",
+                                        ["y"] = -169166.43846394,
+                                        ["x"] = 43009.739766658,
+                                        ["name"] = "Ru BTR-80 Alpha-5",
+                                        ["heading"] = 0,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [1]
+                                    [2] = 
+                                    {
+                                        ["type"] = "BTR-80",
+                                        ["unitId"] = 6,
+                                        ["skill"] = "Average",
+                                        ["y"] = -169083.63172111,
+                                        ["x"] = 42947.634709536,
+                                        ["name"] = "Ru BTR-80 Alpha-4",
+                                        ["heading"] = 0,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [2]
+                                    [3] = 
+                                    {
+                                        ["type"] = "BTR-80",
+                                        ["unitId"] = 5,
+                                        ["skill"] = "Average",
+                                        ["y"] = -169232.42508713,
+                                        ["x"] = 42973.51181667,
+                                        ["name"] = "Ru BTR-80 Alpha-3",
+                                        ["heading"] = 0,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [3]
+                                    [4] = 
+                                    {
+                                        ["type"] = "BTR-80",
+                                        ["unitId"] = 4,
+                                        ["skill"] = "Average",
+                                        ["y"] = -169126.32894788,
+                                        ["x"] = 42859.65254528,
+                                        ["name"] = "Ru BTR-80 Alpha-2",
+                                        ["heading"] = 0,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [4]
+                                    [5] = 
+                                    {
+                                        ["type"] = "BTR-80",
+                                        ["unitId"] = 3,
+                                        ["skill"] = "Average",
+                                        ["y"] = -169188.434005,
+                                        ["x"] = 42908.819048835,
+                                        ["name"] = "Ru BTR-80 Alpha-1",
+                                        ["heading"] = 0,
+                                        ["playerCanDrive"] = true,
+                                    }, -- end of [5]
+                                }, -- end of ["units"]
+                                ["y"] = -169166.43846394,
+                                ["x"] = 43009.739766658,
+                                ["name"] = "Ru BTR-80 Alpha",
+                                ["start_time"] = 0,
+                            }, -- end of [1]
+                        }, -- end of ["group"]
+                    }, -- end of ["vehicle"]
+                    ["static"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["heading"] = 4.7472955654246,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 6142.0302809923,
+                                            ["speed"] = 0,
+                                            ["x"] = 42672.232865674,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 23,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["livery_id"] = "174 GvIAP_Boris Safonov",
+                                        ["category"] = "Planes",
+                                        ["type"] = "MiG-31",
+                                        ["unitId"] = 27,
+                                        ["rate"] = "50",
+                                        ["y"] = 6142.0302809923,
+                                        ["x"] = 42672.232865674,
+                                        ["name"] = "Static MiG-31-1",
+                                        ["heading"] = 4.7472955654246,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 6142.0302809923,
+                                ["x"] = 42672.232865674,
+                                ["name"] = "Static MiG-31-1",
+                                ["dead"] = false,
+                            }, -- end of [1]
+                            [2] = 
+                            {
+                                ["heading"] = 4.7472955654246,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 6145.5672227112,
+                                            ["speed"] = 0,
+                                            ["x"] = 42595.127536202,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 24,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["livery_id"] = "174 GvIAP_Boris Safonov",
+                                        ["category"] = "Planes",
+                                        ["type"] = "MiG-31",
+                                        ["unitId"] = 28,
+                                        ["rate"] = "50",
+                                        ["y"] = 6145.5672227112,
+                                        ["x"] = 42595.127536202,
+                                        ["name"] = "Static MiG-31-2-1",
+                                        ["heading"] = 4.7472955654246,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 6145.5672227112,
+                                ["x"] = 42595.127536202,
+                                ["name"] = "Static MiG-31-2",
+                                ["dead"] = false,
+                            }, -- end of [2]
+                            [3] = 
+                            {
+                                ["heading"] = 4.7472955654246,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 6149.1041644301,
+                                            ["speed"] = 0,
+                                            ["x"] = 42519.436983418,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 25,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["livery_id"] = "174 GvIAP_Boris Safonov",
+                                        ["category"] = "Planes",
+                                        ["type"] = "MiG-31",
+                                        ["unitId"] = 29,
+                                        ["rate"] = "50",
+                                        ["y"] = 6149.1041644301,
+                                        ["x"] = 42519.436983418,
+                                        ["name"] = "Static MiG-31-3-1",
+                                        ["heading"] = 4.7472955654246,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 6149.1041644301,
+                                ["x"] = 42519.436983418,
+                                ["name"] = "Static MiG-31-3",
+                                ["dead"] = false,
+                            }, -- end of [3]
+                            [4] = 
+                            {
+                                ["heading"] = 4.7472955654246,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 6145.5672227112,
+                                            ["speed"] = 0,
+                                            ["x"] = 42440.916877259,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 26,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["livery_id"] = "174 GvIAP_Boris Safonov",
+                                        ["category"] = "Planes",
+                                        ["type"] = "MiG-31",
+                                        ["unitId"] = 30,
+                                        ["rate"] = "50",
+                                        ["y"] = 6145.5672227112,
+                                        ["x"] = 42440.916877259,
+                                        ["name"] = "Static MiG-31-4-1",
+                                        ["heading"] = 4.7472955654246,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 6145.5672227112,
+                                ["x"] = 42440.916877259,
+                                ["name"] = "Static MiG-31-4",
+                                ["dead"] = false,
+                            }, -- end of [4]
+                            [5] = 
+                            {
+                                ["heading"] = 4.7472955654246,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 6145.5672227112,
+                                            ["speed"] = 0,
+                                            ["x"] = 42362.3967711,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 27,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["livery_id"] = "174 GvIAP_Boris Safonov",
+                                        ["category"] = "Planes",
+                                        ["type"] = "MiG-31",
+                                        ["unitId"] = 31,
+                                        ["rate"] = "50",
+                                        ["y"] = 6145.5672227112,
+                                        ["x"] = 42362.3967711,
+                                        ["name"] = "Static MiG-31-5-1",
+                                        ["heading"] = 4.7472955654246,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 6145.5672227112,
+                                ["x"] = 42362.3967711,
+                                ["name"] = "Static MiG-31-5",
+                                ["dead"] = false,
+                            }, -- end of [5]
+                            [6] = 
+                            {
+                                ["heading"] = 0.082855938181985,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = -209215.49173824,
+                                            ["speed"] = 0,
+                                            ["x"] = -7257.3443684521,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 28,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Warehouses",
+                                        ["shape_name"] = "sklad",
+                                        ["type"] = "Warehouse",
+                                        ["unitId"] = 32,
+                                        ["rate"] = 100,
+                                        ["y"] = -209215.49173824,
+                                        ["x"] = -7257.3443684521,
+                                        ["name"] = "Warhouse Larnaca",
+                                        ["heading"] = 0.082855938181985,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -209215.49173824,
+                                ["x"] = -7257.3443684521,
+                                ["name"] = "Warhouse Larnaca",
+                                ["dead"] = false,
+                            }, -- end of [6]
+                            [7] = 
+                            {
+                                ["heading"] = 0.082855938181985,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 6229.1659434534,
+                                            ["speed"] = 0,
+                                            ["x"] = 41815.453752512,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 29,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Warehouses",
+                                        ["shape_name"] = "sklad",
+                                        ["type"] = "Warehouse",
+                                        ["unitId"] = 33,
+                                        ["rate"] = 100,
+                                        ["y"] = 6229.1659434534,
+                                        ["x"] = 41815.453752512,
+                                        ["name"] = "Warhouse Bassel Al-Assad",
+                                        ["heading"] = 0.082855938181985,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 6229.1659434534,
+                                ["x"] = 41815.453752512,
+                                ["name"] = "Warhouse Bassel Al-Assad",
+                                ["dead"] = false,
+                            }, -- end of [7]
+                        }, -- end of ["group"]
+                    }, -- end of ["static"]
+                }, -- end of [1]
+                [2] = 
+                {
+                    ["name"] = "CJTF Red",
+                    ["ship"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -268995.97660008,
+                                            ["x"] = -44211.049894275,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 8,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "PIOTR",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 12,
+                                        ["skill"] = "Average",
+                                        ["y"] = -268995.97660008,
+                                        ["x"] = -44211.049894275,
+                                        ["name"] = "Battlecruiser 1144.2 Pyotr Velikiy Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -268995.97660008,
+                                ["x"] = -44211.049894275,
+                                ["name"] = "Battlecruiser 1144.2 Pyotr Velikiy Template",
+                                ["start_time"] = 0,
+                            }, -- end of [1]
+                            [2] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -267586.23746027,
+                                            ["x"] = -44259.423296131,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 9,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "ALBATROS",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 13,
+                                        ["skill"] = "Average",
+                                        ["y"] = -267586.23746027,
+                                        ["x"] = -44259.423296131,
+                                        ["name"] = "Corvette 1124.4 Grisha Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -267586.23746027,
+                                ["x"] = -44259.423296131,
+                                ["name"] = "Corvette 1124.4 Grisha Template",
+                                ["start_time"] = 0,
+                            }, -- end of [2]
+                            [3] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -266473.64921758,
+                                            ["x"] = -44169.586978398,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 10,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "MOLNIYA",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 14,
+                                        ["skill"] = "Average",
+                                        ["y"] = -266473.64921758,
+                                        ["x"] = -44169.586978398,
+                                        ["name"] = "Corvette 1241.1 Molniys Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -266473.64921758,
+                                ["x"] = -44169.586978398,
+                                ["name"] = "Corvette 1241.1 Molniys Template",
+                                ["start_time"] = 0,
+                            }, -- end of [3]
+                            [4] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -265443.98680665,
+                                            ["x"] = -44121.213576542,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 11,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "MOSCOW",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 15,
+                                        ["skill"] = "Average",
+                                        ["y"] = -265443.98680665,
+                                        ["x"] = -44121.213576542,
+                                        ["name"] = "Cruiser 1165 Moskva Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -265443.98680665,
+                                ["x"] = -44121.213576542,
+                                ["name"] = "Cruiser 1165 Moskva Template",
+                                ["start_time"] = 0,
+                            }, -- end of [4]
+                            [5] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -264262.29370416,
+                                            ["x"] = -44121.213576542,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 12,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "REZKY",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 16,
+                                        ["skill"] = "Average",
+                                        ["y"] = -264262.29370416,
+                                        ["x"] = -44121.213576542,
+                                        ["name"] = "Frigate 1135M Rezky Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -264262.29370416,
+                                ["x"] = -44121.213576542,
+                                ["name"] = "Frigate 1135M Rezky Template",
+                                ["start_time"] = 0,
+                            }, -- end of [5]
+                            [6] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -263211.89983529,
+                                            ["x"] = -44093.571632624,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 13,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "KUZNECOW",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 17,
+                                        ["skill"] = "Average",
+                                        ["y"] = -263211.89983529,
+                                        ["x"] = -44093.571632624,
+                                        ["name"] = "CV 1143.5 Admiral Kuznetsov Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -263211.89983529,
+                                ["x"] = -44093.571632624,
+                                ["name"] = "CV 1143.5 Admiral Kuznetsov Template",
+                                ["start_time"] = 0,
+                            }, -- end of [6]
+                            [7] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -262368.8205458,
+                                            ["x"] = -44065.929688706,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 14,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "NEUSTRASH",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 18,
+                                        ["skill"] = "Average",
+                                        ["y"] = -262368.8205458,
+                                        ["x"] = -44065.929688706,
+                                        ["name"] = "Frigate 11540 Neustrashimy Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -262368.8205458,
+                                ["x"] = -44065.929688706,
+                                ["name"] = "Frigate 11540 Neustrashimy Template",
+                                ["start_time"] = 0,
+                            }, -- end of [7]
+                            [8] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -261560.2936862,
+                                            ["x"] = -44045.198230768,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 15,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "IMPROVED_KILO",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 19,
+                                        ["skill"] = "Average",
+                                        ["y"] = -261560.2936862,
+                                        ["x"] = -44045.198230768,
+                                        ["name"] = "SSK 636 Kilo Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -261560.2936862,
+                                ["x"] = -44045.198230768,
+                                ["name"] = "SSK 636 Kilo Template",
+                                ["start_time"] = 0,
+                            }, -- end of [8]
+                            [9] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -260786.3192565,
+                                            ["x"] = -44079.750660665,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 16,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "Type_052B",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 20,
+                                        ["skill"] = "Average",
+                                        ["y"] = -260786.3192565,
+                                        ["x"] = -44079.750660665,
+                                        ["name"] = "Type 052B Destroyer Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -260786.3192565,
+                                ["x"] = -44079.750660665,
+                                ["name"] = "Type 052B Destroyer Template",
+                                ["start_time"] = 0,
+                            }, -- end of [9]
+                            [10] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -260178.19649031,
+                                            ["x"] = -44065.929688706,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 17,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "Type_052C",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 21,
+                                        ["skill"] = "Average",
+                                        ["y"] = -260178.19649031,
+                                        ["x"] = -44065.929688706,
+                                        ["name"] = "Type 052C Destroyer Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -260178.19649031,
+                                ["x"] = -44065.929688706,
+                                ["name"] = "Type 052C Destroyer Template",
+                                ["start_time"] = 0,
+                            }, -- end of [10]
+                            [11] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -259611.53664,
+                                            ["x"] = -44059.019202727,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 18,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "Type_054A",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 22,
+                                        ["skill"] = "Average",
+                                        ["y"] = -259611.53664,
+                                        ["x"] = -44059.019202727,
+                                        ["name"] = "Type 054A Frigate Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -259611.53664,
+                                ["x"] = -44059.019202727,
+                                ["name"] = "Type 054A Frigate Template",
+                                ["start_time"] = 0,
+                            }, -- end of [11]
+                            [12] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -259134.71310742,
+                                            ["x"] = -44038.287744789,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 19,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "Type_071",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 23,
+                                        ["skill"] = "Average",
+                                        ["y"] = -259134.71310742,
+                                        ["x"] = -44038.287744789,
+                                        ["name"] = "Type 071 Amphibious Transport Dock Template",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -259134.71310742,
+                                ["x"] = -44038.287744789,
+                                ["name"] = "Type 071 Amphibious Transport Dock Template",
+                                ["start_time"] = 0,
+                            }, -- end of [12]
+                            [13] = 
+                            {
+                                ["visible"] = false,
+                                ["lateActivation"] = true,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["routeRelativeTOT"] = true,
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -258554.23228514,
+                                            ["x"] = -44045.198230768,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 20,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "Type_093",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 24,
+                                        ["skill"] = "Average",
+                                        ["y"] = -258554.23228514,
+                                        ["x"] = -44045.198230768,
+                                        ["name"] = "Type 093 Attack Submarine",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -258554.23228514,
+                                ["x"] = -44045.198230768,
+                                ["name"] = "Type 093 Attack Submarine",
+                                ["start_time"] = 0,
+                            }, -- end of [13]
+                            [14] = 
+                            {
+                                ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -92991.263608796,
+                                            ["x"] = -29242.151468659,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["enabled"] = true,
+                                                            ["auto"] = false,
+                                                            ["id"] = "WrappedAction",
+                                                            ["number"] = 1,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "Option",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["value"] = 4,
+                                                                        ["name"] = 0,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 31,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "MOSCOW",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 41,
+                                        ["skill"] = "Average",
+                                        ["y"] = -92991.263608796,
+                                        ["x"] = -29242.151468659,
+                                        ["name"] = "Ru Ships Alpha-1",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                    [2] = 
+                                    {
+                                        ["type"] = "MOLNIYA",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 42,
+                                        ["skill"] = "Average",
+                                        ["y"] = -92720.041754525,
+                                        ["x"] = -29375.689685214,
+                                        ["name"] = "Ru Ships Alpha-2",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [2]
+                                    [3] = 
+                                    {
+                                        ["type"] = "ALBATROS",
+                                        ["modulation"] = 0,
+                                        ["unitId"] = 43,
+                                        ["skill"] = "Average",
+                                        ["y"] = -93157.541829303,
+                                        ["x"] = -29605.88507602,
+                                        ["name"] = "Ru Ships Alpha-3",
+                                        ["heading"] = 0,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [3]
+                                }, -- end of ["units"]
+                                ["y"] = -92991.263608796,
+                                ["x"] = -29242.151468659,
+                                ["name"] = "Ru Ships Alpha",
+                                ["start_time"] = 0,
+                            }, -- end of [14]
+                        }, -- end of ["group"]
+                    }, -- end of ["ship"]
+                    ["id"] = 81,
+                    ["vehicle"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["task"] = "Ground Nothing",
+                                ["taskSelected"] = true,
+                                ["route"] = 
+                                {
+                                    ["spans"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            [1] = 
+                                            {
+                                                ["y"] = -166440.36326647,
+                                                ["x"] = -450.10667417367,
+                                            }, -- end of [1]
+                                            [2] = 
+                                            {
+                                                ["y"] = -166494.1285383,
+                                                ["x"] = -421.33619835023,
+                                            }, -- end of [2]
+                                        }, -- end of [1]
+                                    }, -- end of ["spans"]
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 9,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -166451.46996895,
+                                            ["x"] = -478.92526696634,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Off Road",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                        [1] = 
+                                                        {
+                                                            ["enabled"] = true,
+                                                            ["auto"] = false,
+                                                            ["id"] = "WrappedAction",
+                                                            ["number"] = 1,
+                                                            ["params"] = 
+                                                            {
+                                                                ["action"] = 
+                                                                {
+                                                                    ["id"] = "Option",
+                                                                    ["params"] = 
+                                                                    {
+                                                                        ["value"] = 4,
+                                                                        ["name"] = 0,
+                                                                    }, -- end of ["params"]
+                                                                }, -- end of ["action"]
+                                                            }, -- end of ["params"]
+                                                        }, -- end of [1]
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 30,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["type"] = "hy_launcher",
+                                        ["unitId"] = 40,
+                                        ["skill"] = "Average",
+                                        ["y"] = -166451.46996895,
+                                        ["x"] = -478.92526696634,
+                                        ["name"] = "Red Silkworm Alpha-5",
+                                        ["heading"] = 3.8746309394274,
+                                        ["playerCanDrive"] = false,
+                                    }, -- end of [1]
+                                    [2] = 
+                                    {
+                                        ["type"] = "hy_launcher",
+                                        ["unitId"] = 39,
+                                        ["skill"] = "Average",
+                                        ["y"] = -166539.45326823,
+                                        ["x"] = -466.66092827958,
+                                        ["name"] = "Red Silkworm Alpha-4",
+                                        ["heading"] = 3.3510321638291,
+                                        ["playerCanDrive"] = false,
+                                    }, -- end of [2]
+                                    [3] = 
+                                    {
+                                        ["type"] = "hy_launcher",
+                                        ["unitId"] = 38,
+                                        ["skill"] = "Average",
+                                        ["y"] = -166575.17982005,
+                                        ["x"] = -433.33392097859,
+                                        ["name"] = "Red Silkworm Alpha-3",
+                                        ["heading"] = 4.1713369122664,
+                                        ["playerCanDrive"] = false,
+                                    }, -- end of [3]
+                                    [4] = 
+                                    {
+                                        ["type"] = "hy_launcher",
+                                        ["unitId"] = 37,
+                                        ["skill"] = "Average",
+                                        ["y"] = -166597.57556896,
+                                        ["x"] = -385.60964652357,
+                                        ["name"] = "Red Silkworm Alpha-2",
+                                        ["heading"] = 4.4680428851055,
+                                        ["playerCanDrive"] = false,
+                                    }, -- end of [4]
+                                    [5] = 
+                                    {
+                                        ["type"] = "Silkworm_SR",
+                                        ["unitId"] = 34,
+                                        ["skill"] = "Average",
+                                        ["y"] = -166518.12398355,
+                                        ["x"] = -412.80448448118,
+                                        ["name"] = "Red Silkworm Alpha-1",
+                                        ["heading"] = 5.203730545939,
+                                        ["playerCanDrive"] = false,
+                                    }, -- end of [5]
+                                }, -- end of ["units"]
+                                ["y"] = -166451.46996895,
+                                ["x"] = -478.92526696634,
+                                ["name"] = "Red Silkworm Alpha",
+                                ["start_time"] = 0,
+                            }, -- end of [1]
+                        }, -- end of ["group"]
+                    }, -- end of ["vehicle"]
+                }, -- end of [2]
+            }, -- end of ["country"]
+        }, -- end of ["red"]
+    }, -- end of ["coalition"]
+    ["sortie"] = "DictKey_sortie_5",
+    ["version"] = 20,
+    ["trigrules"] = 
+    {
+        [1] = 
+        {
+            ["rules"] = 
+            {
+            }, -- end of ["rules"]
+            ["eventlist"] = "",
+            ["comment"] = "Load Moose",
+            ["actions"] = 
+            {
+                [1] = 
+                {
+                    ["predicate"] = "a_do_script_file",
+                    ["file"] = "ResKey_Action_6",
+                }, -- end of [1]
+            }, -- end of ["actions"]
+            ["predicate"] = "triggerStart",
+            ["colorItem"] = "0xff0000ff",
+        }, -- end of [1]
+        [2] = 
+        {
+            ["rules"] = 
+            {
+            }, -- end of ["rules"]
+            ["comment"] = "Load Mission",
+            ["eventlist"] = "",
+            ["predicate"] = "triggerStart",
+            ["actions"] = 
+            {
+                [1] = 
+                {
+                    ["text"] = "assert(loadfile(\"D:/DCS/Scripts/My_Missions/_Ops/Fleet/Fleet_Syria.lua\"))();",
+                    ["predicate"] = "a_do_script",
+                }, -- end of [1]
+            }, -- end of ["actions"]
+            ["colorItem"] = "0x00ff00ff",
+        }, -- end of [2]
+    }, -- end of ["trigrules"]
+    ["currentKey"] = 11330,
+    ["start_time"] = 28800,
+    ["forcedOptions"] = 
+    {
+    }, -- end of ["forcedOptions"]
+    ["failures"] = 
+    {
+    }, -- end of ["failures"]
+} -- end of mission
