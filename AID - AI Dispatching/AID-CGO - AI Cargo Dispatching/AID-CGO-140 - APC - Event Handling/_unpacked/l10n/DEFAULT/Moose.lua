@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-04-14T06:12:02.0000000Z-fc9e237dbb5bfaf44c4f3b0d501af96a610d7297 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-04-14T13:55:51.0000000Z-061469840b25a60039b1f45c1301afe0b0d06870 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -3619,6 +3619,7 @@ self.pointer=0
 self.counter=0
 self.stackbypointer={}
 self.stackbyid={}
+self.uniquecounter=0
 self.lid=string.format("%s (%s) | ","FiFo",self.version)
 self:I(self.lid.."Created.")
 return self
@@ -3628,12 +3629,13 @@ self:T(self.lid.."Push")
 self:T({Object,UniqueID})
 self.pointer=self.pointer+1
 self.counter=self.counter+1
-self.stackbypointer[self.pointer]={pointer=self.pointer,data=Object,uniqueID=UniqueID}
-if UniqueID then
-self.stackbyid[UniqueID]={pointer=self.pointer,data=Object,uniqueID=UniqueID}
-else
-self.stackbyid[self.pointer]={pointer=self.pointer,data=Object,uniqueID=UniqueID}
+local uniID=UniqueID
+if not UniqueID then
+self.uniquecounter=self.uniquecounter+1
+uniID=self.uniquecounter
 end
+self.stackbyid[uniID]={pointer=self.pointer,data=Object,uniqueID=uniID}
+self.stackbypointer[self.pointer]={pointer=self.pointer,data=Object,uniqueID=uniID}
 return self
 end
 function FIFO:Pull()
@@ -3697,6 +3699,10 @@ function FIFO:GetPointerStack()
 self:T(self.lid.."GetPointerStack")
 return self.stackbypointer
 end
+function FIFO:HasUniqueID(UniqueID)
+self:T(self.lid.."HasUniqueID")
+return self.stackbyid[UniqueID]and true or false
+end
 function FIFO:GetIDStack()
 self:T(self.lid.."GetIDStack")
 return self.stackbyid
@@ -3707,7 +3713,7 @@ local stack=self:GetIDStack()
 local idstack={}
 for _id,_entry in pairs(stack)do
 idstack[#idstack+1]=_id
-self:I({"pre",_id})
+self:T({"pre",_id})
 end
 local function sortID(a,b)
 return a<b
@@ -3720,12 +3726,12 @@ self:T(self.lid.."FiFo Flush")
 self:I("FIFO Flushing Stack by Pointer")
 for _id,_data in pairs(self.stackbypointer)do
 local data=_data
-self:I(string.format("Pointer: %s | Entry: Number = %s Data = %s UniID = %s",tostring(_id),tostring(data.pointer),tostring(data.data),tostring(data.uniqueID)))
+self:I(string.format("Pointer: %s | Entry: Number = %s Data = %s UniqueID = %s",tostring(_id),tostring(data.pointer),tostring(data.data),tostring(data.uniqueID)))
 end
 self:I("FIFO Flushing Stack by ID")
 for _id,_data in pairs(self.stackbyid)do
 local data=_data
-self:I(string.format("ID: %s | Entry: Number = %s Data = %s UniID = %s",tostring(_id),tostring(data.pointer),tostring(data.data),tostring(data.uniqueID)))
+self:I(string.format("ID: %s | Entry: Number = %s Data = %s UniqueID = %s",tostring(_id),tostring(data.pointer),tostring(data.data),tostring(data.uniqueID)))
 end
 self:I("Counter = "..self.counter)
 self:I("Pointer = "..self.pointer)
@@ -3746,6 +3752,7 @@ function LIFO:New()
 local self=BASE:Inherit(self,BASE:New())
 self.pointer=0
 self.counter=0
+self.uniquecounter=0
 self.stackbypointer={}
 self.stackbyid={}
 self.lid=string.format("%s (%s) | ","LiFo",self.version)
@@ -3757,12 +3764,13 @@ self:T(self.lid.."Push")
 self:T({Object,UniqueID})
 self.pointer=self.pointer+1
 self.counter=self.counter+1
-self.stackbypointer[self.pointer]={pointer=self.pointer,data=Object,uniqueID=UniqueID}
-if UniqueID then
-self.stackbyid[UniqueID]={pointer=self.pointer,data=Object,uniqueID=UniqueID}
-else
-self.stackbyid[self.pointer]={pointer=self.pointer,data=Object,uniqueID=UniqueID}
+local uniID=UniqueID
+if not UniqueID then
+self.uniquecounter=self.uniquecounter+1
+uniID=self.uniquecounter
 end
+self.stackbyid[uniID]={pointer=self.pointer,data=Object,uniqueID=uniID}
+self.stackbypointer[self.pointer]={pointer=self.pointer,data=Object,uniqueID=uniID}
 return self
 end
 function LIFO:Pull()
@@ -3837,7 +3845,7 @@ local stack=self:GetIDStack()
 local idstack={}
 for _id,_entry in pairs(stack)do
 idstack[#idstack+1]=_id
-self:I({"pre",_id})
+self:T({"pre",_id})
 end
 local function sortID(a,b)
 return a<b
@@ -3845,17 +3853,21 @@ end
 table.sort(idstack)
 return idstack
 end
+function LIFO:HasUniqueID(UniqueID)
+self:T(self.lid.."HasUniqueID")
+return self.stackbyid[UniqueID]and true or false
+end
 function LIFO:Flush()
 self:T(self.lid.."FiFo Flush")
 self:I("LIFO Flushing Stack by Pointer")
 for _id,_data in pairs(self.stackbypointer)do
 local data=_data
-self:I(string.format("Pointer: %s | Entry: Number = %s Data = %s UniID = %s",tostring(_id),tostring(data.pointer),tostring(data.data),tostring(data.uniqueID)))
+self:I(string.format("Pointer: %s | Entry: Number = %s Data = %s UniqueID = %s",tostring(_id),tostring(data.pointer),tostring(data.data),tostring(data.uniqueID)))
 end
 self:I("LIFO Flushing Stack by ID")
 for _id,_data in pairs(self.stackbyid)do
 local data=_data
-self:I(string.format("ID: %s | Entry: Number = %s Data = %s UniID = %s",tostring(_id),tostring(data.pointer),tostring(data.data),tostring(data.uniqueID)))
+self:I(string.format("ID: %s | Entry: Number = %s Data = %s UniqueID = %s",tostring(_id),tostring(data.pointer),tostring(data.data),tostring(data.uniqueID)))
 end
 self:I("Counter = "..self.counter)
 self:I("Pointer = "..self.pointer)
