@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-05-06T09:45:11.0000000Z-cc497919975a1999c6eeef499c8ffbebb71aff7a ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-05-13T14:37:41.0000000Z-c0b32a5584c12c2e736ff4cc0ab6003feeb57923 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -14418,7 +14418,7 @@ local Distance=FromCoordinate:Get2DDistance(self)
 local Altitude=self:GetAltitudeText()
 return"BRA, "..self:GetBRAText(AngleRadians,Distance,Settings,Language)
 end
-function COORDINATE:ToStringBRAANATO(FromCoordinate,Bogey,Spades)
+function COORDINATE:ToStringBRAANATO(FromCoordinate,Bogey,Spades,SSML)
 local BRAANATO="Merged."
 local currentCoord=FromCoordinate
 local DirectionVec3=FromCoordinate:GetDirectionVec3(self)
@@ -14430,10 +14430,11 @@ local aspect=self:ToStringAspect(currentCoord)
 local alt=UTILS.Round(UTILS.MetersToFeet(self.y)/1000,0)
 local track=UTILS.BearingToCardinal(bearing)or"North"
 if rangeNM>3 then
+if SSML then
 if aspect==""then
-BRAANATO=string.format("BRA, %03d, %d miles, Angels %d, Track %s",bearing,rangeNM,alt,track)
+BRAANATO=string.format("brah <say-as interpret-as='characters'>%03d</say-as>, %d miles, Angels %d, Track %s",bearing,rangeNM,alt,track)
 else
-BRAANATO=string.format("BRAA, %03d, %d miles, Angels %d, %s, Track %s",bearing,rangeNM,alt,aspect,track)
+BRAANATO=string.format("brah <say-as interpret-as='characters'>%03d</say-as>, %d miles, Angels %d, %s, Track %s",bearing,rangeNM,alt,aspect,track)
 end
 if Bogey and Spades then
 BRAANATO=BRAANATO..", Bogey, Spades."
@@ -14443,6 +14444,22 @@ elseif Spades then
 BRAANATO=BRAANATO..", Spades."
 else
 BRAANATO=BRAANATO.."."
+end
+else
+if aspect==""then
+BRAANATO=string.format("BRA %03d, %d miles, Angels %d, Track %s",bearing,rangeNM,alt,track)
+else
+BRAANATO=string.format("BRAA %03d, %d miles, Angels %d, %s, Track %s",bearing,rangeNM,alt,aspect,track)
+end
+if Bogey and Spades then
+BRAANATO=BRAANATO..", Bogey, Spades."
+elseif Bogey then
+BRAANATO=BRAANATO..", Bogey."
+elseif Spades then
+BRAANATO=BRAANATO..", Spades."
+else
+BRAANATO=BRAANATO.."."
+end
 end
 end
 return BRAANATO
@@ -20837,8 +20854,14 @@ end
 function GROUP:GetDCSUnit(UnitNumber)
 local DCSGroup=self:GetDCSObject()
 if DCSGroup then
-local DCSUnitFound=DCSGroup:getUnit(UnitNumber)
-return DCSUnitFound
+local UnitFound=nil
+local units=DCSGroup:getUnits()or{}
+for _,_unit in pairs(units)do
+local UnitFound=UNIT:Find(_unit)
+if UnitFound then
+return UnitFound
+end
+end
 end
 return nil
 end
@@ -21054,12 +21077,13 @@ return nil
 end
 function GROUP:GetHeading()
 self:F2(self.GroupName)
+self:F2(self.GroupName)
 local GroupSize=self:GetSize()
 local HeadingAccumulator=0
 local n=0
+local Units=self:GetUnits()
 if GroupSize then
-for i=1,GroupSize do
-local unit=self:GetUnit(i)
+for _,unit in pairs(Units)do
 if unit and unit:IsAlive()then
 HeadingAccumulator=HeadingAccumulator+unit:GetHeading()
 n=n+1
@@ -23218,7 +23242,7 @@ AIRBASE.Syria={
 ["Ruwayshid"]="Ruwayshid",
 ["Sanliurfa"]="Sanliurfa",
 ["Tal_Siman"]="Tal Siman",
-["Deir_ez-Zor"]="Deir ez-Zor",
+["Deir_ez_Zor"]="Deir ez-Zor",
 }
 AIRBASE.MarianaIslands={
 ["Rota_Intl"]="Rota Intl",
@@ -62094,6 +62118,8 @@ self:AddTransition("*","Eject","*")
 self:AddTransition("*","Crash","Crashed")
 self:AddTransition("*","PilotDead","*")
 self.IdleCount=0
+self.RTBSpeedMaxFactor=0.6
+self.RTBSpeedMinFactor=0.5
 return self
 end
 function GROUP:OnEventTakeoff(EventData,Fsm)
@@ -62255,6 +62281,11 @@ local Task=AIGroup:TaskOrbitCircle(4000,400)
 AIGroup:SetTask(Task)
 end
 end
+function AI_AIR:SetRTBSpeedFactors(MinFactor,MaxFactor)
+self.RTBSpeedMaxFactor=MaxFactor or 0.6
+self.RTBSpeedMinFactor=MinFactor or 0.5
+return self
+end
 function AI_AIR:onafterRTB(AIGroup,From,Event,To)
 self:F({AIGroup,From,Event,To})
 if AIGroup and AIGroup:IsAlive()then
@@ -62265,11 +62296,13 @@ local EngageRoute={}
 local FromCoord=AIGroup:GetCoordinate()
 local ToTargetCoord=self.HomeAirbase:GetCoordinate()
 local ToTargetVec3=ToTargetCoord:GetVec3()
-ToTargetVec3.y=ToTargetCoord:GetLandHeight()+1000
+ToTargetVec3.y=ToTargetCoord:GetLandHeight()+3000
 local ToTargetCoord2=COORDINATE:NewFromVec3(ToTargetVec3)
 if not self.RTBMinSpeed or not self.RTBMaxSpeed then
 local RTBSpeedMax=AIGroup:GetSpeedMax()
-self:SetRTBSpeed(RTBSpeedMax*0.5,RTBSpeedMax*0.6)
+local RTBSpeedMaxFactor=self.RTBSpeedMaxFactor or 0.6
+local RTBSpeedMinFactor=self.RTBSpeedMinFactor or 0.5
+self:SetRTBSpeed(RTBSpeedMax*RTBSpeedMinFactor,RTBSpeedMax*RTBSpeedMaxFactor)
 end
 local RTBSpeed=math.random(self.RTBMinSpeed,self.RTBMaxSpeed)
 local Distance=FromCoord:Get2DDistance(ToTargetCoord2)
@@ -71271,7 +71304,7 @@ speed=1,
 coordinate=nil,
 Label="ROBOT",
 }
-MSRS.version="0.0.5"
+MSRS.version="0.0.6"
 function MSRS:New(PathToSRS,Frequency,Modulation,Volume)
 Frequency=Frequency or 143
 Modulation=Modulation or radio.modulation.AM
@@ -71489,7 +71522,7 @@ port=port or self.port
 label=label or self.Label
 modus=modus:gsub("0","AM")
 modus=modus:gsub("1","FM")
-local command=string.format('"%s\\%s" -f %s -m %s -c %s -p %s -n "%s"',path,exe,freqs,modus,coal,port,label)
+local command=string.format('"%s\\%s" -f %s -m %s -c %s -p %s -n "%s" -v "%.1f"',path,exe,freqs,modus,coal,port,label,volume)
 if voice then
 command=command..string.format(" --voice=\"%s\"",tostring(voice))
 else
