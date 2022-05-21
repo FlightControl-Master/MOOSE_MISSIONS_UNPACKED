@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-05-13T14:37:41.0000000Z-c0b32a5584c12c2e736ff4cc0ab6003feeb57923 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-05-20T18:16:45.0000000Z-7df3946189518ac1933e66ca1ea43e763c62c983 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -18510,7 +18510,11 @@ local Weights={
 ["Ural-4320 APA-5D"]=10,
 ["Ural-4320T"]=14,
 ["ZBD04A"]=7,
-["VAB_Mephisto"]=8
+["VAB_Mephisto"]=8,
+["tt_KORD"]=6,
+["tt_DSHK"]=6,
+["HL_KORD"]=6,
+["HL_DSHK"]=6,
 }
 local CargoBayWeightLimit=(Weights[Desc.typeName]or 0)*95
 self.__.CargoBayWeightLimit=CargoBayWeightLimit
@@ -51523,7 +51527,7 @@ return self:GetHeading(true)
 end
 function AIRBOSS:GetWind(alt,magnetic,coord)
 local cv=coord or self:GetCoordinate()
-local Wdir,Wspeed=cv:GetWind(alt or 50)
+local Wdir,Wspeed=cv:GetWind(alt or 15)
 if magnetic then
 Wdir=Wdir-self.magvar
 if Wdir<0 then
