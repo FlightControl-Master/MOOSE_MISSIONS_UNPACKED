@@ -31,9 +31,10 @@ This repository contains the source lua code of the MOOSE framework.
 This repository contains the Moose.lua file to be included within your missions.
   
  
-###   [MOOSE_DOCS](https://github.com/FlightControl-Master/MOOSE_DOCS) - Not for use
+##  [MOOSE Youtube Tutorials](https://youtube.com/playlist?list=PLLkY2GByvtC2ME0Q9wrKRDE6qnXJYV3iT)
 
-This repository contains the generated documentation and pictures and other references. The generated documentation is reflected in html and is published at: https://flightcontrol-master.github.io/MOOSE_DOCS/
+Pene has kindly created a [tutorial series for MOOSE](https://youtube.com/playlist?list=PLLkY2GByvtC2ME0Q9wrKRDE6qnXJYV3iT)
+ with various videos that you can watch.
   
   
 ###   [MOOSE_MISSIONS](https://github.com/FlightControl-Master/MOOSE_MISSIONS) - For use and generated
