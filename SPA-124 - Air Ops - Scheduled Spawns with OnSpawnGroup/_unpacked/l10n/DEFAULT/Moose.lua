@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-05-22T10:06:49.0000000Z-ed9c14e63d5a7d65b891cdb27744afdfd97be7e8 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-06-09T10:12:29.0000000Z-f0e0b918af98877cf83ca4d79f998b694928ab9a ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -23258,6 +23258,16 @@ AIRBASE.MarianaIslands={
 ["Saipan_Intl"]="Saipan Intl",
 ["Tinian_Intl"]="Tinian Intl",
 ["Olf_Orote"]="Olf Orote",
+}
+AIRBASE.SouthAtlantic={
+["Port_Stanley"]="Port Stanley",
+["Mount_Pleasant"]="Mount Pleasant",
+["San_Carlos_FOB"]="San Carlos FOB",
+["Rio_Grande"]="Rio Grande",
+["Rio_Gallegos"]="Rio Gallegos",
+["Ushuaia"]="Ushuaia",
+["Ushuaia_Helo_Port"]="Ushuaia Helo Port",
+["Punta_Arenas"]="Punta Arenas",
 }
 AIRBASE.TerminalType={
 Runway=16,
@@ -60325,7 +60335,6 @@ CTLD_HERCULES.Types={
 ["ART GVOZDIKA [34720lb]"]={['name']="SAU Gvozdika",['container']=false},
 ["APC MTLB Air [26400lb]"]={['name']="MTLB",['container']=true},
 ["APC MTLB Skid [26290lb]"]={['name']="MTLB",['container']=false},
-["Generic Crate [20000lb]"]={['name']="Hercules_Container_Parachute",['container']=true}
 }
 function CTLD_HERCULES:New(Coalition,Alias,CtldObject)
 local self=BASE:Inherit(self,FSM:New())
@@ -60699,7 +60708,7 @@ CSAR.AircraftType["Mi-24V"]=8
 CSAR.AircraftType["Bell-47"]=2
 CSAR.AircraftType["UH-60L"]=10
 CSAR.AircraftType["AH-64D_BLK_II"]=2
-CSAR.version="1.0.4e"
+CSAR.version="1.0.5"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
@@ -60803,6 +60812,10 @@ self.SRSPath="E:\\Progra~1\\DCS-SimpleRadio-Standalone\\"
 self.SRSchannel=300
 self.SRSModulation=radio.modulation.AM
 self.SRSport=5002
+self.SRSCulture="en-GB"
+self.SRSVoice=nil
+self.SRSGPathToCredentials=nil
+self.SRSVolume=1
 return self
 end
 function CSAR:_CreateDownedPilotTrack(Group,Groupname,Side,OriginalUnit,Description,Typename,Frequency,Playername,Wetfeet)
@@ -61281,7 +61294,7 @@ if _maxUnits==nil then
 _maxUnits=self.max_units
 end
 if _unitsInHelicopter+1>_maxUnits then
-self:_DisplayMessageToSAR(_heliUnit,string.format("%s, %s. We\'re already crammed with %d guys! Sorry!",_pilotName,_heliName,_unitsInHelicopter,_unitsInHelicopter),self.messageTime)
+self:_DisplayMessageToSAR(_heliUnit,string.format("%s, %s. We\'re already crammed with %d guys! Sorry!",_pilotName,_heliName,_unitsInHelicopter,_unitsInHelicopter),self.messageTime,false,false,true)
 return true
 end
 local found,downedgrouptable=self:_CheckNameInDownedPilots(_woundedGroupName)
@@ -61343,7 +61356,7 @@ self.landedStatus[_lookupKeyHeli]=_time
 end
 if _distance<self.loadDistance+5 or _distance<=13 then
 if self.pilotmustopendoors and not self:_IsLoadingDoorOpen(_heliName)then
-self:_DisplayMessageToSAR(_heliUnit,"Open the door to let me in!",self.messageTime,true)
+self:_DisplayMessageToSAR(_heliUnit,"Open the door to let me in!",self.messageTime,true,true)
 return true
 else
 self.landedStatus[_lookupKeyHeli]=nil
@@ -61355,7 +61368,7 @@ end
 else
 if(_distance<self.loadDistance)then
 if self.pilotmustopendoors and not self:_IsLoadingDoorOpen(_heliName)then
-self:_DisplayMessageToSAR(_heliUnit,"Open the door to let me in!",self.messageTime,true)
+self:_DisplayMessageToSAR(_heliUnit,"Open the door to let me in!",self.messageTime,true,true)
 return true
 else
 self:_PickupUnit(_heliUnit,_pilotName,_woundedGroup,_woundedGroupName)
@@ -61387,7 +61400,7 @@ if _time>0 then
 self:_DisplayMessageToSAR(_heliUnit,"Hovering above ".._pilotName..". \n\nHold hover for ".._time.." seconds to winch them up. \n\nIf the countdown stops you\'re too far away!",self.messageTime,true)
 else
 if self.pilotmustopendoors and not self:_IsLoadingDoorOpen(_heliName)then
-self:_DisplayMessageToSAR(_heliUnit,"Open the door to let me in!",self.messageTime,true)
+self:_DisplayMessageToSAR(_heliUnit,"Open the door to let me in!",self.messageTime,true,true)
 return true
 else
 self.hoverStatus[_lookupKeyHeli]=nil
@@ -61430,7 +61443,7 @@ return
 end
 if(_dist<self.FARPRescueDistance or isairport)and _heliUnit:InAir()==false then
 if self.pilotmustopendoors and self:_IsLoadingDoorOpen(heliname)==false then
-self:_DisplayMessageToSAR(_heliUnit,"Open the door to let me out!",self.messageTime,true)
+self:_DisplayMessageToSAR(_heliUnit,"Open the door to let me out!",self.messageTime,true,true)
 else
 self:_RescuePilots(_heliUnit)
 return
@@ -61477,6 +61490,14 @@ local modulation=self.SRSModulation
 local channel=self.SRSchannel
 local msrs=MSRS:New(path,channel,modulation)
 msrs:SetPort(self.SRSport)
+msrs:SetLabel("CSAR")
+msrs:SetCulture(self.SRSCulture)
+msrs:SetCoalition(self.coalition)
+msrs:SetVoice(self.SRSVoice)
+if self.SRSGPathToCredentials then
+msrs:SetGoogle(self.SRSGPathToCredentials)
+end
+msrs:SetVolume(self.SRSVolume)
 msrs:PlaySoundText(srstext,2)
 end
 return self
