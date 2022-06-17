@@ -15,7 +15,7 @@
 ---- These are set in ME trigger
 local hereSRSPath = mySRSPath or "C:\\Program Files\\DCS-SimpleRadio-Standalone"
 local hereSRSPort = mySRSPort or 5002
-local hereSRSGoogle = mySRSGKey or "C:\\Program Files\\DCS-SimpleRadio-Standalone\\yourkey.json"
+local hereSRSGoogle = mySRSGKey --or "C:\\Program Files\\DCS-SimpleRadio-Standalone\\yourkey.json"
 
 --- SETTINGS
 _SETTINGS:SetLocale("en")
