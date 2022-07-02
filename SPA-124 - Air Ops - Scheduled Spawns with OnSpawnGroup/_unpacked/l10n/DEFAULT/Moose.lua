@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-06-16T13:42:02.0000000Z-b83f4782943fbf1bb6516362d21e32fac5e5f2b9 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-07-01T21:05:26.0000000Z-183a60159c6069df05069815b40fc506502db896 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -3199,58 +3199,55 @@ end
 return element
 end
 function UTILS.IsLoadingDoorOpen(unit_name)
-local ret_val=false
 local unit=Unit.getByName(unit_name)
 if unit~=nil then
 local type_name=unit:getTypeName()
-if type_name=="Mi-8MT"and unit:getDrawArgumentValue(38)==1 or unit:getDrawArgumentValue(86)==1 or unit:getDrawArgumentValue(250)<0 then
+BASE:T("TypeName = "..type_name)
+if type_name=="Mi-8MT"and(unit:getDrawArgumentValue(38)==1 or unit:getDrawArgumentValue(86)==1 or unit:getDrawArgumentValue(250)<0)then
 BASE:T(unit_name.." Cargo doors are open or cargo door not present")
-ret_val=true
+return true
 end
-if type_name=="Mi-24P"and unit:getDrawArgumentValue(38)==1 or unit:getDrawArgumentValue(86)==1 then
+if type_name=="Mi-24P"and(unit:getDrawArgumentValue(38)==1 or unit:getDrawArgumentValue(86)==1)then
 BASE:T(unit_name.." a side door is open")
-ret_val=true
+return true
 end
-if type_name=="UH-1H"and unit:getDrawArgumentValue(43)==1 or unit:getDrawArgumentValue(44)==1 then
+if type_name=="UH-1H"and(unit:getDrawArgumentValue(43)==1 or unit:getDrawArgumentValue(44)==1)then
 BASE:T(unit_name.." a side door is open ")
-ret_val=true
+return true
 end
-if string.find(type_name,"SA342")and unit:getDrawArgumentValue(34)==1 or unit:getDrawArgumentValue(38)==1 then
-BASE:T(unit_name.." front door(s) are open")
-ret_val=true
+if string.find(type_name,"SA342")and(unit:getDrawArgumentValue(34)==1)then
+BASE:T(unit_name.." front door(s) are open or doors removed")
+return true
 end
-if string.find(type_name,"Hercules")and unit:getDrawArgumentValue(1215)==1 and unit:getDrawArgumentValue(1216)==1 then
+if string.find(type_name,"Hercules")and(unit:getDrawArgumentValue(1215)==1 and unit:getDrawArgumentValue(1216)==1)then
 BASE:T(unit_name.." rear doors are open")
-ret_val=true
+return true
 end
 if string.find(type_name,"Hercules")and(unit:getDrawArgumentValue(1220)==1 or unit:getDrawArgumentValue(1221)==1)then
 BASE:T(unit_name.." para doors are open")
-ret_val=true
+return true
 end
-if string.find(type_name,"Hercules")and unit:getDrawArgumentValue(1217)==1 then
+if string.find(type_name,"Hercules")and(unit:getDrawArgumentValue(1217)==1)then
 BASE:T(unit_name.." side door is open")
-ret_val=true
+return true
 end
 if string.find(type_name,"Bell-47")then
 BASE:T(unit_name.." door is open")
-ret_val=true
+return true
 end
-if string.find(type_name,"UH-60L")and(unit:getDrawArgumentValue(401)==1)or(unit:getDrawArgumentValue(402)==1)then
+if string.find(type_name,"UH-60L")and(unit:getDrawArgumentValue(401)==1 or unit:getDrawArgumentValue(402)==1)then
 BASE:T(unit_name.." cargo door is open")
-ret_val=true
+return true
 end
-if string.find(type_name,"UH-60L")and unit:getDrawArgumentValue(38)==1 or unit:getDrawArgumentValue(400)==1 then
+if string.find(type_name,"UH-60L")and(unit:getDrawArgumentValue(38)==1 or unit:getDrawArgumentValue(400)==1)then
 BASE:T(unit_name.." front door(s) are open")
-ret_val=true
+return true
 end
 if type_name=="AH-64D_BLK_II"then
 BASE:T(unit_name.." front door(s) are open")
-ret_val=true
+return true
 end
-if ret_val==false then
-BASE:T(unit_name.." all doors are closed")
-end
-return ret_val
+return false
 end
 return nil
 end
@@ -9119,10 +9116,6 @@ return self.AIRBASES[AirbaseName]
 end
 function DATABASE:DeleteAirbase(AirbaseName)
 self.AIRBASES[AirbaseName]=nil
-end
-function DATABASE:FindAirbase(AirbaseName)
-local AirbaseFound=self.AIRBASES[AirbaseName]
-return AirbaseFound
 end
 do
 function DATABASE:FindZone(ZoneName)
@@ -36876,7 +36869,7 @@ local _text=string.format("%s, hits on target %s: %d",self:_myname(_unitName),_r
 if shots and accur then
 _text=_text..string.format("\nTotal rounds fired %d. Accuracy %.1f %%.",shots,accur)
 end
-_text=_text..string.format("\n%s",_result.text)
+_text=_text..string.format("\n%s",resulttext)
 self:_DisplayMessageToGroup(_unit,_text)
 local result={}
 result.player=_playername
@@ -41454,9 +41447,12 @@ for i=0,2 do
 local airports=coalition.getAirbases(i)
 for _,airbase in pairs(airports)do
 local name=airbase:getName()
-local q=AIRBASE:FindByName(name):GetCoordinate()
+local a=AIRBASE:FindByName(name)
+if a then
+local q=a:GetCoordinate()
 local d=q:Get2DDistance(pos)
 table.insert(self.group[GID].player[UID].airports,{distance=d,name=name})
+end
 end
 end
 local function compare(a,b)
@@ -61368,7 +61364,7 @@ player=grouptable.player,
 _woundedGroup:Destroy(false)
 self:_RemoveNameFromDownedPilots(_woundedGroupName,true)
 self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s I\'m in! Get to the MASH ASAP! ",_heliName,_pilotName),self.messageTime,true,true)
-self:__Boarded(5,_heliName,_woundedGroupName)
+self:__Boarded(5,_heliName,_woundedGroupName,grouptable.desc)
 return self
 end
 function CSAR:_OrderGroupToMoveToPoint(_leader,_destination)
