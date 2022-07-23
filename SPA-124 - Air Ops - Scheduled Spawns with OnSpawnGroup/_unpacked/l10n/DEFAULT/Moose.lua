@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-07-07T06:41:56.0000000Z-f6e673c2bbe80951c0eb1c83546da7e169120e1a ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-07-22T09:06:55.0000000Z-a37d4214c072b83cec40dd685f12c0acc6dbb15c ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -5465,6 +5465,16 @@ self:T2({"ICLS BEACON started!"})
 self.Positionable:CommandActivateICLS(Channel,UnitID,Callsign)
 if Duration then
 self.Positionable:DeactivateBeacon(Duration)
+end
+return self
+end
+function BEACON:ActivateLink4(Frequency,Morse,Duration)
+self:F({Frequency=Frequency,Morse=Morse,Duration=Duration})
+local UnitID=self.Positionable:GetID()
+self:T2({"LINK4 BEACON started!"})
+self.Positionable:CommandActivateLink4(Frequency,UnitID,Morse)
+if Duration then
+self.Positionable:DeactivateLink4(Duration)
 end
 return self
 end
@@ -12743,7 +12753,7 @@ local MZoneName=MZone:GetName()
 if self.Filter.Prefixes then
 local MZonePrefix=false
 for ZonePrefixId,ZonePrefix in pairs(self.Filter.Prefixes)do
-self:T3({"Prefix:",string.find(MZoneName,ZonePrefix,1),ZonePrefix})
+self:T2({"Prefix:",string.find(MZoneName,ZonePrefix,1),ZonePrefix})
 if string.find(MZoneName,ZonePrefix,1)then
 MZonePrefix=true
 end
@@ -18895,10 +18905,26 @@ self:SetCommand(CommandActivateICLS)
 end
 return self
 end
+function CONTROLLABLE:CommandActivateLink4(Frequency,UnitID,Callsign,Delay)
+local CommandActivateLink4={
+id="ActivateLink4",
+params={
+["frequency "]=Frequency*1000,
+["unitId"]=UnitID,
+["name"]=Callsign,
+}
+}
+if Delay and Delay>0 then
+SCHEDULER:New(nil,self.CommandActivateLink4,{self},Delay)
+else
+self:SetCommand(CommandActivateLink4)
+end
+return self
+end
 function CONTROLLABLE:CommandDeactivateBeacon(Delay)
 local CommandDeactivateBeacon={id='DeactivateBeacon',params={}}
 if Delay and Delay>0 then
-SCHEDULER:New(nil,self.CommandActivateBeacon,{self},Delay)
+SCHEDULER:New(nil,self.CommandDeactivateBeacon,{self},Delay)
 else
 self:SetCommand(CommandDeactivateBeacon)
 end
@@ -18910,6 +18936,15 @@ if Delay and Delay>0 then
 SCHEDULER:New(nil,self.CommandDeactivateICLS,{self},Delay)
 else
 self:SetCommand(CommandDeactivateICLS)
+end
+return self
+end
+function CONTROLLABLE:CommandDeactivateLink4(Delay)
+local CommandDeactivateLink4={id='DeactivateLink4',params={}}
+if Delay and Delay>0 then
+SCHEDULER:New(nil,self.CommandDeactivateLink4,{self},Delay)
+else
+self:SetCommand(CommandDeactivateLink4)
 end
 return self
 end
@@ -23292,6 +23327,8 @@ AIRBASE.SouthAtlantic={
 ["Ushuaia"]="Ushuaia",
 ["Ushuaia_Helo_Port"]="Ushuaia Helo Port",
 ["Punta_Arenas"]="Punta Arenas",
+["Pampa_Guanaco"]="Pampa Guanaco",
+["San_Julian"]="San Julian",
 }
 AIRBASE.TerminalType={
 Runway=16,
