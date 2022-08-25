@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-08-25T09:41:27.0000000Z-4dc43263a5e3f8cd41aff4b662f77553a091da16 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-08-25T14:00:03.0000000Z-3178cbc56366d911c5a15123127c8420a2f880b0 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -36207,7 +36207,7 @@ self:AddBombingTargetUnit(_static,goodhitrange)
 elseif _isstatic==false then
 local _unit=UNIT:FindByName(name)
 self:T2(self.id..string.format("Adding unit bombing target %s with hit range %d.",name,goodhitrange,randommove))
-self:AddBombingTargetUnit(_unit,goodhitrange)
+self:AddBombingTargetUnit(_unit,goodhitrange,randommove)
 else
 self:E(self.id..string.format("ERROR! Could not find bombing target %s.",name))
 end
@@ -47608,7 +47608,7 @@ verbose=0,
 alias="",
 debug=false,
 }
-AUTOLASE.version="0.1.13"
+AUTOLASE.version="0.1.14"
 function AUTOLASE:New(RecceSet,Coalition,Alias,PilotSet)
 BASE:T({RecceSet,Coalition,Alias,PilotSet})
 local self=BASE:Inherit(self,BASE:New())
@@ -47684,7 +47684,6 @@ self.usepilotset=true
 self.pilotset=PilotSet
 self:HandleEvent(EVENTS.PlayerEnterAircraft)
 end
-self.SetPilotMenu()
 self:SetClusterAnalysis(false,false)
 self:__Start(2)
 self:__Monitor(math.random(5,10))
@@ -92228,7 +92227,7 @@ POINTEROVERTARGET="%s, %s, Marker im Zielbereich für %03d, Laser an!",
 POINTERTARGETREPORT="\nMarker im Zielbereich: %s\nLaser an: %s",
 },
 }
-PLAYERTASKCONTROLLER.version="0.1.22"
+PLAYERTASKCONTROLLER.version="0.1.23"
 function PLAYERTASKCONTROLLER:New(Name,Coalition,Type,ClientFilter)
 local self=BASE:Inherit(self,FSM:New())
 self.Name=Name or"CentCom"
@@ -92371,7 +92370,11 @@ local modulation=self.Modulation
 if type(modulation)=="table"then modulation=modulation[1]end
 modulation=UTILS.GetModulationName(modulation)
 local switchtext=self.gettext:GetEntry("BROADCAST",self.locale)
-local text=string.format(switchtext,self.MenuName or self.Name,EventData.IniPlayerName,freqtext)
+local playername=EventData.IniPlayerName
+if string.find(playername,"|")then
+playername=string.match(playername,"| ([%a]+)")
+end
+local text=string.format(switchtext,self.MenuName or self.Name,playername,freqtext)
 self.SRSQueue:NewTransmission(text,nil,self.SRS,timer.getAbsTime()+60,2,{EventData.IniGroup},text,30,self.BCFrequency,self.BCModulation)
 end
 end
