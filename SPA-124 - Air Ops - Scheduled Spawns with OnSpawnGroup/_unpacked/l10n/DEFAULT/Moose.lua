@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-09-01T20:54:22.0000000Z-7c717c219ca37a277cf00e49f845efb8d9466fa7 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-09-09T15:33:23.0000000Z-cea9437e6677771cd2fc87036e02e9928deaf0fb ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -20970,6 +20970,7 @@ return nil
 end
 function GROUP:HasAttribute(attribute,all)
 local _units=self:GetUnits()
+if _units then
 local _allhave=true
 local _onehas=false
 for _,_unit in pairs(_units)do
@@ -20989,18 +20990,18 @@ else
 return _onehas
 end
 end
+return nil
+end
 function GROUP:GetSpeedMax()
 self:F2(self.GroupName)
 local DCSGroup=self:GetDCSObject()
 if DCSGroup then
 local Units=self:GetUnits()
-local speedmax=0
+local speedmax=nil
 for _,unit in pairs(Units)do
 local unit=unit
 local speed=unit:GetSpeedMax()
-if speedmax==0 then
-speedmax=speed
-elseif speed<speedmax then
+if speedmax==nil or speed<speedmax then
 speedmax=speed
 end
 end
@@ -21060,12 +21061,26 @@ return Units
 end
 return nil
 end
+function GROUP:IsPlayer()
+local units=self:GetTemplate().units
+for _,unit in pairs(units)do
+if unit.name==self:GetName()and(unit.skill=="Client"or unit.skill=="Player")then
+return true
+end
+end
+return false
+end
 function GROUP:GetUnit(UnitNumber)
 local DCSGroup=self:GetDCSObject()
 if DCSGroup then
-local DCSUnit=DCSGroup:getUnit(UnitNumber)
-local UnitFound=UNIT:Find(DCSUnit)
+local UnitFound=nil
+local units=DCSGroup:getUnits()or{}
+for _,_unit in pairs(units)do
+local UnitFound=UNIT:Find(_unit)
+if UnitFound then
 return UnitFound
+end
+end
 end
 return nil
 end
@@ -21373,18 +21388,20 @@ local Nshells=0
 local Nrockets=0
 local Nmissiles=0
 local Nbombs=0
+local Narti=0
 if DCSControllable then
 for UnitID,UnitData in pairs(self:GetUnits())do
 local Unit=UnitData
-local ntot,nshells,nrockets,nbombs,nmissiles=Unit:GetAmmunition()
+local ntot,nshells,nrockets,nbombs,nmissiles,narti=Unit:GetAmmunition()
 Ntot=Ntot+ntot
 Nshells=Nshells+nshells
 Nrockets=Nrockets+nrockets
 Nmissiles=Nmissiles+nmissiles
 Nbombs=Nbombs+nbombs
+Narti=Narti+narti
 end
 end
-return Ntot,Nshells,Nrockets,Nbombs,Nmissiles
+return Ntot,Nshells,Nrockets,Nbombs,Nmissiles,Narti
 end
 do
 function GROUP:IsInZone(Zone)
@@ -22512,6 +22529,7 @@ local nshells=0
 local nrockets=0
 local nmissiles=0
 local nbombs=0
+local narti=0
 local unit=self
 local ammotable=unit:GetAmmo()
 if ammotable then
@@ -22526,6 +22544,9 @@ MissileCategory=ammotable[w].desc.missileCategory
 end
 if Category==Weapon.Category.SHELL then
 nshells=nshells+Nammo
+if ammotable[w].desc.warhead and ammotable[w].desc.warhead.explosiveMass and ammotable[w].desc.warhead.explosiveMass>0 then
+narti=narti+Nammo
+end
 elseif Category==Weapon.Category.ROCKET then
 nrockets=nrockets+Nammo
 elseif Category==Weapon.Category.BOMB then
@@ -22548,7 +22569,7 @@ end
 end
 end
 nammo=nshells+nrockets+nmissiles+nbombs
-return nammo,nshells,nrockets,nbombs,nmissiles
+return nammo,nshells,nrockets,nbombs,nmissiles,narti
 end
 function UNIT:GetSensors()
 self:F2(self.UnitName)
