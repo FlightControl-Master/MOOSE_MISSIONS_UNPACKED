@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-09-13T08:11:10.0000000Z-d2132b2e64a957f8ccca04b28a6bf5f7101fbeae ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-09-15T12:02:09.0000000Z-92044c7797557fee08cddf64e1f2e6f57d3431c7 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -23475,17 +23475,19 @@ if IsPlayer and string.find(groupname,"#")then
 if Keepnumber then
 shortcallsign=string.match(groupname,"#(.+)")
 else
-shortcallsign=string.match(groupname,"#([%a]+)")
+shortcallsign=string.match(groupname,"#%s*([%a]+)")
 end
 personalized=true
 elseif IsPlayer and string.find(self:GetPlayerName(),"|")then
-shortcallsign=string.match(self:GetPlayerName(),"|([%a]+)")
+shortcallsign=string.match(self:GetPlayerName(),"|%s*([%a]+)")
 personalized=true
 end
 if(not personalized)and CallsignTranslations and CallsignTranslations[callsignroot]then
 callsignroot=CallsignTranslations[callsignroot]
 end
 if personalized then
+shortcallsign=string.gsub(shortcallsign,"^%s*","")
+shortcallsign=string.gsub(shortcallsign,"%s*$","")
 if Keepnumber then
 return shortcallsign
 elseif ShortCallsign then
@@ -58957,7 +58959,7 @@ RSBNChannel={filename="RSBNChannel.ogg",duration=1.14},
 Zulu={filename="Zulu.ogg",duration=0.62},
 }
 _ATIS={}
-ATIS.version="0.9.6"
+ATIS.version="0.9.7"
 function ATIS:New(AirbaseName,Frequency,Modulation)
 local self=BASE:Inherit(self,FSM:New())
 local self=BASE:Inherit(self,FSM:New())
@@ -59200,6 +59202,7 @@ self:E(self.lid..string.format("ERROR: Cannot start ATIS for airbase %s! Only AI
 return
 end
 self:I(self.lid..string.format("Starting ATIS v%s for airbase %s on %.3f MHz Modulation=%d",ATIS.version,self.airbasename,self.frequency,self.modulation))
+if not self.useSRS then
 self.radioqueue=RADIOQUEUE:New(self.frequency,self.modulation,string.format("ATIS %s",self.airbasename))
 self.radioqueue:SetSenderCoordinate(self.airbase:GetCoordinate())
 self.radioqueue:SetSenderUnitName(self.relayunitname)
@@ -59215,6 +59218,7 @@ self.radioqueue:SetDigit(7,ATIS.Sound.N7.filename,ATIS.Sound.N7.duration,self.so
 self.radioqueue:SetDigit(8,ATIS.Sound.N8.filename,ATIS.Sound.N8.duration,self.soundpath)
 self.radioqueue:SetDigit(9,ATIS.Sound.N9.filename,ATIS.Sound.N9.duration,self.soundpath)
 self.radioqueue:Start(1,0.1)
+end
 self:HandleEvent(EVENTS.BaseCaptured)
 self:__Status(-2)
 self:__CheckQueue(-3)
@@ -62729,7 +62733,7 @@ end
 do
 AWACS={
 ClassName="AWACS",
-version="0.2.42",
+version="0.2.43",
 lid="",
 coalition=coalition.side.BLUE,
 coalitiontxt="blue",
@@ -62795,6 +62799,8 @@ maxassigndistance=100,
 PlayerGuidance=true,
 ModernEra=true,
 callsignshort=true,
+keepnumber=true,
+callsignTranslations=nil,
 TacDistance=45,
 MeldDistance=35,
 ThreatDistance=25,
@@ -63715,33 +63721,19 @@ return managedgroup.CallSign
 end
 local callsign="Ghost 1"
 if Group and Group:IsAlive()then
-local shortcallsign=Group:GetCallsign()or"unknown11"
-local callsignroot=string.match(shortcallsign,'(%a+)')
-self:I("CallSign = "..callsignroot)
-local groupname=Group:GetName()
-local callnumber=string.match(shortcallsign,"(%d+)$")or"unknown11"
-local callnumbermajor=string.char(string.byte(callnumber,1))
-local callnumberminor=string.char(string.byte(callnumber,2))
-local personalized=false
-if IsPlayer and string.find(groupname,"#")then
-shortcallsign=string.match(groupname,"#([%a]+)")
-personalized=true
-end
-if IsPlayer and string.find(Group:GetPlayerName(),"|")then
-shortcallsign=string.match(Group:GetPlayerName(),"| ([%a]+)")
-personalized=true
-end
-if(not personalized)and self.callsignTranslations and self.callsignTranslations[callsignroot]then
-shortcallsign=string.gsub(shortcallsign,callsignroot,self.callsignTranslations[callsignroot])
-end
-if self.callsignshort then
-callsign=string.gsub(shortcallsign,callnumber,"").." "..callnumbermajor
-else
-callsign=string.gsub(shortcallsign,callnumber,"").." "..callnumbermajor.." "..callnumberminor
-end
-self:T("Generated Callsign for TTS = "..callsign)
+callsign=Group:GetCustomCallSign(self.callsignshort,self.keepnumber,self.callsignTranslations)
 end
 return callsign
+end
+function AWACS:SetCallSignOptions(ShortCallsign,Keepnumber,CallsignTranslations)
+if not ShortCallsign or ShortCallsign==false then
+self.callsignshort=false
+else
+self.callsignshort=true
+end
+self.keepnumber=Keepnumber or false
+self.callsignTranslations=CallsignTranslations
+return self
 end
 function AWACS:_UpdateContactFromCluster(CID)
 self:T(self.lid.."_UpdateContactFromCluster CID="..CID)
@@ -65215,40 +65207,6 @@ return self.ManagedGrps[task.AssignedGroupID]
 end
 end
 return nil
-end
-function AWACS:_CreateIdleTaskForContact(Description,Object,Contact)
-self:T(self.lid.."_CreateIdleTaskForContact "..Description)
-local task={}
-self.ManagedTaskID=self.ManagedTaskID+1
-task.TID=self.ManagedTaskID
-task.AssignedGroupID=0
-task.Status=AWACS.TaskStatus.IDLE
-task.ToDo=Description
-task.Target=TARGET:New(Object)
-task.Contact=Contact
-task.ScreenText=Description
-if Description==AWACS.TaskDescription.ANCHOR or Description==AWACS.TaskDescription.REANCHOR then
-task.Target.Type=TARGET.ObjectType.ZONE
-end
-self.ManagedTasks:Push(task,task.TID)
-return self
-end
-function AWACS:_CreateIdleTaskForCluster(Description,Object,Cluster)
-self:T(self.lid.."_CreateIdleTaskForCluster "..Description)
-local task={}
-self.ManagedTaskID=self.ManagedTaskID+1
-task.TID=self.ManagedTaskID
-task.AssignedGroupID=0
-task.Status=AWACS.TaskStatus.IDLE
-task.ToDo=Description
-task.Target=TARGET:New(self.intel:GetClusterCoordinate(Cluster))
-task.Cluster=Cluster
-task.ScreenText=Description
-if Description==AWACS.TaskDescription.ANCHOR or Description==AWACS.TaskDescription.REANCHOR then
-task.Target.Type=TARGET.ObjectType.ZONE
-end
-self.ManagedTasks:Push(task,task.TID)
-return self
 end
 function AWACS:_MessageAIReadyForTasking(GID)
 self:T(self.lid.."_MessageAIReadyForTasking")
@@ -74836,8 +74794,8 @@ LANDING="Landing",
 TAXIINB="Taxi To Parking",
 ARRIVED="Arrived",
 }
-FLIGHTCONTROL.version="0.7.2"
-function FLIGHTCONTROL:New(AirbaseName,Frequency,Modulation,PathToSRS)
+FLIGHTCONTROL.version="0.7.3"
+function FLIGHTCONTROL:New(AirbaseName,Frequency,Modulation,PathToSRS,Port)
 local self=BASE:Inherit(self,FSM:New())
 self.airbase=AIRBASE:FindByName(AirbaseName)
 self.airbasename=AirbaseName
@@ -74861,10 +74819,14 @@ self:SetLandingInterval()
 self:SetFrequency(Frequency,Modulation)
 self:SetMarkHoldingPattern(true)
 self:SetRunwayRepairtime()
+self:SetSRSPort(Port or 5002)
+self:SetCallSignOptions(true,true)
 self.msrsqueue=MSRSQUEUE:New(self.alias)
 self.msrsTower=MSRS:New(PathToSRS,Frequency,Modulation)
+self.msrsTower:SetPort(self.Port)
 self:SetSRSTower()
 self.msrsPilot=MSRS:New(PathToSRS,Frequency,Modulation)
+self.msrsPilot:SetPort(self.Port)
 self:SetSRSPilot()
 self.dTmessage=10
 self:SetStartState("Stopped")
@@ -74895,7 +74857,11 @@ self.msrsTower:SetModulations(Modulation)
 end
 return self
 end
-function FLIGHTCONTROL:_SetSRSOptions(msrs,Gender,Culture,Voice,Volume,Label,PathToGoogleCredentials)
+function FLIGHTCONTROL:SetSRSPort(Port)
+self.Port=Port or 5002
+return self
+end
+function FLIGHTCONTROL:_SetSRSOptions(msrs,Gender,Culture,Voice,Volume,Label,PathToGoogleCredentials,Port)
 Gender=Gender or"female"
 Culture=Culture or"en-GB"
 Volume=Volume or 1.0
@@ -74907,6 +74873,7 @@ msrs:SetVolume(Volume)
 msrs:SetLabel(Label)
 msrs:SetGoogle(PathToGoogleCredentials)
 msrs:SetCoalition(self:GetCoalition())
+msrs:SetPort(Port or self.Port or 5002)
 end
 return self
 end
@@ -75867,7 +75834,17 @@ function FLIGHTCONTROL:_PlayerRadioCheck(groupname)
 local flight=_DATABASE:GetOpsGroup(groupname)
 if flight then
 local callsign=self:_GetCallsignName(flight)
-local text=string.format("%s, %s, radio check %.3f",self.alias,callsign,self.frequency)
+local text=""
+if type(self.frequency)=="table"then
+local multifreq=""
+for _,_entry in pairs(self.frequency)do
+multifreq=string.format("%s%.2f, ",multifreq,_entry)
+end
+multifreq=string.gsub(multifreq,", $","")
+text=string.format("%s, %s, radio check %s",self.alias,callsign,multifreq)
+else
+text=string.format("%s, %s, radio check %.3f",self.alias,callsign,self.frequency)
+end
 self:TransmissionPilot(text,flight)
 local text=string.format("%s, %s, reading you 5",callsign,self.alias)
 self:TransmissionTower(text,flight,10)
@@ -75903,7 +75880,16 @@ local flight=_DATABASE:GetOpsGroup(groupname)
 if flight then
 local text=string.format("Airbase %s Info:",self.airbasename)
 text=text..string.format("\nATC Status: %s",self:GetState())
+if type(self.frequency)=="table"then
+local multifreq=""
+for i=1,#self.frequency do
+multifreq=string.format("%s%.2f %s, ",multifreq,self.frequency[i],UTILS.GetModulationName(self.modulation[i]or 0))
+end
+text=string.gsub(text,", $","")
+text=text..string.format("\nFrequencies: %s",multifreq)
+else
 text=text..string.format("\nFrequency: %.3f %s",self.frequency,UTILS.GetModulationName(self.modulation))
+end
 text=text..string.format("\nRunway Landing: %s",self:GetActiveRunwayText())
 text=text..string.format("\nRunway Takeoff: %s",self:GetActiveRunwayText(true))
 self:TextMessageToFlight(text,flight,10,true)
@@ -76687,8 +76673,18 @@ end
 end
 return nil
 end
+function FLIGHTCONTROL:SetCallSignOptions(ShortCallsign,Keepnumber,CallsignTranslations)
+if not ShortCallsign or ShortCallsign==false then
+self.ShortCallsign=false
+else
+self.ShortCallsign=true
+end
+self.Keepnumber=Keepnumber or false
+self.CallsignTranslations=CallsignTranslations
+return self
+end
 function FLIGHTCONTROL:_GetCallsignName(flight)
-local callsign=flight:GetCallsignName()
+local callsign=flight:GetCallsignName(self.ShortCallsign,self.Keepnumber,self.CallsignTranslations)
 return callsign
 end
 function FLIGHTCONTROL:_GetTextForSpeech(text)
@@ -78893,7 +78889,8 @@ function FLIGHTGROUP:_PlayerSubtitles()
 local playerData=self:_GetPlayerData()
 if playerData then
 playerData.subtitles=not playerData.subtitles
-MESSAGE:New(string.format("%s, subtitles are now %s",playerData.name,tostring(playerData.subtitles)),10,nil,true):ToGroup(self.group)
+local onoff=playerData.subtitles==true and"ON"or"OFF"
+MESSAGE:New(string.format("%s, subtitles are now %s",playerData.name,onoff),10,nil,true):ToGroup(self.group)
 else
 end
 end
@@ -88292,12 +88289,15 @@ self:T(self.lid.."ERROR: Group is not alive and not in utero! Cannot switch call
 end
 return self
 end
-function OPSGROUP:GetCallsignName()
+function OPSGROUP:GetCallsignName(ShortCallsign,Keepnumber,CallsignTranslations)
 local element=self:GetElementAlive()
 if element then
 self:T2(self.lid..string.format("Callsign %s",tostring(element.callsign)))
 local name=element.callsign or"Ghostrider11"
 name=name:gsub("-","")
+if self.group:IsPlayer()or CallsignTranslations then
+name=self.group:GetCustomCallSign(ShortCallsign,Keepnumber,CallsignTranslations)
+end
 return name
 end
 return"Ghostrider11"
@@ -90501,7 +90501,7 @@ conditionFailure={},
 TaskController=nil,
 timestamp=0,
 }
-PLAYERTASK.version="0.1.1"
+PLAYERTASK.version="0.1.2"
 function PLAYERTASK:New(Type,Target,Repeat,Times,TTSType)
 local self=BASE:Inherit(self,FSM:New())
 self.Type=Type
@@ -90514,7 +90514,7 @@ self.SmokeColor=SMOKECOLOR.Red
 self.conditionSuccess={}
 self.conditionFailure={}
 self.TaskController=nil
-self.timestamp=timer.getTime()
+self.timestamp=timer.getAbsTime()
 self.TTSType=TTSType or"close air support"
 if Repeat then
 self.Repeat=true
@@ -90565,6 +90565,12 @@ end
 function PLAYERTASK:GetClients()
 self:T(self.lid.."GetClients")
 local clientlist=self.Clients:GetIDStackSorted()or{}
+local count=self.Clients:Count()
+return clientlist,count
+end
+function PLAYERTASK:GetClientObjects()
+self:T(self.lid.."GetClientObjects")
+local clientlist=self.Clients:GetDataTable()or{}
 local count=self.Clients:Count()
 return clientlist,count
 end
@@ -90733,18 +90739,22 @@ return self
 end
 function PLAYERTASK:onafterPlanned(From,Event,To)
 self:T({From,Event,To})
+self.timestamp=timer.getAbsTime()
 return self
 end
 function PLAYERTASK:onafterRequested(From,Event,To)
 self:T({From,Event,To})
+self.timestamp=timer.getAbsTime()
 return self
 end
 function PLAYERTASK:onafterExecuting(From,Event,To)
 self:T({From,Event,To})
+self.timestamp=timer.getAbsTime()
 return self
 end
 function PLAYERTASK:onafterStop(From,Event,To)
 self:T({From,Event,To})
+self.timestamp=timer.getAbsTime()
 return self
 end
 function PLAYERTASK:onafterClientAdded(From,Event,To,Client)
@@ -90753,6 +90763,7 @@ if Client and self.verbose then
 local text=string.format("Player %s joined task %03d!",Client:GetPlayerName()or"Generic",self.PlayerTaskNr)
 self:I(self.lid..text)
 end
+self.timestamp=timer.getAbsTime()
 return self
 end
 function PLAYERTASK:onafterDone(From,Event,To)
@@ -90760,6 +90771,7 @@ self:T({From,Event,To})
 if self.TaskController then
 self.TaskController:__TaskDone(-1,self)
 end
+self.timestamp=timer.getAbsTime()
 self:__Stop(-1)
 return self
 end
@@ -90768,6 +90780,7 @@ self:T({From,Event,To})
 if self.TaskController then
 self.TaskController:__TaskCancelled(-1,self)
 end
+self.timestamp=timer.getAbsTime()
 self:__Done(-1)
 return self
 end
@@ -90779,6 +90792,7 @@ end
 if self.TargetMarker then
 self.TargetMarker:Remove()
 end
+self.timestamp=timer.getAbsTime()
 self:__Done(-1)
 return self
 end
@@ -90800,6 +90814,7 @@ self.TaskController:__TaskFailed(-1,self)
 end
 self:__Done(-1)
 end
+self.timestamp=timer.getAbsTime()
 return self
 end
 end
@@ -90828,6 +90843,10 @@ MarkerReadOnly=false,
 customcallsigns={},
 ShortCallsign=true,
 Keepnumber=false,
+CallsignTranslations=nil,
+PlayerFlashMenu={},
+PlayerJoinMenu={},
+PlayerInfoMenu={},
 }
 PLAYERTASKCONTROLLER.Type={
 A2A="Air-To-Air",
@@ -90965,7 +90984,7 @@ FLASHOFF="%s - Richtungsangaben einblenden ist AUS!",
 FLASHMENU="Richtungsangaben Schalter",
 },
 }
-PLAYERTASKCONTROLLER.version="0.1.33"
+PLAYERTASKCONTROLLER.version="0.1.36"
 function PLAYERTASKCONTROLLER:New(Name,Coalition,Type,ClientFilter)
 local self=BASE:Inherit(self,FSM:New())
 self.Name=Name or"CentCom"
@@ -90999,6 +91018,7 @@ self.UseGroupNames=true
 self.customcallsigns={}
 self.ShortCallsign=true
 self.Keepnumber=false
+self.CallsignTranslations=nil
 if ClientFilter then
 self.ClientSet=SET_CLIENT:New():FilterCoalitions(string.lower(self.CoalitionName)):FilterActive(true):FilterPrefixes(ClientFilter):FilterStart()
 else
@@ -91046,14 +91066,21 @@ self:T(self.lid.."SetAllowFlashDirection")
 self.AllowFlash=OnOff
 return self
 end
-function PLAYERTASKCONTROLLER:SetCallSignOptions(ShortCallsign,Keepnumber)
+function PLAYERTASKCONTROLLER:SetCallSignOptions(ShortCallsign,Keepnumber,CallsignTranslations)
 if not ShortCallsign or ShortCallsign==false then
 self.ShortCallsign=false
 else
 self.ShortCallsign=true
 end
 self.Keepnumber=Keepnumber or false
+self.CallsignTranslations=CallsignTranslations
 return self
+end
+function PLAYERTASKCONTROLLER:_GetTextForSpeech(text)
+text=string.gsub(text,"%d","%1 ")
+text=string.gsub(text,"^%s*","")
+text=string.gsub(text,"%s*$","")
+return text
 end
 function PLAYERTASKCONTROLLER:SetTaskRepetition(OnOff,Repeats)
 self:T(self.lid.."SetTaskRepetition")
@@ -91127,8 +91154,10 @@ local playername=Client:GetPlayerName()
 local ttsplayername=nil
 if not self.customcallsigns[playername]then
 local playergroup=Client:GetGroup()
-ttsplayername=playergroup:GetCustomCallSign(self.ShortCallsign,self.Keepnumber)
-self.customcallsigns[playername]=ttsplayername
+ttsplayername=playergroup:GetCustomCallSign(self.ShortCallsign,self.Keepnumber,self.CallsignTranslations)
+local newplayername=self:_GetTextForSpeech(ttsplayername)
+self.customcallsigns[playername]=newplayername
+ttsplayername=newplayername
 else
 ttsplayername=self.customcallsigns[playername]
 end
@@ -91215,6 +91244,7 @@ self.customcallsigns[playername]=nil
 end
 playername=EventData.IniGroup:GetCustomCallSign(self.ShortCallsign,self.Keepnumber)
 end
+playername=self:_GetTextForSpeech(playername)
 local text=string.format(switchtext,self.MenuName or self.Name,playername,freqtext)
 self.SRSQueue:NewTransmission(text,nil,self.SRS,timer.getAbsTime()+60,2,{EventData.IniGroup},text,30,self.BCFrequency,self.BCModulation)
 end
@@ -91277,7 +91307,9 @@ local threattable={}
 for _,_task in pairs(datatable)do
 local task=_task
 local threat=task.Target:GetThreatLevelMax()
+if not task:IsDone()then
 threattable[#threattable+1]={task=task,threat=threat}
+end
 end
 table.sort(threattable,function(k1,k2)return k1.threat>k2.threat end)
 for _id,_data in pairs(threattable)do
@@ -91313,8 +91345,11 @@ for _,_id in pairs(clientsattask)do
 self:T("*****Removing player ".._id)
 self.TasksPerPlayer:PullByID(_id)
 end
+local TNow=timer.getAbsTime()
+if TNow-task.timestamp>10 then
 local task=self.TaskQueue:PullByID(_id)
 task=nil
+end
 end
 end
 end
@@ -91663,6 +91698,7 @@ if not self.NoScreenOutput then
 self:_SendMessageToClients(text)
 end
 if self.UseSRS then
+self:I(self.lid..text)
 self.SRSQueue:NewTransmission(text,nil,self.SRS,nil,2)
 end
 self.TasksPerPlayer:Push(Task,playername)
@@ -91875,11 +91911,13 @@ self:_BuildMenus(Client,true)
 return self
 end
 function PLAYERTASKCONTROLLER:_BuildTaskInfoMenu(group,client,playername,topmenu,tasktypes,taskpertype)
+self:T(self.lid.."_BuildTaskInfoMenu")
+local taskinfomenu=nil
 if self.taskinfomenu then
 local menutaskinfo=self.gettext:GetEntry("MENUTASKINFO",self.locale)
+local taskinfomenu=MENU_GROUP_DELAYED:New(group,menutaskinfo,topmenu)
 local ittypes={}
 local itaskmenu={}
-local taskinfomenu=MENU_GROUP_DELAYED:New(group,menutaskinfo,topmenu)
 for _tasktype,_data in pairs(tasktypes)do
 ittypes[_tasktype]=MENU_GROUP_DELAYED:New(group,_tasktype,taskinfomenu)
 local tasks=taskpertype[_tasktype]or{}
@@ -91909,12 +91947,13 @@ end
 end
 end
 end
-return self
+return taskinfomenu
 end
-function PLAYERTASKCONTROLLER:_BuildMenus(Client,enforced)
+function PLAYERTASKCONTROLLER:_BuildMenus(Client,enforced,fromsuccess)
 self:T(self.lid.."_BuildMenus")
 local clients=self.ClientSet:GetAliveSet()
 local joinorabort=false
+local timedbuild=false
 if Client then
 clients={Client}
 enforced=true
@@ -91931,7 +91970,7 @@ local taskings=self.gettext:GetEntry("MENUTASKING",self.locale)
 local longname=self.Name..taskings..self.Type
 local menuname=self.MenuName or longname
 local playerhastask=false
-if self:_CheckPlayerHasTask(playername)then playerhastask=true end
+if self:_CheckPlayerHasTask(playername)and not fromsuccess then playerhastask=true end
 local topmenu=nil
 self:T("Playerhastask = "..tostring(playerhastask).." Enforced = "..tostring(enforced).." Join or Abort = "..tostring(joinorabort))
 if self.PlayerMenu[playername]then
@@ -91939,13 +91978,14 @@ if joinorabort then
 self.PlayerMenu[playername]:RemoveSubMenus()
 self.PlayerMenu[playername]:SetTag(timer.getAbsTime())
 topmenu=self.PlayerMenu[playername]
-elseif(not playerhastask)and enforced then
+elseif(not playerhastask)or enforced then
 local T0=timer.getAbsTime()
 local TDiff=T0-self.PlayerMenu[playername].MenuTag
-self:T("TDiff = "..TDiff)
+self:T("TDiff = "..string.format("%.2d",TDiff))
 if TDiff>=self.holdmenutime then
 self.PlayerMenu[playername]:RemoveSubMenus()
 self.PlayerMenu[playername]:SetTag(timer.getAbsTime())
+timedbuild=true
 end
 topmenu=self.PlayerMenu[playername]
 end
@@ -91972,9 +92012,12 @@ local abort=MENU_GROUP_COMMAND_DELAYED:New(group,menuabort,active,self._AbortTas
 if self.activehasinfomenu and self.taskinfomenu then
 local tasktypes=self:_GetAvailableTaskTypes()
 local taskpertype=self:_GetTasksPerType()
-self:_BuildTaskInfoMenu(group,client,playername,topmenu,tasktypes,taskpertype)
+if self.PlayerInfoMenu[playername]then
+self.PlayerInfoMenu[playername]:RemoveSubMenus()
 end
-elseif(self.TaskQueue:Count()>0 and enforced)or(not playerhastask)then
+self.PlayerInfoMenu[playername]=self:_BuildTaskInfoMenu(group,client,playername,topmenu,tasktypes,taskpertype)
+end
+elseif(self.TaskQueue:Count()>0 and enforced)or(not playerhastask and(timedbuild or joinorabort))then
 local tasktypes=self:_GetAvailableTaskTypes()
 local taskpertype=self:_GetTasksPerType()
 local menujoin=self.gettext:GetEntry("MENUJOIN",self.locale)
@@ -92010,7 +92053,10 @@ end
 end
 end
 if self.taskinfomenu then
-self:_BuildTaskInfoMenu(group,client,playername,topmenu,tasktypes,taskpertype)
+if self.PlayerInfoMenu[playername]then
+self.PlayerInfoMenu[playername]:RemoveSubMenus()
+end
+self.PlayerInfoMenu[playername]=self:_BuildTaskInfoMenu(group,client,playername,topmenu,tasktypes,taskpertype)
 end
 elseif self.TaskQueue:Count()==0 then
 local menunotasks=self.gettext:GetEntry("MENUNOTASKS",self.locale)
@@ -92245,6 +92291,10 @@ end
 if self.UseSRS then
 taskname=string.format(succtxttts,self.MenuName or self.Name,Task.PlayerTaskNr,tostring(Task.TTSType))
 self.SRSQueue:NewTransmission(taskname,nil,self.SRS,nil,2)
+end
+local clients=Task:GetClientObjects()
+for _,client in pairs(clients)do
+self:_BuildMenus(client,true,true)
 end
 return self
 end
