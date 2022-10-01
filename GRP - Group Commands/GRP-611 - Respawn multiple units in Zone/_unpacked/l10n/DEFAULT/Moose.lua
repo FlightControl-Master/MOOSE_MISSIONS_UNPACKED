@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-09-23T08:28:35.0000000Z-d8bdf6a8d3cd24cbdea114ea3ddc309c96b35ddd ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-09-30T12:47:51.0000000Z-2fc7139f6bd97e6f4ba980a5aac80e7db2576d74 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -9078,7 +9078,7 @@ rcoord=self:GetRandomCoordinate(inner,outer)
 found=false
 for _,_coord in pairs(buildings)do
 local coord=_coord
-if coord:Get2DDistance(rcoord)>dist then
+if coord:Get3DDistance(rcoord)>dist then
 found=true
 else
 found=false
@@ -9519,6 +9519,12 @@ self:F({ZoneName,ZoneGroup,self._.Polygon})
 _EVENTDISPATCHER:CreateEventNewZone(self)
 return self
 end
+function ZONE_POLYGON:NewFromPointsArray(ZoneName,PointsArray)
+local self=BASE:Inherit(self,ZONE_POLYGON_BASE:New(ZoneName,PointsArray))
+self:F({ZoneName,self._.Polygon})
+_EVENTDISPATCHER:CreateEventNewZone(self)
+return self
+end
 function ZONE_POLYGON:NewFromGroupName(GroupName)
 local ZoneGroup=GROUP:FindByName(GroupName)
 local GroupPoints=ZoneGroup:GetTaskRoute()
@@ -9530,6 +9536,145 @@ end
 function ZONE_POLYGON:FindByName(ZoneName)
 local ZoneFound=_DATABASE:FindZone(ZoneName)
 return ZoneFound
+end
+function ZONE_POLYGON:Scan(ObjectCategories,UnitCategories)
+self.ScanData={}
+self.ScanData.Coalitions={}
+self.ScanData.Scenery={}
+self.ScanData.Units={}
+local function EvaluateZone(ZoneObject)
+if ZoneObject then
+local ObjectCategory=ZoneObject:getCategory()
+if(ObjectCategory==Object.Category.UNIT and ZoneObject:isExist()and ZoneObject:isActive())or(ObjectCategory==Object.Category.STATIC and ZoneObject:isExist())then
+local CoalitionDCSUnit=ZoneObject:getCoalition()
+local Include=false
+if not UnitCategories then
+Include=true
+else
+local CategoryDCSUnit=ZoneObject:getDesc().category
+for UnitCategoryID,UnitCategory in pairs(UnitCategories)do
+if UnitCategory==CategoryDCSUnit then
+Include=true
+break
+end
+end
+end
+if Include then
+local CoalitionDCSUnit=ZoneObject:getCoalition()
+self.ScanData.Coalitions[CoalitionDCSUnit]=true
+self.ScanData.Units[ZoneObject]=ZoneObject
+self:F2({Name=ZoneObject:getName(),Coalition=CoalitionDCSUnit})
+end
+end
+end
+return true
+end
+local inzoneunits=SET_UNIT:New():FilterZones({self}):FilterOnce()
+local inzonestatics=SET_STATIC:New():FilterZones({self}):FilterOnce()
+inzoneunits:ForEach(
+function(unit)
+local Unit=unit
+local DCS=Unit:GetDCSObject()
+EvaluateZone(DCS)
+end
+)
+inzonestatics:ForEach(
+function(static)
+local Static=static
+local DCS=Static:GetDCSObject()
+EvaluateZone(DCS)
+end
+)
+end
+function ZONE_POLYGON:GetScannedUnits()
+return self.ScanData.Units
+end
+function ZONE_POLYGON:GetScannedSetUnit()
+local SetUnit=SET_UNIT:New()
+if self.ScanData then
+for ObjectID,UnitObject in pairs(self.ScanData.Units)do
+local UnitObject=UnitObject
+if UnitObject:isExist()then
+local FoundUnit=UNIT:FindByName(UnitObject:getName())
+if FoundUnit then
+SetUnit:AddUnit(FoundUnit)
+else
+local FoundStatic=STATIC:FindByName(UnitObject:getName())
+if FoundStatic then
+SetUnit:AddUnit(FoundStatic)
+end
+end
+end
+end
+end
+return SetUnit
+end
+function ZONE_POLYGON:GetScannedSetGroup()
+self.ScanSetGroup=self.ScanSetGroup or SET_GROUP:New()
+self.ScanSetGroup.Set={}
+if self.ScanData then
+for ObjectID,UnitObject in pairs(self.ScanData.Units)do
+local UnitObject=UnitObject
+if UnitObject:isExist()then
+local FoundUnit=UNIT:FindByName(UnitObject:getName())
+if FoundUnit then
+local group=FoundUnit:GetGroup()
+self.ScanSetGroup:AddGroup(group)
+end
+end
+end
+end
+return self.ScanSetGroup
+end
+function ZONE_POLYGON:CountScannedCoalitions()
+local Count=0
+for CoalitionID,Coalition in pairs(self.ScanData.Coalitions)do
+Count=Count+1
+end
+return Count
+end
+function ZONE_POLYGON:CheckScannedCoalition(Coalition)
+if Coalition then
+return self.ScanData.Coalitions[Coalition]
+end
+return nil
+end
+function ZONE_POLYGON:GetScannedCoalition(Coalition)
+if Coalition then
+return self.ScanData.Coalitions[Coalition]
+else
+local Count=0
+local ReturnCoalition=nil
+for CoalitionID,Coalition in pairs(self.ScanData.Coalitions)do
+Count=Count+1
+ReturnCoalition=CoalitionID
+end
+if Count~=1 then
+ReturnCoalition=nil
+end
+return ReturnCoalition
+end
+end
+function ZONE_POLYGON:GetScannedSceneryType(SceneryType)
+return self.ScanData.Scenery[SceneryType]
+end
+function ZONE_POLYGON:GetScannedScenery()
+return self.ScanData.Scenery
+end
+function ZONE_POLYGON:IsAllInZoneOfCoalition(Coalition)
+return self:CountScannedCoalitions()==1 and self:GetScannedCoalition(Coalition)==true
+end
+function ZONE_POLYGON:IsAllInZoneOfOtherCoalition(Coalition)
+return self:CountScannedCoalitions()==1 and self:GetScannedCoalition(Coalition)==nil
+end
+function ZONE_POLYGON:IsSomeInZoneOfCoalition(Coalition)
+return self:CountScannedCoalitions()>1 and self:GetScannedCoalition(Coalition)==true
+end
+function ZONE_POLYGON:IsNoneInZoneOfCoalition(Coalition)
+return self:GetScannedCoalition(Coalition)==nil
+end
+function ZONE_POLYGON:IsNoneInZone()
+return self:CountScannedCoalitions()==0
 end
 do
 ZONE_ELASTIC={
@@ -10987,9 +11132,22 @@ function SET_BASE:IsIncludeObject(Object)
 self:F3(Object)
 return true
 end
-function SET_BASE:IsInSet(ObjectName)
+function SET_BASE:IsInSet(Object)
 self:F3(Object)
-return true
+local outcome=false
+local name=Object:GetName()
+self:ForEach(
+function(object)
+if object:GetName()==name then
+outcome=true
+end
+end
+)
+return outcome
+end
+function SET_BASE:IsNotInSet(Object)
+self:F3(Object)
+return not self:IsInSet(Object)
 end
 function SET_BASE:GetObjectNames()
 self:F3()
@@ -18388,8 +18546,9 @@ self.Target=Target
 self.LaserCode=LaserCode
 self.Lasing=true
 local RecceDcsUnit=self.Recce:GetDCSObject()
-self.SpotIR=Spot.createInfraRed(RecceDcsUnit,{x=0,y=2,z=0},Target:GetPointVec3():AddY(1):GetVec3())
-self.SpotLaser=Spot.createLaser(RecceDcsUnit,{x=0,y=2,z=0},Target:GetPointVec3():AddY(1):GetVec3(),LaserCode)
+local relativespot=self.relstartpos or{x=0,y=2,z=0}
+self.SpotIR=Spot.createInfraRed(RecceDcsUnit,relativespot,Target:GetPointVec3():AddY(1):GetVec3())
+self.SpotLaser=Spot.createLaser(RecceDcsUnit,relativespot,Target:GetPointVec3():AddY(1):GetVec3(),LaserCode)
 if Duration then
 self.ScheduleID=self.LaseScheduler:Schedule(self,StopLase,{self},Duration)
 end
@@ -18454,6 +18613,10 @@ return self
 end
 function SPOT:IsLasing()
 return self.Lasing
+end
+function SPOT:SetRelativeStartPosition(position)
+self.relstartpos=position or{x=0,y=2,z=0}
+return self
 end
 end
 MARKEROPS_BASE={
@@ -23221,13 +23384,13 @@ local callnumberminor=string.char(string.byte(callnumber,2))
 local personalized=false
 if IsPlayer and string.find(groupname,"#")then
 if Keepnumber then
-shortcallsign=string.match(groupname,"#(.+)")
+shortcallsign=string.match(groupname,"#(.+)")or"Ghost 111"
 else
-shortcallsign=string.match(groupname,"#%s*([%a]+)")
+shortcallsign=string.match(groupname,"#%s*([%a]+)")or"Ghost"
 end
 personalized=true
 elseif IsPlayer and string.find(self:GetPlayerName(),"|")then
-shortcallsign=string.match(self:GetPlayerName(),"|%s*([%a]+)")
+shortcallsign=string.match(self:GetPlayerName(),"|%s*([%a]+)")or string.match(self:GetPlayerName(),"|%s*([%d]+)")or"Ghost"
 personalized=true
 end
 if(not personalized)and CallsignTranslations and CallsignTranslations[callsignroot]then
@@ -36633,6 +36796,10 @@ else
 if _currentTarget.pastfoulline==false and _unit and _playername then
 local _d=_currentTarget.zone.foulline
 local text=string.format("%s, Invalid hit!\nYou already passed foul line distance of %d m for target %s.",self:_myname(_unitName),_d,targetname)
+if self.useSRS then
+local ttstext=string.format("%s, Invalid hit! You already passed foul line distance of %d meters for target %s.",self:_myname(_unitName),_d,targetname)
+self.controlsrsQ:NewTransmission(ttstext,nil,self.controlmsrs,nil,2)
+end
 self:_DisplayMessageToGroup(_unit,text)
 self:T2(self.id..text)
 _currentTarget.pastfoulline=true
@@ -36773,6 +36940,10 @@ table.insert(_results,result)
 self:Impact(result,playerData)
 elseif insidezone then
 local _message=string.format("%s, weapon impacted too far from nearest range target (>%.1f km). No score!",_callsign,self.scorebombdistance/1000)
+if self.useSRS then
+local ttstext=string.format("%s, weapon impacted too far from nearest range target, mor than %.1f kilometer. No score!",_callsign,self.scorebombdistance/1000)
+self.controlsrsQ:NewTransmission(ttstext,nil,self.controlmsrs,nil,2)
+end
 self:_DisplayMessageToGroup(_unit,_message,nil,false)
 if self.rangecontrol then
 if self.useSRS then
@@ -37552,10 +37723,10 @@ local _BoTgtgs=MENU_GROUP_COMMAND:New(group,"Bombing Targets",_infoPath,self._Di
 local _StrPits=MENU_GROUP_COMMAND:New(group,"Strafe Pits",_infoPath,self._DisplayStrafePits,self,_unitName):Refresh()
 end
 else
-self:E(self.id.."Could not find group or group ID in AddF10Menu() function. Unit name: ".._unitName)
+self:E(self.id.."Could not find group or group ID in AddF10Menu() function. Unit name: ".._unitName or"N/A")
 end
 else
-self:E(self.id.."Player unit does not exist in AddF10Menu() function. Unit name: ".._unitName)
+self:E(self.id.."Player unit does not exist in AddF10Menu() function. Unit name: ".._unitName or"N/A")
 end
 end
 function RANGE:_GetBombTargetCoordinate(target)
@@ -37934,9 +38105,9 @@ function RANGE:_myname(unitname)
 self:F2(unitname)
 local pname="Ghost 1 1"
 local unit=UNIT:FindByName(unitname)
-if unit then
+if unit and unit:IsAlive()then
 local grp=unit:GetGroup()
-if grp then
+if grp and grp:IsAlive()then
 pname=grp:GetCustomCallSign(true,true)
 end
 end
@@ -37952,8 +38123,14 @@ SmokeColor=nil,
 SmokeZone=nil,
 }
 function ZONE_GOAL:New(Zone)
-local self=BASE:Inherit(self,ZONE_RADIUS:New(Zone:GetName(),Zone:GetVec2(),Zone:GetRadius()))
+BASE:I({Zone=Zone})
+local self=BASE:Inherit(self,BASE:New())
+if type(Zone)=="string"then
+self=BASE:Inherit(self,ZONE_POLYGON:NewFromGroupName(Zone))
+else
+self=BASE:Inherit(self,ZONE_RADIUS:New(Zone:GetName(),Zone:GetVec2(),Zone:GetRadius()))
 self:F({Zone=Zone})
+end
 self.Goal=GOAL:New()
 self.SmokeTime=nil
 self:SetSmokeZone(true)
@@ -45823,6 +46000,10 @@ return self
 end
 function FOX:SetDisableF10Menu()
 self.menudisabled=true
+return self
+end
+function FOX:SetEnableF10Menu()
+self.menudisabled=false
 return self
 end
 function FOX:SetDefaultMissileDestruction(switch)
@@ -57206,6 +57387,7 @@ altimeterQNH=nil,
 usemarker=nil,
 markerid=nil,
 relHumidity=nil,
+ReportmBar=false,
 }
 ATIS.Alphabet={
 [1]="Alfa",
@@ -57333,7 +57515,7 @@ RSBNChannel={filename="RSBNChannel.ogg",duration=1.14},
 Zulu={filename="Zulu.ogg",duration=0.62},
 }
 _ATIS={}
-ATIS.version="0.9.8"
+ATIS.version="0.9.9"
 function ATIS:New(AirbaseName,Frequency,Modulation)
 local self=BASE:Inherit(self,FSM:New())
 self.airbasename=AirbaseName
@@ -57356,6 +57538,7 @@ self:SetAltimeterQNH(true)
 self:SetMapMarks(false)
 self:SetRelativeHumidity()
 self:SetQueueUpdateTime()
+self:SetReportmBar(false)
 self:SetStartState("Stopped")
 self:AddTransition("Stopped","Start","Running")
 self:AddTransition("*","Status","*")
@@ -57385,6 +57568,21 @@ return self
 end
 function ATIS:SetActiveRunway(runway)
 self.activerunway=tostring(runway)
+local prefer=nil
+if string.find(string.lower(runway),"l")then
+prefer=true
+elseif string.find(string.lower(runway),"r")then
+prefer=false
+end
+self.airbase:SetActiveRunway(runway,prefer)
+return self
+end
+function ATIS:SetActiveRunwayLanding(runway,preferleft)
+self.airbase:SetActiveRunwayLanding(runway,preferleft)
+return self
+end
+function ATIS:SetActiveRunwayTakeoff(runway,preferleft)
+self.airbase:SetActiveRunwayTakeoff(runway,preferleft)
 return self
 end
 function ATIS:SetRunwayLength()
@@ -57471,6 +57669,18 @@ self.altimeterQNH=false
 end
 return self
 end
+function ATIS:SetReportmBar(switch)
+if switch==true or switch==nil then
+self.ReportmBar=true
+else
+self.ReportmBar=false
+end
+return self
+end
+function ATIS:SetAdditionalInformation(text)
+self.AdditionalInformation=text
+return self
+end
 function ATIS:ReportQNHOnly()
 self.qnhonly=true
 return self
@@ -57544,7 +57754,7 @@ airbase:GetRunwayData(self.runwaym2t,true)
 end
 end
 end
-function ATIS:SetSRS(PathToSRS,Gender,Culture,Voice,Port)
+function ATIS:SetSRS(PathToSRS,Gender,Culture,Voice,Port,GoogleKey)
 if PathToSRS then
 self.useSRS=true
 self.msrs=MSRS:New(PathToSRS,self.frequency,self.modulation)
@@ -57554,6 +57764,7 @@ self.msrs:SetVoice(Voice)
 self.msrs:SetPort(Port)
 self.msrs:SetCoalition(self:GetCoalition())
 self.msrs:SetLabel("ATIS")
+self.msrs:SetGoogle(GoogleKey)
 self.msrsQ=MSRSQUEUE:New("ATIS")
 if self.dTQueueCheck<=10 then
 self:SetQueueUpdateTime(90)
@@ -57647,6 +57858,8 @@ local A=(T0/L)*((P/q)^(((-R*L)/(g*M)))-1)
 self:T2(self.lid..string.format("height=%.1f, A=%.1f, T0=%.1f, QFE=%.1f, QNH=%.1f, P=%.1f, Q=%.1f hPa = %.2f",height,A,T0-273.15,qfe,qnh,P/100,Q/100,UTILS.hPa2inHg(Q/100)))
 qnh=Q/100
 end
+local mBarqnh=qnh
+local mBarqfe=qfe
 if self.PmmHg then
 qfe=UTILS.hPa2mmHg(qfe)
 qnh=UTILS.hPa2mmHg(qnh)
@@ -57962,6 +58175,7 @@ self:Transmission(ATIS.Sound.StatuteMiles,0.2)
 end
 end
 alltext=alltext..";\n"..subtitle
+subtitle=""
 local wp=false
 local wpsub=""
 if precepitation==1 then
@@ -58054,6 +58268,7 @@ end
 end
 end
 alltext=alltext..";\n"..subtitle
+subtitle=""
 if self.TDegF then
 if temperature<0 then
 subtitle=string.format("Temperature -%s °F",TEMPERATURE)
@@ -58127,6 +58342,13 @@ subtitle=string.format("Altimeter %s.%s inHg",QNH[1],QNH[2])
 else
 subtitle=string.format("Altimeter: QNH %s.%s, QFE %s.%s inHg",QNH[1],QNH[2],QFE[1],QFE[2])
 end
+end
+end
+if self.ReportmBar and not self.metric then
+if self.qnhonly then
+subtitle=string.format("%s;\nAltimeter %d hPa",subtitle,mBarqnh)
+else
+subtitle=string.format("%s;\nAltimeter: QNH %d, QFE %d hPa",subtitle,mBarqnh,mBarqfe)
 end
 end
 local _ALTIMETER=subtitle
@@ -58352,6 +58574,9 @@ self:Transmission(ATIS.Sound.PRMGChannel,1.0,subtitle)
 self.radioqueue:Number2Transmission(tostring(ndb.frequency),nil,0.5)
 end
 alltext=alltext..";\n"..subtitle
+end
+if self.useSRS and self.AdditionalInformation then
+alltext=alltext..";\n"..self.AdditionalInformation
 end
 subtitle=string.format("Advise on initial contact, you have information %s",NATO)
 if not self.useSRS then
@@ -61935,6 +62160,7 @@ limitmaxdownedpilots=true,
 maxdownedpilots=10,
 allheligroupset=nil,
 topmenuname="CSAR",
+ADFRadioPwr=1000,
 }
 CSAR.AircraftType={}
 CSAR.AircraftType["SA342Mistral"]=2
@@ -61950,7 +62176,7 @@ CSAR.AircraftType["Bell-47"]=2
 CSAR.AircraftType["UH-60L"]=10
 CSAR.AircraftType["AH-64D_BLK_II"]=2
 CSAR.AircraftType["Bronco-OV-10A"]=2
-CSAR.version="1.0.9"
+CSAR.version="1.0.11"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
@@ -62051,6 +62277,7 @@ self.csarUsePara=false
 self.wetfeettemplate=nil
 self.usewetfeet=false
 self.allowbronco=false
+self.ADFRadioPwr=1000
 self.useSRS=false
 self.SRSPath="E:\\Program Files\\DCS-SimpleRadio-Standalone"
 self.SRSchannel=300
@@ -63101,7 +63328,7 @@ if _radioUnit then
 local Frequency=_freq
 local Sound="l10n/DEFAULT/"..self.radioSound
 local vec3=_radioUnit:GetVec3()or _radioUnit:GetPositionVec3()or{x=0,y=0,z=0}
-trigger.action.radioTransmission(Sound,vec3,0,false,Frequency,1000)
+trigger.action.radioTransmission(Sound,vec3,0,false,Frequency,self.ADFRadioPwr or 1000)
 end
 end
 return self
@@ -72673,91 +72900,91 @@ Microsoft={
 },
 Google={
 Standard={
-["en-AU-Standard-A"]='en-AU-Standard-A',
-["en-AU-Standard-B"]='en-AU-Standard-B',
-["en-AU-Standard-C"]='en-AU-Standard-C',
-["en-AU-Standard-D"]='en-AU-Standard-D',
-["en-IN-Standard-A"]='en-IN-Standard-A',
-["en-IN-Standard-B"]='en-IN-Standard-B',
-["en-IN-Standard-C"]='en-IN-Standard-C',
-["en-IN-Standard-D"]='en-IN-Standard-D',
-["en-GB-Standard-A"]='en-GB-Standard-A',
-["en-GB-Standard-B"]='en-GB-Standard-B',
-["en-GB-Standard-C"]='en-GB-Standard-C',
-["en-GB-Standard-D"]='en-GB-Standard-D',
-["en-GB-Standard-F"]='en-GB-Standard-F',
-["en-US-Standard-A"]='en-US-Standard-A',
-["en-US-Standard-B"]='en-US-Standard-B',
-["en-US-Standard-C"]='en-US-Standard-C',
-["en-US-Standard-D"]='en-US-Standard-D',
-["en-US-Standard-E"]='en-US-Standard-E',
-["en-US-Standard-F"]='en-US-Standard-F',
-["en-US-Standard-G"]='en-US-Standard-G',
-["en-US-Standard-H"]='en-US-Standard-H',
-["en-US-Standard-I"]='en-US-Standard-I',
-["en-US-Standard-J"]='en-US-Standard-J',
-["fr-FR-Standard-A"]="fr-FR-Standard-A",
-["fr-FR-Standard-B"]="fr-FR-Standard-B",
-["fr-FR-Standard-C"]="fr-FR-Standard-C",
-["fr-FR-Standard-D"]="fr-FR-Standard-D",
-["fr-FR-Standard-E"]="fr-FR-Standard-E",
-["de-DE-Standard-A"]="de-DE-Standard-A",
-["de-DE-Standard-B"]="de-DE-Standard-B",
-["de-DE-Standard-C"]="de-DE-Standard-C",
-["de-DE-Standard-D"]="de-DE-Standard-D",
-["de-DE-Standard-E"]="de-DE-Standard-E",
-["de-DE-Standard-F"]="de-DE-Standard-F",
-["es-ES-Standard-A"]="es-ES-Standard-A",
-["es-ES-Standard-B"]="es-ES-Standard-B",
-["es-ES-Standard-C"]="es-ES-Standard-C",
-["es-ES-Standard-D"]="es-ES-Standard-D",
-["it-IT-Standard-A"]="it-IT-Standard-A",
-["it-IT-Standard-B"]="it-IT-Standard-B",
-["it-IT-Standard-C"]="it-IT-Standard-C",
-["it-IT-Standard-D"]="it-IT-Standard-D",
+["en_AU_Standard_A"]='en-AU-Standard-A',
+["en_AU_Standard_B"]='en-AU-Standard-B',
+["en_AU_Standard_C"]='en-AU-Standard-C',
+["en_AU_Standard_D"]='en-AU-Standard-D',
+["en_IN_Standard_A"]='en-IN-Standard-A',
+["en_IN_Standard_B"]='en-IN-Standard-B',
+["en_IN_Standard_C"]='en-IN-Standard-C',
+["en_IN_Standard_D"]='en-IN-Standard-D',
+["en_GB_Standard_A"]='en-GB-Standard-A',
+["en_GB_Standard_B"]='en-GB-Standard-B',
+["en_GB_Standard_C"]='en-GB-Standard-C',
+["en_GB_Standard_D"]='en-GB-Standard-D',
+["en_GB_Standard_F"]='en-GB-Standard-F',
+["en_US_Standard_A"]='en-US-Standard-A',
+["en_US_Standard_B"]='en-US-Standard-B',
+["en_US_Standard_C"]='en-US-Standard-C',
+["en_US_Standard_D"]='en-US-Standard-D',
+["en_US_Standard_E"]='en-US-Standard-E',
+["en_US_Standard_F"]='en-US-Standard-F',
+["en_US_Standard_G"]='en-US-Standard-G',
+["en_US_Standard_H"]='en-US-Standard-H',
+["en_US_Standard_I"]='en-US-Standard-I',
+["en_US_Standard_J"]='en-US-Standard-J',
+["fr_FR_Standard_A"]="fr-FR-Standard-A",
+["fr_FR_Standard_B"]="fr-FR-Standard-B",
+["fr_FR_Standard_C"]="fr-FR-Standard-C",
+["fr_FR_Standard_D"]="fr-FR-Standard-D",
+["fr_FR_Standard_E"]="fr-FR-Standard-E",
+["de_DE_Standard_A"]="de-DE-Standard-A",
+["de_DE_Standard_B"]="de-DE-Standard-B",
+["de_DE_Standard_C"]="de-DE-Standard-C",
+["de_DE_Standard_D"]="de-DE-Standard-D",
+["de_DE_Standard_E"]="de-DE-Standard-E",
+["de_DE_Standard_F"]="de-DE-Standard-F",
+["es_ES_Standard_A"]="es-ES-Standard-A",
+["es_ES_Standard_B"]="es-ES-Standard-B",
+["es_ES_Standard_C"]="es-ES-Standard-C",
+["es_ES_Standard_D"]="es-ES-Standard-D",
+["it_IT_Standard_A"]="it-IT-Standard-A",
+["it_IT_Standard_B"]="it-IT-Standard-B",
+["it_IT_Standard_C"]="it-IT-Standard-C",
+["it_IT_Standard_D"]="it-IT-Standard-D",
 },
 Wavenet={
-["en-AU-Wavenet-A"]='en-AU-Wavenet-A',
-["en-AU-Wavenet-B"]='en-AU-Wavenet-B',
-["en-AU-Wavenet-C"]='en-AU-Wavenet-C',
-["en-AU-Wavenet-D"]='en-AU-Wavenet-D',
-["en-IN-Wavenet-A"]='en-IN-Wavenet-A',
-["en-IN-Wavenet-B"]='en-IN-Wavenet-B',
-["en-IN-Wavenet-C"]='en-IN-Wavenet-C',
-["en-IN-Wavenet-D"]='en-IN-Wavenet-D',
-["en-GB-Wavenet-A"]='en-GB-Wavenet-A',
-["en-GB-Wavenet-B"]='en-GB-Wavenet-B',
-["en-GB-Wavenet-C"]='en-GB-Wavenet-C',
-["en-GB-Wavenet-D"]='en-GB-Wavenet-D',
-["en-GB-Wavenet-F"]='en-GB-Wavenet-F',
-["en-US-Wavenet-A"]='en-US-Wavenet-A',
-["en-US-Wavenet-B"]='en-US-Wavenet-B',
-["en-US-Wavenet-C"]='en-US-Wavenet-C',
-["en-US-Wavenet-D"]='en-US-Wavenet-D',
-["en-US-Wavenet-E"]='en-US-Wavenet-E',
-["en-US-Wavenet-F"]='en-US-Wavenet-F',
-["en-US-Wavenet-G"]='en-US-Wavenet-G',
-["en-US-Wavenet-H"]='en-US-Wavenet-H',
-["en-US-Wavenet-I"]='en-US-Wavenet-I',
-["en-US-Wavenet-J"]='en-US-Wavenet-J',
-["fr-FR-Wavenet-A"]="fr-FR-Wavenet-A",
-["fr-FR-Wavenet-B"]="fr-FR-Wavenet-B",
-["fr-FR-Wavenet-C"]="fr-FR-Wavenet-C",
-["fr-FR-Wavenet-D"]="fr-FR-Wavenet-D",
-["fr-FR-Wavenet-E"]="fr-FR-Wavenet-E",
-["de-DE-Wavenet-A"]="de-DE-Wavenet-A",
-["de-DE-Wavenet-B"]="de-DE-Wavenet-B",
-["de-DE-Wavenet-C"]="de-DE-Wavenet-C",
-["de-DE-Wavenet-D"]="de-DE-Wavenet-D",
-["de-DE-Wavenet-E"]="de-DE-Wavenet-E",
-["de-DE-Wavenet-F"]="de-DE-Wavenet-F",
-["es-ES-Wavenet-B"]="es-ES-Wavenet-B",
-["es-ES-Wavenet-C"]="es-ES-Wavenet-C",
-["es-ES-Wavenet-D"]="es-ES-Wavenet-D",
-["it-IT-Wavenet-A"]="it-IT-Wavenet-A",
-["it-IT-Wavenet-B"]="it-IT-Wavenet-B",
-["it-IT-Wavenet-C"]="it-IT-Wavenet-C",
-["it-IT-Wavenet-D"]="it-IT-Wavenet-D",
+["en_AU_Wavenet_A"]='en-AU-Wavenet-A',
+["en_AU_Wavenet_B"]='en-AU-Wavenet-B',
+["en_AU_Wavenet_C"]='en-AU-Wavenet-C',
+["en_AU_Wavenet_D"]='en-AU-Wavenet-D',
+["en_IN_Wavenet_A"]='en-IN-Wavenet-A',
+["en_IN_Wavenet_B"]='en-IN-Wavenet-B',
+["en_IN_Wavenet_C"]='en-IN-Wavenet-C',
+["en_IN_Wavenet_D"]='en-IN-Wavenet-D',
+["en_GB_Wavenet_A"]='en-GB-Wavenet-A',
+["en_GB_Wavenet_B"]='en-GB-Wavenet-B',
+["en_GB_Wavenet_C"]='en-GB-Wavenet-C',
+["en_GB_Wavenet_D"]='en-GB-Wavenet-D',
+["en_GB_Wavenet_F"]='en-GB-Wavenet-F',
+["en_US_Wavenet_A"]='en-US-Wavenet-A',
+["en_US_Wavenet_B"]='en-US-Wavenet-B',
+["en_US_Wavenet_C"]='en-US-Wavenet-C',
+["en_US_Wavenet_D"]='en-US-Wavenet-D',
+["en_US_Wavenet_E"]='en-US-Wavenet-E',
+["en_US_Wavenet_F"]='en-US-Wavenet-F',
+["en_US_Wavenet_G"]='en-US-Wavenet-G',
+["en_US_Wavenet_H"]='en-US-Wavenet-H',
+["en_US_Wavenet_I"]='en-US-Wavenet-I',
+["en_US_Wavenet_J"]='en-US-Wavenet-J',
+["fr_FR_Wavenet_A"]="fr-FR-Wavenet-A",
+["fr_FR_Wavenet_B"]="fr-FR-Wavenet-B",
+["fr_FR_Wavenet_C"]="fr-FR-Wavenet-C",
+["fr_FR_Wavenet_D"]="fr-FR-Wavenet-D",
+["fr_FR_Wavenet_E"]="fr-FR-Wavenet-E",
+["de_DE_Wavenet_A"]="de-DE-Wavenet-A",
+["de_DE_Wavenet_B"]="de-DE-Wavenet-B",
+["de_DE_Wavenet_C"]="de-DE-Wavenet-C",
+["de_DE_Wavenet_D"]="de-DE-Wavenet-D",
+["de_DE_Wavenet_E"]="de-DE-Wavenet-E",
+["de_DE_Wavenet_F"]="de-DE-Wavenet-F",
+["es_ES_Wavenet_B"]="es-ES-Wavenet-B",
+["es_ES_Wavenet_C"]="es-ES-Wavenet-C",
+["es_ES_Wavenet_D"]="es-ES-Wavenet-D",
+["it_IT_Wavenet_A"]="it-IT-Wavenet-A",
+["it_IT_Wavenet_B"]="it-IT-Wavenet-B",
+["it_IT_Wavenet_C"]="it-IT-Wavenet-C",
+["it_IT_Wavenet_D"]="it-IT-Wavenet-D",
 },
 },
 }
@@ -72994,7 +73221,7 @@ port=port or self.port
 label=label or self.Label
 modus=modus:gsub("0","AM")
 modus=modus:gsub("1","FM")
-local command=string.format('"%s\\%s" -f %s -m %s -c %s -p %s -n "%s" -v "%.1f"',path,exe,freqs,modus,coal,port,label,volume)
+local command=string.format('"%s\\%s" -f "%s" -m "%s" -c %s -p %s -n "%s" -v "%.1f"',path,exe,freqs,modus,coal,port,label,volume)
 if voice then
 command=command..string.format(" --voice=\"%s\"",tostring(voice))
 else
