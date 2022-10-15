@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-10-06T05:27:07.0000000Z-2ca6168f475b6c4ed7d0d800cfdf03293155e438 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-10-14T14:50:31.0000000Z-1d296d1cf46f6650ab1ce69fd0c7c5a4955ff37e ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -10906,6 +10906,7 @@ end
 table.sort(self.Index)
 end
 function SET_BASE:AddSet(SetToAdd)
+if not SetToAdd then return self end
 for _,ObjectB in pairs(SetToAdd.Set)do
 self:AddObject(ObjectB)
 end
@@ -12035,7 +12036,7 @@ self:F({MaxThreatLevelA2G=MaxThreatLevelA2G,MaxThreatText=MaxThreatText})
 return MaxThreatLevelA2G,MaxThreatText
 end
 function SET_UNIT:GetCoordinate()
-local Coordinate=self:GetFirst():GetCoordinate()
+local Coordinate=self:GetRandom():GetCoordinate()
 local x1=Coordinate.x
 local x2=Coordinate.x
 local y1=Coordinate.y
@@ -14846,7 +14847,7 @@ RoutePoint.task.params={}
 RoutePoint.task.params.tasks=DCSTasks or{}
 return RoutePoint
 end
-function COORDINATE:GetClosestAirbase2(Category,Coalition)
+function COORDINATE:GetClosestAirbase(Category,Coalition)
 local airbases=AIRBASE.GetAllAirbases(Coalition)
 local closest=nil
 local distmin=nil
@@ -14870,20 +14871,9 @@ end
 end
 return closest,distmin
 end
-function COORDINATE:GetClosestAirbase(Category,Coalition)
-local a=self:GetVec3()
-local distmin=math.huge
-local airbase=nil
-for DCSairbaseID,DCSairbase in pairs(world.getAirbases(Coalition))do
-local b=DCSairbase:getPoint()
-local c=UTILS.VecSubstract(a,b)
-local dist=UTILS.VecNorm(c)
-if dist<distmin and(Category==nil or Category==DCSairbase:getDesc().category)then
-distmin=dist
-airbase=DCSairbase
-end
-end
-return AIRBASE:Find(airbase)
+function COORDINATE:GetClosestAirbase2(Category,Coalition)
+local closest,distmin=self:GetClosestAirbase(Category,Coalition)
+return closest,distmin
 end
 function COORDINATE:GetClosestParkingSpot(airbase,terminaltype,free)
 local airbases={}
@@ -24452,7 +24442,22 @@ ClassName="STATIC",
 function STATIC:Register(StaticName)
 local self=BASE:Inherit(self,POSITIONABLE:New(StaticName))
 self.StaticName=StaticName
+local DCSStatic=StaticObject.getByName(self.StaticName)
+if DCSStatic then
+local Life0=DCSStatic:getLife()or 1
+self.Life0=Life0
+end
 return self
+end
+function STATIC:GetLife0()
+return self.Life0 or 1
+end
+function STATIC:GetLife()
+local DCSStatic=StaticObject.getByName(self.StaticName)
+if DCSStatic then
+return DCSStatic:getLife()or 1
+end
+return nil
 end
 function STATIC:Find(DCSStatic)
 local StaticName=DCSStatic:getName()
@@ -25641,43 +25646,67 @@ function SCENERY:Register(SceneryName,SceneryObject)
 local self=BASE:Inherit(self,POSITIONABLE:New(SceneryName))
 self.SceneryName=SceneryName
 self.SceneryObject=SceneryObject
+if self.SceneryObject then
+self.Life0=self.SceneryObject:getLife()
+else
+self.Life0=0
+end
 return self
 end
 function SCENERY:GetDCSObject()
 return self.SceneryObject
 end
+function SCENERY:GetLife()
+local life=0
+if self.SceneryObject then
+life=self.SceneryObject:getLife()
+end
+return life
+end
+function SCENERY:GetLife0()
+return self.Life0 or 0
+end
+function SCENERY:IsAlive()
+return self:GetLife()>=1 and true or false
+end
+function SCENERY:IsDead()
+return self:GetLife()<1 and true or false
+end
 function SCENERY:GetThreatLevel()
 return 0,"Scenery"
 end
-function SCENERY:FindByName(name)
-local findAirbase=function()
-local airbases=AIRBASE.GetAllAirbases()
-for index,airbase in pairs(airbases)do
-local surftype=airbase:GetCoordinate():GetSurfaceType()
-if surftype~=land.SurfaceType.SHALLOW_WATER and surftype~=land.SurfaceType.WATER then
-return airbase:GetCoordinate()
+function SCENERY:FindByName(Name,Coordinate,Radius)
+local radius=Radius or 100
+local name=Name or"unknown"
+local scenery=nil
+local function SceneryScan(coordinate,radius,name)
+if coordinate~=nil then
+local scenerylist=coordinate:ScanScenery(radius)
+local rscenery=nil
+for _,_scenery in pairs(scenerylist)do
+local scenery=_scenery
+if tostring(scenery.SceneryName)==tostring(name)then
+rscenery=scenery
+break
 end
 end
-return nil
-end
-local sceneryScan=function(scancoord)
-if scancoord~=nil then
-local _,_,sceneryfound,_,_,scenerylist=scancoord:ScanObjects(200,false,false,true)
-if sceneryfound==true then
-scenerylist[1].id_=name
-SCENERY.SceneryObject=SCENERY:Register(scenerylist[1].id_,scenerylist[1])
-return SCENERY.SceneryObject
-end
+return rscenery
 end
 return nil
 end
-if SCENERY.SceneryObject then
-SCENERY.SceneryObject.SceneryObject.id_=name
-SCENERY.SceneryObject.SceneryName=name
-return SCENERY:Register(SCENERY.SceneryObject.SceneryObject.id_,SCENERY.SceneryObject.SceneryObject)
-else
-return sceneryScan(findAirbase())
+if Coordinate then
+scenery=SceneryScan(Coordinate,radius,name)
 end
+return scenery
+end
+function SCENERY:FindByNameInZone(Name,Zone,Radius)
+local radius=Radius or 100
+local name=Name or"unknown"
+if type(Zone)=="string"then
+Zone=ZONE:FindByName(Zone)
+end
+local coordinate=Zone:GetCoordinate()
+return self:FindByName(Name,coordinate,Radius)
 end
 MARKER={
 ClassName="MARKER",
@@ -59195,7 +59224,7 @@ CTLD.UnitTypes={
 ["UH-60L"]={type="UH-60L",crates=true,troops=true,cratelimit=2,trooplimit=20,length=16,cargoweightlimit=3500},
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 }
-CTLD.version="1.0.11"
+CTLD.version="1.0.14"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -59361,6 +59390,14 @@ self:T(self.lid.." SetTroopDropZoneRadius")
 local tradius=Radius or 100
 if tradius<25 then tradius=25 end
 self.troopdropzoneradius=tradius
+return self
+end
+function CTLD:AddPlayerTask(PlayerTask)
+self:T(self.lid.." AddPlayerTask")
+if not self.PlayerTaskQueue then
+self.PlayerTaskQueue=FIFO:New()
+end
+self.PlayerTaskQueue:Push(PlayerTask,PlayerTask.PlayerTaskNr)
 return self
 end
 function CTLD:_EventHandler(EventData)
@@ -61606,6 +61643,25 @@ return self
 end
 function CTLD:onbeforeTroopsDeployed(From,Event,To,Group,Unit,Troops)
 self:T({From,Event,To})
+if Unit and Unit:IsPlayer()and self.PlayerTaskQueue then
+local playername=Unit:GetPlayerName()
+local dropcoord=Troops:GetCoordinate()or COORDINATE:New(0,0,0)
+local dropvec2=dropcoord:GetVec2()
+self.PlayerTaskQueue:ForEach(
+function(Task)
+local task=Task
+local subtype=task:GetSubType()
+if Event==subtype and not task:IsDone()then
+local targetzone=task.Target:GetObject()
+if targetzone and targetzone.ClassName and string.match(targetzone.ClassName,"ZONE")and targetzone:IsVec2InZone(dropvec2)then
+if task.Clients:HasUniqueID(playername)then
+task:__Success(-1)
+end
+end
+end
+end
+)
+end
 return self
 end
 function CTLD:onbeforeCratesDropped(From,Event,To,Group,Unit,Cargotable)
@@ -61613,7 +61669,26 @@ self:T({From,Event,To})
 return self
 end
 function CTLD:onbeforeCratesBuild(From,Event,To,Group,Unit,Vehicle)
-self:T({From,Event,To})
+self:I({From,Event,To})
+if Unit and Unit:IsPlayer()and self.PlayerTaskQueue then
+local playername=Unit:GetPlayerName()
+local dropcoord=Vehicle:GetCoordinate()or COORDINATE:New(0,0,0)
+local dropvec2=dropcoord:GetVec2()
+self.PlayerTaskQueue:ForEach(
+function(Task)
+local task=Task
+local subtype=task:GetSubType()
+if Event==subtype and not task:IsDone()then
+local targetzone=task.Target:GetObject()
+if targetzone and targetzone.ClassName and string.match(targetzone.ClassName,"ZONE")and targetzone:IsVec2InZone(dropvec2)then
+if task.Clients:HasUniqueID(playername)then
+task:__Success(-1)
+end
+end
+end
+end
+)
+end
 return self
 end
 function CTLD:onbeforeTroopsRTB(From,Event,To,Group,Unit)
@@ -62301,7 +62376,7 @@ CSAR.AircraftType["Bell-47"]=2
 CSAR.AircraftType["UH-60L"]=10
 CSAR.AircraftType["AH-64D_BLK_II"]=2
 CSAR.AircraftType["Bronco-OV-10A"]=2
-CSAR.version="1.0.11"
+CSAR.version="1.0.13"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
@@ -62459,6 +62534,14 @@ end
 end
 self.lastCrash[_unitname]=timer.getTime()
 return false
+end
+function CSAR:AddPlayerTask(PlayerTask)
+self:T(self.lid.." AddPlayerTask")
+if not self.PlayerTaskQueue then
+self.PlayerTaskQueue=FIFO:New()
+end
+self.PlayerTaskQueue:Push(PlayerTask,PlayerTask.PlayerTaskNr)
+return self
 end
 function CSAR:_SpawnPilotInField(country,point,frequency,wetfeet)
 self:T({country,point,frequency,tostring(wetfeet)})
@@ -63310,7 +63393,7 @@ return distmin
 end
 if self.allowFARPRescue then
 local position=_heli:GetCoordinate()
-local afb,distance=position:GetClosestAirbase2(nil,self.coalition)
+local afb,distance=position:GetClosestAirbase(nil,self.coalition)
 _shortestDistance=distance
 end
 for _,_mashUnit in pairs(_mashes)do
@@ -63627,6 +63710,27 @@ end
 function CSAR:onbeforeBoarded(From,Event,To,Heliname,Woundedgroupname)
 self:T({From,Event,To,Heliname,Woundedgroupname})
 self:_ScheduledSARFlight(Heliname,Woundedgroupname)
+local Unit=UNIT:FindByName(Heliname)
+if Unit and Unit:IsPlayer()and self.PlayerTaskQueue then
+local playername=Unit:GetPlayerName()
+local dropcoord=Unit:GetCoordinate()or COORDINATE:New(0,0,0)
+local dropvec2=dropcoord:GetVec2()
+self.PlayerTaskQueue:ForEach(
+function(Task)
+local task=Task
+local subtype=task:GetSubType()
+if Event==subtype and not task:IsDone()then
+local targetzone=task.Target:GetObject()
+if(targetzone and targetzone.ClassName and string.match(targetzone.ClassName,"ZONE")and targetzone:IsVec2InZone(dropvec2))
+or(string.find(task.CSARPilotName,Woundedgroupname))then
+if task.Clients:HasUniqueID(playername)then
+task:__Success(-1)
+end
+end
+end
+end
+)
+end
 return self
 end
 function CSAR:onbeforeReturning(From,Event,To,Heliname,Woundedgroupname,IsAirPort)
@@ -63638,6 +63742,21 @@ function CSAR:onbeforeRescued(From,Event,To,HeliUnit,HeliName,PilotsSaved)
 self:T({From,Event,To,HeliName,HeliUnit})
 self.rescues=self.rescues+1
 self.rescuedpilots=self.rescuedpilots+PilotsSaved
+local Unit=HeliUnit or UNIT:FindByName(HeliName)
+if Unit and Unit:IsPlayer()and self.PlayerTaskQueue then
+local playername=Unit:GetPlayerName()
+self.PlayerTaskQueue:ForEach(
+function(Task)
+local task=Task
+local subtype=task:GetSubType()
+if Event==subtype and not task:IsDone()then
+if task.Clients:HasUniqueID(playername)then
+task:__Success(-1)
+end
+end
+end
+)
+end
 return self
 end
 function CSAR:onbeforePilotDown(From,Event,To,Group,Frequency,Leadername,CoordinatesText)
