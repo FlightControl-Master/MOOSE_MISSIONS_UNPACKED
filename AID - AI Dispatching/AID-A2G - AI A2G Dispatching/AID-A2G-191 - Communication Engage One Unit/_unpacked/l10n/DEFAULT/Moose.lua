@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-10-14T14:50:31.0000000Z-1d296d1cf46f6650ab1ce69fd0c7c5a4955ff37e ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-10-21T11:52:09.0000000Z-61ea4846141fec056064958fc5d9a7363bb07549 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -8812,6 +8812,7 @@ function ZONE_RADIUS:Scan(ObjectCategories,UnitCategories)
 self.ScanData={}
 self.ScanData.Coalitions={}
 self.ScanData.Scenery={}
+self.ScanData.SceneryTable={}
 self.ScanData.Units={}
 local ZoneCoord=self:GetCoordinate()
 local ZoneRadius=self:GetRadius()
@@ -8852,6 +8853,7 @@ local SceneryType=ZoneObject:getTypeName()
 local SceneryName=ZoneObject:getName()
 self.ScanData.Scenery[SceneryType]=self.ScanData.Scenery[SceneryType]or{}
 self.ScanData.Scenery[SceneryType][SceneryName]=SCENERY:Register(SceneryName,ZoneObject)
+table.insert(self.ScanData.SceneryTable,self.ScanData.Scenery[SceneryType][SceneryName])
 self:T({SCENERY=self.ScanData.Scenery[SceneryType][SceneryName]})
 end
 end
@@ -8933,6 +8935,17 @@ return self.ScanData.Scenery[SceneryType]
 end
 function ZONE_RADIUS:GetScannedScenery()
 return self.ScanData.Scenery
+end
+function ZONE_RADIUS:GetScannedSceneryObjects()
+return self.ScanData.SceneryTable
+end
+function ZONE_RADIUS:GetScannedSetScenery()
+local scenery=SET_SCENERY:New()
+local objects=self:GetScannedSceneryObjects()
+for _,_obj in pairs(objects)do
+scenery:AddScenery(_obj)
+end
+return scenery
 end
 function ZONE_RADIUS:IsAllInZoneOfCoalition(Coalition)
 return self:CountScannedCoalitions()==1 and self:GetScannedCoalition(Coalition)==true
@@ -9505,7 +9518,6 @@ local DeltaY=self._.Polygon[j].y-self._.Polygon[i].y
 for Segment=0,Segments do
 local PointX=self._.Polygon[i].x+(Segment*DeltaX/Segments)
 local PointY=self._.Polygon[i].y+(Segment*DeltaY/Segments)
-ZONE_RADIUS:New("Zone",{x=PointX,y=PointY},Radius,true):DrawZone(Coalition,Color,1,Color,Alpha,nil,false)
 end
 end
 j=i
@@ -9545,7 +9557,18 @@ function ZONE_POLYGON:Scan(ObjectCategories,UnitCategories)
 self.ScanData={}
 self.ScanData.Coalitions={}
 self.ScanData.Scenery={}
+self.ScanData.SceneryTable={}
 self.ScanData.Units={}
+local vectors=self:GetBoundingSquare()
+local minVec3={x=vectors.x1,y=0,z=vectors.y1}
+local maxVec3={x=vectors.x2,y=0,z=vectors.y2}
+local VolumeBox={
+id=world.VolumeType.BOX,
+params={
+min=minVec3,
+max=maxVec3
+}
+}
 local function EvaluateZone(ZoneObject)
 if ZoneObject then
 local ObjectCategory=ZoneObject:getCategory()
@@ -9570,6 +9593,14 @@ self.ScanData.Units[ZoneObject]=ZoneObject
 self:F2({Name=ZoneObject:getName(),Coalition=CoalitionDCSUnit})
 end
 end
+if ObjectCategory==Object.Category.SCENERY then
+local SceneryType=ZoneObject:getTypeName()
+local SceneryName=ZoneObject:getName()
+self.ScanData.Scenery[SceneryType]=self.ScanData.Scenery[SceneryType]or{}
+self.ScanData.Scenery[SceneryType][SceneryName]=SCENERY:Register(SceneryName,ZoneObject)
+table.insert(self.ScanData.SceneryTable,self.ScanData.Scenery[SceneryType][SceneryName])
+self:T({SCENERY=self.ScanData.Scenery[SceneryType][SceneryName]})
+end
 end
 return true
 end
@@ -9589,6 +9620,15 @@ local DCS=Static:GetDCSObject()
 EvaluateZone(DCS)
 end
 )
+local searchscenery=false
+for _,_type in pairs(ObjectCategories)do
+if _type==Object.Category.SCENERY then
+searchscenery=true
+end
+end
+if searchscenery then
+world.searchObjects({Object.Category.SCENERY},VolumeBox,EvaluateZone)
+end
 end
 function ZONE_POLYGON:GetScannedUnits()
 return self.ScanData.Units
@@ -9662,8 +9702,19 @@ end
 function ZONE_POLYGON:GetScannedSceneryType(SceneryType)
 return self.ScanData.Scenery[SceneryType]
 end
+function ZONE_POLYGON:GetScannedSceneryObjects()
+return self.ScanData.SceneryTable
+end
 function ZONE_POLYGON:GetScannedScenery()
 return self.ScanData.Scenery
+end
+function ZONE_POLYGON:GetScannedSetScenery()
+local scenery=SET_SCENERY:New()
+local objects=self:GetScannedSceneryObjects()
+for _,_obj in pairs(objects)do
+scenery:AddScenery(_obj)
+end
+return scenery
 end
 function ZONE_POLYGON:IsAllInZoneOfCoalition(Coalition)
 return self:CountScannedCoalitions()==1 and self:GetScannedCoalition(Coalition)==true
@@ -10052,7 +10103,7 @@ self:I(string.format("Register ZONE: %s (Circular)",ZoneName))
 Zone=ZONE:New(ZoneName)
 else
 self:I(string.format("Register ZONE: %s (Polygon, Quad)",ZoneName))
-Zone=ZONE_POLYGON_BASE:New(ZoneName,ZoneData.verticies)
+Zone=ZONE_POLYGON:NewFromPointsArray(ZoneName,ZoneData.verticies)
 end
 if Zone then
 Zone.Color=color
@@ -14211,6 +14262,134 @@ return MGroupInclude
 end
 end
 do
+SET_SCENERY={
+ClassName="SET_SCENERY",
+Scenerys={},
+Filter={
+SceneryPrefixes=nil,
+Zones=nil,
+},
+}
+function SET_SCENERY:New(ZoneSet)
+local zoneset={}
+local self=BASE:Inherit(self,SET_BASE:New(zoneset))
+local zonenames={}
+if ZoneSet then
+for _,_zone in pairs(ZoneSet.Set)do
+table.insert(zonenames,_zone:GetName())
+end
+self:AddSceneryByName(zonenames)
+end
+return self
+end
+function SET_SCENERY:NewFromZone(Zone)
+local zone=Zone
+if type(Zone)=="string"then
+zone=ZONE:FindByName(Zone)
+end
+zone:Scan({Object.Category.SCENERY})
+return zone:GetScannedSetScenery()
+end
+function SET_SCENERY:AddScenery(AddScenery)
+self:F2(AddScenery:GetName())
+self:Add(AddScenery:GetName(),AddScenery)
+return self
+end
+function SET_SCENERY:AddSceneryByName(AddSceneryNames)
+local AddSceneryNamesArray=(type(AddSceneryNames)=="table")and AddSceneryNames or{AddSceneryNames}
+self:T(AddSceneryNamesArray)
+for AddSceneryID,AddSceneryName in pairs(AddSceneryNamesArray)do
+self:Add(AddSceneryName,SCENERY:FindByZoneName(AddSceneryName))
+end
+return self
+end
+function SET_SCENERY:RemoveSceneryByName(RemoveSceneryNames)
+local RemoveSceneryNamesArray=(type(RemoveSceneryNames)=="table")and RemoveSceneryNames or{RemoveSceneryNames}
+for RemoveSceneryID,RemoveSceneryName in pairs(RemoveSceneryNamesArray)do
+self:Remove(RemoveSceneryName)
+end
+return self
+end
+function SET_SCENERY:FindScenery(SceneryName)
+local SceneryFound=self.Set[SceneryName]
+return SceneryFound
+end
+function SET_SCENERY:FilterZones(Zones)
+if not self.Filter.Zones then
+self.Filter.Zones={}
+end
+local zones={}
+if Zones.ClassName and Zones.ClassName=="SET_ZONE"then
+zones=Zones.Set
+elseif type(Zones)~="table"or(type(Zones)=="table"and Zones.ClassName)then
+self:E("***** FilterZones needs either a table of ZONE Objects or a SET_ZONE as parameter!")
+return self
+else
+zones=Zones
+end
+for _,Zone in pairs(zones)do
+local zonename=Zone:GetName()
+self.Filter.Zones[zonename]=Zone
+end
+return self
+end
+function SET_SCENERY:FilterPrefixes(Prefixes)
+if not self.Filter.SceneryPrefixes then
+self.Filter.SceneryPrefixes={}
+end
+if type(Prefixes)~="table"then
+Prefixes={Prefixes}
+end
+for PrefixID,Prefix in pairs(Prefixes)do
+self.Filter.SceneryPrefixes[Prefix]=Prefix
+end
+return self
+end
+function SET_SCENERY:CountAlive()
+local Set=self:GetSet()
+local CountU=0
+for UnitID,UnitData in pairs(Set)do
+if UnitData and UnitData:IsAlive()then
+CountU=CountU+1
+end
+end
+return CountU
+end
+function SET_SCENERY:ForEachScenery(IteratorFunction,...)
+self:F2(arg)
+self:ForEach(IteratorFunction,arg,self:GetSet())
+return self
+end
+function SET_SCENERY:GetCoordinate()
+local Coordinate=self:GetRandom():GetCoordinate()
+local x1=Coordinate.x
+local x2=Coordinate.x
+local y1=Coordinate.y
+local y2=Coordinate.y
+local z1=Coordinate.z
+local z2=Coordinate.z
+for SceneryName,SceneryData in pairs(self:GetSet())do
+local Scenery=SceneryData
+local Coordinate=Scenery:GetCoordinate()
+x1=(Coordinate.x<x1)and Coordinate.x or x1
+x2=(Coordinate.x>x2)and Coordinate.x or x2
+y1=(Coordinate.y<y1)and Coordinate.y or y1
+y2=(Coordinate.y>y2)and Coordinate.y or y2
+z1=(Coordinate.y<z1)and Coordinate.z or z1
+z2=(Coordinate.y>z2)and Coordinate.z or z2
+end
+Coordinate.x=(x2-x1)/2+x1
+Coordinate.y=(y2-y1)/2+y1
+Coordinate.z=(z2-z1)/2+z1
+self:F({Coordinate=Coordinate})
+return Coordinate
+end
+function SET_SCENERY:IsIncludeObject(MScenery)
+self:F2(MScenery)
+return true
+end
+end
+do
 COORDINATE={
 ClassName="COORDINATE",
 }
@@ -16007,21 +16186,6 @@ end
 if self.MessageDuration~=0 then
 self:T(self.MessageCategory..self.MessageText:gsub("\n$",""):gsub("\n$","").." / "..self.MessageDuration)
 trigger.action.outTextForGroup(Group:GetID(),self.MessageCategory..self.MessageText:gsub("\n$",""):gsub("\n$",""),self.MessageDuration,self.ClearScreen)
-end
-end
-return self
-end
-function MESSAGE:ToUnit(Unit,Settings)
-self:F(Unit.IdentifiableName)
-if Unit then
-if self.MessageType then
-local Settings=Settings or(Unit and _DATABASE:GetPlayerSettings(Unit:GetPlayerName()))or _SETTINGS
-self.MessageDuration=Settings:GetMessageTime(self.MessageType)
-self.MessageCategory=""
-end
-if self.MessageDuration~=0 then
-self:T(self.MessageCategory..self.MessageText:gsub("\n$",""):gsub("\n$","").." / "..self.MessageDuration)
-trigger.action.outTextForUnit(Unit:GetID(),self.MessageCategory..self.MessageText:gsub("\n$",""):gsub("\n$",""),self.MessageDuration,self.ClearScreen)
 end
 end
 return self
@@ -22455,6 +22619,27 @@ end
 self:E("ERROR: Cannot get Vec3 of group "..tostring(self.GroupName))
 return nil
 end
+function GROUP:GetAverageVec3()
+local units=self:GetUnits()or{}
+local x=0;local y=0;local z=0;local n=0
+for _,unit in pairs(units)do
+local vec3=nil
+if unit and unit:IsAlive()then
+vec3=unit:GetVec3()
+end
+if vec3 then
+x=x+vec3.x
+y=y+vec3.y
+z=z+vec3.z
+n=n+1
+end
+end
+if n>0 then
+local Vec3={x=x/n,y=y/n,z=z/n}
+return Vec3
+end
+return nil
+end
 function GROUP:GetPointVec2()
 self:F2(self.GroupName)
 local FirstUnit=self:GetUnit(1)
@@ -22465,6 +22650,17 @@ return FirstUnitPointVec2
 end
 BASE:E({"Cannot GetPointVec2",Group=self,Alive=self:IsAlive()})
 return nil
+end
+function GROUP:GetAverageCoordinate()
+local vec3=self:GetAverageVec3()
+if vec3 then
+local coord=COORDINATE:NewFromVec3(vec3)
+local Heading=self:GetHeading()
+coord.Heading=Heading
+else
+BASE:E({"Cannot GetAverageCoordinate",Group=self,Alive=self:IsAlive()})
+return nil
+end
 end
 function GROUP:GetCoordinate()
 local Units=self:GetUnits()or{}
@@ -25707,6 +25903,62 @@ Zone=ZONE:FindByName(Zone)
 end
 local coordinate=Zone:GetCoordinate()
 return self:FindByName(Name,coordinate,Radius)
+end
+function SCENERY:FindByZoneName(ZoneName)
+local zone=ZoneName
+if type(ZoneName)=="string"then
+zone=ZONE:FindByName(ZoneName)
+end
+local _id=zone:GetProperty('OBJECT ID')
+if not _id then
+BASE:E("**** Zone without object ID: "..ZoneName.." | Type: "..tostring(zone.ClassName))
+if string.find(zone.ClassName,"POLYGON")then
+zone:Scan({Object.Category.SCENERY})
+local scanned=zone:GetScannedScenery()
+for _,_scenery in(scanned)do
+local scenery=_scenery
+if scenery:IsAlive()then
+return scenery
+end
+end
+return nil
+else
+local coordinate=zone:GetCoordinate()
+local scanned=coordinate:ScanScenery()
+for _,_scenery in(scanned)do
+local scenery=_scenery
+if scenery:IsAlive()then
+return scenery
+end
+end
+return nil
+end
+else
+return self:FindByName(_id,zone:GetCoordinate())
+end
+end
+function SCENERY:FindAllByZoneName(ZoneName)
+local zone=ZoneName
+if type(ZoneName)=="string"then
+zone=ZONE:FindByName(ZoneName)
+end
+local _id=zone:GetProperty('OBJECT ID')
+if not _id then
+zone:Scan({Object.Category.SCENERY})
+local scanned=zone:GetScannedSceneryObjects()
+if#scanned>0 then
+return scanned
+else
+return nil
+end
+else
+local obj=self:FindByName(_id,zone:GetCoordinate())
+if obj then
+return{obj}
+else
+return nil
+end
+end
 end
 MARKER={
 ClassName="MARKER",
@@ -46823,6 +47075,18 @@ MANTIS.SamDataHDS={
 ["SA-23 HDS 1"]={Range=100,Blindspot=1,Height=50,Type="Long",Radar="S-300VM 9A83ME"},
 ["HQ-2 HDS"]={Range=50,Blindspot=6,Height=35,Type="Medium",Radar="HQ_2_Guideline_LN"},
 }
+MANTIS.SamDataSMA={
+["RBS98M SMA"]={Range=20,Blindspot=0,Height=8,Type="Short",Radar="RBS-98"},
+["RBS70 SMA"]={Range=8,Blindspot=0,Height=5.5,Type="Short",Radar="RBS-70"},
+["RBS70M SMA"]={Range=8,Blindspot=0,Height=5.5,Type="Short",Radar="BV410_RBS70"},
+["RBS90 SMA"]={Range=8,Blindspot=0,Height=5.5,Type="Short",Radar="RBS-90"},
+["RBS90M SMA"]={Range=8,Blindspot=0,Height=5.5,Type="Short",Radar="BV410_RBS90"},
+["RBS103A SMA"]={Range=150,Blindspot=3,Height=24.5,Type="Long",Radar="LvS-103_Lavett103_Rb103A"},
+["RBS103B SMA"]={Range=35,Blindspot=0,Height=36,Type="Medium",Radar="LvS-103_Lavett103_Rb103B"},
+["RBS103AM SMA"]={Range=150,Blindspot=3,Height=24.5,Type="Long",Radar="LvS-103_Lavett103_HX_Rb103A"},
+["RBS103BM SMA"]={Range=35,Blindspot=0,Height=36,Type="Medium",Radar="LvS-103_Lavett103_HX_Rb103B"},
+["Lvkv9040M SMA"]={Range=4,Blindspot=0,Height=2.5,Type="Short",Radar="LvKv9040"},
+}
 do
 function MANTIS:New(name,samprefix,ewrprefix,hq,coaltion,dynamic,awacs,EmOnOff,Padding)
 self.SAM_Templates_Prefix=samprefix or"Red SAM"
@@ -46917,7 +47181,7 @@ end
 if self.HQ_Template_CC then
 self.HQ_CC=GROUP:FindByName(self.HQ_Template_CC)
 end
-self.version="0.8.8"
+self.version="0.8.9"
 self:I(string.format("***** Starting MANTIS Version %s *****",self.version))
 self:SetStartState("Stopped")
 self:AddTransition("Stopped","Start","Running")
@@ -47312,7 +47576,7 @@ MANTISAwacs:SetRefreshTimeInterval(interval)
 MANTISAwacs:Start()
 return MANTISAwacs
 end
-function MANTIS:_GetSAMDataFromUnits(grpname,mod)
+function MANTIS:_GetSAMDataFromUnits(grpname,mod,sma)
 self:T(self.lid.."_GetSAMRangeFromUnits")
 local found=false
 local range=self.checkradius
@@ -47325,6 +47589,8 @@ local units=group:GetUnits()
 local SAMData=self.SamData
 if mod then
 SAMData=self.SamDataHDS
+elseif sma then
+SAMData=self.SamDataSMA
 end
 for _,_unit in pairs(units)do
 local unit=_unit
@@ -47358,8 +47624,11 @@ local radiusscale=self.radiusscale[type]
 local blind=0
 local found=false
 local HDSmod=false
+local SMAMod=false
 if string.find(grpname,"HDS",1,true)then
 HDSmod=true
+elseif string.find(grpname,"SMA",1,true)then
+SMAMod=true
 end
 if self.automode then
 for idx,entry in pairs(self.SamData)do
@@ -47375,8 +47644,8 @@ break
 end
 end
 end
-if(not found and self.automode)or HDSmod then
-range,height,type=self:_GetSAMDataFromUnits(grpname,HDSmod)
+if(not found and self.automode)or HDSmod or SMAMod then
+range,height,type=self:_GetSAMDataFromUnits(grpname,HDSmod,SMAMod)
 elseif not found then
 self:E(self.lid..string.format("*****Could not match radar data for %s! Will default to midrange values!",grpname))
 end
@@ -59224,7 +59493,7 @@ CTLD.UnitTypes={
 ["UH-60L"]={type="UH-60L",crates=true,troops=true,cratelimit=2,trooplimit=20,length=16,cargoweightlimit=3500},
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 }
-CTLD.version="1.0.14"
+CTLD.version="1.0.16"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -60910,6 +61179,11 @@ return beacon
 end
 function CTLD:AddCTLDZone(Name,Type,Color,Active,HasBeacon,Shiplength,Shipwidth)
 self:T(self.lid.." AddCTLDZone")
+local zone=ZONE:FindByName(Name)
+if not zone then
+self:E(self.lid.."**** Zone does not exist: "..Name)
+return self
+end
 local ctldzone={}
 ctldzone.active=Active or false
 ctldzone.color=Color or SMOKECOLOR.Red
@@ -61088,9 +61362,10 @@ local maxdist=1000000
 local zoneret=nil
 local zonewret=nil
 local zonenameret=nil
+local unitcoord=Unit:GetCoordinate()
+local unitVec2=unitcoord:GetVec2()
 for _,_cargozone in pairs(zonetable)do
 local czone=_cargozone
-local unitcoord=Unit:GetCoordinate()
 local zonename=czone.name
 local active=czone.active
 local color=czone.color
@@ -61107,17 +61382,17 @@ elseif ZONE:FindByName(zonename)then
 zone=ZONE:FindByName(zonename)
 self:T("Checking Zone: "..zonename)
 zonecoord=zone:GetCoordinate()
-zoneradius=zone:GetRadius()
+zoneradius=1500
 zonewidth=zoneradius
 elseif AIRBASE:FindByName(zonename)then
 zone=AIRBASE:FindByName(zonename):GetZone()
 self:T("Checking Zone: "..zonename)
 zonecoord=zone:GetCoordinate()
-zoneradius=zone:GetRadius()
+zoneradius=2500
 zonewidth=zoneradius
 end
 local distance=self:_GetDistance(zonecoord,unitcoord)
-if distance<=zoneradius and active then
+if zone:IsVec2InZone(unitVec2)and active then
 outcome=true
 end
 if maxdist>distance then
@@ -62376,7 +62651,7 @@ CSAR.AircraftType["Bell-47"]=2
 CSAR.AircraftType["UH-60L"]=10
 CSAR.AircraftType["AH-64D_BLK_II"]=2
 CSAR.AircraftType["Bronco-OV-10A"]=2
-CSAR.version="1.0.13"
+CSAR.version="1.0.15"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
@@ -62921,6 +63196,25 @@ end
 end
 return found
 end
+function CSAR:SetCallSignOptions(ShortCallsign,Keepnumber,CallsignTranslations)
+if not ShortCallsign or ShortCallsign==false then
+self.ShortCallsign=false
+else
+self.ShortCallsign=true
+end
+self.Keepnumber=Keepnumber or false
+self.CallsignTranslations=CallsignTranslations
+return self
+end
+function CSAR:_GetCustomCallSign(UnitName)
+local callsign=Unitname
+local unit=UNIT:FindByName(UnitName)
+if unit and unit:IsAlive()then
+local group=unit:GetGroup()
+callsign=group:GetCustomCallSign(self.ShortCallsign,self.Keepnumber,self.CallsignTranslations)
+end
+return callsign
+end
 function CSAR:_CheckWoundedGroupStatus(heliname,woundedgroupname)
 self:T(self.lid.." _CheckWoundedGroupStatus")
 local _heliName=heliname
@@ -62963,9 +63257,9 @@ if _SETTINGS:IsImperial()then
 local dist=UTILS.MetersToNM(self.autosmokedistance)
 disttext=string.format("%.0fnm",dist)
 end
-self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. I hear you! Finally, that is music in my ears!\nI'll pop a smoke when you are %s away.\nLand or hover by the smoke.",_heliName,_pilotName,disttext),self.messageTime,false,true)
+self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. I hear you! Finally, that is music in my ears!\nI'll pop a smoke when you are %s away.\nLand or hover by the smoke.",self:_GetCustomCallSign(_heliName),_pilotName,disttext),self.messageTime,false,true)
 else
-self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. I hear you! Finally, that is music in my ears!\nRequest a flare or smoke if you need.",_heliName,_pilotName),self.messageTime,false,true)
+self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. I hear you! Finally, that is music in my ears!\nRequest a flare or smoke if you need.",self:_GetCustomCallSign(_heliName),_pilotName),self.messageTime,false,true)
 end
 self.heliVisibleMessage[_lookupKeyHeli]=true
 end
@@ -63007,7 +63301,7 @@ if _maxUnits==nil then
 _maxUnits=self.max_units
 end
 if _unitsInHelicopter+1>_maxUnits then
-self:_DisplayMessageToSAR(_heliUnit,string.format("%s, %s. We\'re already crammed with %d guys! Sorry!",_pilotName,_heliName,_unitsInHelicopter,_unitsInHelicopter),self.messageTime,false,false,true)
+self:_DisplayMessageToSAR(_heliUnit,string.format("%s, %s. We\'re already crammed with %d guys! Sorry!",_pilotName,self:_GetCustomCallSign(_heliName),_unitsInHelicopter,_unitsInHelicopter),self.messageTime,false,false,true)
 return self
 end
 local found,downedgrouptable=self:_CheckNameInDownedPilots(_woundedGroupName)
@@ -63022,8 +63316,18 @@ player=grouptable.player,
 }
 _woundedGroup:Destroy(false)
 self:_RemoveNameFromDownedPilots(_woundedGroupName,true)
-self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s I\'m in! Get to the MASH ASAP! ",_heliName,_pilotName),self.messageTime,true,true)
+self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s I\'m in! Get to the MASH ASAP! ",self:_GetCustomCallSign(_heliName),_pilotName),self.messageTime,true,true)
+self:_UpdateUnitCargoMass(_heliName)
 self:__Boarded(5,_heliName,_woundedGroupName,grouptable.desc)
+return self
+end
+function CSAR:_UpdateUnitCargoMass(_heliName)
+self:T(self.lid.." _UpdateUnitCargoMass")
+local calculatedMass=self:_PilotsOnboard(_heliName)*80
+local Unit=UNIT:FindByName(_heliName)
+if Unit then
+Unit:SetUnitInternalCargo(calculatedMass)
+end
 return self
 end
 function CSAR:_OrderGroupToMoveToPoint(_leader,_destination)
@@ -63048,9 +63352,9 @@ local _reset=true
 if(_distance<500)then
 if self.heliCloseMessage[_lookupKeyHeli]==nil then
 if self.autosmoke==true then
-self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. You\'re close now! Land or hover at the smoke.",_heliName,_pilotName),self.messageTime,false,true)
+self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. You\'re close now! Land or hover at the smoke.",self:_GetCustomCallSign(_heliName),_pilotName),self.messageTime,false,true)
 else
-self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. You\'re close now! Land in a safe place, I will go there ",_heliName,_pilotName),self.messageTime,false,true)
+self:_DisplayMessageToSAR(_heliUnit,string.format("%s: %s. You\'re close now! Land in a safe place, I will go there ",self:_GetCustomCallSign(_heliName),_pilotName),self.messageTime,false,true)
 end
 self.heliCloseMessage[_lookupKeyHeli]=true
 end
@@ -63176,8 +63480,9 @@ return
 end
 local PilotsSaved=self:_PilotsOnboard(_heliName)
 self.inTransitGroups[_heliName]=nil
-local _txt=string.format("%s: The %d pilot(s) have been taken to the\nmedical clinic. Good job!",_heliName,PilotsSaved)
+local _txt=string.format("%s: The %d pilot(s) have been taken to the\nmedical clinic. Good job!",self:_GetCustomCallSign(_heliName),PilotsSaved)
 self:_DisplayMessageToSAR(_heliUnit,_txt,self.messageTime)
+self:_UpdateUnitCargoMass(_heliName)
 self:__Rescued(-1,_heliUnit,_heliName,PilotsSaved)
 return self
 end
@@ -63196,7 +63501,7 @@ local group=_unit:GetGroup()
 local _clear=_clear or nil
 local _time=_time or self.messageTime
 if _override or not self.suppressmessages then
-local m=MESSAGE:New(_text,_time,"Info",_clear):ToGroup(group)
+local m=MESSAGE:New(_text,_time,"CSAR",_clear):ToGroup(group)
 end
 if _speak and self.useSRS then
 self.SRSQueue:NewTransmission(_text,nil,self.msrs,nil,2)
@@ -63310,7 +63615,7 @@ _distance=string.format("%.1fnm",UTILS.MetersToNM(_closest.distance))
 else
 _distance=string.format("%.1fkm",_closest.distance)
 end
-local _msg=string.format("%s - Popping signal flare at your %s o\'clock. Distance %s",_unitName,_clockDir,_distance)
+local _msg=string.format("%s - Popping signal flare at your %s o\'clock. Distance %s",self:_GetCustomCallSign(_unitName),_clockDir,_distance)
 self:_DisplayMessageToSAR(_heli,_msg,self.messageTime,false,true,true)
 local _coord=_closest.pilot:GetCoordinate()
 _coord:FlareRed(_clockDir)
@@ -63353,7 +63658,7 @@ _distance=string.format("%.1fnm",UTILS.MetersToNM(_closest.distance))
 else
 _distance=string.format("%.1fkm",_closest.distance/1000)
 end
-local _msg=string.format("%s - Popping smoke at your %s o\'clock. Distance %s",_unitName,_clockDir,_distance)
+local _msg=string.format("%s - Popping smoke at your %s o\'clock. Distance %s",self:_GetCustomCallSign(_unitName),_clockDir,_distance)
 self:_DisplayMessageToSAR(_heli,_msg,self.messageTime,false,true,true)
 local _coord=_closest.pilot:GetCoordinate()
 local color=self.smokecolor
@@ -63509,12 +63814,15 @@ local _heading=_heli:GetHeading()
 local DirectionVec3=_playerPosition:GetDirectionVec3(_targetpostions)
 local Angle=_playerPosition:GetAngleDegrees(DirectionVec3)
 self:T(self.lid.." _GetClockDirection"..tostring(Angle).." "..tostring(_heading))
+local hours=0
 local clock=12
-if _heading then
-local Aspect=Angle-_heading
-if Aspect==0 then Aspect=360 end
-clock=math.abs(UTILS.Round((Aspect/30),0))
-if clock==0 then clock=12 end
+if _heading and Angle then
+clock=12
+clock=_heading-Angle
+hours=(clock/30)*-1
+clock=12+hours
+clock=UTILS.Round(clock,0)
+if clock>12 then clock=clock-12 end
 end
 return clock
 end
