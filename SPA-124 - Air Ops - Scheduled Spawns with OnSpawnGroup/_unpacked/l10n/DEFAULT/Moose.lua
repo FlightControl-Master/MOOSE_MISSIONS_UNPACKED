@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-10-27T16:38:59.0000000Z-676bc0fef064fcb65976f092f94335d638f63971 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-11-02T10:20:35.0000000Z-574fa8abf464ae6403192b7730e120211b117ec6 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -6483,6 +6483,17 @@ WeaponAdd=world.event.S_EVENT_WEAPON_ADD or-1,
 TriggerZone=world.event.S_EVENT_TRIGGER_ZONE or-1,
 LandingQualityMark=world.event.S_EVENT_LANDING_QUALITY_MARK or-1,
 BDA=world.event.S_EVENT_BDA or-1,
+AIAbortMission=world.event.S_EVENT_AI_ABORT_MISSION or-1,
+DayNight=world.event.S_EVENT_DAYNIGHT or-1,
+FlightTime=world.event.S_EVENT_FLIGHT_TIME or-1,
+SelfKillPilot=world.event.S_EVENT_PLAYER_SELF_KILL_PILOT or-1,
+PlayerCaptureAirfield=world.event.S_EVENT_PLAYER_CAPTURE_AIRFIELD or-1,
+EmergencyLanding=world.event.S_EVENT_EMERGENCY_LANDING or-1,
+UnitCreateTask=world.event.S_EVENT_UNIT_CREATE_TASK or-1,
+UnitDeleteTask=world.event.S_EVENT_UNIT_DELETE_TASK or-1,
+SimulationStart=world.event.S_EVENT_SIMULATION_START or-1,
+WeaponRearm=world.event.S_EVENT_WEAPON_REARM or-1,
+WeaponDrop=world.event.S_EVENT_WEAPON_DROP or-1,
 }
 local _EVENTMETA={
 [world.event.S_EVENT_SHOT]={
@@ -6735,6 +6746,66 @@ Text="S_EVENT_LANDING_QUALITYMARK"
 Order=1,
 Event="OnEventBDA",
 Text="S_EVENT_BDA"
+},
+[EVENTS.AIAbortMission]={
+Order=1,
+Side="I",
+Event="OnEventAIAbortMission",
+Text="S_EVENT_AI_ABORT_MISSION"
+},
+[EVENTS.DayNight]={
+Order=1,
+Event="OnEventDayNight",
+Text="S_EVENT_DAYNIGHT"
+},
+[EVENTS.FlightTime]={
+Order=1,
+Event="OnEventFlightTime",
+Text="S_EVENT_FLIGHT_TIME"
+},
+[EVENTS.SelfKillPilot]={
+Order=1,
+Side="I",
+Event="OnEventSelfKillPilot",
+Text="S_EVENT_PLAYER_SELF_KILL_PILOT"
+},
+[EVENTS.PlayerCaptureAirfield]={
+Order=1,
+Event="OnEventPlayerCaptureAirfield",
+Text="S_EVENT_PLAYER_CAPTURE_AIRFIELD"
+},
+[EVENTS.EmergencyLanding]={
+Order=1,
+Side="I",
+Event="OnEventEmergencyLanding",
+Text="S_EVENT_EMERGENCY_LANDING"
+},
+[EVENTS.UnitCreateTask]={
+Order=1,
+Event="OnEventUnitCreateTask",
+Text="S_EVENT_UNIT_CREATE_TASK"
+},
+[EVENTS.UnitDeleteTask]={
+Order=1,
+Event="OnEventUnitDeleteTask",
+Text="S_EVENT_UNIT_DELETE_TASK"
+},
+[EVENTS.SimulationStart]={
+Order=1,
+Event="OnEventSimulationStart",
+Text="S_EVENT_SIMULATION_START"
+},
+[EVENTS.WeaponRearm]={
+Order=1,
+Side="I",
+Event="OnEventWeaponRearm",
+Text="S_EVENT_WEAPON_REARM"
+},
+[EVENTS.WeaponDrop]={
+Order=1,
+Side="I",
+Event="OnEventWeaponDrop",
+Text="S_EVENT_WEAPON_DROP"
 },
 }
 function EVENT:New()
@@ -9562,11 +9633,15 @@ self.ScanData.Units={}
 local vectors=self:GetBoundingSquare()
 local minVec3={x=vectors.x1,y=0,z=vectors.y1}
 local maxVec3={x=vectors.x2,y=0,z=vectors.y2}
-local VolumeBox={
-id=world.VolumeType.BOX,
+local minmarkcoord=COORDINATE:NewFromVec3(minVec3)
+local maxmarkcoord=COORDINATE:NewFromVec3(maxVec3)
+local ZoneRadius=minmarkcoord:Get2DDistance(maxmarkcoord)/2
+local CenterVec3=self:GetCoordinate():GetVec3()
+local SphereSearch={
+id=world.VolumeType.SPHERE,
 params={
-min=minVec3,
-max=maxVec3
+point=CenterVec3,
+radius=ZoneRadius,
 }
 }
 local function EvaluateZone(ZoneObject)
@@ -9593,7 +9668,7 @@ self.ScanData.Units[ZoneObject]=ZoneObject
 self:F2({Name=ZoneObject:getName(),Coalition=CoalitionDCSUnit})
 end
 end
-if ObjectCategory==Object.Category.SCENERY then
+if ObjectCategory==Object.Category.SCENERY and self:IsVec3InZone(ZoneObject:getPoint())then
 local SceneryType=ZoneObject:getTypeName()
 local SceneryName=ZoneObject:getName()
 self.ScanData.Scenery[SceneryType]=self.ScanData.Scenery[SceneryType]or{}
@@ -9627,7 +9702,7 @@ searchscenery=true
 end
 end
 if searchscenery then
-world.searchObjects({Object.Category.SCENERY},VolumeBox,EvaluateZone)
+world.searchObjects({Object.Category.SCENERY},SphereSearch,EvaluateZone)
 end
 end
 function ZONE_POLYGON:GetScannedUnits()
@@ -23382,7 +23457,7 @@ local apc=self:HasAttribute("APC")
 local truck=self:HasAttribute("Trucks")and self:GetCategory()==Group.Category.GROUND
 local infantry=self:HasAttribute("Infantry")
 local artillery=self:HasAttribute("Artillery")
-local tank=self:HasAttribute("Old Tanks")or self:HasAttribute("Modern Tanks")
+local tank=self:HasAttribute("Old Tanks")or self:HasAttribute("Modern Tanks")or self:HasAttribute("Tanks")
 local aaa=self:HasAttribute("AAA")and(not self:HasAttribute("SAM elements"))
 local ewr=self:HasAttribute("EWR")
 local ifv=self:HasAttribute("IFV")
@@ -23777,6 +23852,7 @@ return nil
 end
 function UNIT:IsPlayer()
 local group=self:GetGroup()
+if not group then return false end
 local units=group:GetTemplate().units
 for _,unit in pairs(units)do
 if unit.name==self:GetName()and(unit.skill=="Client"or unit.skill=="Player")then
@@ -59493,7 +59569,7 @@ CTLD.UnitTypes={
 ["UH-60L"]={type="UH-60L",crates=true,troops=true,cratelimit=2,trooplimit=20,length=16,cargoweightlimit=3500},
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 }
-CTLD.version="1.0.16"
+CTLD.version="1.0.17"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -59591,6 +59667,7 @@ self.HercMaxAngels=2000
 self.HercMaxSpeed=77
 self.suppressmessages=false
 self.repairtime=300
+self.buildtime=300
 self.placeCratesAhead=false
 self.cratecountry=country.id.GERMANY
 self.pilotmustopendoors=false
@@ -60742,7 +60819,13 @@ for _,_build in pairs(buildables)do
 local build=_build
 if build.CanBuild then
 self:_CleanUpCrates(crates,build,number)
+if self.buildtime and self.buildtime>0 then
+local buildtimer=TIMER:New(self._BuildObjectFromCrates,self,Group,Unit,build,false,Group:GetCoordinate())
+buildtimer:Start(self.buildtime)
+self:_SendMessage(string.format("Build started, ready in %d seconds!",self.buildtime),15,false,Group)
+else
 self:_BuildObjectFromCrates(Group,Unit,build)
+end
 end
 end
 end
@@ -60824,9 +60907,7 @@ return self
 end
 function CTLD:_BuildObjectFromCrates(Group,Unit,Build,Repair,RepairLocation)
 self:T(self.lid.." _BuildObjectFromCrates")
-if Group and Group:IsAlive()then
-local position=Unit:GetCoordinate()or Group:GetCoordinate()
-local unitname=Unit:GetName()or Group:GetName()
+if Group and Group:IsAlive()or(RepairLocation and not Repair)then
 local name=Build.Name
 local ctype=Build.Type
 local canmove=false
@@ -60838,7 +60919,12 @@ local temptable=Build.Template or{}
 if type(temptable)=="string"then
 temptable={temptable}
 end
-local zone=ZONE_GROUP:New(string.format("Unload zone-%s",unitname),Group,100)
+local zone=nil
+if RepairLocation and not Repair then
+zone=ZONE_RADIUS:New(string.format("Build zone-%d",math.random(1,10000)),RepairLocation:GetVec2(),100)
+else
+zone=ZONE_GROUP:New(string.format("Unload zone-%d",math.random(1,10000)),Group,100)
+end
 local randomcoord=Build.Coord or zone:GetRandomCoordinate(35):GetVec2()
 if Repair then
 randomcoord=RepairLocation:GetVec2()
@@ -62217,7 +62303,7 @@ CTLD_HERCULES={
 ClassName="CTLD_HERCULES",
 lid="",
 Name="",
-Version="0.0.1",
+Version="0.0.2",
 }
 CTLD_HERCULES.Types={
 ["ATGM M1045 HMMWV TOW Air [7183lb]"]={['name']="M1045 HMMWV TOW",['container']=true},
@@ -62471,7 +62557,7 @@ if self:Calculate_Object_Height_AGL(cargo.Cargo_Contents)<10 then
 if self:Check_SurfaceType(cargo.Cargo_Contents)==2 or self:Check_SurfaceType(cargo.Cargo_Contents)==3 then
 cargo.Cargo_over_water=true
 end
-local dcsvec3=self.ObjectTracker[cargo.Cargo_Contents.id_]
+local dcsvec3=self.ObjectTracker[cargo.Cargo_Contents.id_]or initiator:GetVec3()
 self:T("SPAWNPOSITION: ")
 self:T({dcsvec3})
 local Vec2={
@@ -62545,7 +62631,7 @@ self.Cargo[self.j].all_cargo_gets_destroyed=false
 end
 local timer=TIMER:New(self.Cargo_Track,self,self.Cargo[self.j],Initiator)
 self.Cargo[self.j].scheduleFunctionID=timer
-timer:Start(5,2,600)
+timer:Start(1,1,600)
 else
 self.j=self.j+1
 self.Cargo[self.j]={}
@@ -62566,7 +62652,7 @@ self.Cargo[self.j].destroy_cargo_dropped_without_parachute=true
 end
 local timer=TIMER:New(self.Cargo_Track,self,self.Cargo[self.j],Initiator)
 self.Cargo[self.j].scheduleFunctionID=timer
-timer:Start(5,2,600)
+timer:Start(1,1,600)
 end
 end
 return self
