@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-11-02T10:20:35.0000000Z-574fa8abf464ae6403192b7730e120211b117ec6 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-11-11T10:40:36.0000000Z-5c6efed99593c3754de56ac3cb8d071463fcd1a6 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -2599,7 +2599,9 @@ function UTILS.RemoveMark(MarkID,Delay)
 if Delay and Delay>0 then
 TIMER:New(UTILS.RemoveMark,MarkID):Start(Delay)
 else
+if MarkID then
 trigger.action.removeMark(MarkID)
+end
 end
 end
 function UTILS.IsInRadius(InVec2,Vec2,Radius)
@@ -2787,13 +2789,17 @@ function UTILS.Vec2Norm(a)
 return math.sqrt(UTILS.Vec2Dot(a,a))
 end
 function UTILS.VecDist2D(a,b)
+local d=math.huge
+if(not a)or(not b)then return d end
 local c={x=b.x-a.x,y=b.y-a.y}
-local d=math.sqrt(c.x*c.x+c.y*c.y)
+d=math.sqrt(c.x*c.x+c.y*c.y)
 return d
 end
 function UTILS.VecDist3D(a,b)
+local d=math.huge
+if(not a)or(not b)then return d end
 local c={x=b.x-a.x,y=b.y-a.y,z=b.z-a.z}
-local d=math.sqrt(UTILS.VecDot(c,c))
+d=math.sqrt(UTILS.VecDot(c,c))
 return d
 end
 function UTILS.VecCross(a,b)
@@ -3377,6 +3383,20 @@ end
 _count=_count+1
 end
 return jtacGeneratedLaserCodes
+end
+function UTILS.EnsureTable(Object,ReturnNil)
+if Object then
+if type(Object)~="table"then
+Object={Object}
+end
+else
+if ReturnNil then
+return nil
+else
+Object={}
+end
+end
+return Object
 end
 function UTILS.SaveToFile(Path,Filename,Data)
 if not io then
@@ -14905,27 +14925,34 @@ local TargetVec3=TargetCoordinate:GetVec3()
 local SourceVec3=self:GetVec3()
 return((TargetVec3.x-SourceVec3.x)^2+(TargetVec3.y-SourceVec3.y)^2+(TargetVec3.z-SourceVec3.z)^2)^0.5
 end
-function COORDINATE:GetBearingText(AngleRadians,Precision,Settings,Language)
+function COORDINATE:GetBearingText(AngleRadians,Precision,Settings,MagVar)
 local Settings=Settings or _SETTINGS
 local AngleDegrees=UTILS.Round(UTILS.ToDegree(AngleRadians),Precision)
 local s=string.format('%03d°',AngleDegrees)
+if MagVar then
+local variation=UTILS.GetMagneticDeclination()or 0
+local AngleMagnetic=AngleDegrees-variation
+if AngleMagnetic<0 then AngleMagnetic=360-AngleMagnetic end
+s=string.format('%03d°M|%03d°',AngleMagnetic,AngleDegrees)
+end
 return s
 end
 function COORDINATE:GetDistanceText(Distance,Settings,Language,Precision)
 local Settings=Settings or _SETTINGS
-local Language=Language or"EN"
+local Language=Language or Settings.Locale or _SETTINGS.Locale or"EN"
+Language=string.lower(Language)
 local Precision=Precision or 0
 local DistanceText
 if Settings:IsMetric()then
-if Language=="EN"then
+if Language=="en"then
 DistanceText=" for "..UTILS.Round(Distance/1000,Precision).." km"
-elseif Language=="RU"then
+elseif Language=="ru"then
 DistanceText=" за "..UTILS.Round(Distance/1000,Precision).." километров"
 end
 else
-if Language=="EN"then
+if Language=="en"then
 DistanceText=" for "..UTILS.Round(UTILS.MetersToNM(Distance),Precision).." miles"
-elseif Language=="RU"then
+elseif Language=="ru"then
 DistanceText=" за "..UTILS.Round(UTILS.MetersToNM(Distance),Precision).." миль"
 end
 end
@@ -14934,18 +14961,19 @@ end
 function COORDINATE:GetAltitudeText(Settings,Language)
 local Altitude=self.y
 local Settings=Settings or _SETTINGS
-local Language=Language or"EN"
+local Language=Language or Settings.Locale or _SETTINGS.Locale or"EN"
+Language=string.lower(Language)
 if Altitude~=0 then
 if Settings:IsMetric()then
-if Language=="EN"then
+if Language=="en"then
 return" at "..UTILS.Round(self.y,-3).." meters"
-elseif Language=="RU"then
+elseif Language=="ru"then
 return" в "..UTILS.Round(self.y,-3).." метры"
 end
 else
-if Language=="EN"then
+if Language=="en"then
 return" at "..UTILS.Round(UTILS.MetersToFeet(self.y),-3).." feet"
-elseif Language=="RU"then
+elseif Language=="ru"then
 return" в "..UTILS.Round(self.y,-3).." ноги"
 end
 end
@@ -14974,16 +15002,16 @@ else
 return" bearing unknown"
 end
 end
-function COORDINATE:GetBRText(AngleRadians,Distance,Settings,Language)
+function COORDINATE:GetBRText(AngleRadians,Distance,Settings,Language,MagVar)
 local Settings=Settings or _SETTINGS
-local BearingText=self:GetBearingText(AngleRadians,0,Settings,Language)
+local BearingText=self:GetBearingText(AngleRadians,0,Settings,MagVar)
 local DistanceText=self:GetDistanceText(Distance,Settings,Language,0)
 local BRText=BearingText..DistanceText
 return BRText
 end
-function COORDINATE:GetBRAText(AngleRadians,Distance,Settings,Language)
+function COORDINATE:GetBRAText(AngleRadians,Distance,Settings,Language,MagVar)
 local Settings=Settings or _SETTINGS
-local BearingText=self:GetBearingText(AngleRadians,0,Settings,Language)
+local BearingText=self:GetBearingText(AngleRadians,0,Settings,MagVar)
 local DistanceText=self:GetDistanceText(Distance,Settings,Language,0)
 local AltitudeText=self:GetAltitudeText(Settings,Language)
 local BRAText=BearingText..DistanceText..AltitudeText
@@ -15695,18 +15723,18 @@ delta=sunset+UTILS.SecondsToMidnight()
 end
 return delta/60
 end
-function COORDINATE:ToStringBR(FromCoordinate,Settings)
+function COORDINATE:ToStringBR(FromCoordinate,Settings,MagVar)
 local DirectionVec3=FromCoordinate:GetDirectionVec3(self)
 local AngleRadians=self:GetAngleRadians(DirectionVec3)
 local Distance=self:Get2DDistance(FromCoordinate)
-return"BR, "..self:GetBRText(AngleRadians,Distance,Settings)
+return"BR, "..self:GetBRText(AngleRadians,Distance,Settings,nil,MagVar)
 end
-function COORDINATE:ToStringBRA(FromCoordinate,Settings,Language)
+function COORDINATE:ToStringBRA(FromCoordinate,Settings,MagVar)
 local DirectionVec3=FromCoordinate:GetDirectionVec3(self)
 local AngleRadians=self:GetAngleRadians(DirectionVec3)
 local Distance=FromCoordinate:Get2DDistance(self)
 local Altitude=self:GetAltitudeText()
-return"BRA, "..self:GetBRAText(AngleRadians,Distance,Settings,Language)
+return"BRA, "..self:GetBRAText(AngleRadians,Distance,Settings,nil,MagVar)
 end
 function COORDINATE:ToStringBRAANATO(FromCoordinate,Bogey,Spades,SSML,Angels,Zeros)
 local BRAANATO="Merged."
@@ -15773,13 +15801,13 @@ end
 end
 return BRAANATO
 end
-function COORDINATE:ToStringBULLS(Coalition,Settings)
+function COORDINATE:ToStringBULLS(Coalition,Settings,MagVar)
 local BullsCoordinate=COORDINATE:NewFromVec3(coalition.getMainRefPoint(Coalition))
 local DirectionVec3=BullsCoordinate:GetDirectionVec3(self)
 local AngleRadians=self:GetAngleRadians(DirectionVec3)
 local Distance=self:Get2DDistance(BullsCoordinate)
 local Altitude=self:GetAltitudeText()
-return"BULLS, "..self:GetBRText(AngleRadians,Distance,Settings)
+return"BULLS, "..self:GetBRText(AngleRadians,Distance,Settings,nil,MagVar)
 end
 function COORDINATE:ToStringAspect(TargetCoordinate)
 local Heading=self.Heading
@@ -15821,7 +15849,7 @@ local lat,lon=coord.LOtoLL(self:GetVec3())
 local MGRS=coord.LLtoMGRS(lat,lon)
 return"MGRS "..UTILS.tostringMGRS(MGRS,MGRS_Accuracy)
 end
-function COORDINATE:ToStringFromRP(ReferenceCoord,ReferenceName,Controllable,Settings)
+function COORDINATE:ToStringFromRP(ReferenceCoord,ReferenceName,Controllable,Settings,MagVar)
 self:F2({ReferenceCoord=ReferenceCoord,ReferenceName=ReferenceName})
 local Settings=Settings or(Controllable and _DATABASE:GetPlayerSettings(Controllable:GetPlayerName()))or _SETTINGS
 local IsAir=Controllable and Controllable:IsAirPlane()or false
@@ -15829,16 +15857,16 @@ if IsAir then
 local DirectionVec3=ReferenceCoord:GetDirectionVec3(self)
 local AngleRadians=self:GetAngleRadians(DirectionVec3)
 local Distance=self:Get2DDistance(ReferenceCoord)
-return"Targets are the last seen "..self:GetBRText(AngleRadians,Distance,Settings).." from "..ReferenceName
+return"Targets are the last seen "..self:GetBRText(AngleRadians,Distance,Settings,nil,MagVar).." from "..ReferenceName
 else
 local DirectionVec3=ReferenceCoord:GetDirectionVec3(self)
 local AngleRadians=self:GetAngleRadians(DirectionVec3)
 local Distance=self:Get2DDistance(ReferenceCoord)
-return"Target are located "..self:GetBRText(AngleRadians,Distance,Settings).." from "..ReferenceName
+return"Target are located "..self:GetBRText(AngleRadians,Distance,Settings,nil,MagVar).." from "..ReferenceName
 end
 return nil
 end
-function COORDINATE:ToStringFromRPShort(ReferenceCoord,ReferenceName,Controllable,Settings)
+function COORDINATE:ToStringFromRPShort(ReferenceCoord,ReferenceName,Controllable,Settings,MagVar)
 self:F2({ReferenceCoord=ReferenceCoord,ReferenceName=ReferenceName})
 local Settings=Settings or(Controllable and _DATABASE:GetPlayerSettings(Controllable:GetPlayerName()))or _SETTINGS
 local IsAir=Controllable and Controllable:IsAirPlane()or false
@@ -15846,22 +15874,22 @@ if IsAir then
 local DirectionVec3=ReferenceCoord:GetDirectionVec3(self)
 local AngleRadians=self:GetAngleRadians(DirectionVec3)
 local Distance=self:Get2DDistance(ReferenceCoord)
-return self:GetBRText(AngleRadians,Distance,Settings).." from "..ReferenceName
+return self:GetBRText(AngleRadians,Distance,Settings,nil,MagVar).." from "..ReferenceName
 else
 local DirectionVec3=ReferenceCoord:GetDirectionVec3(self)
 local AngleRadians=self:GetAngleRadians(DirectionVec3)
 local Distance=self:Get2DDistance(ReferenceCoord)
-return self:GetBRText(AngleRadians,Distance,Settings).." from "..ReferenceName
+return self:GetBRText(AngleRadians,Distance,Settings,nil,MagVar).." from "..ReferenceName
 end
 return nil
 end
-function COORDINATE:ToStringA2G(Controllable,Settings)
+function COORDINATE:ToStringA2G(Controllable,Settings,MagVar)
 self:F2({Controllable=Controllable and Controllable:GetName()})
 local Settings=Settings or(Controllable and _DATABASE:GetPlayerSettings(Controllable:GetPlayerName()))or _SETTINGS
 if Settings:IsA2G_BR()then
 if Controllable then
 local Coordinate=Controllable:GetCoordinate()
-return Controllable and self:ToStringBR(Coordinate,Settings)or self:ToStringMGRS(Settings)
+return Controllable and self:ToStringBR(Coordinate,Settings,MagVar)or self:ToStringMGRS(Settings)
 else
 return self:ToStringMGRS(Settings)
 end
@@ -15877,29 +15905,29 @@ return self:ToStringMGRS(Settings)
 end
 return nil
 end
-function COORDINATE:ToStringA2A(Controllable,Settings,Language)
+function COORDINATE:ToStringA2A(Controllable,Settings,MagVar)
 self:F2({Controllable=Controllable and Controllable:GetName()})
 local Settings=Settings or(Controllable and _DATABASE:GetPlayerSettings(Controllable:GetPlayerName()))or _SETTINGS
 if Settings:IsA2A_BRAA()then
 if Controllable then
 local Coordinate=Controllable:GetCoordinate()
-return self:ToStringBRA(Coordinate,Settings,Language)
+return self:ToStringBRA(Coordinate,Settings,MagVar)
 else
-return self:ToStringMGRS(Settings,Language)
+return self:ToStringMGRS(Settings)
 end
 end
 if Settings:IsA2A_BULLS()then
 local Coalition=Controllable:GetCoalition()
-return self:ToStringBULLS(Coalition,Settings,Language)
+return self:ToStringBULLS(Coalition,Settings,MagVar)
 end
 if Settings:IsA2A_LL_DMS()then
-return self:ToStringLLDMS(Settings,Language)
+return self:ToStringLLDMS(Settings)
 end
 if Settings:IsA2A_LL_DDM()then
-return self:ToStringLLDDM(Settings,Language)
+return self:ToStringLLDDM(Settings)
 end
 if Settings:IsA2A_MGRS()then
-return self:ToStringMGRS(Settings,Language)
+return self:ToStringMGRS(Settings)
 end
 return nil
 end
@@ -27615,6 +27643,7 @@ SCORING={
 ClassName="SCORING",
 ClassID=0,
 Players={},
+AutoSave=true,
 }
 local _SCORINGCoalition={
 [1]="Red",
@@ -27659,6 +27688,7 @@ self:_AddPlayerFromUnit(PlayerUnit)
 self:SetScoringMenu(PlayerUnit:GetGroup())
 end
 end)
+self.AutoSave=true
 self:OpenCSV(GameName)
 return self
 end
@@ -28560,7 +28590,7 @@ end
 end
 function SCORING:OpenCSV(ScoringCSV)
 self:F(ScoringCSV)
-if lfs and io and os then
+if lfs and io and os and self.AutoSave then
 if ScoringCSV then
 self.ScoringCSV=ScoringCSV
 local fdir=lfs.writedir()..[[Logs\]]..self.ScoringCSV.." "..os.date("%Y-%m-%d %H-%M-%S")..".csv"
@@ -28611,7 +28641,7 @@ TargetUnitCoalition=TargetUnitCoalition or""
 TargetUnitCategory=TargetUnitCategory or""
 TargetUnitType=TargetUnitType or""
 TargetUnitName=TargetUnitName or""
-if lfs and io and os then
+if lfs and io and os and self.AutoSave then
 self.CSVFile:write(
 '"'..self.GameName..'"'..','..
 '"'..self.RunTime..'"'..','..
@@ -28634,9 +28664,13 @@ self.CSVFile:write("\n")
 end
 end
 function SCORING:CloseCSV()
-if lfs and io and os then
+if lfs and io and os and self.AutoSave then
 self.CSVFile:close()
 end
+end
+function SCORING:SwitchAutoSave(OnOff)
+self.AutoSave=OnOff
+return self
 end
 CLEANUP_AIRBASE={
 ClassName="CLEANUP_AIRBASE",
@@ -37405,7 +37439,7 @@ local targetname=nil
 if#self.bombingTargets>1 then
 targetname=result.name
 end
-local text=string.format("%s, impact %03d° for %d ft",player.playername,result.radial,UTILS.MetersToFeet(result.distance))
+local text=string.format("%s, impact %03d° for %d ft (%d m)",player.playername,result.radial,UTILS.MetersToFeet(result.distance),result.distance)
 if targetname then
 text=text..string.format(" from bulls of target %s.",targetname)
 else
@@ -59568,8 +59602,9 @@ CTLD.UnitTypes={
 ["Hercules"]={type="Hercules",crates=true,troops=true,cratelimit=7,trooplimit=64,length=25,cargoweightlimit=19000},
 ["UH-60L"]={type="UH-60L",crates=true,troops=true,cratelimit=2,trooplimit=20,length=16,cargoweightlimit=3500},
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
+["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.17"
+CTLD.version="1.0.18"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -59761,7 +59796,7 @@ local unitname=event.IniUnitName or"none"
 self.Loaded_Cargo[unitname]=nil
 self:_RefreshF10Menus()
 end
-if _unit:GetTypeName()=="Hercules"and self.enableHercules then
+if self:IsHercules(_unit)and self.enableHercules then
 local unitname=event.IniUnitName or"none"
 self.Loaded_Cargo[unitname]=nil
 self:_RefreshF10Menus()
@@ -60579,7 +60614,7 @@ end
 return self
 end
 function CTLD:IsHercules(Unit)
-if Unit:GetTypeName()=="Hercules"then
+if Unit:GetTypeName()=="Hercules"or string.find(Unit:GetTypeName(),"Bronco")then
 return true
 else
 return false
@@ -60748,8 +60783,7 @@ return self
 end
 function CTLD:_BuildCrates(Group,Unit,Engineering)
 self:T(self.lid.." _BuildCrates")
-local type=Unit:GetTypeName()
-if type=="Hercules"and self.enableHercules and not Engineering then
+if self:IsHercules(Unit)and self.enableHercules and not Engineering then
 local speed=Unit:GetVelocityKMH()
 if speed>1 then
 self:_SendMessage("You need to land / stop to build something, Pilot!",10,false,Group)
@@ -61007,7 +61041,7 @@ for _key,_group in pairs(PlayerTable)do
 local _unit=_group:GetUnit(1)
 if _unit then
 if _unit:IsAlive()and _unit:IsPlayer()then
-if _unit:IsHelicopter()or(_unit:GetTypeName()=="Hercules"and self.enableHercules)then
+if _unit:IsHelicopter()or(self:IsHercules(_unit)and self.enableHercules)then
 local unitName=_unit:GetName()
 _UnitList[unitName]=unitName
 end
@@ -61096,7 +61130,7 @@ local unloadmenu=MENU_GROUP_COMMAND:New(_group,"Drop crates",topcrates,self._Unl
 local buildmenu=MENU_GROUP_COMMAND:New(_group,"Build crates",topcrates,self._BuildCrates,self,_group,_unit)
 local repairmenu=MENU_GROUP_COMMAND:New(_group,"Repair",topcrates,self._RepairCrates,self,_group,_unit):Refresh()
 end
-if unittype=="Hercules"then
+if self:IsHercules(_unit)then
 local hoverpars=MENU_GROUP_COMMAND:New(_group,"Show flight parameters",topmenu,self._ShowFlightParams,self,_group,_unit):Refresh()
 else
 local hoverpars=MENU_GROUP_COMMAND:New(_group,"Show hover parameters",topmenu,self._ShowHoverParams,self,_group,_unit):Refresh()
@@ -61266,9 +61300,16 @@ end
 function CTLD:AddCTLDZone(Name,Type,Color,Active,HasBeacon,Shiplength,Shipwidth)
 self:T(self.lid.." AddCTLDZone")
 local zone=ZONE:FindByName(Name)
-if not zone then
+if not zone and Type~=CTLD.CargoZoneType.SHIP then
 self:E(self.lid.."**** Zone does not exist: "..Name)
 return self
+end
+if Type==CTLD.CargoZoneType.SHIP then
+local Ship=UNIT:FindByName(Name)
+if not Ship then
+self:E(self.lid.."**** Ship does not exist: "..Name)
+return self
+end
 end
 local ctldzone={}
 ctldzone.active=Active or false
@@ -61460,21 +61501,21 @@ local zoneradius=100
 local zonewidth=20
 if Zonetype==CTLD.CargoZoneType.SHIP then
 self:T("Checking Type Ship: "..zonename)
-zone=UNIT:FindByName(zonename)
-zonecoord=zone:GetCoordinate()
+local ZoneUNIT=UNIT:FindByName(zonename)
+zonecoord=ZoneUNIT:GetCoordinate()
 zoneradius=czone.shiplength
 zonewidth=czone.shipwidth
+zone=ZONE_UNIT:New(ZoneUNIT:GetName(),ZoneUNIT,zoneradius/2)
 elseif ZONE:FindByName(zonename)then
 zone=ZONE:FindByName(zonename)
 self:T("Checking Zone: "..zonename)
 zonecoord=zone:GetCoordinate()
-zoneradius=1500
 zonewidth=zoneradius
 elseif AIRBASE:FindByName(zonename)then
 zone=AIRBASE:FindByName(zonename):GetZone()
 self:T("Checking Zone: "..zonename)
 zonecoord=zone:GetCoordinate()
-zoneradius=2500
+zoneradius=2000
 zonewidth=zoneradius
 end
 local distance=self:_GetDistance(zonecoord,unitcoord)
@@ -61669,7 +61710,7 @@ return outcome
 end
 function CTLD:IsUnitInAir(Unit)
 local minheight=self.minimumHoverHeight
-if self.enableHercules and Unit:GetTypeName()=="Hercules"then
+if self.enableHercules and self:IsHercules(Unit)then
 minheight=5.1
 end
 local uheight=Unit:GetHeight()
@@ -73527,7 +73568,7 @@ speed=1,
 coordinate=nil,
 Label="ROBOT",
 }
-MSRS.version="0.1.0"
+MSRS.version="0.1.1"
 MSRS.Voices={
 Microsoft={
 ["Hedda"]="Microsoft Hedda Desktop",
@@ -73698,6 +73739,15 @@ end
 self.frequencies=Frequencies
 return self
 end
+function MSRS:AddFrequencies(Frequencies)
+if type(Frequencies)~="table"then
+Frequencies={Frequencies}
+end
+for _,_freq in pairs(Frequencies)do
+table.insert(self.frequencies,_freq)
+end
+return self
+end
 function MSRS:GetFrequencies()
 return self.frequencies
 end
@@ -73706,6 +73756,15 @@ if type(Modulations)~="table"then
 Modulations={Modulations}
 end
 self.modulations=Modulations
+return self
+end
+function MSRS:AddModulations(Modulations)
+if type(Modulations)~="table"then
+Modulations={Modulations}
+end
+for _,_mod in pairs(Modulations)do
+table.insert(self.modulations,_mod)
+end
 return self
 end
 function MSRS:GetModulations()
