@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-11-11T10:40:36.0000000Z-5c6efed99593c3754de56ac3cb8d071463fcd1a6 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-11-18T10:28:52.0000000Z-0f1ad9d81101e43c8faf67cc249b5f81f1231a7b ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -2516,9 +2516,10 @@ return string.format('%03d°',latDeg)..' '..string.format(minFrmtStr,latMin)..'\
 end
 end
 UTILS.tostringMGRS=function(MGRS,acc)
-if acc==0 then
+if acc<=0 then
 return MGRS.UTMZone..' '..MGRS.MGRSDigraph
 else
+if acc>5 then acc=5 end
 local Easting=tostring(MGRS.Easting)
 local Northing=tostring(MGRS.Northing)
 local nE=5-string.len(Easting)
@@ -16308,6 +16309,28 @@ end
 end
 return self
 end
+function MESSAGE:ToCountry(Country,Settings)
+self:F(Country)
+if Country then
+if self.MessageType then
+local Settings=Settings or _SETTINGS
+self.MessageDuration=Settings:GetMessageTime(self.MessageType)
+self.MessageCategory=""
+end
+if self.MessageDuration~=0 then
+self:T(self.MessageCategory..self.MessageText:gsub("\n$",""):gsub("\n$","").." / "..self.MessageDuration)
+trigger.action.outTextForCountry(Country,self.MessageCategory..self.MessageText:gsub("\n$",""):gsub("\n$",""),self.MessageDuration,self.ClearScreen)
+end
+end
+return self
+end
+function MESSAGE:ToCountryIf(Country,Condition,Settings)
+self:F(Country)
+if Country and Condition==true then
+self:ToCountry(Country,Settings)
+end
+return self
+end
 function MESSAGE:ToBlue()
 self:F()
 self:ToCoalition(coalition.side.BLUE)
@@ -17136,7 +17159,11 @@ return self
 end
 function SPAWN:InitRandomizeTemplate(SpawnTemplatePrefixTable)
 self:F({self.SpawnTemplatePrefix,SpawnTemplatePrefixTable})
-self.SpawnTemplatePrefixTable=SpawnTemplatePrefixTable
+local temptable={}
+for _,_temp in pairs(SpawnTemplatePrefixTable)do
+temptable[#temptable+1]=_temp
+end
+self.SpawnTemplatePrefixTable=UTILS.ShuffleTable(temptable)
 self.SpawnRandomizeTemplate=true
 for SpawnGroupID=1,self.SpawnMaxGroups do
 self:_RandomizeTemplate(SpawnGroupID)
@@ -17145,11 +17172,8 @@ return self
 end
 function SPAWN:InitRandomizeTemplateSet(SpawnTemplateSet)
 self:F({self.SpawnTemplatePrefix})
-self.SpawnTemplatePrefixTable=SpawnTemplateSet:GetSetNames()
-self.SpawnRandomizeTemplate=true
-for SpawnGroupID=1,self.SpawnMaxGroups do
-self:_RandomizeTemplate(SpawnGroupID)
-end
+local setnames=SpawnTemplateSet:GetSetNames()
+self:InitRandomizeTemplate(setnames)
 return self
 end
 function SPAWN:InitRandomizeTemplatePrefixes(SpawnTemplatePrefixes)
@@ -17165,7 +17189,11 @@ return self
 end
 function SPAWN:InitRandomizeZones(SpawnZoneTable)
 self:F({self.SpawnTemplatePrefix,SpawnZoneTable})
-self.SpawnZoneTable=SpawnZoneTable
+local temptable={}
+for _,_temp in pairs(SpawnZoneTable)do
+temptable[#temptable+1]=_temp
+end
+self.SpawnZoneTable=UTILS.ShuffleTable(temptable)
 self.SpawnRandomizeZones=true
 for SpawnGroupID=1,self.SpawnMaxGroups do
 self:_RandomizeZones(SpawnGroupID)
@@ -20848,6 +20876,20 @@ params={},
 }
 return DCSTask
 end
+function CONTROLLABLE:TaskRecoveryTanker(CarrierGroup,Speed,Altitude,LastWptNumber)
+local LastWptFlag=type(LastWptNumber)=="number"and true or false
+local DCSTask={
+id="RecoveryTanker",
+params={
+groupId=CarrierGroup:GetID(),
+speed=Speed,
+altitude=Altitude,
+lastWptIndexFlag=LastWptFlag,
+lastWptIndex=LastWptNumber
+}
+}
+return DCSTask
+end
 function CONTROLLABLE:TaskLandAtVec2(Vec2,Duration)
 local DCSTask={
 id='Land',
@@ -23726,6 +23768,17 @@ end
 end
 return callsign
 end
+function GROUP:SetAsRecoveryTanker(CarrierGroup,Speed,ToKIAS,Altitude,Delay,LastWaypoint)
+local speed=ToKIAS==true and UTILS.KnotsToAltKIAS(Speed,Altitude)or Speed
+speed=UTILS.KnotsToMps(speed)
+local alt=UTILS.FeetToMeters(Altitude)
+local delay=Delay or 1
+local task=self:TaskRecoveryTanker(CarrierGroup,speed,alt,LastWaypoint)
+self:SetTask(task,delay)
+local tankertask=self:EnRouteTaskTanker()
+self:PushTask(tankertask,delay+2)
+return self
+end
 UNIT={
 ClassName="UNIT",
 UnitName=nil,
@@ -25068,6 +25121,12 @@ AIRBASE.SouthAtlantic={
 ["Puerto_Williams"]="Puerto Williams",
 ["Puerto_Natales"]="Puerto Natales",
 ["El_Calafate"]="El Calafate",
+["Puerto_Santa_Cruz"]="Puerto Santa Cruz",
+["Comandante_Luis_Piedrabuena"]="Comandante Luis Piedrabuena",
+["Aerodromo_De_Tolhuin"]="Aerodromo De Tolhuin",
+["Porvenir_Airfield"]="Porvenir Airfield",
+["Almirante_Schroeders"]="Almirante Schroeders",
+["Rio_Turbio"]="Rio Turbio",
 }
 AIRBASE.TerminalType={
 Runway=16,
@@ -58040,7 +58099,7 @@ RSBNChannel={filename="RSBNChannel.ogg",duration=1.14},
 Zulu={filename="Zulu.ogg",duration=0.62},
 }
 _ATIS={}
-ATIS.version="0.9.10"
+ATIS.version="0.9.11"
 function ATIS:New(AirbaseName,Frequency,Modulation)
 local self=BASE:Inherit(self,FSM:New())
 self.airbasename=AirbaseName
@@ -58357,7 +58416,9 @@ else
 text=text..string.format(", Relay unit=%s (alive=%s)",tostring(self.relayunitname),relayunitstatus)
 end
 self:T(self.lid..text)
+if not self:Is("Stopped")then
 self:__Status(-60)
+end
 end
 function ATIS:onafterCheckQueue(From,Event,To)
 if self.useSRS then
@@ -58370,7 +58431,9 @@ else
 self:T2(self.lid..string.format("Radio queue %d transmissions queued.",#self.radioqueue.queue))
 end
 end
+if not self:Is("Stopped")then
 self:__CheckQueue(-math.abs(self.dTQueueCheck))
+end
 end
 function ATIS:onafterBroadcast(From,Event,To)
 local coord=self.airbase:GetCoordinate()
@@ -59604,7 +59667,7 @@ CTLD.UnitTypes={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.18"
+CTLD.version="1.0.19"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -60668,9 +60731,7 @@ self.DroppedTroops[self.TroopCounter]=SPAWN:NewWithAlias(_template,alias)
 :InitRandomizeUnits(true,20,2)
 :InitDelayOff()
 :SpawnFromVec2(randomcoord)
-if self.movetroopstowpzone and type~=CTLD_CARGO.Enum.ENGINEERS then
-self:_MoveGroupToZone(self.DroppedTroops[self.TroopCounter])
-end
+self:__TroopsDeployed(1,Group,Unit,self.DroppedTroops[self.TroopCounter],type)
 end
 cargo:SetWasDropped(true)
 if type==CTLD_CARGO.Enum.ENGINEERS then
@@ -60681,7 +60742,6 @@ self:_SendMessage(string.format("Dropped Engineers %s into action!",name),10,fal
 else
 self:_SendMessage(string.format("Dropped Troops %s into action!",name),10,false,Group)
 end
-self:__TroopsDeployed(1,Group,Unit,self.DroppedTroops[self.TroopCounter])
 end
 end
 else
@@ -60974,9 +61034,6 @@ else
 self.DroppedTroops[self.TroopCounter]=SPAWN:NewWithAlias(_template,alias)
 :InitDelayOff()
 :SpawnFromVec2(randomcoord)
-end
-if self.movetroopstowpzone and canmove then
-self:_MoveGroupToZone(self.DroppedTroops[self.TroopCounter])
 end
 if Repair then
 self:__CratesRepaired(1,Group,Unit,self.DroppedTroops[self.TroopCounter])
@@ -61892,7 +61949,7 @@ local grpname=self.DroppedTroops[self.TroopCounter]:GetName()
 self.EngineersInField[self.Engineers]=CTLD_ENGINEERING:New(name,grpname)
 end
 if self.eventoninject then
-self:__TroopsDeployed(1,nil,nil,self.DroppedTroops[self.TroopCounter])
+self:__TroopsDeployed(1,nil,nil,self.DroppedTroops[self.TroopCounter],type)
 end
 end
 return self
@@ -61941,9 +61998,6 @@ else
 self.DroppedTroops[self.TroopCounter]=SPAWN:NewWithAlias(_template,alias)
 :InitDelayOff()
 :SpawnFromVec2(randomcoord)
-end
-if self.movetroopstowpzone and canmove then
-self:_MoveGroupToZone(self.DroppedTroops[self.TroopCounter])
 end
 if self.eventoninject then
 self:__CratesBuild(1,nil,nil,self.DroppedTroops[self.TroopCounter])
@@ -62066,6 +62120,13 @@ end
 end
 return self
 end
+function CTLD:onafterTroopsDeployed(From,Event,To,Group,Unit,Troops,Type)
+self:T({From,Event,To})
+if self.movetroopstowpzone and Type~=CTLD_CARGO.Enum.ENGINEERS then
+self:_MoveGroupToZone(Troops)
+end
+return self
+end
 function CTLD:onbeforeCratesDropped(From,Event,To,Group,Unit,Cargotable)
 self:T({From,Event,To})
 return self
@@ -62090,6 +62151,13 @@ end
 end
 end
 )
+end
+return self
+end
+function CTLD:onafterCratesBuild(From,Event,To,Group,Unit,Vehicle)
+self:T({From,Event,To})
+if self.movetroopstowpzone then
+self:_MoveGroupToZone(Vehicle)
 end
 return self
 end
@@ -62763,6 +62831,7 @@ maxdownedpilots=10,
 allheligroupset=nil,
 topmenuname="CSAR",
 ADFRadioPwr=1000,
+PilotWeight=80,
 }
 CSAR.AircraftType={}
 CSAR.AircraftType["SA342Mistral"]=2
@@ -62778,7 +62847,7 @@ CSAR.AircraftType["Bell-47"]=2
 CSAR.AircraftType["UH-60L"]=10
 CSAR.AircraftType["AH-64D_BLK_II"]=2
 CSAR.AircraftType["Bronco-OV-10A"]=2
-CSAR.version="1.0.15"
+CSAR.version="1.0.16"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
@@ -62880,6 +62949,7 @@ self.wetfeettemplate=nil
 self.usewetfeet=false
 self.allowbronco=false
 self.ADFRadioPwr=1000
+self.PilotWeight=80
 self.useSRS=false
 self.SRSPath="E:\\Program Files\\DCS-SimpleRadio-Standalone"
 self.SRSchannel=300
@@ -63450,7 +63520,7 @@ return self
 end
 function CSAR:_UpdateUnitCargoMass(_heliName)
 self:T(self.lid.." _UpdateUnitCargoMass")
-local calculatedMass=self:_PilotsOnboard(_heliName)*80
+local calculatedMass=self:_PilotsOnboard(_heliName)*(self.PilotWeight or 80)
 local Unit=UNIT:FindByName(_heliName)
 if Unit then
 Unit:SetUnitInternalCargo(calculatedMass)
