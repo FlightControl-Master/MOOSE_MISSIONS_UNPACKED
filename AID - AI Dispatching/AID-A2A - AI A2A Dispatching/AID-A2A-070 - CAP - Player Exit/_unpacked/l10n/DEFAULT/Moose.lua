@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-11-18T10:28:52.0000000Z-0f1ad9d81101e43c8faf67cc249b5f81f1231a7b ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-11-23T08:55:50.0000000Z-33f30101d99aea4c0d7eee64a59c1c2ef96f07c5 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -7115,6 +7115,10 @@ Event.IniUnit=AIRBASE:FindByName(Event.IniDCSUnitName)
 Event.IniCoalition=Event.IniDCSUnit:getCoalition()
 Event.IniCategory=Event.IniDCSUnit:getDesc().category
 Event.IniTypeName=Event.IniDCSUnit:getTypeName()
+if not Event.IniUnit then
+_DATABASE:_RegisterAirbase(Event.initiator)
+Event.IniUnit=AIRBASE:FindByName(Event.IniDCSUnitName)
+end
 end
 end
 if Event.target then
@@ -10579,8 +10583,14 @@ return self
 end
 function DATABASE:_RegisterAirbases()
 for DCSAirbaseId,DCSAirbase in pairs(world.getAirbases())do
-local DCSAirbaseName=DCSAirbase:getName()
-local airbaseID=DCSAirbase:getID()
+self:_RegisterAirbase(DCSAirbase)
+end
+return self
+end
+function DATABASE:_RegisterAirbase(airbase)
+if airbase then
+local DCSAirbaseName=airbase:getName()
+local airbaseID=airbase:getID()
 local airbase=self:AddAirbase(DCSAirbaseName)
 local airbaseUID=airbase:GetID(true)
 local text=string.format("Register %s: %s (UID=%d), Runways=%d, Parking=%d [",AIRBASE.CategoryName[airbase.category],tostring(DCSAirbaseName),airbaseUID,#airbase.runways,airbase.NparkingTotal)
@@ -10597,10 +10607,10 @@ end
 function DATABASE:_EventOnBirth(Event)
 self:F({Event})
 if Event.IniDCSUnit then
-if Event.IniObjectCategory==3 then
+if Event.IniObjectCategory==Object.Category.STATIC then
 self:AddStatic(Event.IniDCSUnitName)
 else
-if Event.IniObjectCategory==1 then
+if Event.IniObjectCategory==Object.Category.UNIT then
 self:AddUnit(Event.IniDCSUnitName)
 self:AddGroup(Event.IniDCSGroupName)
 local DCSAirbase=Airbase.getByName(Event.IniDCSUnitName)
@@ -10610,7 +10620,7 @@ self:AddAirbase(Event.IniDCSUnitName)
 end
 end
 end
-if Event.IniObjectCategory==1 then
+if Event.IniObjectCategory==Object.Category.UNIT then
 Event.IniUnit=self:FindUnit(Event.IniDCSUnitName)
 Event.IniGroup=self:FindGroup(Event.IniDCSGroupName)
 local client=self.CLIENTS[Event.IniDCSUnitName]
@@ -18266,6 +18276,7 @@ if Callsign then
 if type(Callsign)~="number"then
 Callsign[2]=((SpawnIndex-1)%10)+1
 local CallsignName=SpawnTemplate.units[UnitID].callsign["name"]
+CallsignName=string.match(CallsignName,"^(%a+)")
 local CallsignLen=CallsignName:len()
 SpawnTemplate.units[UnitID].callsign["name"]=CallsignName:sub(1,CallsignLen)..SpawnTemplate.units[UnitID].callsign[2]..SpawnTemplate.units[UnitID].callsign[3]
 else
@@ -18709,6 +18720,12 @@ self:T("Spawning FARP")
 self:T({Template=Template})
 self:T({TemplateGroup=TemplateGroup})
 Static=coalition.addGroup(CountryID,-1,TemplateGroup)
+local Event={
+id=EVENTS.Birth,
+time=timer.getTime(),
+initiator=Static
+}
+world.onEvent(Event)
 else
 self:T("Spawning Static")
 self:T2({Template=Template})
@@ -25183,6 +25200,7 @@ end
 else
 self:E(string.format("ERROR: Cound not get position Vec2 of airbase %s",AirbaseName))
 end
+self:T2(string.format("Registered airbase %s",tostring(self.AirbaseName)))
 return self
 end
 function AIRBASE:Find(DCSAirbase)
@@ -41460,6 +41478,7 @@ CurrentROE="unknown",
 DefaultAlarmState="Auto",
 DefaultROE="Weapon Free",
 eventmoose=true,
+waypoints={},
 }
 SUPPRESSION.ROE={
 Hold="Weapon Hold",
@@ -41472,14 +41491,14 @@ Green="Green",
 Red="Red",
 }
 SUPPRESSION.MenuF10=nil
-SUPPRESSION.version="0.9.3"
+SUPPRESSION.version="0.9.4"
 function SUPPRESSION:New(group)
 local self=BASE:Inherit(self,FSM_CONTROLLABLE:New())
 if group then
 self.lid=string.format("SUPPRESSION %s | ",tostring(group:GetName()))
 self:T(self.lid..string.format("SUPPRESSION version %s. Activating suppressive fire for group %s",SUPPRESSION.version,group:GetName()))
 else
-self:E(self.lid.."SUPPRESSION | Requested group does not exist! (Has to be a MOOSE group.)")
+self:E("SUPPRESSION | Requested group does not exist! (Has to be a MOOSE group)")
 return nil
 end
 if group:IsGround()==false then
@@ -41813,6 +41832,9 @@ function SUPPRESSION:onafterFightBack(Controllable,From,Event,To)
 self:_EventFromTo("onafterFightBack",Event,From,To)
 self:_SetROE()
 self:_SetAlarmState()
+local group=Controllable
+local Waypoints=group:GetTemplateRoutePoints()
+group:Route(Waypoints,5)
 end
 function SUPPRESSION:onbeforeFallBack(Controllable,From,Event,To,AttackUnit)
 self:_EventFromTo("onbeforeFallBack",Event,From,To)
@@ -41839,7 +41861,7 @@ if self.smoke or self.Debug then
 Coord:SmokeBlue()
 end
 self:_SetROE(SUPPRESSION.ROE.Hold)
-self:_SetAlarmState(SUPPRESSION.AlarmState.Green)
+self:_SetAlarmState(SUPPRESSION.AlarmState.Auto)
 self:_Run(Coord,self.Speed,self.Formation,self.FallbackWait)
 end
 function SUPPRESSION:onbeforeTakeCover(Controllable,From,Event,To,Hideout)
@@ -41966,7 +41988,7 @@ self:_OnEventDead(EventData)
 end
 end
 function SUPPRESSION:_OnEventHit(EventData)
-self:F(EventData)
+self:F3(EventData)
 local GroupNameSelf=self.Controllable:GetName()
 local GroupNameTgt=EventData.TgtGroupName
 local TgtUnit=EventData.TgtUnit
@@ -42038,62 +42060,29 @@ self:T(self.lid..text)
 end
 function SUPPRESSION:_Run(fin,speed,formation,wait)
 speed=speed or 20
-formation=formation or"Off road"
+formation=formation or ENUMS.Formation.Vehicle.OffRoad
 wait=wait or 30
 local group=self.Controllable
 if group and group:IsAlive()then
-group:ClearTasks()
 local ini=group:GetCoordinate()
 local dist=ini:Get2DDistance(fin)
 local heading=self:_Heading(ini,fin)
-local nx
-if dist<=50 then
-nx=2
-elseif dist<=100 then
-nx=3
-elseif dist<=500 then
-nx=4
-else
-nx=5
-end
-local dx=dist/(nx-1)
 local wp={}
 local tasks={}
 wp[1]=ini:WaypointGround(speed,formation)
-tasks[1]=group:TaskFunction("SUPPRESSION._Passing_Waypoint",self,1,false)
 if self.Debug then
 local MarkerID=ini:MarkToAll(string.format("Waypoing %d of group %s (initial)",#wp,self.Controllable:GetName()))
-end
-self:T2(self.lid..string.format("Number of waypoints %d",nx))
-for i=1,nx-2 do
-local x=dx*i
-local coord=ini:Translate(x,heading)
-wp[#wp+1]=coord:WaypointGround(speed,formation)
-tasks[#tasks+1]=group:TaskFunction("SUPPRESSION._Passing_Waypoint",self,#wp,false)
-self:T2(self.lid..string.format("%d x = %4.1f",i,x))
-if self.Debug then
-local MarkerID=coord:MarkToAll(string.format("Waypoing %d of group %s",#wp,self.Controllable:GetName()))
-end
-end
-self:T2(self.lid..string.format("Total distance: %4.1f",dist))
-wp[#wp+1]=fin:WaypointGround(speed,formation)
-if self.Debug then
-local MarkerID=fin:MarkToAll(string.format("Waypoing %d of group %s (final)",#wp,self.Controllable:GetName()))
 end
 local ConditionWait=group:TaskCondition(nil,nil,nil,nil,wait,nil)
 local TaskHold=group:TaskHold()
 local TaskComboFin={}
 TaskComboFin[#TaskComboFin+1]=group:TaskFunction("SUPPRESSION._Passing_Waypoint",self,#wp,true)
 TaskComboFin[#TaskComboFin+1]=group:TaskControlled(TaskHold,ConditionWait)
-tasks[#tasks+1]=group:TaskCombo(TaskComboFin)
-local Waypoints=group:GetTemplateRoutePoints()
-for i,p in ipairs(wp)do
-table.insert(Waypoints,i,wp[i])
+wp[#wp+1]=fin:WaypointGround(speed,formation,TaskComboFin)
+if self.Debug then
+local MarkerID=fin:MarkToAll(string.format("Waypoing %d of group %s (final)",#wp,self.Controllable:GetName()))
 end
-for i,wp in ipairs(Waypoints)do
-group:SetTaskWaypoint(Waypoints[i],tasks[i])
-end
-group:Route(Waypoints)
+group:Route(wp)
 else
 self:E(self.lid..string.format("ERROR: Group is not alive!"))
 end
@@ -42102,7 +42091,7 @@ function SUPPRESSION._Passing_Waypoint(group,Fsm,i,final)
 local text=string.format("Group %s passing waypoint %d (final=%s)",group:GetName(),i,tostring(final))
 MESSAGE:New(text,10):ToAllIf(Fsm.Debug)
 if Fsm.Debug then
-env.info(self.lid..text)
+env.info(Fsm.lid..text)
 end
 if final then
 if Fsm:is("Retreating")then
@@ -42151,7 +42140,7 @@ local life_ave=0
 local life_ave0=0
 local n=0
 local groupstrength=#units/self.IniGroupStrength*100
-self.T2(self.lid..string.format("Group %s _GetLife nunits = %d",self.Controllable:GetName(),#units))
+self:T2(self.lid..string.format("Group %s _GetLife nunits = %d",self.Controllable:GetName(),#units))
 for _,unit in pairs(units)do
 local unit=unit
 if unit and unit:IsAlive()then
