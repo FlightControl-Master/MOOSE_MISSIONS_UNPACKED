@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-12-02T15:39:09.0000000Z-37b1e7366c1f1a7e4003e2bedcc4e59ba91d1255 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-12-09T11:37:39.0000000Z-84d301c67662965fc05b6a4ad278166b8c04d816 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -6052,11 +6052,14 @@ lid=nil,
 functionsGen={},
 functionsAny={},
 functionsAll={},
+functionCounter=0,
+defaultPersist=false,
 }
-CONDITION.version="0.2.0"
+CONDITION.version="0.3.0"
 function CONDITION:New(Name)
 local self=BASE:Inherit(self,BASE:New())
 self.name=Name or"Condition X"
+self:SetNoneResult(false)
 self.lid=string.format("%s | ",self.name)
 return self
 end
@@ -6068,28 +6071,80 @@ function CONDITION:SetNegateResult(Negate)
 self.negateResult=Negate
 return self
 end
-function CONDITION:AddFunction(Function,...)
-local condition=self:_CreateCondition(Function,...)
-table.insert(self.functionsGen,condition)
+function CONDITION:SetNoneResult(ReturnValue)
+if not ReturnValue then
+self.noneResult=false
+else
+self.noneResult=true
+end
 return self
+end
+function CONDITION:SetDefaultPersistence(IsPersistent)
+self.defaultPersist=IsPersistent
+return self
+end
+function CONDITION:AddFunction(Function,...)
+local condition=self:_CreateCondition(0,Function,...)
+table.insert(self.functionsGen,condition)
+return condition
 end
 function CONDITION:AddFunctionAny(Function,...)
-local condition=self:_CreateCondition(Function,...)
+local condition=self:_CreateCondition(1,Function,...)
 table.insert(self.functionsAny,condition)
-return self
+return condition
 end
 function CONDITION:AddFunctionAll(Function,...)
-local condition=self:_CreateCondition(Function,...)
+local condition=self:_CreateCondition(2,Function,...)
 table.insert(self.functionsAll,condition)
+return condition
+end
+function CONDITION:RemoveFunction(ConditionFunction)
+if ConditionFunction then
+local data=nil
+if ConditionFunction.type==0 then
+data=self.functionsGen
+elseif ConditionFunction.type==1 then
+data=self.functionsAny
+elseif ConditionFunction.type==2 then
+data=self.functionsAll
+end
+if data then
+for i=#data,1,-1 do
+local cf=data[i]
+if cf.uid==ConditionFunction.uid then
+self:T(self.lid..string.format("Removed ConditionFunction UID=%d",cf.uid))
+table.remove(data,i)
+return self
+end
+end
+end
+end
+return self
+end
+function CONDITION:RemoveNonPersistant()
+for i=#self.functionsGen,1,-1 do
+local cf=self.functionsGen[i]
+if not cf.persistence then
+table.remove(self.functionsGen,i)
+end
+end
+for i=#self.functionsAll,1,-1 do
+local cf=self.functionsAll[i]
+if not cf.persistence then
+table.remove(self.functionsAll,i)
+end
+end
+for i=#self.functionsAny,1,-1 do
+local cf=self.functionsAny[i]
+if not cf.persistence then
+table.remove(self.functionsAny,i)
+end
+end
 return self
 end
 function CONDITION:Evaluate(AnyTrue)
 if#self.functionsAll+#self.functionsAny+#self.functionsAll==0 then
-if self.negateResult then
-return true
-else
-return false
-end
+return self.noneResult
 end
 local evalAny=self.isAny
 if AnyTrue~=nil then
@@ -6138,8 +6193,12 @@ else
 return true
 end
 end
-function CONDITION:_CreateCondition(Function,...)
+function CONDITION:_CreateCondition(Ftype,Function,...)
+self.functionCounter=self.functionCounter+1
 local condition={}
+condition.uid=self.functionCounter
+condition.type=Ftype or 0
+condition.persistence=self.defaultPersist
 condition.func=Function
 condition.arg={}
 if arg then
@@ -59687,6 +59746,10 @@ wpZones={},
 dropOffZones={},
 pickupZones={},
 }
+CTLD.RadioModulation={
+AM=0,
+FM=1,
+}
 CTLD.CargoZoneType={
 LOAD="load",
 DROP="drop",
@@ -59710,7 +59773,7 @@ CTLD.UnitTypes={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.20"
+CTLD.version="1.0.21"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -59821,6 +59884,7 @@ self.saveinterval=600
 self.eventoninject=true
 self.usesubcats=false
 self.subcats={}
+self.nobuildinloadzones=true
 local AliaS=string.gsub(self.alias," ","_")
 self.filename=string.format("CTLD_%s_Persist.csv",AliaS)
 self.allowcratepickupagain=true
@@ -60300,10 +60364,10 @@ local subcat=cargotype.Subcategory
 self.CargoCounter=self.CargoCounter+1
 local realcargo=nil
 if drop then
-realcargo=CTLD_CARGO:New(self.CargoCounter,cratename,templ,sorte,true,false,cratesneeded,self.Spawned_Crates[self.CrateCounter],true,cargotype.PerCrateMass,subcat)
+realcargo=CTLD_CARGO:New(self.CargoCounter,cratename,templ,sorte,true,false,cratesneeded,self.Spawned_Crates[self.CrateCounter],true,cargotype.PerCrateMass,nil,subcat)
 table.insert(droppedcargo,realcargo)
 else
-realcargo=CTLD_CARGO:New(self.CargoCounter,cratename,templ,sorte,false,false,cratesneeded,self.Spawned_Crates[self.CrateCounter],true,cargotype.PerCrateMass,subcat)
+realcargo=CTLD_CARGO:New(self.CargoCounter,cratename,templ,sorte,false,false,cratesneeded,self.Spawned_Crates[self.CrateCounter],false,cargotype.PerCrateMass,nil,subcat)
 Cargo:RemoveStock()
 end
 table.insert(self.Spawned_Cargo,realcargo)
@@ -60893,6 +60957,13 @@ self:_SendMessage("You need to land / stop to build something, Pilot!",10,false,
 return self
 end
 end
+if not Engineering and self.nobuildinloadzones then
+local inloadzone=self:IsUnitInZone(Unit,CTLD.CargoZoneType.LOAD)
+if inloadzone then
+self:_SendMessage("You cannot build in a loading area, Pilot!",10,false,Group)
+return self
+end
+end
 local finddist=self.CrateDistance or 35
 local crates,number=self:_FindCratesNearby(Group,Unit,finddist,true)
 local buildables={}
@@ -61366,7 +61437,7 @@ local FM=table.remove(self.FreeFMFrequencies,math.random(#self.FreeFMFrequencies
 table.insert(self.UsedFMFrequencies,FM)
 beacon.name=Name
 beacon.frequency=FM/1000000
-beacon.modulation=radio.modulation.FM
+beacon.modulation=CTLD.RadioModulation.FM
 return beacon
 end
 function CTLD:_GetUHFBeacon(Name)
@@ -61380,7 +61451,7 @@ local UHF=table.remove(self.FreeUHFFrequencies,math.random(#self.FreeUHFFrequenc
 table.insert(self.UsedUHFFrequencies,UHF)
 beacon.name=Name
 beacon.frequency=UHF/1000000
-beacon.modulation=radio.modulation.AM
+beacon.modulation=CTLD.RadioModulation.AM
 return beacon
 end
 function CTLD:_GetVHFBeacon(Name)
@@ -61394,7 +61465,7 @@ local VHF=table.remove(self.FreeVHFFrequencies,math.random(#self.FreeVHFFrequenc
 table.insert(self.UsedVHFFrequencies,VHF)
 beacon.name=Name
 beacon.frequency=VHF/1000000
-beacon.modulation=radio.modulation.FM
+beacon.modulation=CTLD.RadioModulation.FM
 return beacon
 end
 function CTLD:AddCTLDZone(Name,Type,Color,Active,HasBeacon,Shiplength,Shipwidth)
@@ -61417,6 +61488,10 @@ ctldzone.color=Color or SMOKECOLOR.Red
 ctldzone.name=Name or"NONE"
 ctldzone.type=Type or CTLD.CargoZoneType.MOVE
 ctldzone.hasbeacon=HasBeacon or false
+if Type==CTLD.CargoZoneType.BEACON then
+self.droppedbeaconref[ctldzone.name]=zone:GetCoordinate()
+ctldzone.timestamp=timer.getTime()
+end
 if HasBeacon then
 ctldzone.fmbeacon=self:_GetFMBeacon(Name)
 ctldzone.uhfbeacon=self:_GetUHFBeacon(Name)
@@ -61472,7 +61547,7 @@ local timeout=self.droppedbeacontimeout or 600
 local livebeacontable={}
 for _,_beacon in pairs(self.droppedBeacons)do
 local beacon=_beacon
-if not beacon.timestamp then beacon.timestamp=timer.getTime()end
+if not beacon.timestamp then beacon.timestamp=timer.getTime()+timeout end
 local T0=beacon.timestamp
 if timer.getTime()-T0>timeout then
 local name=beacon.name
@@ -61529,16 +61604,16 @@ end
 local Sound=Sound or"beacon.ogg"
 if IsDropped and Zone then
 local ZoneCoord=Zone
-local ZoneVec3=ZoneCoord:GetVec3()
-local Frequency=Mhz*1000000
+local ZoneVec3=ZoneCoord:GetVec3(1)
+local Frequency=string.format("%09d",Mhz*1000000)
 local Sound="l10n/DEFAULT/"..Sound
-trigger.action.radioTransmission(Sound,ZoneVec3,Modulation,false,Frequency,1000)
+trigger.action.radioTransmission(Sound,ZoneVec3,Modulation,false,tonumber(Frequency),1000)
 elseif Zone then
-local ZoneCoord=Zone:GetCoordinate(2)
+local ZoneCoord=Zone:GetCoordinate(1)
 local ZoneVec3=ZoneCoord:GetVec3()
-local Frequency=Mhz*1000000
+local Frequency=string.format("%09d",Mhz*1000000)
 local Sound="l10n/DEFAULT/"..Sound
-trigger.action.radioTransmission(Sound,ZoneVec3,Modulation,false,Frequency,1000)
+trigger.action.radioTransmission(Sound,ZoneVec3,Modulation,false,tonumber(Frequency),1000)
 end
 return self
 end
@@ -61561,9 +61636,9 @@ local Name=czone.name
 local FM=FMbeacon.frequency
 local VHF=VHFbeacon.frequency
 local UHF=UHFbeacon.frequency
-self:_AddRadioBeacon(Name,Sound,FM,radio.modulation.FM,IsShip,IsDropped)
-self:_AddRadioBeacon(Name,Sound,VHF,radio.modulation.FM,IsShip,IsDropped)
-self:_AddRadioBeacon(Name,Sound,UHF,radio.modulation.AM,IsShip,IsDropped)
+self:_AddRadioBeacon(Name,Sound,FM,CTLD.RadioModulation.FM,IsShip,IsDropped)
+self:_AddRadioBeacon(Name,Sound,VHF,CTLD.RadioModulation.FM,IsShip,IsDropped)
+self:_AddRadioBeacon(Name,Sound,UHF,CTLD.RadioModulation.AM,IsShip,IsDropped)
 end
 end
 end
@@ -62176,7 +62251,7 @@ self:T({From,Event,To})
 return self
 end
 function CTLD:onbeforeCratesBuild(From,Event,To,Group,Unit,Vehicle)
-self:I({From,Event,To})
+self:T({From,Event,To})
 if Unit and Unit:IsPlayer()and self.PlayerTaskQueue then
 local playername=Unit:GetPlayerName()
 local dropcoord=Vehicle:GetCoordinate()or COORDINATE:New(0,0,0)
