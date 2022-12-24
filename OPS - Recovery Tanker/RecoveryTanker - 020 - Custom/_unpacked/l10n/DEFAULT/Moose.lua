@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-12-16T17:43:50.0000000Z-fea1839c06a7608182a465a1852800a07e3b43bb ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2022-12-23T12:42:14.0000000Z-9619b11c58a9ef67982daa312bd30199924d008d ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -14604,6 +14604,19 @@ end
 end
 return CountU
 end
+function SET_SCENERY:GetAliveSet()
+self:F2()
+local AliveSet=SET_SCENERY:New()
+for GroupName,GroupObject in pairs(self.Set)do
+local GroupObject=GroupObject
+if GroupObject then
+if GroupObject:IsAlive()then
+AliveSet:Add(GroupName,GroupObject)
+end
+end
+end
+return AliveSet.Set or{},AliveSet
+end
 function SET_SCENERY:ForEachScenery(IteratorFunction,...)
 self:F2(arg)
 self:ForEach(IteratorFunction,arg,self:GetSet())
@@ -24230,10 +24243,18 @@ return false
 end
 function UNIT:GetGroup()
 self:F2(self.UnitName)
+local UnitGroup=GROUP:FindByName(self.GroupName)
+if UnitGroup then
+return UnitGroup
+else
 local DCSUnit=self:GetDCSObject()
 if DCSUnit then
-local UnitGroup=GROUP:FindByName(DCSUnit:getGroup():getName())
+local grp=DCSUnit:getGroup()
+if grp then
+local UnitGroup=GROUP:FindByName(grp:getName())
 return UnitGroup
+end
+end
 end
 return nil
 end
@@ -59824,7 +59845,7 @@ CTLD.UnitTypes={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.21"
+CTLD.version="1.0.24"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -59881,6 +59902,7 @@ self.UsedVHFFrequencies={}
 self.UsedUHFFrequencies={}
 self.UsedFMFrequencies={}
 self.RadioSound="beacon.ogg"
+self.RadioPath="l10n/DEFAULT/"
 self.pickupZones={}
 self.dropOffZones={}
 self.wpZones={}
@@ -60037,14 +60059,39 @@ local m=MESSAGE:New(Text,Time,"CTLD",Clearscreen):ToGroup(Group)
 end
 return self
 end
-function CTLD:_LoadTroops(Group,Unit,Cargotype)
+function CTLD:_FindTroopsCargoObject(Name)
+self:T(self.lid.." _FindTroopsCargoObject")
+local cargo=nil
+for _,_cargo in pairs(self.Cargo_Troops)do
+local cargo=_cargo
+if cargo.Name==Name then
+return cargo
+end
+end
+return nil
+end
+function CTLD:PreloadTroops(Unit,Troopname)
+self:T(self.lid.." PreloadTroops")
+local name=Troopname or"Unknown"
+if Unit and Unit:IsAlive()then
+local cargo=self:_FindTroopsCargoObject(name)
+local group=Unit:GetGroup()
+if cargo then
+self:_LoadTroops(group,Unit,cargo,true)
+else
+self:E(self.lid.." Troops preload - Cargo Object "..name.." not found!")
+end
+end
+return self
+end
+function CTLD:_LoadTroops(Group,Unit,Cargotype,Inject)
 self:T(self.lid.." _LoadTroops")
 local instock=Cargotype:GetStock()
 local cgoname=Cargotype:GetName()
 local cgotype=Cargotype:GetType()
 local cgonetmass=Cargotype:GetNetMass()
 local maxloadable=self:_GetMaxLoadableMass(Unit)
-if type(instock)=="number"and tonumber(instock)<=0 and tonumber(instock)~=-1 then
+if type(instock)=="number"and tonumber(instock)<=0 and tonumber(instock)~=-1 and not Inject then
 self:_SendMessage(string.format("Sorry, all %s are gone!",cgoname),10,false,Group)
 return self
 end
@@ -60054,6 +60101,7 @@ local inzone,zonename,zone,distance=self:IsUnitInZone(Unit,CTLD.CargoZoneType.LO
 if not inzone then
 inzone,zonename,zone,distance=self:IsUnitInZone(Unit,CTLD.CargoZoneType.SHIP)
 end
+if not Inject then
 if not inzone then
 self:_SendMessage("You are not close enough to a logistics zone!",10,false,Group)
 if not self.debug then return self end
@@ -60063,6 +60111,7 @@ if not self.debug then return self end
 elseif self.pilotmustopendoors and not UTILS.IsLoadingDoorOpen(Unit:GetName())then
 self:_SendMessage("You need to open the door(s) to load troops!",10,false,Group)
 if not self.debug then return self end
+end
 end
 local group=Group
 local unit=Unit
@@ -61657,15 +61706,27 @@ if IsDropped and Zone then
 local ZoneCoord=Zone
 local ZoneVec3=ZoneCoord:GetVec3(1)
 local Frequency=string.format("%09d",Mhz*1000000)
-local Sound="l10n/DEFAULT/"..Sound
+local Sound=self.RadioPath..Sound
 trigger.action.radioTransmission(Sound,ZoneVec3,Modulation,false,tonumber(Frequency),1000)
 elseif Zone then
 local ZoneCoord=Zone:GetCoordinate(1)
 local ZoneVec3=ZoneCoord:GetVec3()
 local Frequency=string.format("%09d",Mhz*1000000)
-local Sound="l10n/DEFAULT/"..Sound
+local Sound=self.RadioPath..Sound
 trigger.action.radioTransmission(Sound,ZoneVec3,Modulation,false,tonumber(Frequency),1000)
 end
+return self
+end
+function CTLD:SetSoundfilesFolder(FolderPath)
+self:T(self.lid.." SetSoundfilesFolder")
+if FolderPath then
+local lastchar=string.sub(FolderPath,-1)
+if lastchar~="/"then
+FolderPath=FolderPath.."/"
+end
+end
+self.RadioPath=FolderPath
+self:I(self.lid..string.format("Setting sound files folder to: %s",self.RadioPath))
 return self
 end
 function CTLD:_RefreshRadioBeacons()
@@ -62376,7 +62437,7 @@ self:T(self.lid.."Bulding Statics Table for Saving")
 for _,_cargo in pairs(stcstable)do
 local cargo=_cargo
 local object=cargo:GetPositionable()
-if object and object:IsAlive()and cargo:WasDropped()then
+if object and object:IsAlive()and(cargo:WasDropped()or not cargo:HasMoved())then
 statics[#statics+1]=cargo
 end
 end
