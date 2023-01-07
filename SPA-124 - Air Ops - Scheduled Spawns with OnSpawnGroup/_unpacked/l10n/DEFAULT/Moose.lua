@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2022-12-29T15:33:13.0000000Z-8661d07e1e2cdd7f0e3ee47ba501bb3771b55a18 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-01-05T09:58:40.0000000Z-8cedd88ce259d407be844eadf5ef9d4eda54a2f0 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -2992,6 +2992,22 @@ else
 return"Unknown"
 end
 end
+function UTILS.GetCoalitionEnemy(Coalition,Neutral)
+local Coalitions={}
+if Coalition then
+if Coalition==coalition.side.RED then
+Coalitions={coalition.side.BLUE}
+elseif Coalition==coalition.side.BLUE then
+Coalitions={coalition.side.RED}
+elseif Coalition==coalition.side.NEUTRAL then
+Coalitions={coalition.side.RED,coalition.side.BLUE}
+end
+end
+if Neutral then
+table.insert(Coalitions,coalition.side.NEUTRAL)
+end
+return Coalitions
+end
 function UTILS.GetModulationName(Modulation)
 if Modulation then
 if Modulation==0 then
@@ -3863,6 +3879,36 @@ BRAANATO=string.format("%s, BRAA, %03d, %d miles, Angels %d, %s, Track %s",Group
 end
 end
 return BRAANATO
+end
+function UTILS.IsInTable(Table,Object,Key)
+for key,object in pairs(Table)do
+if Key then
+if Object[Key]==object[Key]then
+return true
+end
+else
+if object==Object then
+return true
+end
+end
+end
+return false
+end
+function UTILS.IsAnyInTable(Table,Objects,Key)
+for _,Object in pairs(UTILS.EnsureTable(Objects))do
+for key,object in pairs(Table)do
+if Key then
+if Object[Key]==object[Key]then
+return true
+end
+else
+if object==Object then
+return true
+end
+end
+end
+end
+return false
 end
 PROFILER={
 ClassName="PROFILER",
@@ -9712,6 +9758,26 @@ end
 end
 return self
 end
+function ZONE_POLYGON_BASE:GetZoneRadius(ZoneName,DoNotRegisterZone)
+local center=self:GetVec2()
+local radius=0
+for _,_vec2 in pairs(self._.Polygon)do
+local vec2=_vec2
+local r=UTILS.VecDist2D(center,vec2)
+if r>radius then
+radius=r
+end
+end
+local zone=ZONE_RADIUS:New(ZoneName or self.ZoneName,center,radius,DoNotRegisterZone)
+return zone
+end
+function ZONE_POLYGON_BASE:GetZoneQuad(ZoneName,DoNotRegisterZone)
+local vec1,vec3=self:GetBoundingVec2()
+local vec2={x=vec1.x,y=vec3.y}
+local vec4={x=vec3.x,y=vec1.y}
+local zone=ZONE_POLYGON_BASE:New(ZoneName or self.ZoneName,{vec1,vec2,vec3,vec4})
+return zone
+end
 function ZONE_POLYGON_BASE:SmokeZone(SmokeColor,Segments)
 self:F2(SmokeColor)
 Segments=Segments or 10
@@ -9823,6 +9889,22 @@ y1=(y1>self._.Polygon[i].y)and self._.Polygon[i].y or y1
 y2=(y2<self._.Polygon[i].y)and self._.Polygon[i].y or y2
 end
 return{x1=x1,y1=y1,x2=x2,y2=y2}
+end
+function ZONE_POLYGON_BASE:GetBoundingVec2()
+local x1=self._.Polygon[1].x
+local y1=self._.Polygon[1].y
+local x2=self._.Polygon[1].x
+local y2=self._.Polygon[1].y
+for i=2,#self._.Polygon do
+self:T2({self._.Polygon[i],x1,y1,x2,y2})
+x1=(x1>self._.Polygon[i].x)and self._.Polygon[i].x or x1
+x2=(x2<self._.Polygon[i].x)and self._.Polygon[i].x or x2
+y1=(y1>self._.Polygon[i].y)and self._.Polygon[i].y or y1
+y2=(y2<self._.Polygon[i].y)and self._.Polygon[i].y or y2
+end
+local vec1={x=x1,y=y1}
+local vec2={x=x2,y=y2}
+return vec1,vec2
 end
 function ZONE_POLYGON_BASE:Boundary(Coalition,Color,Radius,Alpha,Segments,Closed)
 Coalition=Coalition or-1
@@ -11225,9 +11307,9 @@ self.CallScheduler=SCHEDULER:New(self)
 self:SetEventPriority(2)
 return self
 end
-function SET_BASE:Clear()
+function SET_BASE:Clear(TriggerEvent)
 for Name,Object in pairs(self.Set)do
-self:Remove(Name)
+self:Remove(Name,not TriggerEvent)
 end
 return self
 end
@@ -11258,7 +11340,11 @@ end
 function SET_BASE:Remove(ObjectName,NoTriggerEvent)
 self:F2({ObjectName=ObjectName})
 local TriggerEvent=true
-if NoTriggerEvent then TriggerEvent=false end
+if NoTriggerEvent then
+TriggerEvent=false
+else
+TriggerEvent=true
+end
 local Object=self.Set[ObjectName]
 if Object then
 for Index,Key in ipairs(self.Index)do
@@ -11387,7 +11473,15 @@ function SET_BASE:FilterOnce()
 for ObjectName,Object in pairs(self.Database)do
 if self:IsIncludeObject(Object)then
 self:Add(ObjectName,Object)
+else
+self:Remove(ObjectName,true)
 end
+end
+return self
+end
+function SET_BASE:FilterClear()
+for key,value in pairs(self.Filter)do
+self.Filter[key]={}
 end
 return self
 end
@@ -11677,8 +11771,8 @@ end
 end
 return NearestGroup
 end
-function SET_GROUP:FilterZones(Zones)
-if not self.Filter.Zones then
+function SET_GROUP:FilterZones(Zones,Clear)
+if Clear or not self.Filter.Zones then
 self.Filter.Zones={}
 end
 local zones={}
@@ -11696,39 +11790,18 @@ self.Filter.Zones[zonename]=Zone
 end
 return self
 end
-function SET_GROUP:FilterZones(Zones)
-if not self.Filter.Zones then
-self.Filter.Zones={}
-end
-local zones={}
-if Zones.ClassName and Zones.ClassName=="SET_ZONE"then
-zones=Zones.Set
-elseif type(Zones)~="table"or(type(Zones)=="table"and Zones.ClassName)then
-self:E("***** FilterZones needs either a table of ZONE Objects or a SET_ZONE as parameter!")
-return self
-else
-zones=Zones
-end
-for _,Zone in pairs(zones)do
-local zonename=Zone:GetName()
-self.Filter.Zones[zonename]=Zone
-end
-return self
-end
-function SET_GROUP:FilterCoalitions(Coalitions)
-if not self.Filter.Coalitions then
+function SET_GROUP:FilterCoalitions(Coalitions,Clear)
+if Clear or(not self.Filter.Coalitions)then
 self.Filter.Coalitions={}
 end
-if type(Coalitions)~="table"then
-Coalitions={Coalitions}
-end
+Coalitions=UTILS.EnsureTable(Coalitions,false)
 for CoalitionID,Coalition in pairs(Coalitions)do
 self.Filter.Coalitions[Coalition]=Coalition
 end
 return self
 end
-function SET_GROUP:FilterCategories(Categories)
-if not self.Filter.Categories then
+function SET_GROUP:FilterCategories(Categories,Clear)
+if Clear or not self.Filter.Categories then
 self.Filter.Categories={}
 end
 if type(Categories)~="table"then
@@ -12070,6 +12143,23 @@ for UnitName,UnitData in pairs(GroupData:GetUnits())do
 UnitData:SetCargoBayWeightLimit()
 end
 end
+end
+function SET_GROUP:GetClosestGroup(Coordinate,Coalitions)
+local Set=self:GetSet()
+local dmin=math.huge
+local gmin=nil
+for GroupID,GroupData in pairs(Set)do
+local group=GroupData
+if group and group:IsAlive()and(Coalitions==nil or UTILS.IsAnyInTable(Coalitions,group:GetCoalition()))then
+local coord=group:GetCoord()
+local d=UTILS.VecDist3D(Coordinate,coord)
+if d<dmin then
+dmin=d
+gmin=group
+end
+end
+end
+return gmin,dmin
 end
 end
 do
@@ -14235,6 +14325,19 @@ end
 end
 return nil
 end
+function SET_ZONE:GetClosestZone(Coordinate)
+local dmin=math.huge
+local zmin=nil
+for _,Zone in pairs(self:GetSet())do
+local Zone=Zone
+local d=Zone:Get2DDistance(Coordinate)
+if d<dmin then
+dmin=d
+zmin=Zone
+end
+end
+return zmin,dmin
+end
 end
 do
 SET_ZONE_GOAL={
@@ -14379,6 +14482,215 @@ return nil
 end
 end
 do
+SET_OPSZONE={
+ClassName="SET_OPSZONE",
+Zones={},
+Filter={
+Prefixes=nil,
+Coalitions=nil,
+},
+FilterMeta={
+Coalitions={
+red=coalition.side.RED,
+blue=coalition.side.BLUE,
+neutral=coalition.side.NEUTRAL,
+},
+},
+}
+function SET_OPSZONE:New()
+local self=BASE:Inherit(self,SET_BASE:New(_DATABASE.OPSZONES))
+return self
+end
+function SET_OPSZONE:AddZone(Zone)
+self:Add(Zone:GetName(),Zone)
+return self
+end
+function SET_OPSZONE:RemoveZonesByName(RemoveZoneNames)
+local RemoveZoneNamesArray=(type(RemoveZoneNames)=="table")and RemoveZoneNames or{RemoveZoneNames}
+for RemoveZoneID,RemoveZoneName in pairs(RemoveZoneNamesArray)do
+self:Remove(RemoveZoneName)
+end
+return self
+end
+function SET_OPSZONE:FindZone(ZoneName)
+local ZoneFound=self.Set[ZoneName]
+return ZoneFound
+end
+function SET_OPSZONE:GetRandomZone()
+if self:Count()~=0 then
+local Index=self.Index
+local ZoneFound=nil
+while not ZoneFound do
+local ZoneRandom=math.random(1,#Index)
+ZoneFound=self.Set[Index[ZoneRandom]]:GetZoneMaybe()
+end
+return ZoneFound
+end
+return nil
+end
+function SET_OPSZONE:SetZoneProbability(ZoneName,Probability)
+local Zone=self:FindZone(ZoneName)
+Zone:SetZoneProbability(Probability)
+return self
+end
+function SET_OPSZONE:FilterPrefixes(Prefixes)
+if not self.Filter.Prefixes then
+self.Filter.Prefixes={}
+end
+Prefixes=UTILS.EnsureTable(Prefixes,false)
+for PrefixID,Prefix in pairs(Prefixes)do
+self.Filter.Prefixes[Prefix]=Prefix
+end
+return self
+end
+function SET_OPSZONE:FilterCoalitions(Coalitions)
+if not self.Filter.Coalitions then
+self.Filter.Coalitions={}
+end
+Coalitions=UTILS.EnsureTable(Coalitions,false)
+for CoalitionID,Coalition in pairs(Coalitions)do
+self.Filter.Coalitions[Coalition]=Coalition
+end
+return self
+end
+function SET_OPSZONE:FilterOnce()
+for ObjectName,Object in pairs(self.Database)do
+self:Remove(ObjectName,true)
+if self:IsIncludeObject(Object)then
+self:Add(ObjectName,Object)
+end
+end
+return self
+end
+function SET_OPSZONE:FilterClear()
+local parent=self:GetParent(self,SET_OPSZONE)
+parent:FilterClear()
+return self
+end
+function SET_OPSZONE:FilterStart()
+if _DATABASE then
+for ObjectName,Object in pairs(self.Database)do
+if self:IsIncludeObject(Object)then
+self:Add(ObjectName,Object)
+else
+self:RemoveZonesByName(ObjectName)
+end
+end
+end
+self:HandleEvent(EVENTS.NewZoneGoal)
+self:HandleEvent(EVENTS.DeleteZoneGoal)
+return self
+end
+function SET_OPSZONE:FilterStop()
+self:UnHandleEvent(EVENTS.NewZoneGoal)
+self:UnHandleEvent(EVENTS.DeleteZoneGoal)
+return self
+end
+function SET_OPSZONE:AddInDatabase(Event)
+self:F3({Event})
+return Event.IniDCSUnitName,self.Database[Event.IniDCSUnitName]
+end
+function SET_OPSZONE:FindInDatabase(Event)
+self:F3({Event})
+return Event.IniDCSUnitName,self.Database[Event.IniDCSUnitName]
+end
+function SET_OPSZONE:ForEachZone(IteratorFunction,...)
+self:F2(arg)
+self:ForEach(IteratorFunction,arg,self:GetSet())
+return self
+end
+function SET_OPSZONE:IsIncludeObject(MZone)
+self:F2(MZone)
+local MZoneInclude=true
+if MZone then
+local MZoneName=MZone:GetName()
+if self.Filter.Prefixes then
+local MZonePrefix=false
+for ZonePrefixId,ZonePrefix in pairs(self.Filter.Prefixes)do
+self:T3({"Prefix:",string.find(MZoneName,ZonePrefix,1),ZonePrefix})
+if string.find(MZoneName,ZonePrefix,1)then
+MZonePrefix=true
+break
+end
+end
+self:T({"Evaluated Prefix",MZonePrefix})
+MZoneInclude=MZoneInclude and MZonePrefix
+end
+if self.Filter.Coalitions then
+local MGroupCoalition=false
+local coalition=MZone:GetOwner()
+for _,CoalitionName in pairs(self.Filter.Coalitions)do
+if self.FilterMeta.Coalitions[CoalitionName]and self.FilterMeta.Coalitions[CoalitionName]==coalition then
+MGroupCoalition=true
+break
+end
+end
+MZoneInclude=MZoneInclude and MGroupCoalition
+end
+end
+self:T2(MZoneInclude)
+return MZoneInclude
+end
+function SET_OPSZONE:OnEventNewZoneGoal(EventData)
+self:T({"New Zone Capture Coalition",EventData})
+self:T({"Zone Capture Coalition",EventData.ZoneGoal})
+if EventData.ZoneGoal then
+if EventData.ZoneGoal and self:IsIncludeObject(EventData.ZoneGoal)then
+self:T({"Adding Zone Capture Coalition",EventData.ZoneGoal.ZoneName,EventData.ZoneGoal})
+self:Add(EventData.ZoneGoal.ZoneName,EventData.ZoneGoal)
+end
+end
+end
+function SET_OPSZONE:OnEventDeleteZoneGoal(EventData)
+self:F3({EventData})
+if EventData.ZoneGoal then
+local Zone=_DATABASE:FindZone(EventData.ZoneGoal.ZoneName)
+if Zone and Zone.ZoneName then
+self:F({ZoneNoDestroy=Zone.NoDestroy})
+if Zone.NoDestroy then
+else
+self:Remove(Zone.ZoneName)
+end
+end
+end
+end
+function SET_OPSZONE:Start()
+for _,_Zone in pairs(self:GetSet())do
+local Zone=_Zone
+if Zone:IsStopped()then
+Zone:Start()
+end
+end
+return self
+end
+function SET_OPSZONE:IsCoordinateInZone(Coordinate)
+for _,_Zone in pairs(self:GetSet())do
+local Zone=_Zone
+if Zone:GetZone():IsCoordinateInZone(Coordinate)then
+return Zone
+end
+end
+return nil
+end
+function SET_OPSZONE:GetClosestZone(Coordinate,Coalitions)
+Coalitions=UTILS.EnsureTable(Coalitions,true)
+local dmin=math.huge
+local zmin=nil
+for _,_opszone in pairs(self:GetSet())do
+local opszone=_opszone
+local coal=opszone:GetOwner()
+if opszone:IsStarted()and(Coalitions==nil or(Coalitions and UTILS.IsInTable(Coalitions,coal)))then
+local d=opszone:GetZone():Get2DDistance(Coordinate)
+if d<dmin then
+dmin=d
+zmin=opszone
+end
+end
+end
+return zmin,dmin
+end
+end
+do
 SET_OPSGROUP={
 ClassName="SET_OPSGROUP",
 Filter={
@@ -14482,8 +14794,8 @@ function SET_OPSGROUP:FindNavyGroup(GroupName)
 local GroupFound=self:FindGroup(GroupName)
 return GroupFound
 end
-function SET_OPSGROUP:FilterCoalitions(Coalitions)
-if not self.Filter.Coalitions then
+function SET_OPSGROUP:FilterCoalitions(Coalitions,Clear)
+if Clear or not self.Filter.Coalitions then
 self.Filter.Coalitions={}
 end
 if type(Coalitions)~="table"then
@@ -14494,8 +14806,8 @@ self.Filter.Coalitions[Coalition]=Coalition
 end
 return self
 end
-function SET_OPSGROUP:FilterCategories(Categories)
-if not self.Filter.Categories then
+function SET_OPSGROUP:FilterCategories(Categories,Clear)
+if Clear or not self.Filter.Categories then
 self.Filter.Categories={}
 end
 if type(Categories)~="table"then
@@ -14526,8 +14838,8 @@ function SET_OPSGROUP:FilterCategoryShip()
 self:FilterCategories("ship")
 return self
 end
-function SET_OPSGROUP:FilterCountries(Countries)
-if not self.Filter.Countries then
+function SET_OPSGROUP:FilterCountries(Countries,Clear)
+if Clear or not self.Filter.Countries then
 self.Filter.Countries={}
 end
 if type(Countries)~="table"then
@@ -14538,8 +14850,8 @@ self.Filter.Countries[Country]=Country
 end
 return self
 end
-function SET_OPSGROUP:FilterPrefixes(Prefixes)
-if not self.Filter.GroupPrefixes then
+function SET_OPSGROUP:FilterPrefixes(Prefixes,Clear)
+if Clear or not self.Filter.GroupPrefixes then
 self.Filter.GroupPrefixes={}
 end
 if type(Prefixes)~="table"then
@@ -19067,6 +19379,12 @@ self.tid=timer.scheduleFunction(self._Function,self,self.Tstart)
 self.lid=string.format("TIMER UID=%d/%d | ",self.uid,self.tid)
 self.isrunning=true
 self:T(self.lid..string.format("Starting Timer in %.3f sec, dT=%s, Tstop=%s",self.Tstart-Tnow,tostring(self.dT),tostring(self.Tstop)))
+return self
+end
+function TIMER:StartIf(Condition,Tstart,dT,Duration)
+if Condition then
+self:Start(Tstart,dT,Duration)
+end
 return self
 end
 function TIMER:Stop(Delay)
@@ -24167,7 +24485,7 @@ local Vec3=SpawnGroup:GetVec3()
 SpawnGroupTemplate.x=Coordinate.x
 SpawnGroupTemplate.y=Coordinate.z
 self:F(#SpawnGroupTemplate.units)
-for UnitID,UnitData in pairs(SpawnGroup:GetUnits())do
+for UnitID,UnitData in pairs(SpawnGroup:GetUnits()or{})do
 local GroupUnit=UnitData
 self:F(GroupUnit:GetName())
 if GroupUnit:IsAlive()then
@@ -26455,6 +26773,9 @@ else
 return nil
 end
 end
+end
+function SCENERY:Destroy()
+return self
 end
 MARKER={
 ClassName="MARKER",
@@ -42564,9 +42885,10 @@ mrefresh=120,
 talt=3,
 chatty=true,
 eventsmoose=true,
+reportplayername=false,
 }
 PSEUDOATC.id="PseudoATC | "
-PSEUDOATC.version="0.9.2"
+PSEUDOATC.version="0.9.3"
 function PSEUDOATC:New()
 local self=BASE:Inherit(self,BASE:New())
 self:E(PSEUDOATC.id..string.format("PseudoATC version %s",PSEUDOATC.version))
@@ -42601,6 +42923,10 @@ self.chatty=false
 end
 function PSEUDOATC:SetMessageDuration(duration)
 self.mdur=duration or 30
+end
+function PSEUDOATC:SetReportPlayername()
+self.reportplayername=true
+return self
 end
 function PSEUDOATC:SetMenuRefresh(interval)
 self.mrefresh=interval or 120
@@ -42767,6 +43093,9 @@ self:T(PSEUDOATC.id..text)
 MESSAGE:New(text,30):ToAllIf(self.Debug)
 if place and self.chatty then
 local text=string.format("%s, %s, you are airborne. Have a safe trip!",place,CallSign)
+if self.reportplayername then
+text=string.format("%s, %s, you are airborne. Have a safe trip!",place,PlayerName)
+end
 MESSAGE:New(text,self.mdur):ToGroup(group)
 end
 end
@@ -42942,12 +43271,16 @@ if unit and unit:IsAlive()then
 local position=unit:GetCoordinate()
 local height=get_AGL(position)
 local callsign=unit:GetCallsign()
+local PlayerName=self.group[GID].player[UID].playername
 local settings=_DATABASE:GetPlayerSettings(self.group[GID].player[UID].playername)or _SETTINGS
 local Hs=string.format("%d ft",UTILS.MetersToFeet(height))
 if settings:IsMetric()then
 Hs=string.format("%d m",height)
 end
 local _text=string.format("%s, your altitude is %s AGL.",callsign,Hs)
+if self.reportplayername then
+_text=string.format("%s, your altitude is %s AGL.",PlayerName,Hs)
+end
 if _clear==false then
 _text=_text..string.format(" FL%03d.",position.y/30.48)
 end
@@ -43274,6 +43607,9 @@ end
 function WAREHOUSE:SetWarehouseZone(zone)
 self.zone=zone
 return self
+end
+function WAREHOUSE:GetWarehouseZone()
+return self.zone
 end
 function WAREHOUSE:SetAutoDefenceOn()
 self.autodefence=true
@@ -44980,7 +45316,9 @@ coord=parking[i].Coordinate
 terminal=parking[i].TerminalID
 end
 if self.Debug then
-coord:MarkToAll(string.format("Spawnplace unit %s terminal %d.",unit.name,terminal))
+local text=string.format("Spawnplace unit %s terminal %d.",unit.name,terminal)
+coord:MarkToAll(text)
+env.info(text)
 end
 unit.x=coord.x
 unit.y=coord.z
@@ -45624,17 +45962,22 @@ end
 local _transports
 local _assetattribute
 local _assetcategory
+local _assetairstart=false
 if _nassets>0 then
 _assetattribute=_assets[1].attribute
 _assetcategory=_assets[1].category
+_assetairstart=_assets[1].takeoffType and _assets[1].takeoffType==COORDINATE.WaypointType.TurningPoint or false
 if _assetcategory==Group.Category.AIRPLANE or _assetcategory==Group.Category.HELICOPTER then
 if self.airbase and self.airbase:GetCoalition()==self:GetCoalition()then
-if self:IsRunwayOperational()then
+if self:IsRunwayOperational()or _assetairstart then
+if _assetairstart then
+else
 local Parking=self:_FindParkingForAssets(self.airbase,_assets)
 if Parking==nil then
 local text=string.format("Warehouse %s: Request denied! Not enough free parking spots for all requested assets at the moment.",self.alias)
 self:_InfoMessage(text,5)
 return false
+end
 end
 else
 local text=string.format("Warehouse %s: Request denied! Runway is still destroyed",self.alias)
@@ -45952,6 +46295,7 @@ end
 local parking={}
 for _,asset in pairs(assets)do
 local _asset=asset
+if not _asset.spawned then
 local terminaltype=asset.terminalType or self:_GetTerminal(asset.attribute,self:GetAirbaseCategory())
 parking[_asset.uid]={}
 for i=1,_asset.nunits do
@@ -45959,7 +46303,16 @@ local assetname=_asset.spawngroupname.."-"..tostring(i)
 local gotit=false
 for _,_parkingspot in pairs(parkingdata)do
 local parkingspot=_parkingspot
-if AIRBASE._CheckTerminalType(parkingspot.TerminalType,terminaltype)and self:_CheckParkingValid(parkingspot)and self:_CheckParkingAsset(parkingspot,asset)and airbase:_CheckParkingLists(parkingspot.TerminalID)then
+local valid=true
+if asset.parkingIDs then
+valid=self:_CheckParkingAsset(parkingspot,asset)
+else
+local validTerminal=AIRBASE._CheckTerminalType(parkingspot.TerminalType,terminaltype)
+local validParking=self:_CheckParkingValid(parkingspot)
+local validBWlist=airbase:_CheckParkingLists(parkingspot.TerminalID)
+valid=validTerminal and validParking and validBWlist
+end
+if valid then
 local _spot=parkingspot.Coordinate
 local _termid=parkingspot.TerminalID
 local free=true
@@ -45999,6 +46352,7 @@ end
 if not gotit then
 self:I(self.lid..string.format("WARNING: No free parking spot for asset %s [id=%d]",assetname,_asset.uid))
 return nil
+end
 end
 end
 end
@@ -60002,7 +60356,7 @@ CTLD.UnitTypes={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.24"
+CTLD.version="1.0.25"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -61859,18 +62213,24 @@ Zone=AIRBASE:FindByName(Name):GetZone()
 end
 end
 local Sound=Sound or"beacon.ogg"
-if IsDropped and Zone then
+if Zone then
+if IsDropped then
 local ZoneCoord=Zone
-local ZoneVec3=ZoneCoord:GetVec3(1)
-local Frequency=string.format("%09d",Mhz*1000000)
+local ZoneVec3=ZoneCoord:GetVec3()or{x=0,y=0,z=0}
+local Frequency=Mhz*1000000
 local Sound=self.RadioPath..Sound
-trigger.action.radioTransmission(Sound,ZoneVec3,Modulation,false,tonumber(Frequency),1000)
-elseif Zone then
-local ZoneCoord=Zone:GetCoordinate(1)
-local ZoneVec3=ZoneCoord:GetVec3()
-local Frequency=string.format("%09d",Mhz*1000000)
+trigger.action.radioTransmission(Sound,ZoneVec3,Modulation,false,Frequency,1000,Name..math.random(1,10000))
+self:T2(string.format("Beacon added | Name = %s | Sound = %s | Vec3 = %d %d %d | Freq = %f | Modulation = %d (0=AM/1=FM)",Name,Sound,ZoneVec3.x,ZoneVec3.y,ZoneVec3.z,Mhz,Modulation))
+else
+local ZoneCoord=Zone:GetCoordinate()
+local ZoneVec3=ZoneCoord:GetVec3()or{x=0,y=0,z=0}
+local Frequency=Mhz*1000000
 local Sound=self.RadioPath..Sound
-trigger.action.radioTransmission(Sound,ZoneVec3,Modulation,false,tonumber(Frequency),1000)
+trigger.action.radioTransmission(Sound,ZoneVec3,Modulation,false,Frequency,1000,Name..math.random(1,10000))
+self:T2(string.format("Beacon added | Name = %s | Sound = %s | Vec3 = {x=%d, y=%d, z=%d} | Freq = %f | Modulation = %d (0=AM/1=FM)",Name,Sound,ZoneVec3.x,ZoneVec3.y,ZoneVec3.z,Mhz,Modulation))
+end
+else
+self:E(self.lid.."***** _AddRadioBeacon: Zone does not exist: "..Name)
 end
 return self
 end
@@ -63235,7 +63595,7 @@ CSAR.AircraftType["Bell-47"]=2
 CSAR.AircraftType["UH-60L"]=10
 CSAR.AircraftType["AH-64D_BLK_II"]=2
 CSAR.AircraftType["Bronco-OV-10A"]=2
-CSAR.version="1.0.16"
+CSAR.version="1.0.17"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 if Coalition and type(Coalition)=="string"then
@@ -64427,9 +64787,10 @@ if _group:IsAlive()then
 local _radioUnit=_group:GetUnit(1)
 if _radioUnit then
 local Frequency=_freq
+local name=_radioUnit:GetName()
 local Sound="l10n/DEFAULT/"..self.radioSound
 local vec3=_radioUnit:GetVec3()or _radioUnit:GetPositionVec3()or{x=0,y=0,z=0}
-trigger.action.radioTransmission(Sound,vec3,0,false,Frequency,self.ADFRadioPwr or 1000)
+trigger.action.radioTransmission(Sound,vec3,0,false,Frequency,self.ADFRadioPwr or 1000,name..math.random(1,10000))
 end
 end
 return self
