@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-01-12T12:20:12.0000000Z-55fcaf1c054cf2ae9575b20549d5e70db97687f4 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-01-19T18:10:56.0000000Z-1d52e27668afdcbdf7af84eee202ced7dfd6e08e ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -3681,6 +3681,12 @@ return datatable,fires
 end
 function UTILS.LoadSetOfGroups(Path,Filename,Spawn,Structured,Cinematic,Effect,Density)
 local fires={}
+local usedtemplates={}
+local spawn=true
+if Spawn==false then spawn=false end
+local filename=Filename or"SetOfGroups"
+local setdata=SET_GROUP:New()
+local datatable={}
 local function Smokers(name,coord,effect,density)
 local eff=math.random(8)
 if type(effect)=="number"then eff=effect end
@@ -3704,32 +3710,10 @@ if reduced==anzahl then break end
 end
 end
 end
-local spawn=true
-if Spawn==false then spawn=false end
-local filename=Filename or"SetOfGroups"
-local setdata=SET_GROUP:New()
-local datatable={}
-if UTILS.CheckFileExists(Path,filename)then
-local outcome,loadeddata=UTILS.LoadFromFile(Path,Filename)
-table.remove(loadeddata,1)
-for _id,_entry in pairs(loadeddata)do
-local dataset=UTILS.Split(_entry,",")
-local groupname=dataset[1]
-local template=dataset[2]
-local size=tonumber(dataset[3])
-local posx=tonumber(dataset[4])
-local posy=tonumber(dataset[5])
-local posz=tonumber(dataset[6])
-local structure=dataset[7]
-local coordinate=COORDINATE:NewFromVec3({x=posx,y=posy,z=posz})
-local group=nil
-local data={groupname=groupname,size=size,coordinate=coordinate,template=template}
-table.insert(datatable,data)
-if spawn then
-local group=SPAWN:New(template)
-:InitDelayOff()
-:OnSpawnGroup(
-function(spwndgrp)
+local function PostSpawn(args)
+local spwndgrp=args[1]
+local size=args[2]
+local structure=args[3]
 setdata:AddObject(spwndgrp)
 local actualsize=spwndgrp:CountAliveUnits()
 if actualsize>size then
@@ -3762,8 +3746,60 @@ end
 end
 end
 end
-)
-:SpawnFromCoordinate(coordinate)
+local function MultiUse(Data)
+local template=Data.template
+if template and usedtemplates[template]and usedtemplates[template].used and usedtemplates[template].used>1 then
+if not usedtemplates[template].done then
+local spwnd=0
+local spawngrp=SPAWN:New(template)
+spawngrp:InitLimit(0,usedtemplates[template].used)
+for _,_entry in pairs(usedtemplates[template].data)do
+spwnd=spwnd+1
+local sgrp=spawngrp:SpawnFromCoordinate(_entry.coordinate,spwnd)
+BASE:ScheduleOnce(0.5,PostSpawn,{sgrp,_entry.size,_entry.structure})
+end
+usedtemplates[template].done=true
+end
+return true
+else
+return false
+end
+end
+if UTILS.CheckFileExists(Path,filename)then
+local outcome,loadeddata=UTILS.LoadFromFile(Path,Filename)
+table.remove(loadeddata,1)
+for _id,_entry in pairs(loadeddata)do
+local dataset=UTILS.Split(_entry,",")
+local groupname=dataset[1]
+local template=dataset[2]
+local size=tonumber(dataset[3])
+local posx=tonumber(dataset[4])
+local posy=tonumber(dataset[5])
+local posz=tonumber(dataset[6])
+local structure=dataset[7]
+local coordinate=COORDINATE:NewFromVec3({x=posx,y=posy,z=posz})
+local group=nil
+if size>0 then
+local data={groupname=groupname,size=size,coordinate=coordinate,template=template,structure=structure}
+table.insert(datatable,data)
+if usedtemplates[template]then
+usedtemplates[template].used=usedtemplates[template].used+1
+table.insert(usedtemplates[template].data,data)
+else
+usedtemplates[template]={
+data={},
+used=1,
+done=false,
+}
+table.insert(usedtemplates[template].data,data)
+end
+end
+end
+for _id,_entry in pairs(datatable)do
+if spawn and not MultiUse(_entry)and _entry.size>0 then
+local group=SPAWN:New(_entry.template)
+local sgrp=group:SpawnFromCoordinate(_entry.coordinate)
+BASE:ScheduleOnce(0.5,PostSpawn,{sgrp,_entry.size,_entry.structure})
 end
 end
 else
@@ -17632,7 +17668,7 @@ function SPAWN:NewFromTemplate(SpawnTemplate,SpawnTemplatePrefix,SpawnAliasPrefi
 local self=BASE:Inherit(self,BASE:New())
 self:F({SpawnTemplate,SpawnTemplatePrefix,SpawnAliasPrefix})
 if SpawnAliasPrefix==nil or SpawnAliasPrefix==""then
-BASE:I("ERROR: in function NewFromTemplate, required paramter SpawnAliasPrefix is not set")
+BASE:I("ERROR: in function NewFromTemplate, required parameter SpawnAliasPrefix is not set")
 return nil
 end
 if SpawnTemplate then
@@ -21677,6 +21713,17 @@ id='EngageTargets',
 key="AntiShip",
 params={
 targetTypes=TargetTypes or{"Ships"},
+priority=Priority or 0
+}
+}
+return DCSTask
+end
+function CONTROLLABLE:EnRouteTaskSEAD(TargetTypes,Priority)
+local DCSTask={
+id='EngageTargets',
+key="SEAD",
+params={
+targetTypes=TargetTypes or{"Air Defence"},
 priority=Priority or 0
 }
 }
