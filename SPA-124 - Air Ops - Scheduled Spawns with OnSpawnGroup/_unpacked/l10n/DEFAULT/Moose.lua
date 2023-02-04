@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-01-27T17:34:53.0000000Z-c20927b6d7b6b389b9b687778d67f2c571eb8923 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-02-03T21:34:01.0000000Z-bf486b9f44829f68ef470191d66473fcd9188722 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -10587,6 +10587,27 @@ self.ZONENAMES[ZoneName]=ZoneName
 self:AddZone(ZoneName,Zone_Polygon)
 end
 end
+if env.mission.drawings and env.mission.drawings.layers then
+for layerID,layerData in pairs(env.mission.drawings.layers or{})do
+for objectID,objectData in pairs(layerData.objects or{})do
+if objectData.polygonMode=="free"and objectData.points and#objectData.points>=4 then
+local ZoneName=objectData.name or"Unknown Drawing Zone"
+local vec2={x=objectData.mapX,y=objectData.mapY}
+local points=UTILS.DeepCopy(objectData.points)
+for i,_point in pairs(points)do
+local point=_point
+points[i]=UTILS.Vec2Add(point,vec2)
+end
+table.remove(points,#points)
+self:I(string.format("Register ZONE: %s (Polygon drawing with %d verticies)",ZoneName,#points))
+local Zone=ZONE_POLYGON:NewFromPointsArray(ZoneName,points)
+Zone:SetColor({1,0,0},0.15)
+self.ZONENAMES[ZoneName]=ZoneName
+self:AddZone(ZoneName,Zone)
+end
+end
+end
+end
 end
 end
 do
@@ -15299,6 +15320,7 @@ local gotstatics=false
 local gotunits=false
 local gotscenery=false
 local function EvaluateZone(ZoneObject)
+BASE:T({ZoneObject})
 if ZoneObject then
 local ObjectCategory=ZoneObject:getCategory()
 if ObjectCategory==Object.Category.UNIT and ZoneObject:isExist()then
@@ -15704,6 +15726,11 @@ end
 self.y=alt
 return self
 end
+function COORDINATE:SetAtLandheight()
+local alt=self:GetLandHeight()
+self.y=alt
+return self
+end
 function COORDINATE:WaypointAir(AltType,Type,Action,Speed,SpeedLocked,airbase,DCSTasks,description,timeReFuAr)
 self:F2({AltType,Type,Action,Speed,SpeedLocked})
 AltType=AltType or"RADIO"
@@ -16009,7 +16036,6 @@ self.firename=name or"Fire-"..math.random(1,10000)
 trigger.action.effectSmokeBig(self:GetVec3(),preset,density,self.firename)
 end
 function COORDINATE:StopBigSmokeAndFire(name)
-self:F2({name=name})
 name=name or self.firename
 trigger.action.effectSmokeStop(name)
 end
@@ -39557,7 +39583,7 @@ end
 function ZONE_CAPTURE_COALITION:OnEventHit(EventData)
 if self.HitsOn then
 local UnitHit=EventData.TgtUnit
-if UnitHit.ClassName~="SCENERY"then
+if UnitHit and UnitHit.ClassName~="SCENERY"then
 if UnitHit and UnitHit:IsInZone(self)and UnitHit:GetCoalition()==self.Coalition then
 self.HitTimeLast=timer.getTime()
 if self:GetState()~="Attacked"then
@@ -49480,6 +49506,9 @@ S3B="S-3B",
 S3BTANKER="S-3B Tanker",
 E2D="E-2C",
 C2A="C2A_Greyhound",
+RHINOE="FA-18E",
+RHINOF="FA-18F",
+GROWLER="EA-18G",
 }
 AIRBOSS.CarrierType={
 ROOSEVELT="CVN_71",
@@ -51268,6 +51297,9 @@ radiocall.suffix=suffix or".ogg"
 end
 function AIRBOSS:_GetAircraftAoA(playerData)
 local hornet=playerData.actype==AIRBOSS.AircraftCarrier.HORNET
+or playerData.actype==AIRBOSS.AircraftCarrier.RHINOE
+or playerData.actype==AIRBOSS.AircraftCarrier.RHINOF
+or playerData.actype==AIRBOSS.AircraftCarrier.GROWLER
 local goshawk=playerData.actype==AIRBOSS.AircraftCarrier.T45C
 local skyhawk=playerData.actype==AIRBOSS.AircraftCarrier.A4EC
 local harrier=playerData.actype==AIRBOSS.AircraftCarrier.AV8B
@@ -51339,6 +51371,9 @@ end
 function AIRBOSS:_GetAircraftParameters(playerData,step)
 step=step or playerData.step
 local hornet=playerData.actype==AIRBOSS.AircraftCarrier.HORNET
+or playerData.actype==AIRBOSS.AircraftCarrier.RHINOE
+or playerData.actype==AIRBOSS.AircraftCarrier.RHINOF
+or playerData.actype==AIRBOSS.AircraftCarrier.GROWLER
 local skyhawk=playerData.actype==AIRBOSS.AircraftCarrier.A4EC
 local tomcat=playerData.actype==AIRBOSS.AircraftCarrier.F14A or playerData.actype==AIRBOSS.AircraftCarrier.F14B
 local harrier=playerData.actype==AIRBOSS.AircraftCarrier.AV8B
@@ -51782,6 +51817,9 @@ actype==AIRBOSS.AircraftCarrier.F14A or
 actype==AIRBOSS.AircraftCarrier.F14B or
 actype==AIRBOSS.AircraftCarrier.F14A_AI or
 actype==AIRBOSS.AircraftCarrier.HORNET or
+actype==AIRBOSS.AircraftCarrier.RHINOE or
+actype==AIRBOSS.AircraftCarrier.RHINOF or
+actype==AIRBOSS.AircraftCarrier.GROWLER or
 actype==AIRBOSS.AircraftCarrier.FA18C or
 actype==AIRBOSS.AircraftCarrier.S3B or
 actype==AIRBOSS.AircraftCarrier.S3BTANKER then
@@ -51819,7 +51857,11 @@ end
 function AIRBOSS:_LandAI(flight)
 self:T(self.lid..string.format("Landing AI flight %s.",flight.groupname))
 local Speed=UTILS.KnotsToKmph(200)
-if flight.actype==AIRBOSS.AircraftCarrier.HORNET or flight.actype==AIRBOSS.AircraftCarrier.FA18C then
+if flight.actype==AIRBOSS.AircraftCarrier.HORNET
+or flight.actype==AIRBOSS.AircraftCarrier.FA18C
+or flight.actype==AIRBOSS.AircraftCarrier.RHINOE
+or flight.actype==AIRBOSS.AircraftCarrier.RHINOF
+or flight.actype==AIRBOSS.AircraftCarrier.GROWLER then
 Speed=UTILS.KnotsToKmph(200)
 elseif flight.actype==AIRBOSS.AircraftCarrier.E2D then
 Speed=UTILS.KnotsToKmph(150)
@@ -53225,7 +53267,13 @@ self:_CheckCorridor(playerData)
 local inzone=playerData.unit:IsInZone(self:_GetZoneDirtyUp(playerData.case))
 if inzone then
 self:_PlayerHint(playerData)
-if playerData.actype==AIRBOSS.AircraftCarrier.HORNET or playerData.actype==AIRBOSS.AircraftCarrier.F14A or playerData.actype==AIRBOSS.AircraftCarrier.F14B then
+if playerData.actype==AIRBOSS.AircraftCarrier.HORNET
+or playerData.actype==AIRBOSS.AircraftCarrier.F14A
+or playerData.actype==AIRBOSS.AircraftCarrier.F14B
+or playerData.actype==AIRBOSS.AircraftCarrier.RHINOE
+or playerData.actype==AIRBOSS.AircraftCarrier.RHINOF
+or playerData.actype==AIRBOSS.AircraftCarrier.GROWLER
+then
 local callsay=self:_NewRadioCall(self.MarshalCall.SAYNEEDLES,nil,nil,5,playerData.onboard)
 local callfly=self:_NewRadioCall(self.MarshalCall.FLYNEEDLES,nil,nil,5,playerData.onboard)
 self:RadioTransmission(self.MarshalRadio,callsay,false,55,nil,true)
@@ -53761,7 +53809,10 @@ local v=unit:GetVelocityKMH()-self.carrier:GetVelocityKMH()
 local stern=self:_GetSternCoord()
 local s=stern:Get2DDistance(coord)
 local dcorr=100
-if playerData.actype==AIRBOSS.AircraftCarrier.HORNET then
+if playerData.actype==AIRBOSS.AircraftCarrier.HORNET
+or playerData.actype==AIRBOSS.AircraftCarrier.RHINOE
+or playerData.actype==AIRBOSS.AircraftCarrier.RHINOF
+or playerData.actype==AIRBOSS.AircraftCarrier.GROWLER then
 dcorr=100
 elseif playerData.actype==AIRBOSS.AircraftCarrier.F14A or playerData.actype==AIRBOSS.AircraftCarrier.F14B then
 dcorr=100
@@ -54890,7 +54941,10 @@ end
 end
 if playerData.step==AIRBOSS.PatternStep.BULLSEYE then
 if playerData.difficulty==AIRBOSS.Difficulty.EASY then
-if playerData.actype==AIRBOSS.AircraftCarrier.HORNET then
+if playerData.actype==AIRBOSS.AircraftCarrier.HORNET
+or playerData.actype==AIRBOSS.AircraftCarrier.RHINOE
+or playerData.actype==AIRBOSS.AircraftCarrier.RHINOF
+or playerData.actype==AIRBOSS.AircraftCarrier.GROWLER then
 hint=hint..string.format("\nIntercept glideslope and follow the needles.")
 else
 hint=hint..string.format("\nIntercept glideslope.")
@@ -55554,6 +55608,10 @@ elseif actype==AIRBOSS.AircraftCarrier.F14A_AI or actype==AIRBOSS.AircraftCarrie
 nickname="Tomcat"
 elseif actype==AIRBOSS.AircraftCarrier.FA18C or actype==AIRBOSS.AircraftCarrier.HORNET then
 nickname="Hornet"
+elseif actype==AIRBOSS.AircraftCarrier.RHINOE or actype==AIRBOSS.AircraftCarrier.RHINOF then
+nickname="Rhino"
+elseif actype==AIRBOSS.AircraftCarrier.GROWLER then
+nickname="Growler"
 elseif actype==AIRBOSS.AircraftCarrier.S3B or actype==AIRBOSS.AircraftCarrier.S3BTANKER then
 nickname="Viking"
 end
@@ -60457,7 +60515,7 @@ CTLD.UnitTypes={
 ["SA342Minigun"]={type="SA342Minigun",crates=false,troops=true,cratelimit=0,trooplimit=2,length=12,cargoweightlimit=400},
 ["UH-1H"]={type="UH-1H",crates=true,troops=true,cratelimit=1,trooplimit=8,length=15,cargoweightlimit=700},
 ["Mi-8MTV2"]={type="Mi-8MTV2",crates=true,troops=true,cratelimit=2,trooplimit=12,length=15,cargoweightlimit=3000},
-["Mi-8MT"]={type="Mi-8MTV2",crates=true,troops=true,cratelimit=2,trooplimit=12,length=15,cargoweightlimit=3000},
+["Mi-8MT"]={type="Mi-8MT",crates=true,troops=true,cratelimit=2,trooplimit=12,length=15,cargoweightlimit=3000},
 ["Ka-50"]={type="Ka-50",crates=false,troops=false,cratelimit=0,trooplimit=0,length=15,cargoweightlimit=0},
 ["Ka-50_3"]={type="Ka-50_3",crates=false,troops=false,cratelimit=0,trooplimit=0,length=15,cargoweightlimit=0},
 ["Mi-24P"]={type="Mi-24P",crates=true,troops=true,cratelimit=2,trooplimit=8,length=18,cargoweightlimit=700},
@@ -60467,7 +60525,7 @@ CTLD.UnitTypes={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.27"
+CTLD.version="1.0.29"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -60547,6 +60605,7 @@ self.TroopCounter=0
 self.Engineers=0
 self.EngineersInField={}
 self.EngineerSearch=2000
+self.nobuildmenu=false
 self.CrateDistance=35
 self.ExtractFactor=3.33
 self.prefixes=Prefixes or{"Cargoheli"}
@@ -61956,6 +62015,12 @@ if not self.subcats[entry.Subcategory]then
 self.subcats[entry.Subcategory]=entry.Subcategory
 end
 end
+for _id,_cargo in pairs(self.Cargo_Statics)do
+local entry=_cargo
+if not self.subcats[entry.Subcategory]then
+self.subcats[entry.Subcategory]=entry.Subcategory
+end
+end
 end
 local menucount=0
 local menus={}
@@ -62011,6 +62076,13 @@ menucount=menucount+1
 local menutext=string.format("Crate %s (%dkg)",entry.Name,entry.PerCrateMass or 0)
 menus[menucount]=MENU_GROUP_COMMAND:New(_group,menutext,subcatmenus[subcat],self._GetCrates,self,_group,_unit,entry)
 end
+for _,_entry in pairs(self.Cargo_Statics)do
+local entry=_entry
+local subcat=entry.Subcategory
+menucount=menucount+1
+local menutext=string.format("Crate %s (%dkg)",entry.Name,entry.PerCrateMass or 0)
+menus[menucount]=MENU_GROUP_COMMAND:New(_group,menutext,subcatmenus[subcat],self._GetCrates,self,_group,_unit,entry)
+end
 else
 for _,_entry in pairs(self.Cargo_Crates)do
 local entry=_entry
@@ -62018,17 +62090,21 @@ menucount=menucount+1
 local menutext=string.format("Crate %s (%dkg)",entry.Name,entry.PerCrateMass or 0)
 menus[menucount]=MENU_GROUP_COMMAND:New(_group,menutext,cratesmenu,self._GetCrates,self,_group,_unit,entry)
 end
-end
 for _,_entry in pairs(self.Cargo_Statics)do
 local entry=_entry
 menucount=menucount+1
 local menutext=string.format("Crate %s (%dkg)",entry.Name,entry.PerCrateMass or 0)
 menus[menucount]=MENU_GROUP_COMMAND:New(_group,menutext,cratesmenu,self._GetCrates,self,_group,_unit,entry)
 end
+end
 listmenu=MENU_GROUP_COMMAND:New(_group,"List crates nearby",topcrates,self._ListCratesNearby,self,_group,_unit)
 local unloadmenu=MENU_GROUP_COMMAND:New(_group,"Drop crates",topcrates,self._UnloadCrates,self,_group,_unit)
+if not self.nobuildmenu then
 local buildmenu=MENU_GROUP_COMMAND:New(_group,"Build crates",topcrates,self._BuildCrates,self,_group,_unit)
 local repairmenu=MENU_GROUP_COMMAND:New(_group,"Repair",topcrates,self._RepairCrates,self,_group,_unit):Refresh()
+else
+unloadmenu:Refresh()
+end
 end
 if self:IsHercules(_unit)then
 local hoverpars=MENU_GROUP_COMMAND:New(_group,"Show flight parameters",topmenu,self._ShowFlightParams,self,_group,_unit):Refresh()
@@ -62081,12 +62157,12 @@ local cargo=CTLD_CARGO:New(self.CargoCounter,Name,Templates,Type,false,false,NoC
 table.insert(self.Cargo_Crates,cargo)
 return self
 end
-function CTLD:AddStaticsCargo(Name,Mass,Stock)
+function CTLD:AddStaticsCargo(Name,Mass,Stock,SubCategory)
 self:T(self.lid.." AddStaticsCargo")
 self.CargoCounter=self.CargoCounter+1
 local type=CTLD_CARGO.Enum.STATIC
 local template=STATIC:FindByName(Name,true):GetTypeName()
-local cargo=CTLD_CARGO:New(self.CargoCounter,Name,template,type,false,false,1,nil,nil,Mass,Stock)
+local cargo=CTLD_CARGO:New(self.CargoCounter,Name,template,type,false,false,1,nil,nil,Mass,Stock,SubCategory)
 table.insert(self.Cargo_Statics,cargo)
 return self
 end
@@ -63281,7 +63357,7 @@ CTLD_HERCULES={
 ClassName="CTLD_HERCULES",
 lid="",
 Name="",
-Version="0.0.2",
+Version="0.0.3",
 }
 CTLD_HERCULES.Types={
 ["ATGM M1045 HMMWV TOW Air [7183lb]"]={['name']="M1045 HMMWV TOW",['container']=true},
@@ -63461,8 +63537,6 @@ self:T(self.lid..'Cargo_SpawnObjects')
 local CargoHeading=self.CargoHeading
 if offload_cargo==true or ParatrooperGroupSpawn==true then
 if ParatrooperGroupSpawn==true then
-self:Soldier_SpawnGroup(Cargo_Drop_initiator,Cargo_Content_position,Cargo_Type_name,CargoHeading,Cargo_Country,0)
-self:Soldier_SpawnGroup(Cargo_Drop_initiator,Cargo_Content_position,Cargo_Type_name,CargoHeading,Cargo_Country,5)
 self:Soldier_SpawnGroup(Cargo_Drop_initiator,Cargo_Content_position,Cargo_Type_name,CargoHeading,Cargo_Country,10)
 else
 self:Cargo_SpawnGroup(Cargo_Drop_initiator,Cargo_Content_position,Cargo_Type_name,CargoHeading,Cargo_Country)
