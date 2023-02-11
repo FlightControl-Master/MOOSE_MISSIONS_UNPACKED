@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-02-03T21:34:01.0000000Z-bf486b9f44829f68ef470191d66473fcd9188722 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-02-10T10:00:14.0000000Z-3d5470eb222b7a5fd3245b977f7f33e387d37381 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -27146,6 +27146,438 @@ end
 function MARKER:onafterCoordUpdate(From,Event,To,Coordinate)
 self:T(self.lid..string.format("New Marker Coordinate in LL DMS: %s",Coordinate:ToStringLLDMS()))
 end
+WEAPON={
+ClassName="WEAPON",
+verbose=0,
+}
+WEAPON.version="0.1.0"
+function WEAPON:New(WeaponObject)
+if WeaponObject==nil then
+env.error("ERROR: Weapon object does NOT exist")
+return nil
+end
+local self=BASE:Inherit(self,POSITIONABLE:New("Weapon"))
+self.weapon=WeaponObject
+self.desc=WeaponObject:getDesc()
+self.category=self.desc.category
+if self:IsMissile()and self.desc.missileCategory then
+self.categoryMissile=self.desc.missileCategory
+end
+self.typeName=WeaponObject:getTypeName()or"Unknown Type"
+self.name=WeaponObject:getName()
+self.coalition=WeaponObject:getCoalition()
+self.country=WeaponObject:getCountry()
+self.launcher=WeaponObject:getLauncher()
+self.launcherName="Unknown Launcher"
+if self.launcher then
+self.launcherName=self.launcher:getName()
+self.launcherUnit=UNIT:Find(self.launcher)
+end
+self.coordinate=COORDINATE:NewFromVec3(self.launcher:getPoint())
+self.lid=string.format("[%s] %s | ",self.typeName,self.name)
+self:SetTimeStepTrack()
+self:SetDistanceInterceptPoint()
+local text=string.format("Weapon v%s\nName=%s, TypeName=%s, Category=%s, Coalition=%d, Country=%d, Launcher=%s",
+self.version,self.name,self.typeName,self.category,self.coalition,self.country,self.launcherName)
+self:T(self.lid..text)
+self:T2(self.desc)
+return self
+end
+function WEAPON:SetVerbosity(VerbosityLevel)
+self.verbose=VerbosityLevel or 0
+return self
+end
+function WEAPON:SetTimeStepTrack(TimeStep)
+self.dtTrack=TimeStep or 0.01
+return self
+end
+function WEAPON:SetDistanceInterceptPoint(Distance)
+self.distIP=Distance or 50
+return self
+end
+function WEAPON:SetMarkImpact(Switch)
+if Switch==false then
+self.impactMark=false
+else
+self.impactMark=true
+end
+return self
+end
+function WEAPON:SetSmokeImpact(Switch,SmokeColor)
+if Switch==false then
+self.impactSmoke=false
+else
+self.impactSmoke=true
+end
+self.impactSmokeColor=SmokeColor or SMOKECOLOR.Red
+return self
+end
+function WEAPON:SetFuncTrack(FuncTrack,...)
+self.trackFunc=FuncTrack
+self.trackArg=arg or{}
+return self
+end
+function WEAPON:SetFuncImpact(FuncImpact,...)
+self.impactFunc=FuncImpact
+self.impactArg=arg or{}
+return self
+end
+function WEAPON:GetLauncher()
+return self.launcherUnit
+end
+function WEAPON:GetTarget()
+local target=nil
+if self.weapon then
+local object=self.weapon:getTarget()
+if object then
+local category=object:getCategory()
+local name=object:getName()
+self:T(self.lid..string.format("Got Target Object %s, category=%d",object:getName(),category))
+if category==Object.Category.UNIT then
+target=UNIT:FindByName(name)
+elseif category==Object.Category.STATIC then
+target=STATIC:FindByName(name,false)
+elseif category==Object.Category.SCENERY then
+self:E(self.lid..string.format("ERROR: Scenery target not implemented yet!"))
+else
+self:E(self.lid..string.format("ERROR: Object category=%d is not implemented yet!",category))
+end
+end
+end
+return target
+end
+function WEAPON:GetTargetDistance(ConversionFunction)
+local target=self:GetTarget()
+local distance=nil
+if target then
+local tv3=target:GetVec3()
+local wv3=self:GetVec3()
+if tv3 and wv3 then
+distance=UTILS.VecDist3D(tv3,wv3)
+if ConversionFunction then
+distance=ConversionFunction(distance)
+end
+end
+end
+return distance
+end
+function WEAPON:GetTargetName()
+local target=self:GetTarget()
+local name="None"
+if target then
+name=target:GetName()
+end
+return name
+end
+function WEAPON:GetVelocityVec3()
+local Vvec3=nil
+if self.weapon then
+Vvec3=self.weapon:getVelocity()
+end
+return Vvec3
+end
+function WEAPON:GetSpeed(ConversionFunction)
+local speed=nil
+if self.weapon then
+local v=self:GetVelocityVec3()
+speed=UTILS.VecNorm(v)
+if ConversionFunction then
+speed=ConversionFunction(speed)
+end
+end
+return speed
+end
+function WEAPON:GetVec3()
+local vec3=nil
+if self.weapon then
+vec3=self.weapon:getPoint()
+end
+return vec3
+end
+function WEAPON:GetVec2()
+local vec3=self:GetVec3()
+if vec3 then
+local vec2={x=vec3.x,y=vec3.z}
+return vec2
+end
+return nil
+end
+function WEAPON:GetTypeName()
+return self.typeName
+end
+function WEAPON:GetCoalition()
+return self.coalition
+end
+function WEAPON:GetCountry()
+return self.country
+end
+function WEAPON:GetDCSObject()
+return self.weapon
+end
+function WEAPON:GetImpactVec3()
+return self.impactVec3
+end
+function WEAPON:GetImpactCoordinate()
+return self.impactCoord
+end
+function WEAPON:InAir()
+local inAir=nil
+if self.weapon then
+inAir=self.weapon:inAir()
+end
+return inAir
+end
+function WEAPON:IsExist()
+local isExist=nil
+if self.weapon then
+isExist=self.weapon:isExist()
+end
+return isExist
+end
+function WEAPON:IsBomb()
+return self.category==Weapon.Category.BOMB
+end
+function WEAPON:IsMissile()
+return self.category==Weapon.Category.MISSILE
+end
+function WEAPON:IsRocket()
+return self.category==Weapon.Category.ROCKET
+end
+function WEAPON:IsShell()
+return self.category==Weapon.Category.SHELL
+end
+function WEAPON:IsTorpedo()
+return self.category==Weapon.Category.TORPEDO
+end
+function WEAPON:Destroy(Delay)
+if Delay and Delay>0 then
+self:ScheduleOnce(Delay,WEAPON.Destroy,self,0)
+else
+if self.weapon then
+self:T(self.lid.."Destroying Weapon NOW!")
+self:StopTrack()
+self.weapon:destroy()
+end
+end
+return self
+end
+function WEAPON:StartTrack(Delay)
+Delay=math.max(Delay or 0.001,0.001)
+self:T(self.lid..string.format("Start tracking weapon in %.4f sec",Delay))
+self.trackScheduleID=timer.scheduleFunction(WEAPON._TrackWeapon,self,timer.getTime()+Delay)
+return self
+end
+function WEAPON:StopTrack(Delay)
+if Delay and Delay>0 then
+self:ScheduleOnce(Delay,WEAPON.StopTrack,self,0)
+else
+if self.trackScheduleID then
+timer.removeFunction(self.trackScheduleID)
+end
+end
+return self
+end
+function WEAPON:_TrackWeapon(time)
+if self.verbose>=20 then
+self:I(self.lid..string.format("Tracking at T=%.5f",time))
+end
+local status,pos3=pcall(
+function()
+local point=self.weapon:getPosition()
+return point
+end
+)
+if status then
+self.pos3=pos3
+self.vec3=UTILS.DeepCopy(self.pos3.p)
+self.coordinate:UpdateFromVec3(self.vec3)
+self.tracking=true
+if self.trackFunc then
+self.trackFunc(self,unpack(self.trackArg))
+end
+if self.verbose>=5 then
+local vec2={x=self.vec3.x,y=self.vec3.z}
+local height=land.getHeight(vec2)
+local agl=self.vec3.y-height
+local ip=self:_GetIP(self.distIP)
+local d=0
+if ip then
+d=UTILS.VecDist3D(self.vec3,ip)
+end
+self:I(self.lid..string.format("T=%.3f: Height=%.3f m AGL=%.3f m, dIP=%.3f",time,height,agl,d))
+end
+else
+local ip=self:_GetIP(self.distIP)
+if self.verbose>=10 and ip then
+self:I(self.lid.."Got intercept point!")
+local coord=COORDINATE:NewFromVec3(ip)
+coord:MarkToAll("Intercept point")
+coord:SmokeBlue()
+local d=UTILS.VecDist3D(ip,self.vec3)
+self:I(self.lid..string.format("FF d(ip, vec3)=%.3f meters",d))
+end
+self.impactVec3=ip or self.vec3
+self.impactCoord=COORDINATE:NewFromVec3(self.vec3)
+if self.impactMark then
+self.impactCoord:MarkToAll(string.format("Impact point of weapon %s\ntype=%s\nlauncher=%s",self.name,self.typeName,self.launcherName))
+end
+if self.impactSmoke then
+self.impactCoord:Smoke(self.impactSmokeColor)
+end
+if self.impactFunc then
+self.impactFunc(self,unpack(self.impactArg or{}))
+end
+self.tracking=false
+end
+if self.tracking then
+if self.dtTrack and self.dtTrack>0.001 then
+return time+self.dtTrack
+else
+return nil
+end
+end
+return nil
+end
+function WEAPON:_GetIP(Distance)
+Distance=Distance or 50
+local ip=nil
+if Distance>0 and self.pos3 then
+ip=land.getIP(self.pos3.p,self.pos3.x,Distance or 20)
+end
+return ip
+end
+do
+NET={
+ClassName="NET",
+Version="0.0.2"
+}
+function NET:New()
+local self=BASE:Inherit(self,BASE:New())
+return self
+end
+function NET:SendChat(Message,ToAll)
+if Message then
+net.send_chat(Message,ToAll)
+end
+return self
+end
+function NET:GetPlayerIdByName(Name)
+local playerList=self:GetPlayerList()
+for i=1,#playerList do
+local playerName=net.get_name(i)
+if playerName==Name then
+return playerList[i]
+end
+end
+return nil
+end
+function NET:GetPlayerIDFromClient(Client)
+local name=Client:GetPlayerName()
+local id=self:GetPlayerIdByName(name)
+return id
+end
+function NET:SendChatToPlayer(Message,ToClient,FromClient)
+local PlayerId=self:GetPlayerIDFromClient(ToClient)
+local FromId=self:GetPlayerIDFromClient(FromClient)
+if Message and PlayerId and FromId then
+net.send_chat_to(Message,tonumber(PlayerId),tonumber(FromId))
+elseif Message and PlayerId then
+net.send_chat_to(Message,tonumber(PlayerId))
+end
+return self
+end
+function NET:LoadMission(Path)
+local outcome=false
+if Path then
+outcome=net.load_mission(Path)
+end
+return outcome
+end
+function NET:LoadNextMission()
+local outcome=false
+outcome=net.load_next_mission()
+return outcome
+end
+function NET:GetPlayerList()
+local plist=nil
+plist=net.get_player_list()
+return plist
+end
+function NET:GetMyPlayerID()
+return net.get_my_player_id()
+end
+function NET:GetServerID()
+return net.get_server_id()
+end
+function NET:GetPlayerInfo(Client,Attribute)
+local PlayerID=self:GetPlayerIDFromClient(Client)
+if PlayerID then
+return net.get_player_info(tonumber(PlayerID),Attribute)
+else
+return nil
+end
+end
+function NET:Kick(Client,Message)
+local PlayerID=self:GetPlayerIDFromClient(Client)
+if PlayerID and tonumber(PlayerID)~=1 then
+return net.kick(tonumber(PlayerID),Message)
+else
+return false
+end
+end
+function NET:GetPlayerStatistic(Client,StatisticID)
+local PlayerID=self:GetPlayerIDFromClient(Client)
+local stats=StatisticID or 0
+if stats>7 or stats<0 then stats=0 end
+if PlayerID then
+return net.get_stat(tonumber(PlayerID),stats)
+else
+return nil
+end
+end
+function NET:GetName(Client)
+local PlayerID=self:GetPlayerIDFromClient(Client)
+if PlayerID then
+return net.get_name(tonumber(PlayerID))
+else
+return nil
+end
+end
+function NET:GetSlot(Client)
+local PlayerID=self:GetPlayerIDFromClient(Client)
+if PlayerID then
+local side,slot=net.get_slot(tonumber(PlayerID))
+return side,slot
+else
+return nil,nil
+end
+end
+function NET:ForceSlot(Client,SideID,SlotID)
+local PlayerID=self:GetPlayerIDFromClient(Client)
+if PlayerID then
+return net.force_player_slot(tonumber(PlayerID),SideID,SlotID)
+else
+return false
+end
+end
+function NET:ReturnToSpectators(Client)
+local outcome=self:ForceSlot(Client,0)
+return outcome
+end
+function NET.Lua2Json(Lua)
+return net.lua2json(Lua)
+end
+function NET.Lua2Json(Json)
+return net.json2lua(Json)
+end
+function NET:DoStringIn(State,DoString)
+return net.dostring_in(State,DoString)
+end
+function NET:Log(Message)
+net.log(Message)
+return self
+end
+end
 CARGOS={}
 do
 CARGO={
@@ -28785,8 +29217,10 @@ end
 end
 function SCORING:OnEventBirth(Event)
 if Event.IniUnit then
+Event.IniUnit.ThreatLevel,Event.IniUnit.ThreatType=Event.IniUnit:GetThreatLevel()
 if Event.IniObjectCategory==1 then
 local PlayerName=Event.IniUnit:GetPlayerName()
+Event.IniUnit.BirthTime=timer.getTime()
 if PlayerName then
 self:_AddPlayerFromUnit(Event.IniUnit)
 self:SetScoringMenu(Event.IniGroup)
@@ -28875,7 +29309,16 @@ PlayerHit.ScoreHit=PlayerHit.ScoreHit or 0
 PlayerHit.PenaltyHit=PlayerHit.PenaltyHit or 0
 PlayerHit.TimeStamp=PlayerHit.TimeStamp or 0
 PlayerHit.UNIT=PlayerHit.UNIT or TargetUNIT
+if PlayerHit.UNIT.ThreatType==nil then
 PlayerHit.ThreatLevel,PlayerHit.ThreatType=PlayerHit.UNIT:GetThreatLevel()
+if PlayerHit.ThreatType==nil then
+PlayerHit.ThreatLevel=1
+PlayerHit.ThreatType="Unknown"
+end
+else
+PlayerHit.ThreatLevel=PlayerHit.UNIT.ThreatLevel
+PlayerHit.ThreatType=PlayerHit.UNIT.ThreatType
+end
 if timer.getTime()-PlayerHit.TimeStamp>1 then
 PlayerHit.TimeStamp=timer.getTime()
 if TargetPlayerName~=nil then
@@ -28884,26 +29327,25 @@ end
 local Score=0
 if InitCoalition then
 if InitCoalition==TargetCoalition then
-Player.Penalty=Player.Penalty+10
-PlayerHit.Penalty=PlayerHit.Penalty+10
+local Penalty=10
+Player.Penalty=Player.Penalty+Penalty
+PlayerHit.Penalty=PlayerHit.Penalty+Penalty
 PlayerHit.PenaltyHit=PlayerHit.PenaltyHit+1
 if TargetPlayerName~=nil then
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..InitPlayerName.."' hit friendly player '"..TargetPlayerName.."' "..TargetUnitCategory.." ( "..TargetType.." ) "..PlayerHit.PenaltyHit.." times. "..
-"Penalty: -"..PlayerHit.Penalty..".  Score Total:"..Player.Score-Player.Penalty,
+"Penalty: -"..Penalty..".  Score Total:"..Player.Score-Player.Penalty,
 MESSAGE.Type.Update)
 :ToAllIf(self:IfMessagesHit()and self:IfMessagesToAll())
 :ToCoalitionIf(InitCoalition,self:IfMessagesHit()and self:IfMessagesToCoalition())
 else
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..InitPlayerName.."' hit friendly target "..TargetUnitCategory.." ( "..TargetType.." ) "..PlayerHit.PenaltyHit.." times. "..
-"Penalty: -"..PlayerHit.Penalty..".  Score Total:"..Player.Score-Player.Penalty,
+"Penalty: -"..Penalty..".  Score Total:"..Player.Score-Player.Penalty,
 MESSAGE.Type.Update)
 :ToAllIf(self:IfMessagesHit()and self:IfMessagesToAll())
 :ToCoalitionIf(InitCoalition,self:IfMessagesHit()and self:IfMessagesToCoalition())
 end
 self:ScoreCSV(InitPlayerName,TargetPlayerName,"HIT_PENALTY",1,-10,InitUnitName,InitUnitCoalition,InitUnitCategory,InitUnitType,TargetUnitName,TargetUnitCoalition,TargetUnitCategory,TargetUnitType)
 else
-Player.Score=Player.Score+1
-PlayerHit.Score=PlayerHit.Score+1
 PlayerHit.ScoreHit=PlayerHit.ScoreHit+1
 if TargetPlayerName~=nil then
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..InitPlayerName.."' hit enemy player '"..TargetPlayerName.."' "..TargetUnitCategory.." ( "..TargetType.." ) "..PlayerHit.ScoreHit.." times. "..
@@ -28950,30 +29392,38 @@ PlayerHit.ScoreHit=PlayerHit.ScoreHit or 0
 PlayerHit.PenaltyHit=PlayerHit.PenaltyHit or 0
 PlayerHit.TimeStamp=PlayerHit.TimeStamp or 0
 PlayerHit.UNIT=PlayerHit.UNIT or TargetUNIT
+if PlayerHit.UNIT.ThreatType==nil then
 PlayerHit.ThreatLevel,PlayerHit.ThreatType=PlayerHit.UNIT:GetThreatLevel()
+if PlayerHit.ThreatType==nil then
+PlayerHit.ThreatLevel=1
+PlayerHit.ThreatType="Unknown"
+end
+else
+PlayerHit.ThreatLevel=PlayerHit.UNIT.ThreatLevel
+PlayerHit.ThreatType=PlayerHit.UNIT.ThreatType
+end
 if timer.getTime()-PlayerHit.TimeStamp>1 then
 PlayerHit.TimeStamp=timer.getTime()
 local Score=0
 if InitCoalition then
 if InitCoalition==TargetCoalition then
-Player.Penalty=Player.Penalty+10
-PlayerHit.Penalty=PlayerHit.Penalty+10
+local Penalty=10
+Player.Penalty=Player.Penalty+Penalty
+PlayerHit.Penalty=PlayerHit.Penalty+Penalty
 PlayerHit.PenaltyHit=PlayerHit.PenaltyHit+1*self.ScaleDestroyPenalty
 MESSAGE
 :NewType(self.DisplayMessagePrefix.."Player '"..Event.WeaponPlayerName.."' hit friendly target "..
 TargetUnitCategory.." ( "..TargetType.." ) "..
-"Penalty: -"..PlayerHit.Penalty.." = "..Player.Score-Player.Penalty,
+"Penalty: -"..Penalty.." = "..Player.Score-Player.Penalty,
 MESSAGE.Type.Update
 )
 :ToAllIf(self:IfMessagesHit()and self:IfMessagesToAll())
 :ToCoalitionIf(Event.WeaponCoalition,self:IfMessagesHit()and self:IfMessagesToCoalition())
 self:ScoreCSV(Event.WeaponPlayerName,TargetPlayerName,"HIT_PENALTY",1,-10,Event.WeaponName,Event.WeaponCoalition,Event.WeaponCategory,Event.WeaponTypeName,TargetUnitName,TargetUnitCoalition,TargetUnitCategory,TargetUnitType)
 else
-Player.Score=Player.Score+1
-PlayerHit.Score=PlayerHit.Score+1
 PlayerHit.ScoreHit=PlayerHit.ScoreHit+1
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..Event.WeaponPlayerName.."' hit enemy target "..TargetUnitCategory.." ( "..TargetType.." ) "..
-"Score: +"..PlayerHit.Score.." = "..Player.Score-Player.Penalty,
+"Score: "..PlayerHit.Score..".  Score Total:"..Player.Score-Player.Penalty,
 MESSAGE.Type.Update)
 :ToAllIf(self:IfMessagesHit()and self:IfMessagesToAll())
 :ToCoalitionIf(Event.WeaponCoalition,self:IfMessagesHit()and self:IfMessagesToCoalition())
@@ -29029,7 +29479,7 @@ local InitUnitCoalition=_SCORINGCoalition[InitCoalition]
 local InitUnitCategory=_SCORINGCategory[InitCategory]
 self:T({InitUnitName,InitUnitType,InitUnitCoalition,InitCoalition,InitUnitCategory,InitCategory})
 local Destroyed=false
-if Player and Player.Hit and Player.Hit[TargetCategory]and Player.Hit[TargetCategory][TargetUnitName]and Player.Hit[TargetCategory][TargetUnitName].TimeStamp~=0 then
+if Player and Player.Hit and Player.Hit[TargetCategory]and Player.Hit[TargetCategory][TargetUnitName]and Player.Hit[TargetCategory][TargetUnitName].TimeStamp~=0 and(TargetUnit.BirthTime==nil or Player.Hit[TargetCategory][TargetUnitName].TimeStamp>TargetUnit.BirthTime)then
 local TargetThreatLevel=Player.Hit[TargetCategory][TargetUnitName].ThreatLevel
 local TargetThreatType=Player.Hit[TargetCategory][TargetUnitName].ThreatType
 Player.Destroy[TargetCategory]=Player.Destroy[TargetCategory]or{}
@@ -29051,13 +29501,13 @@ TargetDestroy.Penalty=TargetDestroy.Penalty+ThreatPenalty
 TargetDestroy.PenaltyDestroy=TargetDestroy.PenaltyDestroy+1
 if Player.HitPlayers[TargetPlayerName]then
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..PlayerName.."' destroyed friendly player '"..TargetPlayerName.."' "..TargetUnitCategory.." ( "..ThreatTypeTarget.." ) "..
-"Penalty: -"..TargetDestroy.Penalty.." = "..Player.Score-Player.Penalty,
+"Penalty: -"..ThreatPenalty.." = "..Player.Score-Player.Penalty,
 MESSAGE.Type.Information)
 :ToAllIf(self:IfMessagesDestroy()and self:IfMessagesToAll())
 :ToCoalitionIf(InitCoalition,self:IfMessagesDestroy()and self:IfMessagesToCoalition())
 else
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..PlayerName.."' destroyed friendly target "..TargetUnitCategory.." ( "..ThreatTypeTarget.." ) "..
-"Penalty: -"..TargetDestroy.Penalty.." = "..Player.Score-Player.Penalty,
+"Penalty: -"..ThreatPenalty.." = "..Player.Score-Player.Penalty,
 MESSAGE.Type.Information)
 :ToAllIf(self:IfMessagesDestroy()and self:IfMessagesToAll())
 :ToCoalitionIf(InitCoalition,self:IfMessagesDestroy()and self:IfMessagesToCoalition())
@@ -29075,13 +29525,13 @@ TargetDestroy.Score=TargetDestroy.Score+ThreatScore
 TargetDestroy.ScoreDestroy=TargetDestroy.ScoreDestroy+1
 if Player.HitPlayers[TargetPlayerName]then
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..PlayerName.."' destroyed enemy player '"..TargetPlayerName.."' "..TargetUnitCategory.." ( "..ThreatTypeTarget.." ) "..
-"Score: +"..TargetDestroy.Score.." = "..Player.Score-Player.Penalty,
+"Score: +"..ThreatScore.." = "..Player.Score-Player.Penalty,
 MESSAGE.Type.Information)
 :ToAllIf(self:IfMessagesDestroy()and self:IfMessagesToAll())
 :ToCoalitionIf(InitCoalition,self:IfMessagesDestroy()and self:IfMessagesToCoalition())
 else
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..PlayerName.."' destroyed enemy "..TargetUnitCategory.." ( "..ThreatTypeTarget.." ) "..
-"Score: +"..TargetDestroy.Score.." = "..Player.Score-Player.Penalty,
+"Score: +"..ThreatScore.." = "..Player.Score-Player.Penalty,
 MESSAGE.Type.Information)
 :ToAllIf(self:IfMessagesDestroy()and self:IfMessagesToAll())
 :ToCoalitionIf(InitCoalition,self:IfMessagesDestroy()and self:IfMessagesToCoalition())
@@ -32835,7 +33285,7 @@ DetectionZoneRange=nil,
 }
 function DETECTION_AREAS:New(DetectionSetGroup,DetectionZoneRange)
 local self=BASE:Inherit(self,DETECTION_BASE:New(DetectionSetGroup))
-self.DetectionZoneRange=DetectionZoneRange
+self.DetectionZoneRange=DetectionZoneRange or 5000
 self._SmokeDetectedUnits=false
 self._FlareDetectedUnits=false
 self._SmokeDetectedZones=false
@@ -60525,7 +60975,7 @@ CTLD.UnitTypes={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.29"
+CTLD.version="1.0.30"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -60753,6 +61203,17 @@ end
 end
 return nil
 end
+function CTLD:_FindCratesCargoObject(Name)
+self:T(self.lid.." _FindCratesCargoObject")
+local cargo=nil
+for _,_cargo in pairs(self.Cargo_Crates)do
+local cargo=_cargo
+if cargo.Name==Name then
+return cargo
+end
+end
+return nil
+end
 function CTLD:PreloadTroops(Unit,Troopname)
 self:T(self.lid.." PreloadTroops")
 local name=Troopname or"Unknown"
@@ -60763,6 +61224,60 @@ if cargo then
 self:_LoadTroops(group,Unit,cargo,true)
 else
 self:E(self.lid.." Troops preload - Cargo Object "..name.." not found!")
+end
+end
+return self
+end
+function CTLD:_PreloadCrates(Group,Unit,Cargo,NumberOfCrates)
+local group=Group
+local unit=Unit
+local unitname=unit:GetName()
+local unittype=unit:GetTypeName()
+local capabilities=self:_GetUnitCapabilities(Unit)
+local cancrates=capabilities.crates
+local cratelimit=capabilities.cratelimit
+if not cancrates then
+self:_SendMessage("Sorry this chopper cannot carry crates!",10,false,Group)
+return self
+else
+local numberonboard=0
+local massonboard=0
+local loaded={}
+if self.Loaded_Cargo[unitname]then
+loaded=self.Loaded_Cargo[unitname]
+numberonboard=loaded.Cratesloaded or 0
+massonboard=self:_GetUnitCargoMass(Unit)
+else
+loaded={}
+loaded.Troopsloaded=0
+loaded.Cratesloaded=0
+loaded.Cargo={}
+end
+local crate=Cargo
+local numbercrates=NumberOfCrates or crate:GetCratesNeeded()
+for i=1,numbercrates do
+loaded.Cratesloaded=loaded.Cratesloaded+1
+crate:SetHasMoved(true)
+crate:SetWasDropped(false)
+table.insert(loaded.Cargo,crate)
+crate.Positionable=nil
+self:_SendMessage(string.format("Crate ID %d for %s loaded!",crate:GetID(),crate:GetName()),10,false,Group)
+self.Loaded_Cargo[unitname]=loaded
+self:_UpdateUnitCargoMass(Unit)
+end
+end
+return self
+end
+function CTLD:PreloadCrates(Unit,Cratesname,NumberOfCrates)
+self:T(self.lid.." PreloadCrates")
+local name=Cratesname or"Unknown"
+if Unit and Unit:IsAlive()then
+local cargo=self:_FindCratesCargoObject(name)
+local group=Unit:GetGroup()
+if cargo then
+self:_PreloadCrates(group,Unit,cargo,NumberOfCrates)
+else
+self:E(self.lid.." Crates preload - Cargo Object "..name.." not found!")
 end
 end
 return self
@@ -65364,12 +65879,12 @@ vec3.x=tonumber(dataset[2])
 vec3.y=tonumber(dataset[3])
 vec3.z=tonumber(dataset[4])
 local point=COORDINATE:NewFromVec3(vec3)
-local coalition=dataset[5]
-local country=dataset[6]
+local coalition=tonumber(dataset[5])
+local country=tonumber(dataset[6])
 local description=dataset[7]
 local typeName=dataset[8]
 local unitName=dataset[9]
-local freq=dataset[10]
+local freq=tonumber(dataset[10])
 self:_AddCsar(coalition,country,point,typeName,unitName,playerName,freq,nil,description,nil)
 end
 return self
