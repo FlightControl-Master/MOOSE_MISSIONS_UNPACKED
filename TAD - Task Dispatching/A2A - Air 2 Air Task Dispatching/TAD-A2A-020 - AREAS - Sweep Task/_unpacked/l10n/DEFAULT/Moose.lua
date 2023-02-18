@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-02-10T10:00:14.0000000Z-3d5470eb222b7a5fd3245b977f7f33e387d37381 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-02-17T15:41:38.0000000Z-ff86bfb91dafb5748857d2dcc41e71abe03b85e7 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -2440,6 +2440,16 @@ return Celcius*9/5+32
 end
 UTILS.hPa2inHg=function(hPa)
 return hPa*0.0295299830714
+end
+UTILS.IasToTas=function(ias,altitude,oatcorr)
+oatcorr=oatcorr or 0.017
+local tas=ias+(ias*oatcorr*UTILS.MetersToFeet(altitude)/1000)
+return tas
+end
+UTILS.TasToIas=function(tas,altitude,oatcorr)
+oatcorr=oatcorr or 0.017
+local ias=tas/(1+oatcorr*UTILS.MetersToFeet(altitude)/1000)
+return ias
 end
 UTILS.KnotsToAltKIAS=function(knots,altitude)
 return(knots*0.018*(altitude/1000))+knots
@@ -10458,6 +10468,7 @@ ZONES_GOAL={},
 WAREHOUSES={},
 FLIGHTGROUPS={},
 FLIGHTCONTROLS={},
+PATHLINES={},
 }
 local _DATABASECoalition=
 {
@@ -10547,6 +10558,19 @@ end
 function DATABASE:DeleteZone(ZoneName)
 self.ZONES[ZoneName]=nil
 end
+function DATABASE:AddPathline(PathlineName,Pathline)
+if not self.PATHLINES[PathlineName]then
+self.PATHLINES[PathlineName]=Pathline
+end
+end
+function DATABASE:FindPathline(PathlineName)
+local pathline=self.PATHLINES[PathlineName]
+return pathline
+end
+function DATABASE:DeletePathline(PathlineName)
+self.PATHLINES[PathlineName]=nil
+return self
+end
 function DATABASE:_RegisterZones()
 for ZoneID,ZoneData in pairs(env.mission.triggers.zones)do
 local ZoneName=ZoneData.name
@@ -10590,8 +10614,8 @@ end
 if env.mission.drawings and env.mission.drawings.layers then
 for layerID,layerData in pairs(env.mission.drawings.layers or{})do
 for objectID,objectData in pairs(layerData.objects or{})do
-if objectData.polygonMode=="free"and objectData.points and#objectData.points>=4 then
-local ZoneName=objectData.name or"Unknown Drawing Zone"
+if objectData.polygonMode and(objectData.polygonMode=="free")and objectData.points and#objectData.points>=4 then
+local ZoneName=objectData.name or"Unknown free Polygon Drawing"
 local vec2={x=objectData.mapX,y=objectData.mapY}
 local points=UTILS.DeepCopy(objectData.points)
 for i,_point in pairs(points)do
@@ -10599,11 +10623,37 @@ local point=_point
 points[i]=UTILS.Vec2Add(point,vec2)
 end
 table.remove(points,#points)
-self:I(string.format("Register ZONE: %s (Polygon drawing with %d verticies)",ZoneName,#points))
+self:I(string.format("Register ZONE: %s (Polygon (free) drawing with %d vertices)",ZoneName,#points))
 local Zone=ZONE_POLYGON:NewFromPointsArray(ZoneName,points)
 Zone:SetColor({1,0,0},0.15)
 self.ZONENAMES[ZoneName]=ZoneName
 self:AddZone(ZoneName,Zone)
+elseif objectData.polygonMode and objectData.polygonMode=="rect"then
+local ZoneName=objectData.name or"Unknown rect Polygon Drawing"
+local vec2={x=objectData.mapX,y=objectData.mapY}
+local w=objectData.width
+local h=objectData.height
+local points={}
+points[1]={x=vec2.x-h/2,y=vec2.y+w/2}
+points[2]={x=vec2.x+h/2,y=vec2.y+w/2}
+points[3]={x=vec2.x+h/2,y=vec2.y-w/2}
+points[4]={x=vec2.x-h/2,y=vec2.y-w/2}
+self:I(string.format("Register ZONE: %s (Polygon (rect) drawing with %d vertices)",ZoneName,#points))
+local Zone=ZONE_POLYGON:NewFromPointsArray(ZoneName,points)
+Zone:SetColor({1,0,0},0.15)
+self.ZONENAMES[ZoneName]=ZoneName
+self:AddZone(ZoneName,Zone)
+elseif objectData.lineMode and(objectData.lineMode=="segments"or objectData.lineMode=="segment"or objectData.lineMode=="free")and objectData.points and#objectData.points>=2 then
+local Name=objectData.name or"Unknown Line Drawing"
+local vec2={x=objectData.mapX,y=objectData.mapY}
+local points=UTILS.DeepCopy(objectData.points)
+for i,_point in pairs(points)do
+local point=_point
+points[i]=UTILS.Vec2Add(point,vec2)
+end
+self:I(string.format("Register PATHLINE: %s (Line drawing with %d points)",Name,#points))
+local Pathline=PATHLINE:NewFromVec2Array(Name,points)
+self:AddPathline(Name,Pathline)
 end
 end
 end
@@ -15583,20 +15633,26 @@ heading=360+heading
 end
 return heading
 end
-function COORDINATE:GetWind(height)
+function COORDINATE:GetWindVec3(height,turbulence)
 local landheight=self:GetLandHeight()+0.1
 local point={x=self.x,y=math.max(height or self.y,landheight),z=self.z}
-local wind=atmosphere.getWind(point)
-local direction=math.deg(math.atan2(wind.z,wind.x))
-if direction<0 then
-direction=360+direction
+local wind=nil
+if turbulence then
+wind=atmosphere.getWindWithTurbulence(point)
+else
+wind=atmosphere.getWind(point)
 end
+return wind
+end
+function COORDINATE:GetWind(height,turbulence)
+local wind=self:GetWindVec3(height,turbulence)
+local direction=UTILS.VecHdg(wind)
 if direction>180 then
 direction=direction-180
 else
 direction=direction+180
 end
-local strength=math.sqrt((wind.x)^2+(wind.z)^2)
+local strength=UTILS.VecNorm(wind)
 return direction,strength
 end
 function COORDINATE:GetWindWithTurbulenceVec3(height)
@@ -19563,6 +19619,7 @@ self:AddTransition("On","Lasing","On")
 self:AddTransition({"On","Destroyed"},"LaseOff","Off")
 self:AddTransition("*","Destroyed","Destroyed")
 self.Recce=Recce
+self.RecceName=self.Recce:GetName()
 self.LaseScheduler=SCHEDULER:New(self)
 self:SetEventPriority(5)
 self.Lasing=false
@@ -19574,6 +19631,7 @@ local function StopLase(self)
 self:LaseOff()
 end
 self.Target=Target
+self.TargetName=Target:GetName()
 self.LaserCode=LaserCode
 self.Lasing=true
 local RecceDcsUnit=self.Recce:GetDCSObject()
@@ -19606,9 +19664,15 @@ end
 function SPOT:OnEventDead(EventData)
 self:F({Dead=EventData.IniDCSUnitName,Target=self.Target})
 if self.Target then
-if EventData.IniDCSUnitName==self.Target:GetName()then
-self:F({"Target dead ",self.Target:GetName()})
+if EventData.IniDCSUnitName==self.TargetName then
+self:F({"Target dead ",self.TargetName})
 self:Destroyed()
+self:LaseOff()
+end
+end
+if self.Recce then
+if EventData.IniDCSUnitName==self.RecceName then
+self:F({"Recce dead ",self.RecceName})
 self:LaseOff()
 end
 end
@@ -19654,7 +19718,7 @@ MARKEROPS_BASE={
 ClassName="MARKEROPS",
 Tag="mytag",
 Keywords={},
-version="0.1.0",
+version="0.1.1",
 debug=false,
 Casesensitive=true,
 }
@@ -19709,7 +19773,7 @@ local Eventtext=tostring(Event.text)
 if Eventtext~=nil then
 if self:_MatchTag(Eventtext)then
 local matchtable=self:_MatchKeywords(Eventtext)
-self:MarkChanged(Eventtext,matchtable,coord)
+self:MarkChanged(Eventtext,matchtable,coord,Event.idx)
 end
 end
 elseif Event.id==world.event.S_EVENT_MARK_REMOVED then
@@ -19860,6 +19924,140 @@ self:I(text)
 end
 end
 return self
+end
+PATHLINE={
+ClassName="PATHLINE",
+lid=nil,
+points={},
+}
+PATHLINE.version="0.1.0"
+function PATHLINE:New(Name)
+local self=BASE:Inherit(self,BASE:New())
+self.name=Name or"Unknown Path"
+self.lid=string.format("PATHLINE %s | ",Name)
+return self
+end
+function PATHLINE:NewFromVec2Array(Name,Vec2Array)
+local self=PATHLINE:New(Name)
+for i=1,#Vec2Array do
+self:AddPointFromVec2(Vec2Array[i])
+end
+return self
+end
+function PATHLINE:NewFromVec3Array(Name,Vec3Array)
+local self=PATHLINE:New(Name)
+for i=1,#Vec3Array do
+self:AddPointFromVec3(Vec3Array[i])
+end
+return self
+end
+function PATHLINE:FindByName(Name)
+local pathline=_DATABASE:FindPathline(Name)
+return pathline
+end
+function PATHLINE:AddPointFromVec2(Vec2)
+if Vec2 then
+local point=self:_CreatePoint(Vec2)
+table.insert(self.points,point)
+end
+return self
+end
+function PATHLINE:AddPointFromVec3(Vec3)
+if Vec3 then
+local point=self:_CreatePoint(Vec3)
+table.insert(self.points,point)
+end
+return self
+end
+function PATHLINE:GetName()
+return self.name
+end
+function PATHLINE:GetNumberOfPoints()
+local N=#self.points
+return N
+end
+function PATHLINE:GetPoints()
+return self.points
+end
+function PATHLINE:GetPoints3D()
+local vecs={}
+for _,_point in pairs(self.points)do
+local point=_point
+table.insert(vecs,point.vec3)
+end
+return vecs
+end
+function PATHLINE:GetPoints2D()
+local vecs={}
+for _,_point in pairs(self.points)do
+local point=_point
+table.insert(vecs,point.vec2)
+end
+return vecs
+end
+function PATHLINE:GetCoordinats()
+local vecs={}
+for _,_point in pairs(self.points)do
+local point=_point
+local coord=COORDINATE:NewFromVec3(point.vec3)
+end
+return vecs
+end
+function PATHLINE:GetPointFromIndex(n)
+local N=self:GetNumberOfPoints()
+n=n or 1
+local point=nil
+if n>=1 and n<=N then
+point=self.point[n]
+else
+self:E(self.lid..string.format("ERROR: No point in pathline for N=%s",tostring(n)))
+end
+return point
+end
+function PATHLINE:GetPoint3DFromIndex(n)
+local point=self:GetPointFromIndex(n)
+if point then
+return point.vec3
+end
+return nil
+end
+function PATHLINE:GetPoint2DFromIndex(n)
+local point=self:GetPointFromIndex(n)
+if point then
+return point.vec2
+end
+return nil
+end
+function PATHLINE:MarkPoints(Switch)
+for i,_point in pairs(self.points)do
+local point=_point
+if Switch==false then
+if point.markerID then
+UTILS.RemoveMark(point.markerID,Delay)
+end
+else
+if point.markerID then
+UTILS.RemoveMark(point.markerID)
+end
+point.markerID=UTILS.GetMarkID()
+local text=string.format("Pathline %s: Point #%d\nSurface Type=%d\nHeight=%.1f m\nDepth=%.1f m",self.name,i,point.surfaceType,point.landHeight,point.depth)
+trigger.action.markToAll(point.markerID,text,point.vec3,"")
+end
+end
+end
+function PATHLINE:_CreatePoint(Vec)
+local point={}
+if Vec.z then
+point.vec3=UTILS.DeepCopy(Vec)
+point.vec2={x=Vec.x,y=Vec.z}
+else
+point.vec2=UTILS.DeepCopy(Vec)
+point.vec3={x=Vec.x,y=land.getHeight(Vec),z=Vec.y}
+end
+point.surfaceType=land.getSurfaceType(point.vec2)
+point.landHeight,point.depth=land.getSurfaceHeightWithSeabed(point.vec2)
+point.markerID=nil
+return point
 end
 OBJECT={
 ClassName="OBJECT",
@@ -20436,6 +20634,33 @@ end
 function POSITIONABLE:GetVelocityKNOTS()
 self:F2(self.PositionableName)
 return UTILS.MpsToKnots(self:GetVelocityMPS())
+end
+function POSITIONABLE:GetAirspeedTrue()
+local tas=0
+local coord=self:GetCoord()
+if coord then
+local alt=coord.y
+local wvec3=coord:GetWindVec3(alt,false)
+local vvec3=self:GetVelocityVec3()
+local tasvec3=UTILS.VecSubstract(vvec3,wvec3)
+tas=UTILS.VecNorm(tasvec3)
+end
+return tas
+end
+function POSITIONABLE:GetAirspeedIndicated(oatcorr)
+local tas=self:GetAirspeedTrue()
+local altitude=self:GetAltitude()
+local ias=UTILS.TasToIas(tas,altitude,oatcorr)
+return ias
+end
+function POSITIONABLE:GetGroundSpeed()
+local gs=0
+local vel=self:GetVelocityVec3()
+if vel then
+local vec2={x=vel.x,y=vel.z}
+gs=UTILS.Vec2Norm(vel)
+end
+return gs
 end
 function POSITIONABLE:GetAoA()
 local unitpos=self:GetPosition()
@@ -24484,7 +24709,7 @@ local callsign="Ghost 1"
 if self:IsAlive()then
 local IsPlayer=self:IsPlayer()
 local shortcallsign=self:GetCallsign()or"unknown91"
-local callsignroot=string.match(shortcallsign,'(%a+)')
+local callsignroot=string.match(shortcallsign,'(%a+)')or"Ghost"
 local groupname=self:GetName()
 local callnumber=string.match(shortcallsign,"(%d+)$")or"91"
 local callnumbermajor=string.char(string.byte(callnumber,1))
@@ -25001,6 +25226,14 @@ if self and self:IsAlive()then
 return 1-self:GetLifeRelative()
 end
 return 1
+end
+function UNIT:GetDrawArgumentValue(AnimationArgument)
+local DCSUnit=self:GetDCSObject()
+if DCSUnit then
+local value=DCSUnit:getDrawArgumentValue(AnimationArgument or 0)
+return value
+end
+return 0
 end
 function UNIT:GetUnitCategory()
 self:F3(self.UnitName)
@@ -27449,10 +27682,145 @@ end
 do
 NET={
 ClassName="NET",
-Version="0.0.2"
+Version="0.0.5",
+BlockTime=600,
+BlockedPilots={},
+BlockedUCIDs={},
+KnownPilots={},
+BlockMessage=nil,
+UnblockMessage=nil,
+lid=nil,
 }
 function NET:New()
-local self=BASE:Inherit(self,BASE:New())
+local self=BASE:Inherit(self,FSM:New())
+self.BlockTime=600
+self.BlockedPilots={}
+self.KnownPilots={}
+self:SetBlockMessage()
+self:SetUnblockMessage()
+self:HandleEvent(EVENTS.PlayerEnterUnit,self._EventHandler)
+self:HandleEvent(EVENTS.PlayerEnterAircraft,self._EventHandler)
+self:HandleEvent(EVENTS.PlayerLeaveUnit,self._EventHandler)
+self:HandleEvent(EVENTS.PilotDead,self._EventHandler)
+self:HandleEvent(EVENTS.Ejection,self._EventHandler)
+self:HandleEvent(EVENTS.Crash,self._EventHandler)
+self:HandleEvent(EVENTS.SelfKillPilot,self._EventHandler)
+self:SetStartState("Running")
+self:AddTransition("*","Run","Running")
+self:AddTransition("*","PlayerJoined","*")
+self:AddTransition("*","PlayerLeft","*")
+self:AddTransition("*","PlayerDied","*")
+self:AddTransition("*","PlayerEjected","*")
+self:AddTransition("*","PlayerBlocked","*")
+self:AddTransition("*","PlayerUnblocked","*")
+self.lid=string.format("NET %s | ",self.Version)
+return self
+end
+function NET:_EventHandler(EventData)
+self:T(self.lid.." _EventHandler")
+self:T2({Event=EventData.id})
+local data=EventData
+if data.id and data.IniUnit and(data.IniPlayerName or data.IniUnit:GetPlayerName())then
+local name=data.IniPlayerName and data.IniPlayerName or data.IniUnit:GetPlayerName()
+local ucid=self:GetPlayerUCID(nil,name)
+self:T(self.lid.."Event for: "..name.." | UCID: "..ucid)
+if data.id==EVENTS.PlayerEnterUnit or data.id==EVENTS.PlayerEnterAircraft then
+local TNow=timer.getTime()
+if self.BlockedPilots[name]and TNow<self.BlockedPilots[name]then
+local PlayerID=self:GetPlayerIDByName(name)
+if PlayerID and tonumber(PlayerID)~=1 then
+local outcome=net.force_player_slot(tonumber(PlayerID),0,'')
+end
+elseif self.BlockedUCIDs[ucid]and TNow<self.BlockedUCIDs[ucid]then
+local PlayerID=self:GetPlayerIDByName(name)
+if PlayerID and tonumber(PlayerID)~=1 then
+local outcome=net.force_player_slot(tonumber(PlayerID),0,'')
+end
+else
+self.KnownPilots[name]=true
+self.BlockedPilots[name]=nil
+self.BlockedUCIDs[ucid]=nil
+self:__PlayerJoined(1,data.IniUnit,name)
+return self
+end
+end
+if data.id==EVENTS.PlayerLeaveUnit and self.KnownPilots[name]then
+self:__PlayerLeft(1,data.IniUnit,name)
+self.KnownPilots[name]=false
+return self
+end
+if data.id==EVENTS.Ejection and self.KnownPilots[name]then
+self:__PlayerEjected(1,data.IniUnit,name)
+self.KnownPilots[name]=false
+return self
+end
+if(data.id==EVENTS.PilotDead or data.id==EVENTS.SelfKillPilot or data.id==EVENTS.Crash)and self.KnownPilots[name]then
+self:__PlayerDied(1,data.IniUnit,name)
+self.KnownPilots[name]=false
+return self
+end
+end
+return self
+end
+function NET:BlockPlayer(Client,PlayerName,Seconds,Message)
+local name=PlayerName
+if Client then
+name=Client:GetPlayerName()
+elseif PlayerName then
+name=PlayerName
+else
+self:F(self.lid.."Block: No Client or PlayerName given or nothing found!")
+return self
+end
+local ucid=self:GetPlayerUCID(Client,name)
+local addon=Seconds or self.BlockTime
+self.BlockedPilots[name]=timer.getTime()+addon
+self.BlockedUCIDs[ucid]=timer.getTime()+addon
+local message=Message or self.BlockMessage
+if name then
+self:SendChatToPlayer(message,name)
+else
+self:SendChat(name..": "..message)
+end
+self:__PlayerBlocked(1,Client,name,Seconds)
+local PlayerID=self:GetPlayerIDByName(name)
+if PlayerID and tonumber(PlayerID)~=1 then
+local outcome=net.force_player_slot(tonumber(PlayerID),0,'')
+end
+return self
+end
+function NET:UnblockPlayer(Client,PlayerName,Message)
+local name=PlayerName
+if Client then
+name=Client:GetPlayerName()
+elseif PlayerName then
+name=PlayerName
+else
+self:F(self.lid.."Unblock: No PlayerName given or not found!")
+return self
+end
+local ucid=self:GetPlayerUCID(Client,name)
+self.BlockedPilots[name]=nil
+self.BlockedUCIDs[ucid]=nil
+local message=Message or self.UnblockMessage
+if name then
+self:SendChatToPlayer(message,name)
+else
+self:SendChat(name..": "..message)
+end
+self:__PlayerUnblocked(1,Client,name)
+return self
+end
+function NET:SetBlockMessage(Text)
+self.BlockMessage=Text or"You are blocked from joining. Wait time is: "..self.BlockTime.." seconds!"
+return self
+end
+function NET:SetBlockTime(Seconds)
+self.BlockTime=Seconds or 600
+return self
+end
+function NET:SetUnblockMessage(Text)
+self.UnblockMessage=Text or"You are unblocked now and can join again."
 return self
 end
 function NET:SendChat(Message,ToAll)
@@ -27461,7 +27829,8 @@ net.send_chat(Message,ToAll)
 end
 return self
 end
-function NET:GetPlayerIdByName(Name)
+function NET:GetPlayerIDByName(Name)
+if not Name then return nil end
 local playerList=self:GetPlayerList()
 for i=1,#playerList do
 local playerName=net.get_name(i)
@@ -27472,13 +27841,27 @@ end
 return nil
 end
 function NET:GetPlayerIDFromClient(Client)
+if Client then
 local name=Client:GetPlayerName()
-local id=self:GetPlayerIdByName(name)
+local id=self:GetPlayerIDByName(name)
 return id
+else
+return nil
 end
-function NET:SendChatToPlayer(Message,ToClient,FromClient)
+end
+function NET:SendChatToClient(Message,ToClient,FromClient)
 local PlayerId=self:GetPlayerIDFromClient(ToClient)
 local FromId=self:GetPlayerIDFromClient(FromClient)
+if Message and PlayerId and FromId then
+net.send_chat_to(Message,tonumber(PlayerId),tonumber(FromId))
+elseif Message and PlayerId then
+net.send_chat_to(Message,tonumber(PlayerId))
+end
+return self
+end
+function NET:SendChatToPlayer(Message,ToPlayer,FromPlayer)
+local PlayerId=self:GetPlayerIDByName(ToPlayer)
+local FromId=self:GetPlayerIDByName(FromPlayer)
 if Message and PlayerId and FromId then
 net.send_chat_to(Message,tonumber(PlayerId),tonumber(FromId))
 elseif Message and PlayerId then
@@ -27517,6 +27900,18 @@ else
 return nil
 end
 end
+function NET:GetPlayerUCID(Client,Name)
+local PlayerID=nil
+if Client then
+PlayerID=self:GetPlayerIDFromClient(Client)
+elseif Name then
+PlayerID=self:GetPlayerIDByName(Name)
+else
+self:E(self.lid.."Neither client nor name provided!")
+end
+local ucid=net.get_player_info(tonumber(PlayerID),'ucid')
+return ucid
+end
 function NET:Kick(Client,Message)
 local PlayerID=self:GetPlayerIDFromClient(Client)
 if PlayerID and tonumber(PlayerID)~=1 then
@@ -27554,8 +27949,8 @@ end
 end
 function NET:ForceSlot(Client,SideID,SlotID)
 local PlayerID=self:GetPlayerIDFromClient(Client)
-if PlayerID then
-return net.force_player_slot(tonumber(PlayerID),SideID,SlotID)
+if PlayerID and tonumber(PlayerID)~=1 then
+return net.force_player_slot(tonumber(PlayerID),SideID,SlotID or'')
 else
 return false
 end
@@ -39435,12 +39830,11 @@ end
 function RANGE:_GetBombTargetCoordinate(target)
 local coord=nil
 if target.type==RANGE.TargetType.UNIT then
-if not target.move then
-coord=target.coordinate
-else
 if target.target and target.target:IsAlive()then
 coord=target.target:GetCoordinate()
-end
+target.coordinate=coord
+else
+coord=target.coordinate
 end
 elseif target.type==RANGE.TargetType.STATIC then
 coord=target.coordinate
@@ -54207,6 +54601,20 @@ self.sterncoord:Translate(self.carrierparam.sterndist,hdg,true,true):Translate(9
 end
 self.sterncoord:SetAltitude(self.carrierparam.deckheight)
 return self.sterncoord
+end
+function AIRBOSS:_GetWireFromDrawArg()
+local wireArgs={}
+wireArgs[1]=141
+wireArgs[2]=142
+wireArgs[3]=143
+wireArgs[4]=144
+for wire,drawArg in pairs(wireArgs)do
+local value=self.carrier:GetDrawArgumentValue(drawArg)
+if math.abs(value)>0.001 then
+return wire
+end
+end
+return 99
 end
 function AIRBOSS:_GetWire(Lcoord,dc)
 local FB=self:GetFinalBearing()
