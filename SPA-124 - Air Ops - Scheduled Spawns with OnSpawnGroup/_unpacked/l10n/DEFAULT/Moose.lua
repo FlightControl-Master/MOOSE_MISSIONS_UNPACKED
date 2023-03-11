@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-02-28T07:00:06.0000000Z-34285b26ae4c04dbe62e78e173e016b1f80cab6b ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-03-10T09:09:08.0000000Z-d92a20050c0c0049777c356c4f4be9ab72c3ee03 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -3967,6 +3967,28 @@ end
 end
 end
 return false
+end
+function UTILS.PlotRacetrack(Coordinate,Altitude,Speed,Heading,Leg,Coalition,Color,Alpha,LineType,ReadOnly)
+local fix_coordinate=Coordinate
+local altitude=Altitude
+local speed=Speed or 350
+local heading=Heading or 270
+local leg_distance=Leg or 10
+local coalition=Coalition or-1
+local color=Color or{1,0,0}
+local alpha=Alpha or 1
+local lineType=LineType or 1
+speed=UTILS.IasToTas(speed,UTILS.FeetToMeters(altitude),oatcorr)
+local turn_radius=0.0211*speed-3.01
+local point_two=fix_coordinate:Translate(UTILS.NMToMeters(leg_distance),heading,true,false)
+local point_three=point_two:Translate(UTILS.NMToMeters(turn_radius)*2,heading-90,true,false)
+local point_four=fix_coordinate:Translate(UTILS.NMToMeters(turn_radius)*2,heading-90,true,false)
+local circle_center_fix_four=point_two:Translate(UTILS.NMToMeters(turn_radius),heading-90,true,false)
+local circle_center_two_three=fix_coordinate:Translate(UTILS.NMToMeters(turn_radius),heading-90,true,false)
+fix_coordinate:LineToAll(point_two,coalition,color,alpha,lineType)
+point_four:LineToAll(point_three,coalition,color,alpha,lineType)
+circle_center_fix_four:CircleToAll(UTILS.NMToMeters(turn_radius),coalition,color,alpha,nil,0,lineType)
+circle_center_two_three:CircleToAll(UTILS.NMToMeters(turn_radius),coalition,color,alpha,nil,0,lineType)
 end
 PROFILER={
 ClassName="PROFILER",
@@ -24123,7 +24145,7 @@ if DCSGroup then
 local GroupHeightMax=-999999999
 for Index,UnitData in pairs(DCSGroup:getUnits())do
 local UnitData=UnitData
-local UnitHeight=UnitData:getPoint()
+local UnitHeight=UnitData:getPoint().p.y
 if UnitHeight>GroupHeightMax then
 GroupHeightMax=UnitHeight
 end
@@ -24733,7 +24755,9 @@ local callnumber=string.match(shortcallsign,"(%d+)$")or"91"
 local callnumbermajor=string.char(string.byte(callnumber,1))
 local callnumberminor=string.char(string.byte(callnumber,2))
 local personalized=false
-if IsPlayer and string.find(groupname,"#")then
+if CallsignTranslations and CallsignTranslations[callsignroot]then
+callsignroot=CallsignTranslations[callsignroot]
+elseif IsPlayer and string.find(groupname,"#")then
 if Keepnumber then
 shortcallsign=string.match(groupname,"#(.+)")or"Ghost 111"
 else
@@ -24743,9 +24767,6 @@ personalized=true
 elseif IsPlayer and string.find(self:GetPlayerName(),"|")then
 shortcallsign=string.match(self:GetPlayerName(),"|%s*([%a]+)")or string.match(self:GetPlayerName(),"|%s*([%d]+)")or"Ghost"
 personalized=true
-end
-if(not personalized)and CallsignTranslations and CallsignTranslations[callsignroot]then
-callsignroot=CallsignTranslations[callsignroot]
 end
 if personalized then
 shortcallsign=string.gsub(shortcallsign,"^%s*","")
@@ -61406,6 +61427,10 @@ if self.Stock<0 then self.Stock=0 end
 end
 return self
 end
+function CTLD_CARGO:SetStock(Number)
+self.Stock=Number
+return self
+end
 function CTLD_CARGO:IsRepair()
 if self.CargoType=="Repair"then
 return true
@@ -61487,7 +61512,7 @@ CTLD.UnitTypes={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.31"
+CTLD.version="1.0.32"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -63813,6 +63838,7 @@ if _troop.Name==name then
 _troop:AddStock(number)
 end
 end
+return self
 end
 function CTLD:AddStockCrates(Name,Number)
 local name=Name or"none"
@@ -63823,6 +63849,75 @@ if _troop.Name==name then
 _troop:AddStock(number)
 end
 end
+return self
+end
+function CTLD:AddStockStatics(Name,Number)
+local name=Name or"none"
+local number=Number or 1
+local gentroops=self.Cargo_Statics
+for _id,_troop in pairs(gentroops)do
+if _troop.Name==name then
+_troop:AddStock(number)
+end
+end
+return self
+end
+function CTLD:SetStockCrates(Name,Number)
+local name=Name or"none"
+local number=Number
+local gentroops=self.Cargo_Crates
+for _id,_troop in pairs(gentroops)do
+if _troop.Name==name then
+_troop:SetStock(number)
+end
+end
+return self
+end
+function CTLD:SetStockTroops(Name,Number)
+local name=Name or"none"
+local number=Number
+local gentroops=self.Cargo_Troops
+for _id,_troop in pairs(gentroops)do
+if _troop.Name==name then
+_troop:SetStock(number)
+end
+end
+return self
+end
+function CTLD:SetStockStatics(Name,Number)
+local name=Name or"none"
+local number=Number
+local gentroops=self.Cargo_Statics
+for _id,_troop in pairs(gentroops)do
+if _troop.Name==name then
+_troop:SetStock(number)
+end
+end
+return self
+end
+function CTLD:GetStockCrates()
+local Stock={}
+local gentroops=self.Cargo_Crates
+for _id,_troop in pairs(gentroops)do
+table.insert(Stock,_troop.Name,_troop.Stock or-1)
+end
+return Stock
+end
+function CTLD:GetStockTroops()
+local Stock={}
+local gentroops=self.Cargo_Troops
+for _id,_troop in pairs(gentroops)do
+table.insert(Stock,_troop.Name,_troop.Stock or-1)
+end
+return Stock
+end
+function CTLD:GetStockStatics()
+local Stock={}
+local gentroops=self.Cargo_Statics
+for _id,_troop in pairs(gentroops)do
+table.insert(Stock,_troop.Name,_troop.Stock or-1)
+end
+return Stock
 end
 function CTLD:RemoveStockTroops(Name,Number)
 local name=Name or"none"
@@ -63833,11 +63928,23 @@ if _troop.Name==name then
 _troop:RemoveStock(number)
 end
 end
+return self
 end
 function CTLD:RemoveStockCrates(Name,Number)
 local name=Name or"none"
 local number=Number or 1
 local gentroops=self.Cargo_Crates
+for _id,_troop in pairs(gentroops)do
+if _troop.Name==name then
+_troop:RemoveStock(number)
+end
+end
+return self
+end
+function CTLD:RemoveStockStatics(Name,Number)
+local name=Name or"none"
+local number=Number or 1
+local gentroops=self.Cargo_Statics
 for _id,_troop in pairs(gentroops)do
 if _troop.Name==name then
 _troop:RemoveStock(number)
