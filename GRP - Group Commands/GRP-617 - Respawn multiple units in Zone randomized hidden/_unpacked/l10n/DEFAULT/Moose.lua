@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-03-23T08:21:46.0000000Z-a85ef6e769ae80c6664dd88883164ac272e6b13a ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-03-30T10:22:04.0000000Z-63b3807cf6510a21d39727bfbc199a439607f458 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -12283,14 +12283,6 @@ end
 self:T2(MGroupInclude)
 return MGroupInclude
 end
-function SET_GROUP:SetCargoBayWeightLimit()
-local Set=self:GetSet()
-for GroupID,GroupData in pairs(Set)do
-for UnitName,UnitData in pairs(GroupData:GetUnits())do
-UnitData:SetCargoBayWeightLimit()
-end
-end
-end
 function SET_GROUP:GetClosestGroup(Coordinate,Coalitions)
 local Set=self:GetSet()
 local dmin=math.huge
@@ -12307,6 +12299,14 @@ end
 end
 end
 return gmin,dmin
+end
+function SET_GROUP:SetCargoBayWeightLimit()
+local Set=self:GetSet()
+for GroupID,GroupData in pairs(Set)do
+for UnitName,UnitData in pairs(GroupData:GetUnits())do
+UnitData:SetCargoBayWeightLimit()
+end
+end
 end
 end
 do
@@ -12344,7 +12344,9 @@ end
 function SET_UNIT:AddUnit(Unit)
 self:F2(Unit:GetName())
 self:Add(Unit:GetName(),Unit)
+if Unit:IsInstanceOf("UNIT")then
 Unit:SetCargoBayWeightLimit()
+end
 return self
 end
 function SET_UNIT:AddUnitsByName(AddUnitNames)
@@ -13335,6 +13337,23 @@ TypeReport:Add(StaticTypeName)
 end
 end
 return TypeReport:Text(Delimiter)
+end
+function SET_STATIC:GetClosestStatic(Coordinate,Coalitions)
+local Set=self:GetSet()
+local dmin=math.huge
+local gmin=nil
+for GroupID,GroupData in pairs(Set)do
+local group=GroupData
+if group and group:IsAlive()and(Coalitions==nil or UTILS.IsAnyInTable(Coalitions,group:GetCoalition()))then
+local coord=group:GetCoord()
+local d=UTILS.VecDist3D(Coordinate,coord)
+if d<dmin then
+dmin=d
+gmin=group
+end
+end
+end
+return gmin,dmin
 end
 end
 do
@@ -17962,6 +17981,18 @@ self:_RandomizeRoute(GroupID)
 end
 return self
 end
+function SPAWN:InitSetUnitRelativePositions(Positions)
+self:F({self.SpawnTemplatePrefix,Positions})
+self.SpawnUnitsWithRelativePositions=true
+self.UnitsRelativePositions=Positions
+return self
+end
+function SPAWN:InitSetUnitAbsolutePositions(Positions)
+self:F({self.SpawnTemplatePrefix,Positions})
+self.SpawnUnitsWithAbsolutePositions=true
+self.UnitsAbsolutePositions=Positions
+return self
+end
 function SPAWN:InitRandomizeTemplate(SpawnTemplatePrefixTable)
 self:F({self.SpawnTemplatePrefix,SpawnTemplatePrefixTable})
 local temptable={}
@@ -18213,6 +18244,33 @@ if self.SpawnInitHeadingMin then
 for UnitID=1,#SpawnTemplate.units do
 SpawnTemplate.units[UnitID].heading=_Heading(_RandomInRange(self.SpawnInitHeadingMin,self.SpawnInitHeadingMax))
 SpawnTemplate.units[UnitID].psi=-SpawnTemplate.units[UnitID].heading
+end
+end
+if self.SpawnUnitsWithRelativePositions and self.UnitsRelativePositions then
+local BaseX=SpawnTemplate.units[1].x or 0
+local BaseY=SpawnTemplate.units[1].y or 0
+local BaseZ=SpawnTemplate.units[1].z or 0
+for UnitID=1,#SpawnTemplate.units do
+if self.UnitsRelativePositions[UnitID].heading then
+SpawnTemplate.units[UnitID].heading=math.rad(self.UnitsRelativePositions[UnitID].heading or 0)
+end
+SpawnTemplate.units[UnitID].x=BaseX+(self.UnitsRelativePositions[UnitID].x or 0)
+SpawnTemplate.units[UnitID].y=BaseY+(self.UnitsRelativePositions[UnitID].y or 0)
+if self.UnitsRelativePositions[UnitID].z then
+SpawnTemplate.units[UnitID].z=BaseZ+(self.UnitsRelativePositions[UnitID].z or 0)
+end
+end
+end
+if self.SpawnUnitsWithAbsolutePositions and self.UnitsAbsolutePositions then
+for UnitID=1,#SpawnTemplate.units do
+if self.UnitsAbsolutePositions[UnitID].heading then
+SpawnTemplate.units[UnitID].heading=math.rad(self.UnitsAbsolutePositions[UnitID].heading or 0)
+end
+SpawnTemplate.units[UnitID].x=self.UnitsAbsolutePositions[UnitID].x or 0
+SpawnTemplate.units[UnitID].y=self.UnitsAbsolutePositions[UnitID].y or 0
+if self.UnitsAbsolutePositions[UnitID].z then
+SpawnTemplate.units[UnitID].z=self.UnitsAbsolutePositions[UnitID].z or 0
+end
 end
 end
 if self.SpawnInitLivery then
