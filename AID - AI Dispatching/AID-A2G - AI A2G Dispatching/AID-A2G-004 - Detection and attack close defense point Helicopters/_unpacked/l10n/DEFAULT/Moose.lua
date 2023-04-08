@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-03-30T10:22:04.0000000Z-63b3807cf6510a21d39727bfbc199a439607f458 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-04-04T08:33:04.0000000Z-9e138aa149134038d26bf493994d9fc68d0684d8 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -10504,6 +10504,7 @@ ZONES_GOAL={},
 WAREHOUSES={},
 FLIGHTGROUPS={},
 FLIGHTCONTROLS={},
+OPSZONES={},
 PATHLINES={},
 }
 local _DATABASECoalition=
@@ -10708,6 +10709,23 @@ end
 end
 function DATABASE:DeleteZoneGoal(ZoneName)
 self.ZONES_GOAL[ZoneName]=nil
+end
+end
+do
+function DATABASE:FindOpsZone(ZoneName)
+local ZoneFound=self.OPSZONES[ZoneName]
+return ZoneFound
+end
+function DATABASE:AddOpsZone(OpsZone)
+if OpsZone then
+local ZoneName=OpsZone:GetName()
+if not self.OPSZONES[ZoneName]then
+self.OPSZONES[ZoneName]=OpsZone
+end
+end
+end
+function DATABASE:DeleteOpsZone(ZoneName)
+self.OPSZONES[ZoneName]=nil
 end
 end
 do
@@ -11234,14 +11252,14 @@ self:F2(arg)
 self:ForEach(IteratorFunction,FinalizeFunction,arg,self.PLAYERUNITS)
 return self
 end
-function DATABASE:ForEachClient(IteratorFunction,...)
+function DATABASE:ForEachClient(IteratorFunction,FinalizeFunction,...)
 self:F2(arg)
-self:ForEach(IteratorFunction,arg,self.CLIENTS)
+self:ForEach(IteratorFunction,FinalizeFunction,arg,self.CLIENTS)
 return self
 end
-function DATABASE:ForEachCargo(IteratorFunction,...)
+function DATABASE:ForEachCargo(IteratorFunction,FinalizeFunction,...)
 self:F2(arg)
-self:ForEach(IteratorFunction,arg,self.CARGOS)
+self:ForEach(IteratorFunction,FinalizeFunction,arg,self.CARGOS)
 return self
 end
 function DATABASE:OnEventNewCargo(EventData)
@@ -27797,7 +27815,7 @@ end
 do
 NET={
 ClassName="NET",
-Version="0.1.0",
+Version="0.1.1",
 BlockTime=600,
 BlockedPilots={},
 BlockedUCIDs={},
@@ -27855,7 +27873,7 @@ self:T2({Event=EventData.id})
 local data=EventData
 if data.id and data.IniUnit and(data.IniPlayerName or data.IniUnit:GetPlayerName())then
 local name=data.IniPlayerName and data.IniPlayerName or data.IniUnit:GetPlayerName()
-local ucid=self:GetPlayerUCID(nil,name)
+local ucid=self:GetPlayerUCID(nil,name)or"none"
 local PlayerID=self:GetPlayerIDByName(name)or"none"
 local PlayerSide,PlayerSlot=self:GetSlot(data.IniUnit)
 local TNow=timer.getTime()
@@ -28180,7 +28198,7 @@ return nil
 end
 end
 function NET:onafterStatus(From,Event,To)
-self:T({From,Event,To})
+self:I({From,Event,To})
 local function HouseHold(tavolo)
 local TNow=timer.getTime()
 for _,entry in pairs(tavolo)do
@@ -28197,7 +28215,7 @@ end
 return self
 end
 function NET:onafterRun(From,Event,To)
-self:T({From,Event,To})
+self:I({From,Event,To})
 self:HandleEvent(EVENTS.PlayerEnterUnit,self._EventHandler)
 self:HandleEvent(EVENTS.PlayerEnterAircraft,self._EventHandler)
 self:HandleEvent(EVENTS.PlayerLeaveUnit,self._EventHandler)
