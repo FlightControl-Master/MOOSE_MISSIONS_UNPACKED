@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-04-13T13:51:21.0000000Z-ee409c45a0647df62d157bbd942ae42e07ae073c ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-04-20T06:23:03.0000000Z-240307ef940e67744fbf0980e9c34341b66bba5f ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -12021,6 +12021,17 @@ self.Filter.GroupPrefixes[Prefix]=Prefix
 end
 return self
 end
+function SET_GROUP:_ContinousZoneFilter()
+local Database=_DATABASE.GROUPS
+for ObjectName,Object in pairs(Database)do
+if self:IsIncludeObject(Object)and self:IsNotInSet(Object)then
+self:Add(ObjectName,Object)
+elseif(not self:IsIncludeObject(Object))and self:IsInSet(Object)then
+self:Remove(ObjectName)
+end
+end
+return self
+end
 function SET_GROUP:FilterActive(Active)
 Active=Active or not(Active==false)
 self.Filter.Active=Active
@@ -12033,6 +12044,27 @@ self:HandleEvent(EVENTS.Birth,self._EventOnBirth)
 self:HandleEvent(EVENTS.Dead,self._EventOnDeadOrCrash)
 self:HandleEvent(EVENTS.Crash,self._EventOnDeadOrCrash)
 self:HandleEvent(EVENTS.RemoveUnit,self._EventOnDeadOrCrash)
+if self.Filter.Zones then
+self.ZoneTimer=TIMER:New(self._ContinousZoneFilter,self)
+local timing=self.ZoneTimerInterval or 30
+self.ZoneTimer:Start(timing,timing)
+end
+end
+return self
+end
+function SET_GROUP:FilterZoneTimer(Seconds)
+self.ZoneTimerInterval=Seconds or 30
+return self
+end
+function SET_GROUP:FilterStop()
+if _DATABASE then
+self:UnHandleEvent(EVENTS.Birth)
+self:UnHandleEvent(EVENTS.Dead)
+self:UnHandleEvent(EVENTS.Crash)
+self:UnHandleEvent(EVENTS.RemoveUnit)
+if self.Filter.Zones and self.ZoneTimer and self.ZoneTimer:IsRunning()then
+self.ZoneTimer:Stop()
+end
 end
 return self
 end
@@ -12291,7 +12323,6 @@ end
 if self.Filter.Zones then
 local MGroupZone=false
 for ZoneName,Zone in pairs(self.Filter.Zones)do
-self:T3("Zone:",ZoneName)
 if MGroup:IsInZone(Zone)then
 MGroupZone=true
 end
@@ -12492,6 +12523,33 @@ end
 end
 return CountU
 end
+function SET_UNIT:_ContinousZoneFilter()
+local Database=_DATABASE.UNITS
+for ObjectName,Object in pairs(Database)do
+if self:IsIncludeObject(Object)and self:IsNotInSet(Object)then
+self:Add(ObjectName,Object)
+elseif(not self:IsIncludeObject(Object))and self:IsInSet(Object)then
+self:Remove(ObjectName)
+end
+end
+return self
+end
+function SET_UNIT:FilterZoneTimer(Seconds)
+self.ZoneTimerInterval=Seconds or 30
+return self
+end
+function SET_UNIT:FilterStop()
+if _DATABASE then
+self:UnHandleEvent(EVENTS.Birth)
+self:UnHandleEvent(EVENTS.Dead)
+self:UnHandleEvent(EVENTS.Crash)
+self:UnHandleEvent(EVENTS.RemoveUnit)
+if self.Filter.Zones and self.ZoneTimer and self.ZoneTimer:IsRunning()then
+self.ZoneTimer:Stop()
+end
+end
+return self
+end
 function SET_UNIT:FilterStart()
 if _DATABASE then
 self:_FilterStart()
@@ -12499,6 +12557,11 @@ self:HandleEvent(EVENTS.Birth,self._EventOnBirth)
 self:HandleEvent(EVENTS.Dead,self._EventOnDeadOrCrash)
 self:HandleEvent(EVENTS.Crash,self._EventOnDeadOrCrash)
 self:HandleEvent(EVENTS.RemoveUnit,self._EventOnDeadOrCrash)
+if self.Filter.Zones then
+self.ZoneTimer=TIMER:New(self._ContinousZoneFilter,self)
+local timing=self.ZoneTimerInterval or 30
+self.ZoneTimer:Start(timing,timing)
+end
 end
 return self
 end
@@ -13534,12 +13597,43 @@ self.Filter.Zones[zonename]=Zone
 end
 return self
 end
+function SET_CLIENT:_ContinousZoneFilter()
+local Database=_DATABASE.CLIENTS
+for ObjectName,Object in pairs(Database)do
+if self:IsIncludeObject(Object)and self:IsNotInSet(Object)then
+self:Add(ObjectName,Object)
+elseif(not self:IsIncludeObject(Object))and self:IsInSet(Object)then
+self:Remove(ObjectName)
+end
+end
+return self
+end
+function SET_CLIENT:FilterZoneTimer(Seconds)
+self.ZoneTimerInterval=Seconds or 30
+return self
+end
+function SET_CLIENT:FilterStop()
+if _DATABASE then
+self:UnHandleEvent(EVENTS.Birth)
+self:UnHandleEvent(EVENTS.Dead)
+self:UnHandleEvent(EVENTS.Crash)
+if self.Filter.Zones and self.ZoneTimer and self.ZoneTimer:IsRunning()then
+self.ZoneTimer:Stop()
+end
+end
+return self
+end
 function SET_CLIENT:FilterStart()
 if _DATABASE then
 self:_FilterStart()
 self:HandleEvent(EVENTS.Birth,self._EventOnBirth)
 self:HandleEvent(EVENTS.Dead,self._EventOnDeadOrCrash)
 self:HandleEvent(EVENTS.Crash,self._EventOnDeadOrCrash)
+if self.Filter.Zones then
+self.ZoneTimer=TIMER:New(self._ContinousZoneFilter,self)
+local timing=self.ZoneTimerInterval or 30
+self.ZoneTimer:Start(timing,timing)
+end
 end
 return self
 end
@@ -27796,7 +27890,7 @@ end
 self.tracking=false
 end
 if self.tracking then
-if self.dtTrack and self.dtTrack>0.001 then
+if self.dtTrack and self.dtTrack>=0.00001 then
 return time+self.dtTrack
 else
 return nil
@@ -44066,7 +44160,7 @@ eventsmoose=true,
 reportplayername=false,
 }
 PSEUDOATC.id="PseudoATC | "
-PSEUDOATC.version="0.9.5"
+PSEUDOATC.version="0.10.5"
 function PSEUDOATC:New()
 local self=BASE:Inherit(self,BASE:New())
 self:E(PSEUDOATC.id..string.format("PseudoATC version %s",PSEUDOATC.version))
@@ -44074,18 +44168,12 @@ return self
 end
 function PSEUDOATC:Start()
 self:F()
-self:E(PSEUDOATC.id.."Starting PseudoATC")
-if self.eventsmoose then
-self:T(PSEUDOATC.id.."Events are handled by MOOSE.")
+self:I(PSEUDOATC.id.."Starting PseudoATC")
 self:HandleEvent(EVENTS.Birth,self._OnBirth)
 self:HandleEvent(EVENTS.Land,self._PlayerLanded)
 self:HandleEvent(EVENTS.Takeoff,self._PlayerTakeOff)
 self:HandleEvent(EVENTS.PlayerLeaveUnit,self._PlayerLeft)
 self:HandleEvent(EVENTS.Crash,self._PlayerLeft)
-else
-self:T(PSEUDOATC.id.."Events are handled by DCS.")
-world.addEventHandler(self)
-end
 end
 function PSEUDOATC:DebugOn()
 self.Debug=true
@@ -44115,56 +44203,11 @@ end
 function PSEUDOATC:SetReportAltInterval(interval)
 self.talt=interval or 3
 end
-function PSEUDOATC:onEvent(Event)
-if Event==nil or Event.initiator==nil or Unit.getByName(Event.initiator:getName())==nil then
-return true
-end
-local DCSiniunit=Event.initiator
-local DCSplace=Event.place
-local DCSsubplace=Event.subplace
-local EventData={}
-local _playerunit=nil
-local _playername=nil
-if Event.initiator then
-EventData.IniUnitName=Event.initiator:getName()
-EventData.IniDCSGroup=Event.initiator:getGroup()
-EventData.IniGroupName=Event.initiator:getGroup():getName()
-_playerunit,_playername=self:_GetPlayerUnitAndName(EventData.IniUnitName)
-end
-if Event.place then
-EventData.Place=Event.place
-EventData.PlaceName=Event.place:getName()
-end
-if Event.subplace then
-EventData.SubPlace=Event.subplace
-EventData.SubPlaceName=Event.subplace:getName()
-end
-self:T3(PSEUDOATC.id..string.format("EVENT: Event in onEvent with ID = %s",tostring(Event.id)))
-self:T3(PSEUDOATC.id..string.format("EVENT: Ini unit   = %s",tostring(EventData.IniUnitName)))
-self:T3(PSEUDOATC.id..string.format("EVENT: Ini group  = %s",tostring(EventData.IniGroupName)))
-self:T3(PSEUDOATC.id..string.format("EVENT: Ini player = %s",tostring(_playername)))
-self:T3(PSEUDOATC.id..string.format("EVENT: Place      = %s",tostring(EventData.PlaceName)))
-self:T3(PSEUDOATC.id..string.format("EVENT: SubPlace   = %s",tostring(EventData.SubPlaceName)))
-if Event.id==world.event.S_EVENT_BIRTH and _playername then
-self:_OnBirth(EventData)
-end
-if Event.id==world.event.S_EVENT_TAKEOFF and _playername and EventData.Place then
-self:_PlayerTakeOff(EventData)
-end
-if Event.id==world.event.S_EVENT_LAND and _playername and EventData.Place then
-self:_PlayerLanded(EventData)
-end
-if Event.id==world.event.S_EVENT_PLAYER_LEAVE_UNIT and _playername then
-self:_PlayerLeft(EventData)
-end
-if Event.id==world.event.S_EVENT_CRASH and _playername then
-self:_PlayerLeft(EventData)
-end
-end
 function PSEUDOATC:_OnBirth(EventData)
 self:F({EventData=EventData})
 local _unitName=EventData.IniUnitName
-local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+local _unit=EventData.IniUnit
+local _playername=EventData.IniPlayerName
 if _unit and _playername then
 self:PlayerEntered(_unit)
 end
@@ -44172,7 +44215,8 @@ end
 function PSEUDOATC:_PlayerLeft(EventData)
 self:F({EventData=EventData})
 local _unitName=EventData.IniUnitName
-local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+local _unit=EventData.IniUnit
+local _playername=EventData.IniPlayerName
 if _unit and _playername then
 self:PlayerLeft(_unit)
 end
@@ -44180,7 +44224,8 @@ end
 function PSEUDOATC:_PlayerLanded(EventData)
 self:F({EventData=EventData})
 local _unitName=EventData.IniUnitName
-local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+local _unit=EventData.IniUnit
+local _playername=EventData.IniPlayerName
 local _base=nil
 local _baseName=nil
 if EventData.place then
@@ -44194,7 +44239,8 @@ end
 function PSEUDOATC:_PlayerTakeOff(EventData)
 self:F({EventData=EventData})
 local _unitName=EventData.IniUnitName
-local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
+local _unit=EventData.IniUnit
+local _playername=EventData.IniPlayerName
 local _base=nil
 local _baseName=nil
 if EventData.place then
@@ -44483,7 +44529,7 @@ end
 function PSEUDOATC:AltitudeTimeStart(GID,UID)
 self:F({GID=GID,UID=UID})
 self:T(PSEUDOATC.id..string.format("Starting altitude report timer for player ID %d.",UID))
-self.group[GID].player[UID].altimer,self.group[GID].player[UID].altimerid=SCHEDULER:New(nil,self.ReportHeight,{self,GID,UID,0.1,true},1,3)
+self.group[GID].player[UID].altimer,self.group[GID].player[UID].altimerid=SCHEDULER:New(nil,self.ReportHeight,{self,GID,UID,1,true},1,3)
 end
 function PSEUDOATC:AltitudeTimerStop(GID,UID)
 self:F({GID=GID,UID=UID})
@@ -53769,6 +53815,7 @@ self:E(self.lid.."ERROR: EventData.IniUnit=nil in event BIRTH!")
 self:E(EventData)
 return
 end
+if EventData.IniObjectCategory~=Object.Category.UNIT then return end
 local _unitName=EventData.IniUnitName
 local _unit,_playername=self:_GetPlayerUnitAndName(_unitName)
 self:T(self.lid.."BIRTH: unit   = "..tostring(EventData.IniUnitName))
@@ -61239,6 +61286,150 @@ local h=S[2]
 return t,h
 end
 do
+CTLD_CARGO={
+ClassName="CTLD_CARGO",
+ID=0,
+Name="none",
+Templates={},
+CargoType="none",
+HasBeenMoved=false,
+LoadDirectly=false,
+CratesNeeded=0,
+Positionable=nil,
+HasBeenDropped=false,
+PerCrateMass=0,
+Stock=nil,
+Mark=nil,
+}
+CTLD_CARGO.Enum={
+VEHICLE="Vehicle",
+TROOPS="Troops",
+FOB="FOB",
+CRATE="Crate",
+REPAIR="Repair",
+ENGINEERS="Engineers",
+STATIC="Static",
+}
+function CTLD_CARGO:New(ID,Name,Templates,Sorte,HasBeenMoved,LoadDirectly,CratesNeeded,Positionable,Dropped,PerCrateMass,Stock,Subcategory)
+local self=BASE:Inherit(self,BASE:New())
+self:T({ID,Name,Templates,Sorte,HasBeenMoved,LoadDirectly,CratesNeeded,Positionable,Dropped})
+self.ID=ID or math.random(100000,1000000)
+self.Name=Name or"none"
+self.Templates=Templates or{}
+self.CargoType=Sorte or"type"
+self.HasBeenMoved=HasBeenMoved or false
+self.LoadDirectly=LoadDirectly or false
+self.CratesNeeded=CratesNeeded or 0
+self.Positionable=Positionable or nil
+self.HasBeenDropped=Dropped or false
+self.PerCrateMass=PerCrateMass or 0
+self.Stock=Stock or nil
+self.Mark=nil
+self.Subcategory=Subcategory or"Other"
+return self
+end
+function CTLD_CARGO:GetID()
+return self.ID
+end
+function CTLD_CARGO:GetSubCat()
+return self.Subcategory
+end
+function CTLD_CARGO:GetMass()
+return self.PerCrateMass
+end
+function CTLD_CARGO:GetName()
+return self.Name
+end
+function CTLD_CARGO:GetTemplates()
+return self.Templates
+end
+function CTLD_CARGO:HasMoved()
+return self.HasBeenMoved
+end
+function CTLD_CARGO:WasDropped()
+return self.HasBeenDropped
+end
+function CTLD_CARGO:CanLoadDirectly()
+return self.LoadDirectly
+end
+function CTLD_CARGO:GetCratesNeeded()
+return self.CratesNeeded
+end
+function CTLD_CARGO:GetType()
+return self.CargoType
+end
+function CTLD_CARGO:GetPositionable()
+return self.Positionable
+end
+function CTLD_CARGO:SetHasMoved(moved)
+self.HasBeenMoved=moved or false
+end
+function CTLD_CARGO:Isloaded()
+if self.HasBeenMoved and not self.WasDropped()then
+return true
+else
+return false
+end
+end
+function CTLD_CARGO:SetWasDropped(dropped)
+self.HasBeenDropped=dropped or false
+end
+function CTLD_CARGO:GetStock()
+if self.Stock then
+return self.Stock
+else
+return-1
+end
+end
+function CTLD_CARGO:AddStock(Number)
+if self.Stock then
+local number=Number or 1
+self.Stock=self.Stock+number
+end
+return self
+end
+function CTLD_CARGO:RemoveStock(Number)
+if self.Stock then
+local number=Number or 1
+self.Stock=self.Stock-number
+if self.Stock<0 then self.Stock=0 end
+end
+return self
+end
+function CTLD_CARGO:SetStock(Number)
+self.Stock=Number
+return self
+end
+function CTLD_CARGO:IsRepair()
+if self.CargoType=="Repair"then
+return true
+else
+return false
+end
+end
+function CTLD_CARGO:IsStatic()
+if self.CargoType=="Static"then
+return true
+else
+return false
+end
+end
+function CTLD_CARGO:AddMark(Mark)
+self.Mark=Mark
+return self
+end
+function CTLD_CARGO:GetMark(Mark)
+return self.Mark
+end
+function CTLD_CARGO:WipeMark()
+self.Mark=nil
+return self
+end
+function CTLD_CARGO:GetNetMass()
+return self.CratesNeeded*self.PerCrateMass
+end
+end
+do
 CTLD_ENGINEERING={
 ClassName="CTLD_ENGINEERING",
 lid="",
@@ -61397,150 +61588,6 @@ end
 end
 end
 do
-CTLD_CARGO={
-ClassName="CTLD_CARGO",
-ID=0,
-Name="none",
-Templates={},
-CargoType="none",
-HasBeenMoved=false,
-LoadDirectly=false,
-CratesNeeded=0,
-Positionable=nil,
-HasBeenDropped=false,
-PerCrateMass=0,
-Stock=nil,
-Mark=nil,
-}
-CTLD_CARGO.Enum={
-VEHICLE="Vehicle",
-TROOPS="Troops",
-FOB="FOB",
-CRATE="Crate",
-REPAIR="Repair",
-ENGINEERS="Engineers",
-STATIC="Static",
-}
-function CTLD_CARGO:New(ID,Name,Templates,Sorte,HasBeenMoved,LoadDirectly,CratesNeeded,Positionable,Dropped,PerCrateMass,Stock,Subcategory)
-local self=BASE:Inherit(self,BASE:New())
-self:T({ID,Name,Templates,Sorte,HasBeenMoved,LoadDirectly,CratesNeeded,Positionable,Dropped})
-self.ID=ID or math.random(100000,1000000)
-self.Name=Name or"none"
-self.Templates=Templates or{}
-self.CargoType=Sorte or"type"
-self.HasBeenMoved=HasBeenMoved or false
-self.LoadDirectly=LoadDirectly or false
-self.CratesNeeded=CratesNeeded or 0
-self.Positionable=Positionable or nil
-self.HasBeenDropped=Dropped or false
-self.PerCrateMass=PerCrateMass or 0
-self.Stock=Stock or nil
-self.Mark=nil
-self.Subcategory=Subcategory or"Other"
-return self
-end
-function CTLD_CARGO:GetID()
-return self.ID
-end
-function CTLD_CARGO:GetSubCat()
-return self.Subcategory
-end
-function CTLD_CARGO:GetMass()
-return self.PerCrateMass
-end
-function CTLD_CARGO:GetName()
-return self.Name
-end
-function CTLD_CARGO:GetTemplates()
-return self.Templates
-end
-function CTLD_CARGO:HasMoved()
-return self.HasBeenMoved
-end
-function CTLD_CARGO:WasDropped()
-return self.HasBeenDropped
-end
-function CTLD_CARGO:CanLoadDirectly()
-return self.LoadDirectly
-end
-function CTLD_CARGO:GetCratesNeeded()
-return self.CratesNeeded
-end
-function CTLD_CARGO:GetType()
-return self.CargoType
-end
-function CTLD_CARGO:GetPositionable()
-return self.Positionable
-end
-function CTLD_CARGO:SetHasMoved(moved)
-self.HasBeenMoved=moved or false
-end
-function CTLD_CARGO:Isloaded()
-if self.HasBeenMoved and not self.WasDropped()then
-return true
-else
-return false
-end
-end
-function CTLD_CARGO:SetWasDropped(dropped)
-self.HasBeenDropped=dropped or false
-end
-function CTLD_CARGO:GetStock()
-if self.Stock then
-return self.Stock
-else
-return-1
-end
-end
-function CTLD_CARGO:AddStock(Number)
-if self.Stock then
-local number=Number or 1
-self.Stock=self.Stock+number
-end
-return self
-end
-function CTLD_CARGO:RemoveStock(Number)
-if self.Stock then
-local number=Number or 1
-self.Stock=self.Stock-number
-if self.Stock<0 then self.Stock=0 end
-end
-return self
-end
-function CTLD_CARGO:SetStock(Number)
-self.Stock=Number
-return self
-end
-function CTLD_CARGO:IsRepair()
-if self.CargoType=="Repair"then
-return true
-else
-return false
-end
-end
-function CTLD_CARGO:IsStatic()
-if self.CargoType=="Static"then
-return true
-else
-return false
-end
-end
-function CTLD_CARGO:AddMark(Mark)
-self.Mark=Mark
-return self
-end
-function CTLD_CARGO:GetMark(Mark)
-return self.Mark
-end
-function CTLD_CARGO:WipeMark()
-self.Mark=nil
-return self
-end
-function CTLD_CARGO:GetNetMass()
-return self.CratesNeeded*self.PerCrateMass
-end
-end
-do
 CTLD={
 ClassName="CTLD",
 verbose=0,
@@ -61592,7 +61639,7 @@ CTLD.UnitTypes={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.33"
+CTLD.version="1.0.35"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -61994,8 +62041,10 @@ end
 local groupname=nearestGroup:GetName()
 local function matchstring(String,Table)
 local match=false
+String=string.gsub(String,"-"," ")
 if type(Table)=="table"then
 for _,_name in pairs(Table)do
+_name=string.gsub(_name,"-"," ")
 if string.find(String,_name)then
 match=true
 break
@@ -62003,6 +62052,7 @@ end
 end
 else
 if type(String)=="string"then
+Table=string.gsub(Table,"-"," ")
 if string.find(String,Table)then match=true end
 end
 end
@@ -64060,7 +64110,7 @@ end
 end
 return self
 end
-function CTLD:InjectTroops(Zone,Cargo,Surfacetypes,PreciseLocation)
+function CTLD:InjectTroops(Zone,Cargo,Surfacetypes,PreciseLocation,Structure)
 self:T(self.lid.." InjectTroops")
 local cargo=Cargo
 local function IsTroopsMatch(cargo)
@@ -64075,6 +64125,42 @@ break
 end
 end
 return match
+end
+local function Cruncher(group,typename,anzahl)
+local units=group:GetUnits()
+local reduced=0
+for _,_unit in pairs(units)do
+local typo=_unit:GetTypeName()
+if typename==typo then
+_unit:Destroy(false)
+reduced=reduced+1
+if reduced==anzahl then break end
+end
+end
+end
+local function PostSpawn(args)
+local group=args[1]
+local structure=args[2]
+if structure then
+local loadedstructure={}
+local strcset=UTILS.Split(structure,";")
+for _,_data in pairs(strcset)do
+local datasplit=UTILS.Split(_data,"==")
+loadedstructure[datasplit[1]]=tonumber(datasplit[2])
+end
+local originalstructure=UTILS.GetCountPerTypeName(group)
+for _name,_number in pairs(originalstructure)do
+local loadednumber=0
+if loadedstructure[_name]then
+loadednumber=loadedstructure[_name]
+end
+local reduce=false
+if loadednumber<_number then reduce=true end
+if reduce then
+Cruncher(group,_name,_number-loadednumber)
+end
+end
+end
 end
 if not IsTroopsMatch(cargo)then
 self.CargoCounter=self.CargoCounter+1
@@ -64109,13 +64195,16 @@ self.Engineers=self.Engineers+1
 local grpname=self.DroppedTroops[self.TroopCounter]:GetName()
 self.EngineersInField[self.Engineers]=CTLD_ENGINEERING:New(name,grpname)
 end
+if Structure then
+BASE:ScheduleOnce(0.5,PostSpawn,{self.DroppedTroops[self.TroopCounter],Structure})
+end
 if self.eventoninject then
 self:__TroopsDeployed(1,nil,nil,self.DroppedTroops[self.TroopCounter],type)
 end
 end
 return self
 end
-function CTLD:InjectVehicles(Zone,Cargo,Surfacetypes,PreciseLocation)
+function CTLD:InjectVehicles(Zone,Cargo,Surfacetypes,PreciseLocation,Structure)
 self:T(self.lid.." InjectVehicles")
 local cargo=Cargo
 local function IsVehicMatch(cargo)
@@ -64130,6 +64219,42 @@ break
 end
 end
 return match
+end
+local function Cruncher(group,typename,anzahl)
+local units=group:GetUnits()
+local reduced=0
+for _,_unit in pairs(units)do
+local typo=_unit:GetTypeName()
+if typename==typo then
+_unit:Destroy(false)
+reduced=reduced+1
+if reduced==anzahl then break end
+end
+end
+end
+local function PostSpawn(args)
+local group=args[1]
+local structure=args[2]
+if structure then
+local loadedstructure={}
+local strcset=UTILS.Split(structure,";")
+for _,_data in pairs(strcset)do
+local datasplit=UTILS.Split(_data,"==")
+loadedstructure[datasplit[1]]=tonumber(datasplit[2])
+end
+local originalstructure=UTILS.GetCountPerTypeName(group)
+for _name,_number in pairs(originalstructure)do
+local loadednumber=0
+if loadedstructure[_name]then
+loadednumber=loadedstructure[_name]
+end
+local reduce=false
+if loadednumber<_number then reduce=true end
+if reduce then
+Cruncher(group,_name,_number-loadednumber)
+end
+end
+end
 end
 if not IsVehicMatch(cargo)then
 self.CargoCounter=self.CargoCounter+1
@@ -64162,6 +64287,9 @@ else
 self.DroppedTroops[self.TroopCounter]=SPAWN:NewWithAlias(_template,alias)
 :InitDelayOff()
 :SpawnFromVec2(randomcoord)
+end
+if Structure then
+BASE:ScheduleOnce(0.5,PostSpawn,{self.DroppedTroops[self.TroopCounter],Structure})
 end
 if self.eventoninject then
 self:__CratesBuild(1,nil,nil,self.DroppedTroops[self.TroopCounter])
@@ -64377,6 +64505,7 @@ end
 local function FindCargoType(name,table)
 local match=false
 local cargo=nil
+name=string.gsub(name,"-"," ")
 for _ind,_cargo in pairs(table)do
 local thiscargo=_cargo
 local template=thiscargo:GetTemplates()
@@ -64384,6 +64513,7 @@ if type(template)=="string"then
 template={template}
 end
 for _,_name in pairs(template)do
+_name=string.gsub(_name,"-"," ")
 if string.find(name,_name)and _cargo:GetType()~=CTLD_CARGO.Enum.REPAIR then
 match=true
 cargo=thiscargo
@@ -64393,16 +64523,17 @@ if match then break end
 end
 return match,cargo
 end
-local data="Group,x,y,z,CargoName,CargoTemplates,CargoType,CratesNeeded,CrateMass\n"
+local data="Group,x,y,z,CargoName,CargoTemplates,CargoType,CratesNeeded,CrateMass,Structure\n"
 local n=0
 for _,_grp in pairs(grouptable)do
 local group=_grp
 if group and group:IsAlive()then
 local name=group:GetName()
-local template=string.gsub(name,"-(.+)$","")
+local template=name
 if string.find(template,"#")then
 template=string.gsub(name,"#(%d+)$","")
 end
+local template=string.gsub(name,"-(%d+)$","")
 local match,cargo=FindCargoType(template,cgotable)
 if not match then
 match,cargo=FindCargoType(template,cgovehic)
@@ -64415,6 +64546,11 @@ local cgotemp=cargo.Templates
 local cgotype=cargo.CargoType
 local cgoneed=cargo.CratesNeeded
 local cgomass=cargo.PerCrateMass
+local structure=UTILS.GetCountPerTypeName(group)
+local strucdata=""
+for typen,anzahl in pairs(structure)do
+strucdata=strucdata..typen.."=="..anzahl..";"
+end
 if type(cgotemp)=="table"then
 local templates="{"
 for _,_tmpl in pairs(cgotemp)do
@@ -64424,8 +64560,8 @@ templates=templates.."}"
 cgotemp=templates
 end
 local location=group:GetVec3()
-local txt=string.format("%s,%d,%d,%d,%s,%s,%s,%d,%d\n"
-,template,location.x,location.y,location.z,cgoname,cgotemp,cgotype,cgoneed,cgomass)
+local txt=string.format("%s,%d,%d,%d,%s,%s,%s,%d,%d,%s\n"
+,template,location.x,location.y,location.z,cgoname,cgotemp,cgotype,cgoneed,cgomass,strucdata)
 data=data..txt
 end
 end
@@ -64541,13 +64677,18 @@ cargotemplates=string.gsub(cargotemplates,"}","")
 cargotemplates=UTILS.Split(cargotemplates,";")
 local size=tonumber(dataset[8])
 local mass=tonumber(dataset[9])
+local structure=nil
+if dataset[10]then
+structure=dataset[10]
+structure=string.gsub(structure,",","")
+end
 local dropzone=ZONE_RADIUS:New("DropZone",vec2,20)
 if cargotype==CTLD_CARGO.Enum.VEHICLE or cargotype==CTLD_CARGO.Enum.FOB then
 local injectvehicle=CTLD_CARGO:New(nil,cargoname,cargotemplates,cargotype,true,true,size,nil,true,mass)
-self:InjectVehicles(dropzone,injectvehicle,self.surfacetypes,self.useprecisecoordloads)
+self:InjectVehicles(dropzone,injectvehicle,self.surfacetypes,self.useprecisecoordloads,structure)
 elseif cargotype==CTLD_CARGO.Enum.TROOPS or cargotype==CTLD_CARGO.Enum.ENGINEERS then
 local injecttroops=CTLD_CARGO:New(nil,cargoname,cargotemplates,cargotype,true,true,size,nil,true,mass)
-self:InjectTroops(dropzone,injecttroops,self.surfacetypes,self.useprecisecoordloads)
+self:InjectTroops(dropzone,injecttroops,self.surfacetypes,self.useprecisecoordloads,structure)
 end
 elseif(type(groupname)=="string"and groupname=="STATIC")or cargotype==CTLD_CARGO.Enum.REPAIR then
 local cargotemplates=dataset[6]
