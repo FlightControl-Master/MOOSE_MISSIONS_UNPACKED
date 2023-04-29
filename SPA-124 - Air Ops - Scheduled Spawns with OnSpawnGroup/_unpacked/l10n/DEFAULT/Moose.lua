@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-04-20T06:23:03.0000000Z-240307ef940e67744fbf0980e9c34341b66bba5f ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-04-25T19:42:53.0000000Z-c360759e49097d956c0f8390aaf5b838780c351b ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -5232,8 +5232,9 @@ TEXT="moose_text",
 BOMBRESULT="moose_bomb_result",
 STRAFERESULT="moose_strafe_result",
 LSOGRADE="moose_lso_grade",
+TTS="moose_text2speech"
 }
-SOCKET.version="0.2.0"
+SOCKET.version="0.3.0"
 function SOCKET:New(Port,Host)
 local self=BASE:Inherit(self,FSM:New())
 package.path=package.path..";.\\LuaSocket\\?.lua;"
@@ -5264,6 +5265,19 @@ function SOCKET:SendText(Text)
 local message={}
 message.command=SOCKET.DataType.TEXT
 message.text=Text
+self:SendTable(message)
+return self
+end
+function SOCKET:SendTextToSpeech(Text,Provider,Voice,Culture,Gender,Volume)
+Text=Text or"Hello World!"
+local message={}
+message.command=SOCKET.DataType.TTS
+message.text=Text
+message.provider=Provider
+message.voice=Voice
+message.culture=Culture
+message.gender=Gender
+message.volume=Volume
 self:SendTable(message)
 return self
 end
@@ -9316,6 +9330,16 @@ return true
 end
 world.searchObjects(ObjectCategories,SphereSearch,EvaluateZone)
 end
+function ZONE_RADIUS:RemoveJunk()
+local radius=self.Radius
+local vec3=self:GetVec3()
+local volS={
+id=world.VolumeType.SPHERE,
+params={point=vec3,radius=radius}
+}
+local n=world.removeJunk(volS)
+return n
+end
 function ZONE_RADIUS:GetScannedUnits()
 return self.ScanData.Units
 end
@@ -9863,6 +9887,21 @@ local vec2={x=vec1.x,y=vec3.y}
 local vec4={x=vec3.x,y=vec1.y}
 local zone=ZONE_POLYGON_BASE:New(ZoneName or self.ZoneName,{vec1,vec2,vec3,vec4})
 return zone
+end
+function ZONE_POLYGON_BASE:RemoveJunk(Height)
+Height=Height or 1000
+local vec2SW,vec2NE=self:GetBoundingVec2()
+local vec3SW={x=vec2SW.x,y=-Height,z=vec2SW.y}
+local vec3NE={x=vec2NE.x,y=Height,z=vec2NE.y}
+local volume={
+id=world.VolumeType.BOX,
+params={
+min=vec3SW,
+max=vec3SW
+}
+}
+local n=world.removeJunk(volume)
+return n
 end
 function ZONE_POLYGON_BASE:SmokeZone(SmokeColor,Segments)
 self:F2(SmokeColor)
@@ -15380,6 +15419,33 @@ function SET_SCENERY:IsIncludeObject(MScenery)
 self:F2(MScenery)
 return true
 end
+function SET_SCENERY:GetLife0()
+local life0=0
+self:ForEachScenery(
+function(obj)
+local Obj=obj
+life0=life0+Obj:GetLife0()
+end
+)
+return life0
+end
+function SET_SCENERY:GetLife()
+local life=0
+self:ForEachScenery(
+function(obj)
+local Obj=obj
+life=life+Obj:GetLife()
+end
+)
+return life
+end
+function SET_SCENERY:GetRelativeLife()
+local life=self:GetLife()
+local life0=self:GetLife0()
+self:T3(string.format("Set Lifepoints: %d life0 | %d life",life0,life))
+local rlife=math.floor((life/life0)*100)
+return rlife
+end
 end
 do
 COORDINATE={
@@ -20596,6 +20662,18 @@ return coord
 end
 self:E({"Cannot GetCoordinate",Positionable=self,Alive=self:IsAlive()})
 return nil
+end
+function POSITIONABLE:Explode(power,delay)
+power=power or 100
+if delay and delay>0 then
+self:ScheduleOnce(delay,POSITIONABLE.Explode,self,power,0)
+else
+local coord=self:GetCoord()
+if coord then
+coord:Explosion(power)
+end
+end
+return self
 end
 function POSITIONABLE:GetOffsetCoordinate(x,y,z)
 x=x or 0
@@ -26201,14 +26279,46 @@ AIRBASE.Normandy={
 ["Needs_Oar_Point"]="Needs Oar Point",
 ["Funtington"]="Funtington",
 ["Tangmere"]="Tangmere",
-["Ford_AF"]="Ford_AF",
-["Goulet"]="Goulet",
+["Ford"]="Ford",
 ["Argentan"]="Argentan",
-["Vrigny"]="Vrigny",
+["Goulet"]="Goulet",
+["Barville"]="Barville",
 ["Essay"]="Essay",
 ["Hauterive"]="Hauterive",
-["Barville"]="Barville",
+["Lymington"]="Lymington",
+["Vrigny"]="Vrigny",
+["Odiham"]="Odiham",
 ["Conches"]="Conches",
+["West_Malling"]="West Malling",
+["Villacoublay"]="Villacoublay",
+["Kenley"]="Kenley",
+["Beauvais_Tille"]="Beauvais-Tille",
+["Cormeilles_en_Vexin"]="Cormeilles-en-Vexin",
+["Creil"]="Creil",
+["Guyancourt"]="Guyancourt",
+["Lonrai"]="Lonrai",
+["Dinan_Trelivan"]="Dinan-Trelivan",
+["Heathrow"]="Heathrow",
+["Fecamp_Benouville"]="Fecamp-Benouville",
+["Farnborough"]="Farnborough",
+["Friston"]="Friston",
+["Deanland "]="Deanland ",
+["Triqueville"]="Triqueville",
+["Poix"]="Poix",
+["Orly"]="Orly",
+["Stoney_Cross"]="Stoney Cross",
+["Amiens_Glisy"]="Amiens-Glisy",
+["Ronai"]="Ronai",
+["Rouen_Boos"]="Rouen-Boos",
+["Deauville"]="Deauville",
+["Saint_Aubin"]="Saint-Aubin",
+["Flers"]="Flers",
+["Avranches_Le_Val_Saint_Pere"]="Avranches Le Val-Saint-Pere",
+["Gravesend"]="Gravesend",
+["Beaumont_le_Roger"]="Beaumont-le-Roger",
+["Broglie"]="Broglie",
+["Bernay_Saint_Martin"]="Bernay Saint Martin",
+["Saint_Andre_de_lEure"]="Saint-Andre-de-lEure",
 }
 AIRBASE.PersianGulf={
 ["Abu_Dhabi_International_Airport"]="Abu Dhabi Intl",
@@ -27249,6 +27359,9 @@ function SCENERY:GetLife()
 local life=0
 if self.SceneryObject then
 life=self.SceneryObject:getLife()
+if life>self.Life0 then
+self.Life0=math.floor(life*1.2)
+end
 end
 return life
 end
@@ -27268,6 +27381,7 @@ function SCENERY:FindByName(Name,Coordinate,Radius)
 local radius=Radius or 100
 local name=Name or"unknown"
 local scenery=nil
+BASE:T({name,radius,Coordinate:GetVec2()})
 local function SceneryScan(coordinate,radius,name)
 if coordinate~=nil then
 local scenerylist=coordinate:ScanScenery(radius)
@@ -27303,6 +27417,7 @@ if type(ZoneName)=="string"then
 zone=ZONE:FindByName(ZoneName)
 end
 local _id=zone:GetProperty('OBJECT ID')
+BASE:T("Object ID ".._id)
 if not _id then
 BASE:E("**** Zone without object ID: "..ZoneName.." | Type: "..tostring(zone.ClassName))
 if string.find(zone.ClassName,"POLYGON")then
