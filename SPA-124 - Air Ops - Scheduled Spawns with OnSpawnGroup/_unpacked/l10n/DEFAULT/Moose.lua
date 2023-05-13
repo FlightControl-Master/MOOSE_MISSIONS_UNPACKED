@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-05-05T08:31:23.0000000Z-9b8154246f97680a9f616526be769480b240567f ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-05-11T13:31:24.0000000Z-943b68f38f968516e0fe6b7c47af31ad429983a5 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -61783,7 +61783,7 @@ CTLD.UnitTypes={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.35"
+CTLD.version="1.0.36"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -62424,7 +62424,7 @@ if cratedistance>self.CrateDistance then cratedistance=self.CrateDistance end
 rheading=UTILS.RandomGaussian(0,30,-90,90,100)
 rheading=math.fmod((heading+rheading+addon),360)
 else
-local initialSpacing=IsHerc and 16 or 12
+local initialSpacing=IsHerc and 16 or(capabilities.length+2)
 local crateSpacing=4
 local lateralSpacing=4
 local nrSideBySideCrates=3
@@ -68067,6 +68067,15 @@ error("Unknown Squadron:"..SquadronName)
 end
 return DefenderSquadron
 end
+function AI_A2A_DISPATCHER:QuerySquadron(Squadron)
+local Squadron=self:GetSquadron(Squadron)
+if Squadron.ResourceCount then
+self:T2(string.format("%s = %s",Squadron.Name,Squadron.ResourceCount))
+return Squadron.ResourceCount
+end
+self:F({Squadron=Squadron.Name,SquadronResourceCount=Squadron.ResourceCount})
+return nil
+end
 function AI_A2A_DISPATCHER:SetSquadronVisible(SquadronName)
 self.DefenderSquadrons[SquadronName]=self.DefenderSquadrons[SquadronName]or{}
 local DefenderSquadron=self:GetSquadron(SquadronName)
@@ -69584,6 +69593,15 @@ if not DefenderSquadron then
 error("Unknown Squadron:"..SquadronName)
 end
 return DefenderSquadron
+end
+function AI_A2G_DISPATCHER:QuerySquadron(Squadron)
+local Squadron=self:GetSquadron(Squadron)
+if Squadron.ResourceCount then
+self:T2(string.format("%s = %s",Squadron.Name,Squadron.ResourceCount))
+return Squadron.ResourceCount
+end
+self:F({Squadron=Squadron.Name,SquadronResourceCount=Squadron.ResourceCount})
+return nil
 end
 function AI_A2G_DISPATCHER:IsSquadronVisible(SquadronName)
 self.DefenderSquadrons[SquadronName]=self.DefenderSquadrons[SquadronName]or{}
