@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-05-11T13:31:24.0000000Z-943b68f38f968516e0fe6b7c47af31ad429983a5 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-05-19T15:11:54.0000000Z-60b75a4c8fb17ef3be818cd089f54d0c7e5319cb ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -15639,6 +15639,29 @@ set:AddUnit(unit)
 end
 return set
 end
+function COORDINATE:ScanStatics(radius)
+local _,_,_,_,statics=self:ScanObjects(radius,false,true,false)
+local set=SET_STATIC:New()
+for _,unit in pairs(statics)do
+set:AddUnit(unit)
+end
+return set
+end
+function COORDINATE:FindClosestStatic(radius)
+local units=self:ScanStatics(radius)
+local umin=nil
+local dmin=math.huge
+for _,_unit in pairs(units.Set)do
+local unit=_unit
+local coordinate=unit:GetCoordinate()
+local d=self:Get2DDistance(coordinate)
+if d<dmin then
+dmin=d
+umin=unit
+end
+end
+return umin
+end
 function COORDINATE:FindClosestUnit(radius)
 local units=self:ScanUnits(radius)
 local umin=nil
@@ -22365,7 +22388,7 @@ params={},
 }
 return DCSTask
 end
-function CONTROLLABLE:EnRouteTaskFAC_EngageGroup(AttackGroup,Priority,WeaponType,Designation,Datalink)
+function CONTROLLABLE:EnRouteTaskFAC_EngageGroup(AttackGroup,Priority,WeaponType,Designation,Datalink,Frequency,Modulation,CallsignID,CallsignNumber)
 local DCSTask={
 id='FAC_EngageControllable',
 params={
@@ -22373,17 +22396,24 @@ groupId=AttackGroup:GetID(),
 weaponType=WeaponType or"Auto",
 designation=Designation,
 datalink=Datalink and Datalink or false,
+frequency=(Frequency or 133)*1000000,
+modulation=Modulation or radio.modulation.AM,
+callname=CallsignID,
+number=CallsignNumber,
 priority=Priority or 0,
 },
 }
 return DCSTask
 end
-function CONTROLLABLE:EnRouteTaskFAC(Radius,Priority)
+function CONTROLLABLE:EnRouteTaskFAC(Frequency,Modulation,CallsignID,CallsignNumber,Priority)
 local DCSTask={
 id='FAC',
 params={
-radius=Radius,
-priority=Priority
+frequency=(Frequency or 133)*1000000,
+modulation=Modulation or radio.modulation.AM,
+callname=CallsignID,
+number=CallsignNumber,
+priority=Priority or 0
 }
 }
 return DCSTask
@@ -44842,7 +44872,7 @@ Assets={},
 WarehouseID=0,
 Warehouses={}
 }
-WAREHOUSE.version="1.0.2"
+WAREHOUSE.version="1.0.2a"
 function WAREHOUSE:New(warehouse,alias)
 local self=BASE:Inherit(self,FSM:New())
 if type(warehouse)=="string"then
@@ -45974,7 +46004,8 @@ spawngroup=self:_SpawnAssetGroundNaval(_alias,_assetitem,Request,self.spawnzone)
 elseif Request.transporttype==WAREHOUSE.TransportType.TRAIN then
 self:_ErrorMessage("ERROR: Cargo transport by train not supported yet!")
 return
-elseif Request.transporttype==WAREHOUSE.TransportType.SHIP or Request.transporttype==WAREHOUSE.TransportType.NAVALCARRIER then
+elseif Request.transporttype==WAREHOUSE.TransportType.SHIP or Request.transporttype==WAREHOUSE.TransportType.NAVALCARRIER
+or Request.transporttype==WAREHOUSE.TransportType.ARMEDSHIP or Request.transporttype==WAREHOUSE.TransportType.WARSHIP then
 spawngroup=self:_SpawnAssetGroundNaval(_alias,_assetitem,Request,self.portzone)
 elseif Request.transporttype==WAREHOUSE.TransportType.SELFPROPELLED then
 self:_ErrorMessage("ERROR: Transport type selfpropelled was already handled above. We should not get here!")
@@ -46563,7 +46594,7 @@ end
 local UnControlled=true
 for i=1,#cargoassets do
 local asset=cargoassets[i]
-asset.spawned=false
+if not asset.spawned then
 asset.iscargo=true
 asset.rid=Request.uid
 local _alias=asset.spawngroupname
@@ -46588,6 +46619,7 @@ self:E(self.lid.."ERROR: Unknown asset category!")
 end
 if _group then
 self:__AssetSpawned(0.01,_group,asset,Request)
+end
 end
 end
 end
@@ -61783,7 +61815,7 @@ CTLD.UnitTypes={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.36"
+CTLD.version="1.0.37"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -61840,6 +61872,7 @@ self.UsedVHFFrequencies={}
 self.UsedUHFFrequencies={}
 self.UsedFMFrequencies={}
 self.RadioSound="beacon.ogg"
+self.RadioSoundFC3="beacon.ogg"
 self.RadioPath="l10n/DEFAULT/"
 self.pickupZones={}
 self.dropOffZones={}
@@ -63779,6 +63812,7 @@ if i==5 then IsDropped=true end
 for index,cargozone in pairs(zones[i])do
 local czone=cargozone
 local Sound=self.RadioSound
+local Silent=self.RadioSoundFC3 or self.RadioSound
 if czone.active and czone.hasbeacon then
 local FMbeacon=czone.fmbeacon
 local VHFbeacon=czone.vhfbeacon
@@ -63788,8 +63822,8 @@ local FM=FMbeacon.frequency
 local VHF=VHFbeacon.frequency
 local UHF=UHFbeacon.frequency
 self:_AddRadioBeacon(Name,Sound,FM,CTLD.RadioModulation.FM,IsShip,IsDropped)
-self:_AddRadioBeacon(Name,Sound,VHF,CTLD.RadioModulation.FM,IsShip,IsDropped)
-self:_AddRadioBeacon(Name,Sound,UHF,CTLD.RadioModulation.AM,IsShip,IsDropped)
+self:_AddRadioBeacon(Name,Sound,VHF,CTLD.RadioModulation.AM,IsShip,IsDropped)
+self:_AddRadioBeacon(Name,Silent,UHF,CTLD.RadioModulation.AM,IsShip,IsDropped)
 end
 end
 end
