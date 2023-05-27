@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-05-19T15:11:54.0000000Z-60b75a4c8fb17ef3be818cd089f54d0c7e5319cb ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-05-26T06:28:08.0000000Z-3e6f25f17c114d5cfeafdfd47bf55348c7e3b91a ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -2372,6 +2372,22 @@ return tostring(s)
 elseif type(s)=='string'then
 s=string.format('%q',s)
 return s
+end
+end
+end
+function UTILS.PrintTableToLog(table,indent)
+if not table then
+BASE:E("No table passed!")
+return
+end
+if not indent then indent=0 end
+for k,v in pairs(table)do
+if type(v)=="table"then
+BASE:I(string.rep("  ",indent)..tostring(k).." = {")
+UTILS.PrintTableToLog(v,indent+1)
+BASE:I(string.rep("  ",indent).."}")
+else
+BASE:I(string.rep("  ",indent)..tostring(k).." = "..tostring(v))
 end
 end
 end
@@ -7514,7 +7530,7 @@ Event.TgtTypeName=Event.TgtDCSUnit:getTypeName()
 end
 if Event.TgtObjectCategory==Object.Category.STATIC then
 Event.TgtDCSUnit=Event.target
-if Event.target:isExist()and Event.id~=33 and not Event.TgtObjectCategory==Object.Category.COORDINATE then
+if Event.target:isExist()and Event.id~=33 then
 Event.TgtDCSUnitName=Event.TgtDCSUnit:getName()
 Event.TgtUnitName=Event.TgtDCSUnitName
 Event.TgtUnit=STATIC:FindByName(Event.TgtDCSUnitName,false)
@@ -15642,8 +15658,8 @@ end
 function COORDINATE:ScanStatics(radius)
 local _,_,_,_,statics=self:ScanObjects(radius,false,true,false)
 local set=SET_STATIC:New()
-for _,unit in pairs(statics)do
-set:AddUnit(unit)
+for _,stat in pairs(statics)do
+set:AddStatic(STATIC:Find(stat))
 end
 return set
 end
@@ -18036,17 +18052,18 @@ self:SetEventPriority(5)
 self.SpawnHookScheduler=SCHEDULER:New(nil)
 return self
 end
-function SPAWN:NewFromTemplate(SpawnTemplate,SpawnTemplatePrefix,SpawnAliasPrefix)
+function SPAWN:NewFromTemplate(SpawnTemplate,SpawnTemplatePrefix,SpawnAliasPrefix,MooseNaming)
 local self=BASE:Inherit(self,BASE:New())
 self:F({SpawnTemplate,SpawnTemplatePrefix,SpawnAliasPrefix})
-if SpawnAliasPrefix==nil or SpawnAliasPrefix==""then
-BASE:I("ERROR: in function NewFromTemplate, required parameter SpawnAliasPrefix is not set")
+if SpawnTemplatePrefix==nil or SpawnTemplatePrefix==""then
+BASE:I("ERROR: in function NewFromTemplate, required parameter SpawnTemplatePrefix is not set")
 return nil
 end
 if SpawnTemplate then
 self.SpawnTemplate=SpawnTemplate
 self.SpawnTemplatePrefix=SpawnTemplatePrefix
-self.SpawnAliasPrefix=SpawnAliasPrefix
+self.SpawnAliasPrefix=SpawnAliasPrefix or SpawnTemplatePrefix
+self.SpawnTemplate.name=SpawnTemplatePrefix
 self.SpawnIndex=0
 self.SpawnCount=0
 self.AliveUnits=0
@@ -18071,6 +18088,7 @@ self.SpawnInitRadio=nil
 self.SpawnInitModex=nil
 self.SpawnInitAirbase=nil
 self.TweakedTemplate=true
+self.MooseNameing=MooseNaming or true
 self.SpawnGroups={}
 else
 error("There is no template provided for SpawnTemplatePrefix = '"..SpawnTemplatePrefix.."'")
@@ -19316,6 +19334,9 @@ local SpawnTemplate
 if self.TweakedTemplate~=nil and self.TweakedTemplate==true then
 BASE:I("WARNING: You are using a tweaked template.")
 SpawnTemplate=self.SpawnTemplate
+if self.MooseNameing then
+SpawnTemplate.name=self:SpawnGroupName(SpawnIndex)
+end
 else
 SpawnTemplate=self:_GetTemplate(SpawnTemplatePrefix)
 SpawnTemplate.name=self:SpawnGroupName(SpawnIndex)
@@ -21800,7 +21821,8 @@ self:T({CommandActivateACLS})
 if Delay and Delay>0 then
 SCHEDULER:New(nil,self.CommandActivateACLS,{self,UnitID,Name},Delay)
 else
-self:SetCommand(CommandActivateACLS)
+local controller=self:_GetController()
+controller:setCommand(CommandActivateACLS)
 end
 return self
 end
@@ -21812,7 +21834,8 @@ params={}
 if Delay and Delay>0 then
 SCHEDULER:New(nil,self.CommandDeactivateACLS,{self},Delay)
 else
-self:SetCommand(CommandDeactivateACLS)
+local controller=self:_GetController()
+controller:setCommand(CommandDeactivateACLS)
 end
 return self
 end
@@ -21838,7 +21861,7 @@ local freq=Frequency or 336
 local CommandActivateLink4={
 id="ActivateLink4",
 params={
-["frequency "]=freq*1000000,
+["frequency"]=freq*1000000,
 ["unitId"]=UnitID or self:GetID(),
 ["name"]=Callsign or"LNK",
 }
@@ -21847,7 +21870,8 @@ self:T({CommandActivateLink4})
 if Delay and Delay>0 then
 SCHEDULER:New(nil,self.CommandActivateLink4,{self,Frequency,UnitID,Callsign},Delay)
 else
-self:SetCommand(CommandActivateLink4)
+local controller=self:_GetController()
+controller:setCommand(CommandActivateLink4)
 end
 return self
 end
@@ -21866,7 +21890,8 @@ local CommandDeactivateLink4={id='DeactivateLink4',params={}}
 if Delay and Delay>0 then
 SCHEDULER:New(nil,self.CommandDeactivateLink4,{self},Delay)
 else
-self:SetCommand(CommandDeactivateLink4)
+local controller=self:_GetController()
+controller:setCommand(CommandDeactivateLink4)
 end
 return self
 end
@@ -59860,7 +59885,8 @@ if EventData.IniGroupName~=self.helo:GetName()then
 local text=string.format("Unit %s crashed or ejected.",unitname)
 MESSAGE:New(text,10,"DEBUG"):ToAllIf(self.Debug)
 self:T(self.lid..text)
-local coord=unit:GetCoordinate()
+local Vec3=EventData.IniDCSUnit:getPoint()
+local coord=COORDINATE:NewFromVec3(Vec3)
 if coord and self.rescuezone:IsCoordinateInZone(coord)then
 if self.Debug then
 coord:MarkToCoalition(self.lid..string.format("Crash site of unit %s.",unitname),self.helo:GetCoalition())
