@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-05-26T06:28:08.0000000Z-3e6f25f17c114d5cfeafdfd47bf55348c7e3b91a ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-06-02T06:44:14.0000000Z-55ed39478246e4bcc83fd96a8ad83c315399d1d3 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -11053,7 +11053,7 @@ function DATABASE:GetCoalitionFromAirbase(AirbaseName)
 return self.AIRBASES[AirbaseName]:GetCoalition()
 end
 function DATABASE:GetCategoryFromAirbase(AirbaseName)
-return self.AIRBASES[AirbaseName]:GetCategory()
+return self.AIRBASES[AirbaseName]:GetAirbaseCategory()
 end
 function DATABASE:_RegisterPlayers()
 local CoalitionsData={AlivePlayersRed=coalition.getPlayers(coalition.side.RED),AlivePlayersBlue=coalition.getPlayers(coalition.side.BLUE),AlivePlayersNeutral=coalition.getPlayers(coalition.side.NEUTRAL)}
@@ -18052,7 +18052,7 @@ self:SetEventPriority(5)
 self.SpawnHookScheduler=SCHEDULER:New(nil)
 return self
 end
-function SPAWN:NewFromTemplate(SpawnTemplate,SpawnTemplatePrefix,SpawnAliasPrefix,MooseNaming)
+function SPAWN:NewFromTemplate(SpawnTemplate,SpawnTemplatePrefix,SpawnAliasPrefix,NoMooseNamingPostfix)
 local self=BASE:Inherit(self,BASE:New())
 self:F({SpawnTemplate,SpawnTemplatePrefix,SpawnAliasPrefix})
 if SpawnTemplatePrefix==nil or SpawnTemplatePrefix==""then
@@ -18088,7 +18088,10 @@ self.SpawnInitRadio=nil
 self.SpawnInitModex=nil
 self.SpawnInitAirbase=nil
 self.TweakedTemplate=true
-self.MooseNameing=MooseNaming or true
+self.MooseNameing=true
+if NoMooseNamingPostfix==true then
+self.MooseNameing=false
+end
 self.SpawnGroups={}
 else
 error("There is no template provided for SpawnTemplatePrefix = '"..SpawnTemplatePrefix.."'")
@@ -19334,8 +19337,10 @@ local SpawnTemplate
 if self.TweakedTemplate~=nil and self.TweakedTemplate==true then
 BASE:I("WARNING: You are using a tweaked template.")
 SpawnTemplate=self.SpawnTemplate
-if self.MooseNameing then
+if self.MooseNameing==true then
 SpawnTemplate.name=self:SpawnGroupName(SpawnIndex)
+else
+SpawnTemplate.name=self:SpawnGroupName()
 end
 else
 SpawnTemplate=self:_GetTemplate(SpawnTemplatePrefix)
@@ -25135,6 +25140,7 @@ UNIT={
 ClassName="UNIT",
 UnitName=nil,
 GroupName=nil,
+DCSUnit=nil,
 }
 function UNIT:Register(UnitName)
 local self=BASE:Inherit(self,CONTROLLABLE:New(UnitName))
@@ -25145,6 +25151,7 @@ local group=unit:getGroup()
 if group then
 self.GroupName=group:getName()
 end
+self.DCSUnit=unit
 end
 self:SetEventPriority(3)
 return self
@@ -25168,6 +25175,9 @@ function UNIT:GetDCSObject()
 local DCSUnit=Unit.getByName(self.UnitName)
 if DCSUnit then
 return DCSUnit
+end
+if self.DCSUnit then
+return self.DCSUnit
 end
 return nil
 end
@@ -27421,6 +27431,12 @@ else
 self:T(string.format("%s, checking if group %s is on runway. Group is NOT alive.",self:GetName(),group:GetName()))
 end
 return false
+end
+function AIRBASE:GetCategory()
+return self.category
+end
+function AIRBASE:GetCategoryName()
+return AIRBASE.CategoryName[self.category]
 end
 SCENERY={
 ClassName="SCENERY",
@@ -61841,7 +61857,7 @@ CTLD.UnitTypes={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.37"
+CTLD.version="1.0.38"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -64022,6 +64038,9 @@ if self:IsUnitInAir(Unit)then
 local uspeed=Unit:GetVelocityMPS()
 local uheight=Unit:GetHeight()
 local ucoord=Unit:GetCoordinate()
+if not ucoord then
+return false
+end
 local gheight=ucoord:GetLandHeight()
 local aheight=uheight-gheight
 local maxh=self.maximumHoverHeight
@@ -64040,6 +64059,9 @@ if self:IsUnitInAir(Unit)then
 local uspeed=Unit:GetVelocityMPS()
 local uheight=Unit:GetHeight()
 local ucoord=Unit:GetCoordinate()
+if not ucoord then
+return false
+end
 local gheight=ucoord:GetLandHeight()
 local aheight=uheight-gheight
 local minh=self.HercMinAngels
@@ -64102,6 +64124,9 @@ minheight=5.1
 end
 local uheight=Unit:GetHeight()
 local ucoord=Unit:GetCoordinate()
+if not ucoord then
+return false
+end
 local gheight=ucoord:GetLandHeight()
 local aheight=uheight-gheight
 if aheight>=minheight then
@@ -65377,10 +65402,10 @@ CSAR.AircraftType["Bell-47"]=2
 CSAR.AircraftType["UH-60L"]=10
 CSAR.AircraftType["AH-64D_BLK_II"]=2
 CSAR.AircraftType["Bronco-OV-10A"]=2
-CSAR.version="1.0.17"
+CSAR.version="1.0.18"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
-BASE:T({Coalition,Prefixes,Alias})
+BASE:T({Coalition,Template,Alias})
 if Coalition and type(Coalition)=="string"then
 if Coalition=="blue"then
 self.coalition=coalition.side.BLUE
@@ -66348,7 +66373,7 @@ local _distance=0
 if _SETTINGS:IsImperial()then
 _distance=string.format("%.1fnm",UTILS.MetersToNM(_closest.distance))
 else
-_distance=string.format("%.1fkm",_closest.distance)
+_distance=string.format("%.1fkm",_closest.distance/1000)
 end
 local _msg=string.format("%s - Popping signal flare at your %s o\'clock. Distance %s",self:_GetCustomCallSign(_unitName),_clockDir,_distance)
 self:_DisplayMessageToSAR(_heli,_msg,self.messageTime,false,true,true)
@@ -66576,6 +66601,7 @@ end
 if _group:IsAlive()then
 local _radioUnit=_group:GetUnit(1)
 if _radioUnit then
+local name=_radioUnit:GetName()
 local Frequency=_freq
 local name=_radioUnit:GetName()
 local Sound="l10n/DEFAULT/"..self.radioSound
