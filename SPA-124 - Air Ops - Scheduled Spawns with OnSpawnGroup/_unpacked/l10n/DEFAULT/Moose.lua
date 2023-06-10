@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-06-02T06:44:14.0000000Z-55ed39478246e4bcc83fd96a8ad83c315399d1d3 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-06-09T13:13:45.0000000Z-e9adcb0dd5f7588f325ff05e1b59164283d8304c ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -26561,6 +26561,38 @@ AIRBASE.SouthAtlantic={
 ["Cullen_Airport"]="Cullen Airport",
 ["Gull_Point"]="Gull Point",
 }
+AIRBASE.Sinai={
+["Hatzerim"]="Hatzerim",
+["Abu_Suwayr"]="Abu Suwayr",
+["Sde_Dov"]="Sde Dov",
+["AzZaqaziq"]="AzZaqaziq",
+["Hatzor"]="Hatzor",
+["Kedem"]="Kedem",
+["Nevatim"]="Nevatim",
+["Cairo_International_Airport"]="Cairo International Airport",
+["Al_Ismailiyah"]="Al Ismailiyah",
+["As_Salihiyah"]="As Salihiyah",
+["Fayed"]="Fayed",
+["Bilbeis_Air_Base"]="Bilbeis Air Base",
+["Ramon_Airbase"]="Ramon Airbase",
+["Kibrit_Air_Base"]="Kibrit Air Base",
+["El_Arish"]="El Arish",
+["Ovda"]="Ovda",
+["Melez"]="Melez",
+["Al_Mansurah"]="Al Mansurah",
+["Palmahim"]="Palmahim",
+["Baluza"]="Baluza",
+["El_Gora"]="El Gora",
+["Difarsuwar_Airfield"]="Difarsuwar Airfield",
+["Wadi_al_Jandali"]="Wadi al Jandali",
+["St_Catherine"]="St Catherine",
+["Tel_Nof"]="Tel Nof",
+["Abu_Rudeis"]="Abu Rudeis",
+["Inshas_Airbase"]="Inshas Airbase",
+["Ben-Gurion"]="Ben-Gurion",
+["Bir_Hasanah"]="Bir Hasanah",
+["Cairo_West"]="Cairo West",
+}
 AIRBASE.TerminalType={
 Runway=16,
 HelicopterOnly=40,
@@ -30108,23 +30140,27 @@ local PlayerData=self.Players[PlayerName]
 PlayerData.Goals[GoalTag]=PlayerData.Goals[GoalTag]or{Score=0}
 PlayerData.Goals[GoalTag].Score=PlayerData.Goals[GoalTag].Score+Score
 PlayerData.Score=PlayerData.Score+Score
+if Text then
 MESSAGE:NewType(self.DisplayMessagePrefix..Text,
 MESSAGE.Type.Information)
 :ToAll()
+end
 self:ScoreCSV(PlayerName,"","GOAL_"..string.upper(GoalTag),1,Score,nil)
 end
 end
 function SCORING:AddGoalScore(PlayerUnit,GoalTag,Text,Score)
 local PlayerName=PlayerUnit:GetPlayerName()
-self:F({PlayerUnit.UnitName,PlayerName,GoalTag,Text,Score})
+self:T2({PlayerUnit.UnitName,PlayerName,GoalTag,Text,Score})
 if PlayerName then
 local PlayerData=self.Players[PlayerName]
 PlayerData.Goals[GoalTag]=PlayerData.Goals[GoalTag]or{Score=0}
 PlayerData.Goals[GoalTag].Score=PlayerData.Goals[GoalTag].Score+Score
 PlayerData.Score=PlayerData.Score+Score
+if Text then
 MESSAGE:NewType(self.DisplayMessagePrefix..Text,
 MESSAGE.Type.Information)
 :ToAll()
+end
 self:ScoreCSV(PlayerName,"","GOAL_"..string.upper(GoalTag),1,Score,PlayerUnit:GetName())
 end
 end
@@ -30143,9 +30179,11 @@ self:T(PlayerName)
 self:T(PlayerData.Mission[MissionName])
 PlayerData.Score=self.Players[PlayerName].Score+Score
 PlayerData.Mission[MissionName].ScoreTask=self.Players[PlayerName].Mission[MissionName].ScoreTask+Score
+if Text then
 MESSAGE:NewType(self.DisplayMessagePrefix..Mission:GetText().." : "..Text.." Score: "..Score,
 MESSAGE.Type.Information)
 :ToAll()
+end
 self:ScoreCSV(PlayerName,"","TASK_"..MissionName:gsub(' ','_'),1,Score,PlayerUnit:GetName())
 end
 end
@@ -30163,7 +30201,9 @@ self:T(PlayerName)
 self:T(PlayerData.Mission[MissionName])
 PlayerData.Score=self.Players[PlayerName].Score+Score
 PlayerData.Mission[MissionName].ScoreTask=self.Players[PlayerName].Mission[MissionName].ScoreTask+Score
+if Text then
 MESSAGE:NewType(string.format("%s%s: %s! Player %s receives %d score!",self.DisplayMessagePrefix,Mission:GetText(),Text,PlayerName,Score),MESSAGE.Type.Information):ToAll()
+end
 self:ScoreCSV(PlayerName,"","TASK_"..MissionName:gsub(' ','_'),1,Score)
 end
 end
@@ -30176,9 +30216,11 @@ self:F(PlayerData)
 if PlayerData.Mission[MissionName]then
 PlayerData.Score=PlayerData.Score+Score
 PlayerData.Mission[MissionName].ScoreMission=PlayerData.Mission[MissionName].ScoreMission+Score
+if Text then
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..PlayerName.."' has "..Text.." in "..Mission:GetText()..". "..Score.." mission score!",
 MESSAGE.Type.Information)
 :ToAll()
+end
 self:ScoreCSV(PlayerName,"","MISSION_"..MissionName:gsub(' ','_'),1,Score)
 end
 end
@@ -38558,6 +38600,7 @@ Debug=false,
 rat={},
 name={},
 alive={},
+planned={},
 min={},
 nrat=0,
 ntot=nil,
@@ -38579,6 +38622,7 @@ ratobject.f10menu=false
 self.nrat=self.nrat+1
 self.rat[self.nrat]=ratobject
 self.alive[self.nrat]=0
+self.planned[self.nrat]=0
 self.name[self.nrat]=ratobject.alias
 self.min[self.nrat]=min or 1
 self:T(RATMANAGER.id..string.format("Adding ratobject %s with min flights = %d",self.name[self.nrat],self.min[self.nrat]))
@@ -38651,9 +38695,15 @@ local time=0.0
 for i=1,self.nrat do
 for j=1,N[i]do
 time=time+self.dTspawn
-SCHEDULER:New(nil,RAT._SpawnWithRoute,{self.rat[i]},time)
+self.planned[i]=self.planned[i]+1
+SCHEDULER:New(nil,RATMANAGER._Spawn,{self,i},time)
 end
 end
+end
+function RATMANAGER:_Spawn(i)
+local rat=self.rat[i]
+rat:_SpawnWithRoute()
+self.planned[i]=self.planned[i]-1
 end
 function RATMANAGER:_Count()
 local ntotal=0
@@ -38668,7 +38718,7 @@ end
 end
 self.alive[i]=n
 ntotal=ntotal+n
-local text=string.format("Number of alive groups of %s = %d",self.name[i],n)
+local text=string.format("Number of alive groups of %s = %d, planned=%d",self.name[i],n,self.planned[i])
 self:T(RATMANAGER.id..text)
 end
 return ntotal
@@ -38685,9 +38735,10 @@ local N={}
 local M={}
 local P={}
 for i=1,nrat do
+local a=alive[i]+self.planned[i]
 N[#N+1]=0
-M[#M+1]=math.max(alive[i],min[i])
-P[#P+1]=math.max(min[i]-alive[i],0)
+M[#M+1]=math.max(a,min[i])
+P[#P+1]=math.max(min[i]-a,0)
 end
 local mini={}
 local maxi={}
@@ -38698,7 +38749,7 @@ end
 local done={}
 local nnew=ntot
 for i=1,nrat do
-nnew=nnew-alive[i]
+nnew=nnew-alive[i]-self.planned[i]
 end
 for i=1,nrat-1 do
 local r=math.random(#rattab)
@@ -38714,7 +38765,7 @@ N[j]=math.random(mini[j],maxi[j])
 else
 N[j]=0
 end
-self:T3(string.format("RATMANAGER: i=%d, alive=%d, min=%d, mini=%d, maxi=%d, add=%d, sumN=%d, sumP=%d",j,alive[j],min[j],mini[j],maxi[j],N[j],sN,sP))
+self:T3(string.format("RATMANAGER: i=%d, alive=%d, planned=%d, min=%d, mini=%d, maxi=%d, add=%d, sumN=%d, sumP=%d",j,alive[j],self.planned[i],min[j],mini[j],maxi[j],N[j],sN,sP))
 end
 local j=rattab[1]
 N[j]=nnew-sum(N,done)
@@ -38724,7 +38775,7 @@ table.remove(rattab,1)
 table.insert(done,j)
 local text=RATMANAGER.id.."\n"
 for i=1,nrat do
-text=text..string.format("%s: i=%d, alive=%d, min=%d, mini=%d, maxi=%d, add=%d\n",self.name[i],i,alive[i],min[i],mini[i],maxi[i],N[i])
+text=text..string.format("%s: i=%d, alive=%d, planned=%d, min=%d, mini=%d, maxi=%d, add=%d\n",self.name[i],i,alive[i],self.planned[i],min[i],mini[i],maxi[i],N[i])
 end
 text=text..string.format("Total # of groups to add = %d",sum(N,done))
 self:T(text)
@@ -61857,7 +61908,7 @@ CTLD.UnitTypes={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.38"
+CTLD.version="1.0.39"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -62050,6 +62101,8 @@ local _coalition=event.IniCoalition
 if _coalition~=self.coalition then
 return
 end
+local unitname=event.IniUnitName or"none"
+self.MenusDone[unitname]=nil
 local _unit=event.IniUnit
 local _group=event.IniGroup
 if _unit:IsHelicopter()or _group:IsHelicopter()then
@@ -62067,6 +62120,7 @@ elseif event.id==EVENTS.PlayerLeaveUnit then
 local unitname=event.IniUnitName or"none"
 self.CtldUnits[unitname]=nil
 self.Loaded_Cargo[unitname]=nil
+self.MenusDone[unitname]=nil
 end
 return self
 end
@@ -63406,6 +63460,9 @@ if _unit:IsAlive()and _unit:IsPlayer()then
 if _unit:IsHelicopter()or(self:IsHercules(_unit)and self.enableHercules)then
 local unitName=_unit:GetName()
 _UnitList[unitName]=unitName
+else
+local unitName=_unit:GetName()
+_UnitList[unitName]=nil
 end
 end
 end
