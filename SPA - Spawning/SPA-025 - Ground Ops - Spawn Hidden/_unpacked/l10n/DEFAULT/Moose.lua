@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-06-09T13:13:45.0000000Z-e9adcb0dd5f7588f325ff05e1b59164283d8304c ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-06-16T09:06:46.0000000Z-dae78d7ac1e97f272fad121478adaf1c2f1b49f6 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -2142,6 +2142,7 @@ TheChannel="TheChannel",
 Syria="Syria",
 MarianaIslands="MarianaIslands",
 Falklands="Falklands",
+Sinai="SinaiMap"
 }
 CALLSIGN={
 Aircraft={
@@ -2986,6 +2987,8 @@ elseif map==DCSMAP.MarianaIslands then
 declination=2
 elseif map==DCSMAP.Falklands then
 declination=12
+elseif map==DCSMAP.Sinai then
+declination=4.8
 else
 declination=0
 end
@@ -3143,6 +3146,8 @@ elseif theatre==DCSMAP.MarianaIslands then
 return 10
 elseif theatre==DCSMAP.Falklands then
 return-3
+elseif theatre==DCSMAP.Sinai then
+return 2
 else
 BASE:E(string.format("ERROR: Unknown Map %s in UTILS.GMTToLocal function. Returning 0",tostring(theatre)))
 return 0
@@ -19849,7 +19854,7 @@ ClassName="TIMER",
 lid=nil,
 }
 _TIMERID=0
-TIMER.version="0.1.2"
+TIMER.version="0.2.0"
 function TIMER:New(Function,...)
 local self=BASE:Inherit(self,BASE:New())
 self.func=Function
@@ -19886,7 +19891,16 @@ self.Tstop=timer.getTime()+Delay
 else
 if self.tid then
 self:T(self.lid..string.format("Stopping timer by removing timer function after %d calls!",self.ncalls))
+local status=pcall(
+function()
 timer.removeFunction(self.tid)
+end
+)
+if status then
+self:T2(self.lid..string.format("Stopped timer!"))
+else
+self:E(self.lid..string.format("WARNING: Could not remove timer function! isrunning=%s",tostring(self.isrunning)))
+end
 self.isrunning=false
 end
 end
@@ -20670,13 +20684,9 @@ function POSITIONABLE:GetVec3()
 local DCSPositionable=self:GetDCSObject()
 if DCSPositionable then
 local vec3=DCSPositionable:getPoint()
-if vec3 then
 return vec3
-else
-self:E("ERROR: Cannot get vec3!")
 end
-end
-self:E({"Cannot GetVec3",Positionable=self,Alive=self:IsAlive()})
+self:E({"Cannot get the Positionable DCS Object for GetVec3",Positionable=self,Alive=self:IsAlive()})
 return nil
 end
 function POSITIONABLE:GetVec2()
@@ -20768,6 +20778,62 @@ local a={x=x.x+y.x+z.x,y=x.y+y.y+z.y,z=x.z+y.z+z.z}
 local u=self:GetVec3()
 local v={x=a.x+u.x,y=a.y+u.y,z=a.z+u.z}
 local coord=COORDINATE:NewFromVec3(v)
+return coord
+end
+function POSITIONABLE:GetRelativeCoordinate(x,y,z)
+x=x or 0
+y=y or 0
+z=z or 0
+local selfPos=self:GetVec3()
+local X=self:GetOrientationX()
+local Y=self:GetOrientationY()
+local Z=self:GetOrientationZ()
+local off={
+x=x-selfPos.x,
+y=y-selfPos.y,
+z=z-selfPos.z
+}
+local res={x=0,y=0,z=0}
+local mat={
+{X.x,Y.x,Z.x,off.x},
+{X.y,Y.y,Z.y,off.y},
+{X.z,Y.z,Z.z,off.z}
+}
+local m=3
+local n=4
+local h=1
+local k=1
+while h<=m and k<=n do
+local v_max=math.abs(mat[h][k])
+local i_max=h
+for i=h,m,1 do
+local value=math.abs(mat[i][k])
+if value>v_max then
+i_max=i
+v_max=value
+end
+end
+if mat[i_max][k]==0 then
+k=k+1
+else
+local tmp=mat[h]
+mat[h]=mat[i_max]
+mat[i_max]=tmp
+for i=h+1,m,1 do
+local f=mat[i][k]/mat[h][k]
+mat[i][k]=0
+for j=k+1,n,1 do
+mat[i][j]=mat[i][j]-f*mat[h][j]
+end
+end
+h=h+1
+k=k+1
+end
+end
+res.z=mat[3][4]/mat[3][3]
+res.y=(mat[2][4]-res.z*mat[2][3])/mat[2][2]
+res.x=(mat[1][4]-res.y*mat[1][2]-res.z*mat[1][3])/mat[1][1]
+local coord=COORDINATE:NewFromVec3(res)
 return coord
 end
 function POSITIONABLE:GetRandomVec3(Radius)
@@ -25271,11 +25337,19 @@ return UnitIsActive
 end
 return nil
 end
+function UNIT:IsExist()
+local DCSUnit=self:GetDCSObject()
+if DCSUnit then
+local exists=DCSUnit:isExist()
+return exists
+end
+return nil
+end
 function UNIT:IsAlive()
 self:F3(self.UnitName)
 local DCSUnit=self:GetDCSObject()
-if DCSUnit then
-local UnitIsAlive=DCSUnit:isExist()and DCSUnit:isActive()
+if DCSUnit and DCSUnit:isExist()then
+local UnitIsAlive=DCSUnit:isActive()
 return UnitIsAlive
 end
 return nil
@@ -26516,8 +26590,6 @@ AIRBASE.Syria={
 ["H3_Northwest"]="H3 Northwest",
 ["H3_Southwest"]="H3 Southwest",
 ["Kharab_Ishk"]="Kharab Ishk",
-["Raj_al_Issa_East"]="Raj al Issa East",
-["Raj_al_Issa_West"]="Raj al Issa West",
 ["Ruwayshid"]="Ruwayshid",
 ["Sanliurfa"]="Sanliurfa",
 ["Tal_Siman"]="Tal Siman",
@@ -26589,7 +26661,7 @@ AIRBASE.Sinai={
 ["Tel_Nof"]="Tel Nof",
 ["Abu_Rudeis"]="Abu Rudeis",
 ["Inshas_Airbase"]="Inshas Airbase",
-["Ben-Gurion"]="Ben-Gurion",
+["Ben_Gurion"]="Ben-Gurion",
 ["Bir_Hasanah"]="Bir Hasanah",
 ["Cairo_West"]="Cairo West",
 }
@@ -28156,7 +28228,7 @@ end
 do
 NET={
 ClassName="NET",
-Version="0.1.1",
+Version="0.1.2",
 BlockTime=600,
 BlockedPilots={},
 BlockedUCIDs={},
@@ -28232,7 +28304,8 @@ id=PlayerID,
 side=PlayerSide,
 slot=PlayerSlot,
 }
-self:__PlayerJoined(1,data.IniUnit,name)
+local client=CLIENT:FindByPlayerName(name)or data.IniUnit
+self:__PlayerJoined(1,client,name)
 return self
 end
 end
@@ -28539,7 +28612,7 @@ return nil
 end
 end
 function NET:onafterStatus(From,Event,To)
-self:I({From,Event,To})
+self:T({From,Event,To})
 local function HouseHold(tavolo)
 local TNow=timer.getTime()
 for _,entry in pairs(tavolo)do
@@ -28556,7 +28629,7 @@ end
 return self
 end
 function NET:onafterRun(From,Event,To)
-self:I({From,Event,To})
+self:T({From,Event,To})
 self:HandleEvent(EVENTS.PlayerEnterUnit,self._EventHandler)
 self:HandleEvent(EVENTS.PlayerEnterAircraft,self._EventHandler)
 self:HandleEvent(EVENTS.PlayerLeaveUnit,self._EventHandler)
@@ -28564,7 +28637,7 @@ self:HandleEvent(EVENTS.PilotDead,self._EventHandler)
 self:HandleEvent(EVENTS.Ejection,self._EventHandler)
 self:HandleEvent(EVENTS.Crash,self._EventHandler)
 self:HandleEvent(EVENTS.SelfKillPilot,self._EventHandler)
-self:__Status(-30)
+self:__Status(-10)
 end
 function NET:onafterStop(From,Event,To)
 self:T({From,Event,To})
