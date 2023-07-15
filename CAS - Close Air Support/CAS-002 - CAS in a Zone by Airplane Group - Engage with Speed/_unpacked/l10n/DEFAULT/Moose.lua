@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-07-07T13:14:33.0000000Z-40fa929eb0d2a17b2a9db34970af31652f16b663 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-07-13T14:15:11.0000000Z-f6fdecf892bd1ecfd75641a83c7d21e2b64eda4c ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -18295,6 +18295,21 @@ self:_RandomizeZones(SpawnGroupID)
 end
 return self
 end
+function SPAWN:InitPositionCoordinate(Coordinate)
+self:T({self.SpawnTemplatePrefix,Coordinate:GetVec2()})
+self:InitPositionVec2(Coordinate:GetVec2())
+return self
+end
+function SPAWN:InitPositionVec2(Vec2)
+self:T({self.SpawnTemplatePrefix,Vec2})
+self.SpawnInitPosition=Vec2
+self.SpawnFromNewPosition=true
+self:I("MaxGroups:"..self.SpawnMaxGroups)
+for SpawnGroupID=1,self.SpawnMaxGroups do
+self:_SetInitialPosition(SpawnGroupID)
+end
+return self
+end
 function SPAWN:InitRepeat()
 self:F({self.SpawnTemplatePrefix,self.SpawnIndex})
 self.Repeat=true
@@ -18428,6 +18443,9 @@ end
 function SPAWN:SpawnWithIndex(SpawnIndex,NoBirth)
 self:F2({SpawnTemplatePrefix=self.SpawnTemplatePrefix,SpawnIndex=SpawnIndex,AliveUnits=self.AliveUnits,SpawnMaxGroups=self.SpawnMaxGroups})
 if self:_GetSpawnIndex(SpawnIndex)then
+if self.SpawnFromNewPosition then
+self:_SetInitialPosition(SpawnIndex)
+end
 if self.SpawnGroups[self.SpawnIndex].Visible then
 self.SpawnGroups[self.SpawnIndex].Group:Activate()
 else
@@ -19330,6 +19348,9 @@ end
 function SPAWN:_GetTemplate(SpawnTemplatePrefix)
 self:F({self.SpawnTemplatePrefix,self.SpawnAliasPrefix,SpawnTemplatePrefix})
 local SpawnTemplate=nil
+if _DATABASE.Templates.Groups[SpawnTemplatePrefix]==nil then
+error('No Template exists for SpawnTemplatePrefix = '..SpawnTemplatePrefix)
+end
 local Template=_DATABASE.Templates.Groups[SpawnTemplatePrefix].Template
 self:F({Template=Template})
 SpawnTemplate=UTILS.DeepCopy(_DATABASE.Templates.Groups[SpawnTemplatePrefix].Template)
@@ -19446,6 +19467,39 @@ self.SpawnGroups[SpawnIndex].SpawnTemplate.units[UnitID].alt=self.SpawnTemplate.
 end
 end
 self:_RandomizeRoute(SpawnIndex)
+return self
+end
+function SPAWN:_SetInitialPosition(SpawnIndex)
+self:T({self.SpawnTemplatePrefix,SpawnIndex,self.SpawnRandomizeZones})
+if self.SpawnFromNewPosition then
+self:T("Preparing Spawn at Vec2 ",self.SpawnInitPosition)
+local SpawnVec2=self.SpawnInitPosition
+self:T({SpawnVec2=SpawnVec2})
+local SpawnTemplate=self.SpawnGroups[SpawnIndex].SpawnTemplate
+SpawnTemplate.route=SpawnTemplate.route or{}
+SpawnTemplate.route.points=SpawnTemplate.route.points or{}
+SpawnTemplate.route.points[1]=SpawnTemplate.route.points[1]or{}
+SpawnTemplate.route.points[1].x=SpawnTemplate.route.points[1].x or 0
+SpawnTemplate.route.points[1].y=SpawnTemplate.route.points[1].y or 0
+self:T({Route=SpawnTemplate.route})
+for UnitID=1,#SpawnTemplate.units do
+local UnitTemplate=SpawnTemplate.units[UnitID]
+self:T('Before Translation SpawnTemplate.units['..UnitID..'].x = '..UnitTemplate.x..', SpawnTemplate.units['..UnitID..'].y = '..UnitTemplate.y)
+local SX=UnitTemplate.x
+local SY=UnitTemplate.y
+local BX=SpawnTemplate.route.points[1].x
+local BY=SpawnTemplate.route.points[1].y
+local TX=SpawnVec2.x+(SX-BX)
+local TY=SpawnVec2.y+(SY-BY)
+UnitTemplate.x=TX
+UnitTemplate.y=TY
+self:T('After Translation SpawnTemplate.units['..UnitID..'].x = '..UnitTemplate.x..', SpawnTemplate.units['..UnitID..'].y = '..UnitTemplate.y)
+end
+SpawnTemplate.route.points[1].x=SpawnVec2.x
+SpawnTemplate.route.points[1].y=SpawnVec2.y
+SpawnTemplate.x=SpawnVec2.x
+SpawnTemplate.y=SpawnVec2.y
+end
 return self
 end
 function SPAWN:_RandomizeZones(SpawnIndex)
@@ -19996,7 +20050,8 @@ self.Lasing=false
 return self
 end
 function SPOT:onafterLaseOn(From,Event,To,Target,LaserCode,Duration)
-self:F({"LaseOn",Target,LaserCode,Duration})
+self:T({From,Event,To})
+self:T2({"LaseOn",Target,LaserCode,Duration})
 local function StopLase(self)
 self:LaseOff()
 end
@@ -20013,9 +20068,10 @@ self.ScheduleID=self.LaseScheduler:Schedule(self,StopLase,{self},Duration)
 end
 self:HandleEvent(EVENTS.Dead)
 self:__Lasing(-1)
+return self
 end
 function SPOT:onafterLaseOnCoordinate(From,Event,To,Coordinate,LaserCode,Duration)
-self:F({"LaseOnCoordinate",Coordinate,LaserCode,Duration})
+self:T2({"LaseOnCoordinate",Coordinate,LaserCode,Duration})
 local function StopLase(self)
 self:LaseOff()
 end
@@ -20030,9 +20086,10 @@ if Duration then
 self.ScheduleID=self.LaseScheduler:Schedule(self,StopLase,{self},Duration)
 end
 self:__Lasing(-1)
+return self
 end
 function SPOT:OnEventDead(EventData)
-self:F({Dead=EventData.IniDCSUnitName,Target=self.Target})
+self:T2({Dead=EventData.IniDCSUnitName,Target=self.Target})
 if self.Target then
 if EventData.IniDCSUnitName==self.TargetName then
 self:F({"Target dead ",self.TargetName})
@@ -20046,24 +20103,30 @@ self:F({"Recce dead ",self.RecceName})
 self:LaseOff()
 end
 end
+return self
 end
 function SPOT:onafterLasing(From,Event,To)
+self:T({From,Event,To})
+if self.Lasing then
 if self.Target and self.Target:IsAlive()then
 self.SpotIR:setPoint(self.Target:GetPointVec3():AddY(1):AddY(math.random(-100,100)/100):AddX(math.random(-100,100)/100):GetVec3())
 self.SpotLaser:setPoint(self.Target:GetPointVec3():AddY(1):GetVec3())
-self:__Lasing(-0.2)
+self:__Lasing(0.2)
 elseif self.TargetCoord then
 local irvec3={x=self.TargetCoord.x+math.random(-100,100)/100,y=self.TargetCoord.y+math.random(-100,100)/100,z=self.TargetCoord.z}
 local lsvec3={x=self.TargetCoord.x,y=self.TargetCoord.y,z=self.TargetCoord.z}
 self.SpotIR:setPoint(irvec3)
 self.SpotLaser:setPoint(lsvec3)
-self:__Lasing(-0.25)
+self:__Lasing(0.2)
 else
 self:F({"Target is not alive",self.Target:IsAlive()})
 end
 end
+return self
+end
 function SPOT:onafterLaseOff(From,Event,To)
-self:F({"Stopped lasing for ",self.Target and self.Target:GetName()or"coord",SpotIR=self.SportIR,SpotLaser=self.SpotLaser})
+self:t({From,Event,To})
+self:T2({"Stopped lasing for ",self.Target and self.Target:GetName()or"coord",SpotIR=self.SportIR,SpotLaser=self.SpotLaser})
 self.Lasing=false
 self.SpotIR:destroy()
 self.SpotLaser:destroy()
