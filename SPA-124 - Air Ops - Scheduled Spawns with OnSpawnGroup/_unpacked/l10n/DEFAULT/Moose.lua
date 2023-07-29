@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-07-16T09:27:34.0000000Z-6481f66e27a022d51aa7ad7872763c0726991c4e ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-07-26T14:36:44.0000000Z-8bf56b8b1a1977c2112627388e4d4fdbcf2c7585 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -26680,6 +26680,8 @@ AIRBASE.MarianaIslands={
 ["Saipan_Intl"]="Saipan Intl",
 ["Tinian_Intl"]="Tinian Intl",
 ["Olf_Orote"]="Olf Orote",
+["Pagan_Airstrip"]="Pagan Airstrip",
+["North_West_Field"]="North West Field",
 }
 AIRBASE.SouthAtlantic={
 ["Port_Stanley"]="Port Stanley",
@@ -53173,17 +53175,32 @@ local group=_group
 local knownflight=self:_GetFlightFromGroupInQueue(group,self.flights)
 local actype=group:GetTypeName()
 if knownflight then
-if knownflight.ai and knownflight.flag==-100 and self.handleai and false then
-local putintomarshal=false
-local flight=_DATABASE:GetOpsGroup(groupname)
-if flight and flight:IsInbound()and flight.destbase:GetName()==self.carrier:GetName()then
-if flight.ishelo then
+self:T2(self.lid..string.format("Known flight group %s of type %s in CCA.",groupname,actype))
+if knownflight.ai and self.handleai then
+local iscarriersquad=true
+if self.squadsetAI then
+local group=self.squadsetAI:FindGroup(groupname)
+if group then
+iscarriersquad=true
 else
-putintomarshal=true
+iscarriersquad=false
 end
-flight.airboss=self
 end
-if putintomarshal then
+if self.excludesetAI then
+local group=self.excludesetAI:FindGroup(groupname)
+if group then
+iscarriersquad=false
+end
+end
+local dist=knownflight.group:GetCoordinate():Get2DDistance(self:GetCoordinate())
+local closein=knownflight.dist0-dist
+self:T3(self.lid..string.format("Known AI flight group %s closed in by %.1f NM",knownflight.groupname,UTILS.MetersToNM(closein)))
+local istanker=self.tanker and self.tanker.tanker:GetName()==groupname
+local isawacs=self.awacs and self.awacs.tanker:GetName()==groupname
+local tanker2marshal=istanker and self.tanker:IsReturning()and self.tanker.airbase:GetName()==self.airbase:GetName()and knownflight.flag==-100 and self.tanker.recovery==true
+local awacs2marshal=isawacs and self.awacs:IsReturning()and self.awacs.airbase:GetName()==self.airbase:GetName()and knownflight.flag==-100 and self.awacs.recovery==true
+local putintomarshal=closein>UTILS.NMToMeters(5)and knownflight.flag==-100 and iscarriersquad and istanker==false and isawacs==false
+if putintomarshal or tanker2marshal or awacs2marshal then
 local stack=self:_GetFreeStack(knownflight.ai)
 local respawn=self.respawnAI
 if stack then
@@ -60399,6 +60416,8 @@ PersianGulf=2,
 TheChannel=-10,
 Syria=5,
 MarianaIslands=2,
+Falklands=12,
+Sinai=5,
 }
 ATIS.ICAOPhraseology={
 Caucasus=true,
@@ -60407,7 +60426,9 @@ Normandy=true,
 PersianGulf=true,
 TheChannel=true,
 Syria=true,
-MarianaIslands=true
+MarianaIslands=true,
+Falklands=true,
+Sinai=true,
 }
 ATIS.Sound={
 ActiveRunway={filename="ActiveRunway.ogg",duration=0.99},
@@ -60765,6 +60786,7 @@ local coal=self.airbase and self.airbase:GetCoalition()or nil
 return coal
 end
 function ATIS:onafterStart(From,Event,To)
+self:I("Airbase category is "..self.airbase:GetAirbaseCategory())
 if self.airbase:GetAirbaseCategory()==Airbase.Category.SHIP then
 self:E(self.lid..string.format("ERROR: Cannot start ATIS for airbase %s! Only AIRDROMES are supported but NOT SHIPS.",self.airbasename))
 return
@@ -61096,7 +61118,10 @@ end
 end
 local subtitle=""
 subtitle=string.format("%s",self.airbasename)
-if(not self.ATISforFARPs)and self.airbasename:find("AFB")==nil and self.airbasename:find("Airport")==nil and self.airbasename:find("Airstrip")==nil and self.airbasename:find("airfield")==nil and self.airbasename:find("AB")==nil then
+if(not self.ATISforFARPs)and self.airbasename:find("AFB")==nil and self.airbasename:find("Airport")==nil
+and self.airbasename:find("Airstrip")==nil and self.airbasename:find("airfield")==nil and self.airbasename:find("AB")==nil
+and self.airbasename:find("Field")==nil
+then
 subtitle=subtitle.." Airport"
 end
 if not self.useSRS then
@@ -72448,6 +72473,13 @@ self.EscortGroupSet=EscortGroupSet
 self.EscortGroupSet:SetSomeIteratorLimit(8)
 self.EscortBriefing=EscortBriefing
 self.Menu={}
+self.Menu.HoldAtEscortPosition=self.Menu.HoldAtEscortPosition or{}
+self.Menu.HoldAtLeaderPosition=self.Menu.HoldAtLeaderPosition or{}
+self.Menu.Flare=self.Menu.Flare or{}
+self.Menu.Smoke=self.Menu.Smoke or{}
+self.Menu.Targets=self.Menu.Targets or{}
+self.Menu.ROE=self.Menu.ROE or{}
+self.Menu.ROT=self.Menu.ROT or{}
 self.FollowDistance=100
 self.CT1=0
 self.GT1=0
@@ -72702,7 +72734,7 @@ self.Menu.JoinUp=true
 return self
 end
 function AI_ESCORT:SetFlightMenuHoldAtEscortPosition()
-for _,MenuHoldAtEscortPosition in pairs(self.Menu.HoldAtEscortPosition)do
+for _,MenuHoldAtEscortPosition in pairs(self.Menu.HoldAtEscortPosition or{})do
 local FlightMenuReportNavigation=MENU_GROUP:New(self.PlayerGroup,"Navigation",self.FlightMenu)
 local FlightMenuHoldPosition=MENU_GROUP_COMMAND
 :New(
@@ -72719,7 +72751,7 @@ end
 return self
 end
 function AI_ESCORT:SetEscortMenuHoldAtEscortPosition(EscortGroup)
-for _,HoldAtEscortPosition in pairs(self.Menu.HoldAtEscortPosition)do
+for _,HoldAtEscortPosition in pairs(self.Menu.HoldAtEscortPosition or{})do
 if EscortGroup:IsAir()then
 local EscortGroupName=EscortGroup:GetName()
 local EscortMenuReportNavigation=MENU_GROUP:New(self.PlayerGroup,"Navigation",EscortGroup.EscortMenu)
@@ -72769,7 +72801,7 @@ self.Menu.HoldAtEscortPosition[#self.Menu.HoldAtEscortPosition].MenuText=MenuTex
 return self
 end
 function AI_ESCORT:SetFlightMenuHoldAtLeaderPosition()
-for _,MenuHoldAtLeaderPosition in pairs(self.Menu.HoldAtLeaderPosition)do
+for _,MenuHoldAtLeaderPosition in pairs(self.Menu.HoldAtLeaderPosition or{})do
 local FlightMenuReportNavigation=MENU_GROUP:New(self.PlayerGroup,"Navigation",self.FlightMenu)
 local FlightMenuHoldAtLeaderPosition=MENU_GROUP_COMMAND
 :New(
@@ -72786,7 +72818,7 @@ end
 return self
 end
 function AI_ESCORT:SetEscortMenuHoldAtLeaderPosition(EscortGroup)
-for _,HoldAtLeaderPosition in pairs(self.Menu.HoldAtLeaderPosition)do
+for _,HoldAtLeaderPosition in pairs(self.Menu.HoldAtLeaderPosition or{})do
 if EscortGroup:IsAir()then
 local EscortGroupName=EscortGroup:GetName()
 local EscortMenuReportNavigation=MENU_GROUP:New(self.PlayerGroup,"Navigation",EscortGroup.EscortMenu)
@@ -72877,7 +72909,7 @@ end
 return self
 end
 function AI_ESCORT:SetFlightMenuFlare()
-for _,MenuFlare in pairs(self.Menu.Flare)do
+for _,MenuFlare in pairs(self.Menu.Flare or{})do
 local FlightMenuReportNavigation=MENU_GROUP:New(self.PlayerGroup,"Navigation",self.FlightMenu)
 local FlightMenuFlare=MENU_GROUP:New(self.PlayerGroup,MenuFlare.MenuText,FlightMenuReportNavigation)
 local FlightMenuFlareGreenFlight=MENU_GROUP_COMMAND:New(self.PlayerGroup,"Release green flare",FlightMenuFlare,AI_ESCORT._FlightFlare,self,FLARECOLOR.Green,"Released a green flare!")
@@ -72888,7 +72920,7 @@ end
 return self
 end
 function AI_ESCORT:SetEscortMenuFlare(EscortGroup)
-for _,MenuFlare in pairs(self.Menu.Flare)do
+for _,MenuFlare in pairs(self.Menu.Flare or{})do
 if EscortGroup:IsAir()then
 local EscortGroupName=EscortGroup:GetName()
 local EscortMenuReportNavigation=MENU_GROUP:New(self.PlayerGroup,"Navigation",EscortGroup.EscortMenu)
@@ -72915,7 +72947,7 @@ self.Menu.Flare[#self.Menu.Flare].MenuText=MenuText
 return self
 end
 function AI_ESCORT:SetFlightMenuSmoke()
-for _,MenuSmoke in pairs(self.Menu.Smoke)do
+for _,MenuSmoke in pairs(self.Menu.Smoke or{})do
 local FlightMenuReportNavigation=MENU_GROUP:New(self.PlayerGroup,"Navigation",self.FlightMenu)
 local FlightMenuSmoke=MENU_GROUP:New(self.PlayerGroup,MenuSmoke.MenuText,FlightMenuReportNavigation)
 local FlightMenuSmokeGreenFlight=MENU_GROUP_COMMAND:New(self.PlayerGroup,"Release green smoke",FlightMenuSmoke,AI_ESCORT._FlightSmoke,self,SMOKECOLOR.Green,"Releasing green smoke!")
@@ -72927,7 +72959,7 @@ end
 return self
 end
 function AI_ESCORT:SetEscortMenuSmoke(EscortGroup)
-for _,MenuSmoke in pairs(self.Menu.Smoke)do
+for _,MenuSmoke in pairs(self.Menu.Smoke or{})do
 if EscortGroup:IsAir()then
 local EscortGroupName=EscortGroup:GetName()
 local EscortMenuReportNavigation=MENU_GROUP:New(self.PlayerGroup,"Navigation",EscortGroup.EscortMenu)
@@ -72989,13 +73021,13 @@ self.FlightMenuAttack=MENU_GROUP:New(self.PlayerGroup,"Attack targets",self.Flig
 local FlightMenuAttackNearby=MENU_GROUP_COMMAND:New(self.PlayerGroup,"Attack nearest targets",self.FlightMenuAttack,AI_ESCORT._FlightAttackNearestTarget,self):SetTag("Attack")
 local FlightMenuAttackNearbyAir=MENU_GROUP_COMMAND:New(self.PlayerGroup,"Attack nearest airborne targets",self.FlightMenuAttack,AI_ESCORT._FlightAttackNearestTarget,self,self.__Enum.ReportType.Air):SetTag("Attack")
 local FlightMenuAttackNearbyGround=MENU_GROUP_COMMAND:New(self.PlayerGroup,"Attack nearest ground targets",self.FlightMenuAttack,AI_ESCORT._FlightAttackNearestTarget,self,self.__Enum.ReportType.Ground):SetTag("Attack")
-for _,MenuTargets in pairs(self.Menu.Targets)do
+for _,MenuTargets in pairs(self.Menu.Targets or{})do
 MenuTargets.FlightReportTargetsScheduler=SCHEDULER:New(self,self._FlightReportTargetsScheduler,{},MenuTargets.Interval,MenuTargets.Interval)
 end
 return self
 end
 function AI_ESCORT:SetEscortMenuTargets(EscortGroup)
-for _,MenuTargets in pairs(self.Menu.Targets)do
+for _,MenuTargets in pairs(self.Menu.Targets or{}or{})do
 if EscortGroup:IsAir()then
 local EscortGroupName=EscortGroup:GetName()
 EscortGroup.EscortMenuReportNearbyTargetsNow=MENU_GROUP_COMMAND:New(self.PlayerGroup,"Report targets",EscortGroup.EscortMenu,AI_ESCORT._ReportNearbyTargetsNow,self,EscortGroup,true)
@@ -73027,7 +73059,7 @@ end
 return self
 end
 function AI_ESCORT:SetFlightMenuROE()
-for _,MenuROE in pairs(self.Menu.ROE)do
+for _,MenuROE in pairs(self.Menu.ROE or{})do
 local FlightMenuROE=MENU_GROUP:New(self.PlayerGroup,"Rule Of Engagement",self.FlightMenu)
 local FlightMenuROEHoldFire=MENU_GROUP_COMMAND:New(self.PlayerGroup,"Hold fire",FlightMenuROE,AI_ESCORT._FlightROEHoldFire,self,"Holding weapons!")
 local FlightMenuROEReturnFire=MENU_GROUP_COMMAND:New(self.PlayerGroup,"Return fire",FlightMenuROE,AI_ESCORT._FlightROEReturnFire,self,"Returning fire!")
@@ -73037,7 +73069,7 @@ end
 return self
 end
 function AI_ESCORT:SetEscortMenuROE(EscortGroup)
-for _,MenuROE in pairs(self.Menu.ROE)do
+for _,MenuROE in pairs(self.Menu.ROE or{})do
 if EscortGroup:IsAir()then
 local EscortGroupName=EscortGroup:GetName()
 local EscortMenuROE=MENU_GROUP:New(self.PlayerGroup,"Rule Of Engagement",EscortGroup.EscortMenu)
@@ -73064,7 +73096,7 @@ self.Menu.ROE[#self.Menu.ROE+1]={}
 return self
 end
 function AI_ESCORT:SetFlightMenuROT()
-for _,MenuROT in pairs(self.Menu.ROT)do
+for _,MenuROT in pairs(self.Menu.ROT or{})do
 local FlightMenuROT=MENU_GROUP:New(self.PlayerGroup,"Reaction On Threat",self.FlightMenu)
 local FlightMenuROTNoReaction=MENU_GROUP_COMMAND:New(self.PlayerGroup,"Fight until death",FlightMenuROT,AI_ESCORT._FlightROTNoReaction,self,"Fighting until death!")
 local FlightMenuROTPassiveDefense=MENU_GROUP_COMMAND:New(self.PlayerGroup,"Use flares, chaff and jammers",FlightMenuROT,AI_ESCORT._FlightROTPassiveDefense,self,"Defending using jammers, chaff and flares!")
@@ -73074,7 +73106,7 @@ end
 return self
 end
 function AI_ESCORT:SetEscortMenuROT(EscortGroup)
-for _,MenuROT in pairs(self.Menu.ROT)do
+for _,MenuROT in pairs(self.Menu.ROT or{})do
 if EscortGroup:IsAir()then
 local EscortGroupName=EscortGroup:GetName()
 local EscortMenuROT=MENU_GROUP:New(self.PlayerGroup,"Reaction On Threat",EscortGroup.EscortMenu)
