@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-08-02T16:02:34.0000000Z-c5757ffd222fe703e8f58252e6293296d6f0411b ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-08-18T09:07:43.0000000Z-f40442d3098427fa4de1f2f099ac14af350753f6 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 ENUMS.ROE={
@@ -2364,6 +2364,40 @@ end
 local objectreturn=_Serialize(tbl)
 return objectreturn
 end
+function UTILS._OneLineSerialize(tbl)
+if type(tbl)=='table'then
+local tbl_str={}
+tbl_str[#tbl_str+1]='{ '
+for ind,val in pairs(tbl)do
+if type(ind)=="number"then
+tbl_str[#tbl_str+1]='['
+tbl_str[#tbl_str+1]=tostring(ind)
+tbl_str[#tbl_str+1]='] = '
+else
+tbl_str[#tbl_str+1]='['
+tbl_str[#tbl_str+1]=UTILS.BasicSerialize(ind)
+tbl_str[#tbl_str+1]='] = '
+end
+if((type(val)=='number')or(type(val)=='boolean'))then
+tbl_str[#tbl_str+1]=tostring(val)
+tbl_str[#tbl_str+1]=', '
+elseif type(val)=='string'then
+tbl_str[#tbl_str+1]=UTILS.BasicSerialize(val)
+tbl_str[#tbl_str+1]=', '
+elseif type(val)=='nil'then
+tbl_str[#tbl_str+1]='nil, '
+elseif type(val)=='table'then
+tbl_str[#tbl_str+1]=UTILS._OneLineSerialize(val)
+tbl_str[#tbl_str+1]=', '
+else
+end
+end
+tbl_str[#tbl_str+1]='}'
+return table.concat(tbl_str)
+else
+return UTILS.BasicSerialize(tbl)
+end
+end
 UTILS.BasicSerialize=function(s)
 if s==nil then
 return"\"\""
@@ -2390,6 +2424,86 @@ BASE:I(string.rep("  ",indent).."}")
 else
 BASE:I(string.rep("  ",indent)..tostring(k).." = "..tostring(v))
 end
+end
+end
+function UTILS.TableShow(tbl,loc,indent,tableshow_tbls)
+tableshow_tbls=tableshow_tbls or{}
+loc=loc or""
+indent=indent or""
+if type(tbl)=='table'then
+tableshow_tbls[tbl]=loc
+local tbl_str={}
+tbl_str[#tbl_str+1]=indent..'{\n'
+for ind,val in pairs(tbl)do
+if type(ind)=="number"then
+tbl_str[#tbl_str+1]=indent
+tbl_str[#tbl_str+1]=loc..'['
+tbl_str[#tbl_str+1]=tostring(ind)
+tbl_str[#tbl_str+1]='] = '
+else
+tbl_str[#tbl_str+1]=indent
+tbl_str[#tbl_str+1]=loc..'['
+tbl_str[#tbl_str+1]=UTILS.BasicSerialize(ind)
+tbl_str[#tbl_str+1]='] = '
+end
+if((type(val)=='number')or(type(val)=='boolean'))then
+tbl_str[#tbl_str+1]=tostring(val)
+tbl_str[#tbl_str+1]=',\n'
+elseif type(val)=='string'then
+tbl_str[#tbl_str+1]=UTILS.BasicSerialize(val)
+tbl_str[#tbl_str+1]=',\n'
+elseif type(val)=='nil'then
+tbl_str[#tbl_str+1]='nil,\n'
+elseif type(val)=='table'then
+if tableshow_tbls[val]then
+tbl_str[#tbl_str+1]=tostring(val)..' already defined: '..tableshow_tbls[val]..',\n'
+else
+tableshow_tbls[val]=loc..'['..UTILS.BasicSerialize(ind)..']'
+tbl_str[#tbl_str+1]=tostring(val)..' '
+tbl_str[#tbl_str+1]=UTILS.TableShow(val,loc..'['..UTILS.BasicSerialize(ind)..']',indent..'    ',tableshow_tbls)
+tbl_str[#tbl_str+1]=',\n'
+end
+elseif type(val)=='function'then
+if debug and debug.getinfo then
+local fcnname=tostring(val)
+local info=debug.getinfo(val,"S")
+if info.what=="C"then
+tbl_str[#tbl_str+1]=string.format('%q',fcnname..', C function')..',\n'
+else
+if(string.sub(info.source,1,2)==[[./]])then
+tbl_str[#tbl_str+1]=string.format('%q',fcnname..', defined in ('..info.linedefined..'-'..info.lastlinedefined..')'..info.source)..',\n'
+else
+tbl_str[#tbl_str+1]=string.format('%q',fcnname..', defined in ('..info.linedefined..'-'..info.lastlinedefined..')')..',\n'
+end
+end
+else
+tbl_str[#tbl_str+1]='a function,\n'
+end
+else
+tbl_str[#tbl_str+1]='unable to serialize value type '..UTILS.BasicSerialize(type(val))..' at index '..tostring(ind)
+end
+end
+tbl_str[#tbl_str+1]=indent..'}'
+return table.concat(tbl_str)
+end
+end
+function UTILS.Gdump(fname)
+if lfs and io then
+local fdir=lfs.writedir()..[[Logs\]]..fname
+local f=io.open(fdir,'w')
+f:write(UTILS.TableShow(_G))
+f:close()
+env.info(string.format('Wrote debug data to $1',fdir))
+else
+env.error("WARNING: lfs and/or io not de-sanitized - cannot dump _G!")
+end
+end
+function UTILS.DoString(s)
+local f,err=loadstring(s)
+if f then
+return true,f()
+else
+return false,err
 end
 end
 UTILS.ToDegree=function(angle)
@@ -10566,6 +10680,7 @@ FLIGHTGROUPS={},
 FLIGHTCONTROLS={},
 OPSZONES={},
 PATHLINES={},
+STORAGES={},
 }
 local _DATABASECoalition=
 {
@@ -10641,6 +10756,19 @@ end
 function DATABASE:FindAirbase(AirbaseName)
 local AirbaseFound=self.AIRBASES[AirbaseName]
 return AirbaseFound
+end
+function DATABASE:AddStorage(AirbaseName)
+if not self.STORAGES[AirbaseName]then
+self.STORAGES[AirbaseName]=STORAGE:New(AirbaseName)
+end
+return self.STORAGES[AirbaseName]
+end
+function DATABASE:DeleteStorage(AirbaseName)
+self.STORAGES[AirbaseName]=nil
+end
+function DATABASE:FindStorage(AirbaseName)
+local storage=self.STORAGES[AirbaseName]
+return storage
 end
 do
 function DATABASE:FindZone(ZoneName)
@@ -16652,8 +16780,20 @@ trigger.action.markupToAll(7,Coalition,MarkID,vecs[1],vecs[2],vecs[3],vecs[4],ve
 vecs[11],vecs[12],vecs[13],vecs[14],vecs[15],
 Color,FillColor,LineType,ReadOnly,Text or"")
 else
-self:E("ERROR: Currently a free form polygon can only have 15 points in total!")
-trigger.action.markupToAll(7,Coalition,MarkID,unpack(vecs),Color,FillColor,LineType,ReadOnly,Text or"")
+local s=string.format("trigger.action.markupToAll(7, %d, %d,",Coalition,MarkID)
+for _,vec in pairs(vecs)do
+s=s..string.format("%s,",UTILS._OneLineSerialize(vec))
+end
+s=s..string.format("%s, %s, %s, %s",UTILS._OneLineSerialize(Color),UTILS._OneLineSerialize(FillColor),tostring(LineType),tostring(ReadOnly))
+if Text and Text~=""then
+s=s..string.format(", \"%s\"",Text)
+end
+s=s..")"
+local success=UTILS.DoString(s)
+if not success then
+self:E("ERROR: Could not draw polygon")
+env.info(s)
+end
 end
 return MarkID
 end
@@ -20974,10 +21114,10 @@ if DCSPositionable then
 local PositionablePointVec3=DCSPositionable:getPosition().p
 if Radius then
 local PositionableRandomVec3={}
-local angle=math.random()*math.pi*2;
-PositionableRandomVec3.x=PositionablePointVec3.x+math.cos(angle)*math.random()*Radius;
+local angle=math.random()*math.pi*2
+PositionableRandomVec3.x=PositionablePointVec3.x+math.cos(angle)*math.random()*Radius
 PositionableRandomVec3.y=PositionablePointVec3.y
-PositionableRandomVec3.z=PositionablePointVec3.z+math.sin(angle)*math.random()*Radius;
+PositionableRandomVec3.z=PositionablePointVec3.z+math.sin(angle)*math.random()*Radius
 self:T3(PositionableRandomVec3)
 return PositionableRandomVec3
 else
@@ -21579,6 +21719,73 @@ CargoWeight=CargoWeight+Cargo:GetWeight()
 end
 return self.__.CargoBayWeightLimit-CargoWeight
 end
+POSITIONABLE.DefaultInfantryWeight=95
+POSITIONABLE.CargoBayCapacityValues={
+["Air"]={
+["C_130"]=70000,
+},
+["Naval"]={
+["Type_071"]=245000,
+["LHA_Tarawa"]=500000,
+["Ropucha_class"]=150000,
+["Dry_cargo_ship_1"]=70000,
+["Dry_cargo_ship_2"]=70000,
+["Higgins_boat"]=3700,
+["USS_Samuel_Chase"]=25000,
+["LST_Mk2"]=2100000,
+["speedboat"]=500,
+["Seawise_Giant"]=261000000,
+},
+["Ground"]={
+["AAV7"]=25*POSITIONABLE.DefaultInfantryWeight,
+["Bedford_MWD"]=8*POSITIONABLE.DefaultInfantryWeight,
+["Blitz_36_6700A"]=10*POSITIONABLE.DefaultInfantryWeight,
+["BMD_1"]=9*POSITIONABLE.DefaultInfantryWeight,
+["BMP_1"]=8*POSITIONABLE.DefaultInfantryWeight,
+["BMP_2"]=7*POSITIONABLE.DefaultInfantryWeight,
+["BMP_3"]=8*POSITIONABLE.DefaultInfantryWeight,
+["Boman"]=25*POSITIONABLE.DefaultInfantryWeight,
+["BTR_80"]=9*POSITIONABLE.DefaultInfantryWeight,
+["BTR_82A"]=9*POSITIONABLE.DefaultInfantryWeight,
+["BTR_D"]=12*POSITIONABLE.DefaultInfantryWeight,
+["Cobra"]=8*POSITIONABLE.DefaultInfantryWeight,
+["Land_Rover_101_FC"]=11*POSITIONABLE.DefaultInfantryWeight,
+["Land_Rover_109_S3"]=7*POSITIONABLE.DefaultInfantryWeight,
+["LAV_25"]=6*POSITIONABLE.DefaultInfantryWeight,
+["M_2_Bradley"]=6*POSITIONABLE.DefaultInfantryWeight,
+["M1043_HMMWV_Armament"]=4*POSITIONABLE.DefaultInfantryWeight,
+["M1045_HMMWV_TOW"]=4*POSITIONABLE.DefaultInfantryWeight,
+["M1126_Stryker_ICV"]=9*POSITIONABLE.DefaultInfantryWeight,
+["M1134_Stryker_ATGM"]=9*POSITIONABLE.DefaultInfantryWeight,
+["M2A1_halftrack"]=9*POSITIONABLE.DefaultInfantryWeight,
+["M_113"]=9*POSITIONABLE.DefaultInfantryWeight,
+["Marder"]=6*POSITIONABLE.DefaultInfantryWeight,
+["MCV_80"]=9*POSITIONABLE.DefaultInfantryWeight,
+["MLRS_FDDM"]=4*POSITIONABLE.DefaultInfantryWeight,
+["MTLB"]=25*POSITIONABLE.DefaultInfantryWeight,
+["GAZ_66"]=8*POSITIONABLE.DefaultInfantryWeight,
+["GAZ_3307"]=12*POSITIONABLE.DefaultInfantryWeight,
+["GAZ_3308"]=14*POSITIONABLE.DefaultInfantryWeight,
+["Grad_FDDM"]=6*POSITIONABLE.DefaultInfantryWeight,
+["KAMAZ_Truck"]=12*POSITIONABLE.DefaultInfantryWeight,
+["KrAZ6322"]=12*POSITIONABLE.DefaultInfantryWeight,
+["M_818"]=12*POSITIONABLE.DefaultInfantryWeight,
+["Tigr_233036"]=6*POSITIONABLE.DefaultInfantryWeight,
+["TPZ"]=10*POSITIONABLE.DefaultInfantryWeight,
+["UAZ_469"]=4*POSITIONABLE.DefaultInfantryWeight,
+["Ural_375"]=12*POSITIONABLE.DefaultInfantryWeight,
+["Ural_4320_31"]=14*POSITIONABLE.DefaultInfantryWeight,
+["Ural_4320_APA_5D"]=10*POSITIONABLE.DefaultInfantryWeight,
+["Ural_4320T"]=14*POSITIONABLE.DefaultInfantryWeight,
+["ZBD04A"]=7*POSITIONABLE.DefaultInfantryWeight,
+["VAB_Mephisto"]=8*POSITIONABLE.DefaultInfantryWeight,
+["tt_KORD"]=6*POSITIONABLE.DefaultInfantryWeight,
+["tt_DSHK"]=6*POSITIONABLE.DefaultInfantryWeight,
+["HL_KORD"]=6*POSITIONABLE.DefaultInfantryWeight,
+["HL_DSHK"]=6*POSITIONABLE.DefaultInfantryWeight,
+["CCKW_353"]=16*POSITIONABLE.DefaultInfantryWeight,
+}
+}
 function POSITIONABLE:SetCargoBayWeightLimit(WeightLimit)
 if WeightLimit then
 self.__.CargoBayWeightLimit=WeightLimit
@@ -21587,10 +21794,9 @@ else
 local Desc=self:GetDesc()
 self:F({Desc=Desc})
 local TypeName=Desc.typeName or"Unknown Type"
+TypeName=string.gsub(TypeName,"[%p%s]","_")
 if self:IsAir()then
-local Weights={
-["C-130"]=70000,
-}
+local Weights=POSITIONABLE.CargoBayCapacityValues.Air
 local massMax=Desc.massMax or 0
 local maxTakeoff=Weights[TypeName]
 if maxTakeoff then
@@ -21604,70 +21810,11 @@ local CargoWeight=massMax-(massEmpty+massFuel)
 self:T(string.format("Setting Cargo bay weight limit [%s]=%d kg (Mass max=%d, empty=%d, fuelMax=%d kg (rel=%.3f), fuel=%d kg",TypeName,CargoWeight,massMax,massEmpty,massFuelMax,relFuel,massFuel))
 self.__.CargoBayWeightLimit=CargoWeight
 elseif self:IsShip()then
-local Weights={
-["Type_071"]=245000,
-["LHA_Tarawa"]=500000,
-["Ropucha-class"]=150000,
-["Dry-cargo ship-1"]=70000,
-["Dry-cargo ship-2"]=70000,
-["Higgins_boat"]=3700,
-["USS_Samuel_Chase"]=25000,
-["LST_Mk2"]=2100000,
-["speedboat"]=500,
-["Seawise_Giant"]=261000000,
-}
+local Weights=POSITIONABLE.CargoBayCapacityValues.Naval
 self.__.CargoBayWeightLimit=(Weights[TypeName]or 50000)
 else
-local Weights={
-["AAV7"]=25,
-["Bedford_MWD"]=8,
-["Blitz_36-6700A"]=10,
-["BMD-1"]=9,
-["BMP-1"]=8,
-["BMP-2"]=7,
-["BMP-3"]=8,
-["Boman"]=25,
-["BTR-80"]=9,
-["BTR-82A"]=9,
-["BTR_D"]=12,
-["Cobra"]=8,
-["Land_Rover_101_FC"]=11,
-["Land_Rover_109_S3"]=7,
-["LAV-25"]=6,
-["M-2 Bradley"]=6,
-["M1043 HMMWV Armament"]=4,
-["M1045 HMMWV TOW"]=4,
-["M1126 Stryker ICV"]=9,
-["M1134 Stryker ATGM"]=9,
-["M2A1_halftrack"]=9,
-["M-113"]=9,
-["Marder"]=6,
-["MCV-80"]=9,
-["MLRS FDDM"]=4,
-["MTLB"]=25,
-["GAZ-66"]=8,
-["GAZ-3307"]=12,
-["GAZ-3308"]=14,
-["Grad_FDDM"]=6,
-["KAMAZ Truck"]=12,
-["KrAZ6322"]=12,
-["M 818"]=12,
-["Tigr_233036"]=6,
-["TPZ"]=10,
-["UAZ-469"]=4,
-["Ural-375"]=12,
-["Ural-4320-31"]=14,
-["Ural-4320 APA-5D"]=10,
-["Ural-4320T"]=14,
-["ZBD04A"]=7,
-["VAB_Mephisto"]=8,
-["tt_KORD"]=6,
-["tt_DSHK"]=6,
-["HL_KORD"]=6,
-["HL_DSHK"]=6,
-["CCKW_353"]=16,
-}
-local CargoBayWeightLimit=(Weights[TypeName]or 0)*95
+local Weights=POSITIONABLE.CargoBayCapacityValues.Ground
+local CargoBayWeightLimit=(Weights[TypeName]or 0)
 self.__.CargoBayWeightLimit=CargoBayWeightLimit
 end
 end
@@ -26865,6 +27012,7 @@ end
 self:_InitParkingSpots()
 local vec2=self:GetVec2()
 self:GetCoordinate()
+self.storage=_DATABASE:AddStorage(AirbaseName)
 if vec2 then
 if self.isShip then
 local unit=UNIT:FindByName(AirbaseName)
@@ -26908,6 +27056,47 @@ return nil
 end
 function AIRBASE:GetZone()
 return self.AirbaseZone
+end
+function AIRBASE:GetWarehouse()
+local warehouse=nil
+local airbase=self:GetDCSObject()
+if airbase then
+warehouse=airbase:getWarehouse()
+end
+return warehouse
+end
+function AIRBASE:GetStorage()
+return self.storage
+end
+function AIRBASE:SetAutoCapture(Switch)
+local airbase=self:GetDCSObject()
+if airbase then
+airbase:autoCapture(Switch)
+end
+return self
+end
+function AIRBASE:SetAutoCaptureON()
+self:SetAutoCapture(true)
+return self
+end
+function AIRBASE:SetAutoCaptureOFF()
+self:SetAutoCapture(false)
+return self
+end
+function AIRBASE:IsAutoCapture()
+local airbase=self:GetDCSObject()
+local auto=nil
+if airbase then
+auto=airbase:autoCaptureIsOn()
+end
+return auto
+end
+function AIRBASE:SetCoalition(Coal)
+local airbase=self:GetDCSObject()
+if airbase then
+airbase:setCoalition(Coal)
+end
+return self
 end
 function AIRBASE.GetAllAirbases(coalition,category)
 local airbases={}
@@ -28817,6 +29006,89 @@ self:UnHandleEvent(EVENTS.Crash)
 self:UnHandleEvent(EVENTS.SelfKillPilot)
 return self
 end
+end
+STORAGE={
+ClassName="STORAGE",
+verbose=0,
+}
+STORAGE.Liquid={
+JETFUEL=0,
+GASOLINE=1,
+MW50=2,
+DIESEL=3,
+}
+STORAGE.version="0.0.1"
+function STORAGE:New(AirbaseName)
+local self=BASE:Inherit(self,BASE:New())
+self.airbase=Airbase.getByName(AirbaseName)
+self.warehouse=self.airbase:getWarehouse()
+self.lid=string.format("STORAGE %s",AirbaseName)
+return self
+end
+function STORAGE:FindByName(AirbaseName)
+local storage=_DATABASE:FindStorage(AirbaseName)
+return storage
+end
+function STORAGE:SetVerbosity(VerbosityLevel)
+self.verbose=VerbosityLevel or 0
+return self
+end
+function STORAGE:AddItem(Name,Amount)
+self:T(self.lid..string.format("Adding %d items of %s",Amount,UTILS.OneLineSerialize(Name)))
+self.warehouse:addItem(Name,Amount)
+return self
+end
+function STORAGE:SetItem(Name,Amount)
+self:T(self.lid..string.format("Setting item %s to N=%d",UTILS.OneLineSerialize(Name),Amount))
+self.warehouse:setItem(Name,Amount)
+return self
+end
+function STORAGE:GetItemAmount(Name)
+local N=self.warehouse:getItemCount(Name)
+return N
+end
+function STORAGE:RemoveItem(Name,Amount)
+self:T(self.lid..string.format("Removing N=%d of item %s",Amount,Name))
+self.warehouse:removeItem(Name,Amount)
+return self
+end
+function STORAGE:AddLiquid(Type,Amount)
+self:T(self.lid..string.format("Adding %d liquids of %s",Amount,self:GetLiquidName(Type)))
+self.warehouse:addLiquid(Type,Amount)
+return self
+end
+function STORAGE:SetLiquid(Type,Amount)
+self:T(self.lid..string.format("Setting liquid %s to N=%d",self:GetLiquidName(Type),Amount))
+self.warehouse:setLiquid(Type,Amount)
+return self
+end
+function STORAGE:RemoveLiquid(Type,Amount)
+self:T(self.lid..string.format("Removing N=%d of liquid %s",Amount,self:GetLiquidName(Type)))
+self.warehouse:removeLiquid(Type,Amount)
+return self
+end
+function STORAGE:GetLiquidAmount(Type)
+local N=self.warehouse:getLiquidAmount(Type)
+return N
+end
+function STORAGE:GetLiquidName(Type)
+local name="Unknown"
+if Type==STORAGE.Liquid.JETFUEL then
+name="Jet fuel"
+elseif Type==STORAGE.Liquid.GASOLINE then
+name="Aircraft gasoline"
+elseif Type==STORAGE.Liquid.MW50 then
+name="MW 50"
+elseif Type==STORAGE.Liquid.DIESEL then
+name="Diesel"
+else
+self:E(self.lid..string.format("ERROR: Unknown liquid type %s",tostring(Type)))
+end
+return name
+end
+function STORAGE:GetInventory(Item)
+local inventory=self.warehouse:getInventory(Item)
+return inventory.aircraft,inventory.liquids,inventory.weapon
 end
 CARGOS={}
 do
