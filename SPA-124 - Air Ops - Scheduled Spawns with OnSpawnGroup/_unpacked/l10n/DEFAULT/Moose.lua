@@ -1,6 +1,7 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-09-08T09:14:41.0000000Z-e95a9525c681bcd9eb71c6f374afbedce0dc0853 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-09-15T07:11:32.0000000Z-5e20874dcaf44cf0a24b5877fe0b5a5452e83ece ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
+env.setErrorMessageBoxEnabled(false)
 ENUMS.ROE={
 WeaponFree=0,
 OpenFireWeaponFree=1,
@@ -12678,7 +12679,6 @@ return self
 end
 function SET_CLIENT:FilterStart()
 if _DATABASE then
-self:_FilterStart()
 self:HandleEvent(EVENTS.Birth,self._EventOnBirth)
 self:HandleEvent(EVENTS.Dead,self._EventOnDeadOrCrash)
 self:HandleEvent(EVENTS.Crash,self._EventOnDeadOrCrash)
@@ -12687,6 +12687,7 @@ self.ZoneTimer=TIMER:New(self._ContinousZoneFilter,self)
 local timing=self.ZoneTimerInterval or 30
 self.ZoneTimer:Start(timing,timing)
 end
+self:_FilterStart()
 end
 return self
 end
@@ -12843,7 +12844,7 @@ if self.Filter.Callsigns then
 local MClientCallsigns=false
 local callsign=MClient:GetCallsign()
 for _,_Callsign in pairs(self.Filter.Callsigns)do
-if callsign and string.find(callsign,_Callsign)then
+if callsign and string.find(callsign,_Callsign,1,true)then
 MClientCallsigns=true
 end
 end
@@ -37575,8 +37576,11 @@ local prefix=self:_GetPrefixFromGroup(group)
 local life=self:_GetLife(group)
 local fuel=group:GetFuel()*100.0
 local airborne=group:InAir()
-local coords=group:GetCoordinate()
-local alt=coords.y or 1000
+local coords=group:GetCoordinate()or group:GetVec3()
+local alt=1000
+if coords then
+alt=coords.y or 1000
+end
 local departure=ratcraft.departure:GetName()
 local destination=ratcraft.destination:GetName()
 local type=self.aircraft.type
@@ -56090,8 +56094,7 @@ end
 return degreesAdjustment
 end
 local windfrom,vwind=self:GetWind(nil,nil,coord)
-vwind=vwind+adjustDegreesForWindSpeed(vwind)
-local intowind=windfrom-self.carrierparam.rwyangle
+local intowind=windfrom-self.carrierparam.rwyangle+adjustDegreesForWindSpeed(vwind)
 if vwind<0.1 then
 intowind=self:GetHeading()
 end
