@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-09-20T15:17:12.0000000Z-ca84fa11cdc779433bc3d6f721ef75a279b0981b ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-09-29T12:26:22.0000000Z-04b4af58f79158fc0eab7f77b687581e96641d46 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 env.setErrorMessageBoxEnabled(false)
@@ -7952,6 +7952,7 @@ local InZone=self:IsVec2InZone({x=Vec3.x,y=Vec3.z})
 return InZone
 end
 function ZONE_BASE:IsCoordinateInZone(Coordinate)
+if not Coordinate then return false end
 local InZone=self:IsVec2InZone(Coordinate:GetVec2())
 return InZone
 end
@@ -8318,7 +8319,7 @@ if ObjectCategory==Object.Category.SCENERY then
 local SceneryType=ZoneObject:getTypeName()
 local SceneryName=ZoneObject:getName()
 self.ScanData.Scenery[SceneryType]=self.ScanData.Scenery[SceneryType]or{}
-self.ScanData.Scenery[SceneryType][SceneryName]=SCENERY:Register(SceneryName,ZoneObject)
+self.ScanData.Scenery[SceneryType][SceneryName]=SCENERY:Register(tostring(SceneryName),ZoneObject)
 table.insert(self.ScanData.SceneryTable,self.ScanData.Scenery[SceneryType][SceneryName])
 self:T({SCENERY=self.ScanData.Scenery[SceneryType][SceneryName]})
 end
@@ -8545,8 +8546,10 @@ end
 local T0=timer.getTime()
 local T1=timer.getTime()
 local buildings={}
+local buildingzones={}
 if self.ScanData and self.ScanData.BuildingCoordinates then
 buildings=self.ScanData.BuildingCoordinates
+buildingzones=self.ScanData.BuildingZones
 else
 for _,_object in pairs(objects)do
 for _,_scen in pairs(_object)do
@@ -8557,23 +8560,47 @@ if markbuildings then
 MARKER:New(scenery:GetCoordinate(),"Building"):ToAll()
 end
 buildings[#buildings+1]=scenery:GetCoordinate()
+local bradius=scenery:GetBoundingRadius()or dist
+local bzone=ZONE_RADIUS:New("Building-"..math.random(1,100000),scenery:GetVec2(),bradius,false)
+buildingzones[#buildingzones+1]=bzone
 end
 end
 end
 self.ScanData.BuildingCoordinates=buildings
+self.ScanData.BuildingZones=buildingzones
 end
 local rcoord=nil
-local found=false
+local found=true
 local iterations=0
 for i=1,1000 do
 iterations=iterations+1
 rcoord=self:GetRandomCoordinate(inner,outer)
+found=true
+for _,_coord in pairs(buildingzones)do
+local zone=_coord
+if zone:IsPointVec2InZone(rcoord)then
 found=false
+break
+end
+end
+if found then
+if markfinal then
+MARKER:New(rcoord,"FREE"):ToAll()
+end
+break
+end
+end
+if not found then
+local rcoord=nil
+local found=true
+local iterations=0
+for i=1,1000 do
+iterations=iterations+1
+rcoord=self:GetRandomCoordinate(inner,outer)
+found=true
 for _,_coord in pairs(buildings)do
 local coord=_coord
-if coord:Get3DDistance(rcoord)>dist then
-found=true
-else
+if coord:Get3DDistance(rcoord)<dist then
 found=false
 end
 end
@@ -8584,8 +8611,9 @@ end
 break
 end
 end
+end
 T1=timer.getTime()
-self:T(string.format("Found a coordinate: %s | Iterations: %d | Time: %d",tostring(found),iterations,T1-T0))
+self:T(string.format("Found a coordinate: %s | Iterations: %d | Time: %.3f",tostring(found),iterations,T1-T0))
 if found then return rcoord else return nil end
 end
 ZONE={
@@ -8619,13 +8647,15 @@ if Offset then
 if(Offset.dx or Offset.dy)and(Offset.rho or Offset.theta)then
 error("Cannot use (dx, dy) with (rho, theta)")
 end
+end
+local self=BASE:Inherit(self,ZONE_RADIUS:New(ZoneName,ZoneUNIT:GetVec2(),Radius,true))
+if Offset then
 self.dy=Offset.dy or 0.0
 self.dx=Offset.dx or 0.0
 self.rho=Offset.rho or 0.0
 self.theta=(Offset.theta or 0.0)*math.pi/180.0
 self.relative_to_unit=Offset.relative_to_unit or false
 end
-local self=BASE:Inherit(self,ZONE_RADIUS:New(ZoneName,ZoneUNIT:GetVec2(),Radius,true))
 self:F({ZoneName,ZoneUNIT:GetVec2(),Radius})
 self.ZoneUNIT=ZoneUNIT
 self.LastVec2=ZoneUNIT:GetVec2()
@@ -30220,6 +30250,7 @@ ClassName="SCORING",
 ClassID=0,
 Players={},
 AutoSave=true,
+version="1.17.1"
 }
 local _SCORINGCoalition={
 [1]="Red",
@@ -30416,7 +30447,7 @@ if self.Players[PlayerName].UnitCoalition~=UnitCoalition and self.penaltyoncoali
 self.Players[PlayerName].Penalty=self.Players[PlayerName].Penalty+self.CoalitionChangePenalty or 50
 self.Players[PlayerName].PenaltyCoalition=self.Players[PlayerName].PenaltyCoalition+1
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..PlayerName.."' changed coalition from ".._SCORINGCoalition[self.Players[PlayerName].UnitCoalition].." to ".._SCORINGCoalition[UnitCoalition]..
-"(changed "..self.Players[PlayerName].PenaltyCoalition.." times the coalition). "..self.CoalitionChangePenalty.."Penalty points added.",
+"(changed "..self.Players[PlayerName].PenaltyCoalition.." times the coalition). "..self.CoalitionChangePenalty.." penalty points added.",
 MESSAGE.Type.Information
 ):ToAll()
 self:ScoreCSV(PlayerName,"","COALITION_PENALTY",1,-1*self.CoalitionChangePenalty,self.Players[PlayerName].UnitName,_SCORINGCoalition[self.Players[PlayerName].UnitCoalition],_SCORINGCategory[self.Players[PlayerName].UnitCategory],self.Players[PlayerName].UnitType,
@@ -52293,7 +52324,7 @@ if nextwindow then
 self:RecoveryCase(nextwindow.CASE,nextwindow.OFFSET)
 if nextwindow.WIND and nextwindow.START-time<self.dTturn and not self.turnintowind then
 local hdg=self:GetHeading()
-local wind=self:GetHeadingIntoWind()
+local wind=self:GetHeadingIntoWind(nextwindow.SPEED)
 local delta=self:_GetDeltaHeading(hdg,wind)
 local uturn=delta>5
 local _,vwind=self:GetWind()
@@ -53729,7 +53760,7 @@ local P=UTILS.hPa2inHg(self:GetCoordinate():GetPressure())
 local alt=self:_GetMarshalAltitude(stack,flight.case)
 local brc=self:GetBRC()
 if self.recoverywindow and self.recoverywindow.WIND then
-brc=self:GetBRCintoWind()
+brc=self:GetBRCintoWind(self.recoverywindow.SPEED)
 end
 flight.Tcharlie=self:_GetCharlieTime(flight)
 local Ccharlie=UTILS.SecondsToClock(flight.Tcharlie)
@@ -56087,7 +56118,7 @@ local vpp=UTILS.VecDot(vT,zc)
 local vabs=UTILS.VecNorm(vT)
 return-vpa,vpp,vabs
 end
-function AIRBOSS:GetHeadingIntoWind(magnetic,coord)
+function AIRBOSS:GetHeadingIntoWind_old(magnetic,coord)
 local function adjustDegreesForWindSpeed(windSpeed)
 local degreesAdjustment=0
 if windSpeed>0 and windSpeed<3 then
@@ -56116,8 +56147,42 @@ intowind=intowind+360
 end
 return intowind
 end
-function AIRBOSS:GetBRCintoWind()
-return self:GetHeadingIntoWind(true)
+function AIRBOSS:GetHeadingIntoWind(vdeck,magnetic,coord)
+local Offset=self.carrierparam.rwyangle or 0
+local windfrom,vwind=self:GetWind(18,nil,coord)
+local Vmin=4
+local Vmax=UTILS.KmphToKnots(self.carrier:GetSpeedMax())
+if vwind<0.1 then
+local h=self:GetHeading(magnetic)
+return h,math.min(vdeck,Vmax)
+end
+vwind=UTILS.MpsToKnots(vwind)
+local windto=(windfrom+180)%360
+local alpha=math.rad(-Offset)
+local C=math.sqrt(math.cos(alpha)^2/math.sin(alpha)^2+1)
+local vdeckMax=vwind+math.cos(alpha)*Vmax
+local vdeckMin=vwind+math.cos(alpha)*Vmin
+local v=0
+local theta=0
+if vdeck>vdeckMax then
+v=Vmax
+theta=math.asin(v/(vwind*C))-math.asin(-1/C)
+elseif vdeck<vdeckMin then
+v=Vmin
+theta=math.asin(v/(vwind*C))-math.asin(-1/C)
+elseif vdeck*math.sin(alpha)>vwind then
+theta=math.pi/2
+v=math.sqrt(vdeck^2-vwind^2)
+else
+theta=math.asin(vdeck*math.sin(alpha)/vwind)
+v=vdeck*math.cos(alpha)-vwind*math.cos(theta)
+end
+local magvar=magnetic and self.magvar or 0
+local intowind=(540+(windto-magvar+math.deg(theta)))%360
+return intowind,v
+end
+function AIRBOSS:GetBRCintoWind(vdeck)
+return self:GetHeadingIntoWind(vdeck,true)
 end
 function AIRBOSS:GetFinalBearing(magnetic)
 local fb=self:GetHeading(magnetic)
@@ -57147,32 +57212,33 @@ self.carrier:Route(wp)
 end
 function AIRBOSS:CarrierTurnIntoWind(time,vdeck,uturn)
 local _,vwind=self:GetWind()
-local vtot=math.max(vdeck-vwind,UTILS.KnotsToMps(4))
+local vdeck=UTILS.MpsToKnots(vdeck)
+local hiw,speedknots=self:GetHeadingIntoWind(vdeck)
+local vtot=UTILS.KnotsToMps(speedknots)
 local dist=vtot*time
-local speedknots=UTILS.MpsToKnots(vtot)
 local distNM=UTILS.MetersToNM(dist)
-self:I(self.lid..string.format("Carrier steaming into the wind (%.1f kts). Distance=%.1f NM, Speed=%.1f knots, Time=%d sec.",UTILS.MpsToKnots(vwind),distNM,speedknots,time))
-local hiw=self:GetHeadingIntoWind()
 local hdg=self:GetHeading()
 local deltaH=self:_GetDeltaHeading(hdg,hiw)
+self:I(self.lid..string.format("Carrier steaming into the wind (%.1f kts). Heading=%03d-->%03d (Delta=%.1f), Speed=%.1f knots, Distance=%.1f NM, Time=%d sec",
+UTILS.MpsToKnots(vwind),hdg,hiw,deltaH,speedknots,distNM,speedknots,time))
 local Cv=self:GetCoordinate()
 local Ctiw=nil
 local Csoo=nil
 if deltaH<45 then
 Csoo=Cv:Translate(750,hdg):Translate(750,hiw)
-local hsw=self:GetHeadingIntoWind(false,Csoo)
+local hsw=self:GetHeadingIntoWind(vdeck,false,Csoo)
 Ctiw=Csoo:Translate(dist,hsw)
 elseif deltaH<90 then
 Csoo=Cv:Translate(900,hdg):Translate(900,hiw)
-local hsw=self:GetHeadingIntoWind(false,Csoo)
+local hsw=self:GetHeadingIntoWind(vdeck,false,Csoo)
 Ctiw=Csoo:Translate(dist,hsw)
 elseif deltaH<135 then
 Csoo=Cv:Translate(1100,hdg-90):Translate(1000,hiw)
-local hsw=self:GetHeadingIntoWind(false,Csoo)
+local hsw=self:GetHeadingIntoWind(vdeck,false,Csoo)
 Ctiw=Csoo:Translate(dist,hsw)
 else
 Csoo=Cv:Translate(1200,hdg-90):Translate(1000,hiw)
-local hsw=self:GetHeadingIntoWind(false,Csoo)
+local hsw=self:GetHeadingIntoWind(vdeck,false,Csoo)
 Ctiw=Csoo:Translate(dist,hsw)
 end
 self.Creturnto=self:GetCoordinate()
@@ -57253,7 +57319,8 @@ end
 if turning and not self.turning then
 local hdg
 if self.turnintowind then
-hdg=self:GetHeadingIntoWind(false)
+local vdeck=self.recoverywindow and self.recoverywindow.SPEED or 20
+hdg=self:GetHeadingIntoWind(vdeck,false)
 else
 hdg=self:GetCoordinate():HeadingTo(self:_GetNextWaypoint())
 end
