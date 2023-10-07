@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-09-29T12:26:22.0000000Z-04b4af58f79158fc0eab7f77b687581e96641d46 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-10-06T13:49:42.0000000Z-17838e7fe70060755e047d69ce11bef3a9af346f ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 env.setErrorMessageBoxEnabled(false)
@@ -13634,6 +13634,25 @@ zone:DrawZone(Coalition,Color,Alpha,FillColor,FillAlpha,LineType,ReadOnly)
 end
 return self
 end
+function SET_ZONE:GetAverageCoordinate()
+local x,y,z=0,0,0
+local count=0
+for _,_zone in pairs(self.Set)do
+local zone=_zone
+local vec3=zone:GetVec3()
+x=x+vec3.x
+y=y+vec3.y
+z=z+vec3.z
+count=count+1
+end
+if count>1 then
+x=x/count
+y=y/count
+z=z/count
+end
+local coord=COORDINATE:New(x,y,z)
+return coord
+end
 function SET_ZONE:IsIncludeObject(MZone)
 self:F2(MZone)
 local MZoneInclude=true
@@ -16519,6 +16538,7 @@ self:T(self.MessageCategory..self.MessageText:gsub("\n$",""):gsub("\n$","").." /
 trigger.action.outTextForCoalition(CoalitionSide,self.MessageText:gsub("\n$",""):gsub("\n$",""),self.MessageDuration,self.ClearScreen)
 end
 end
+self.CoalitionSide=CoalitionSide
 return self
 end
 function MESSAGE:ToCoalitionIf(CoalitionSide,Condition)
@@ -16555,6 +16575,61 @@ function MESSAGE:ToLogIf(Condition)
 if Condition and Condition==true then
 env.info(self.MessageCategory..self.MessageText:gsub("\n$",""):gsub("\n$",""))
 end
+return self
+end
+_MESSAGESRS={}
+function MESSAGE.SetMSRS(PathToSRS,Port,PathToCredentials,Frequency,Modulation,Gender,Culture,Voice,Coalition,Volume,Label,Coordinate)
+local path=PathToSRS or"C:\\Program Files\\DCS-SimpleRadio-Standalone"
+_MESSAGESRS.MSRS=MSRS:New(path,Frequency,Modulation,Volume)
+_MESSAGESRS.MSRS:SetCoalition(Coalition)
+_MESSAGESRS.MSRS:SetCoordinate(Coordinate)
+_MESSAGESRS.MSRS:SetCulture(Culture)
+_MESSAGESRS.MSRS:SetFrequencies(Frequency)
+_MESSAGESRS.MSRS:SetGender(Gender)
+_MESSAGESRS.MSRS:SetGoogle(PathToCredentials)
+_MESSAGESRS.MSRS:SetLabel(Label or"MESSAGE")
+_MESSAGESRS.MSRS:SetModulations(Modulation)
+_MESSAGESRS.MSRS:SetPath(PathToSRS)
+_MESSAGESRS.MSRS:SetPort(Port)
+_MESSAGESRS.MSRS:SetVolume(Volume)
+_MESSAGESRS.MSRS:SetVoice(Voice)
+_MESSAGESRS.SRSQ=MSRSQUEUE:New(Label or"MESSAGE")
+end
+function MESSAGE:ToSRS(frequency,modulation,gender,culture,voice,coalition,volume,coordinate)
+if _MESSAGESRS.SRSQ then
+_MESSAGESRS.MSRS:SetLabel(self.MessageCategory or _MESSAGESRS.MSRS.Label or"MESSAGE")
+if gender then
+_MESSAGESRS.MSRS:SetGender(gender)
+end
+if coalition then
+_MESSAGESRS.MSRS:SetCoalition(coalition)
+end
+if culture then
+_MESSAGESRS.MSRS:SetCulture(culture)
+end
+if volume then
+_MESSAGESRS.MSRS:SetVolume(volume)
+end
+if coordinate then
+_MESSAGESRS.MSRS:SetCoordinate(coordinate)
+end
+if voice then
+_MESSAGESRS.MSRS:SetVoice(voice)
+end
+_MESSAGESRS.SRSQ:NewTransmission(self.MessageText,nil,_MESSAGESRS.MSRS,nil,1,nil,nil,nil,frequency,modulation)
+end
+return self
+end
+function MESSAGE:ToSRSBlue(frequency,modulation,gender,culture,voice,volume,coordinate)
+self:ToSRS(frequency,modulation,gender,culture,voice,coalition.side.BLUE,volume,coordinate)
+return self
+end
+function MESSAGE:ToSRSRed(frequency,modulation,gender,culture,voice,volume,coordinate)
+self:ToSRS(frequency,modulation,gender,culture,voice,coalition.side.RED,volume,coordinate)
+return self
+end
+function MESSAGE:ToSRSAll(frequency,modulation,gender,culture,voice,volume,coordinate)
+self:ToSRS(frequency,modulation,gender,culture,voice,coalition.side.NEUTRAL,volume,coordinate)
 return self
 end
 do
