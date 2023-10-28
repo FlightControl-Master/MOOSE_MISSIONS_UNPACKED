@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-10-20T23:37:29+02:00-456c002c3cc59293c68b4532fb8b3086f52cd5e6 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-10-27T17:48:41+02:00-764356870690c628b272c8791fe4cadb1ab3fa86 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 env.setErrorMessageBoxEnabled(false)
@@ -1033,6 +1033,9 @@ Tanker={
 Texaco=1,
 Arco=2,
 Shell=3,
+Navy_One=4,
+Mauler=5,
+Bloodhound=6,
 },
 JTAC={
 Axeman=1,
@@ -23964,6 +23967,32 @@ local Task={
 table.insert(TaskAerobatics.params["maneuversSequency"],Task)
 return TaskAerobatics
 end
+function CONTROLLABLE:PatrolRaceTrack(Point1,Point2,Altitude,Speed,Formation,Delay)
+local PatrolGroup=self
+if not self:IsInstanceOf("GROUP")then
+PatrolGroup=self:GetGroup()
+end
+local delay=Delay or 1
+self:F({PatrolGroup=PatrolGroup:GetName()})
+if PatrolGroup:IsAir()then
+if Formation then
+PatrolGroup:SetOption(AI.Option.Air.id.FORMATION,Formation)
+end
+local FromCoord=PatrolGroup:GetCoordinate()
+local ToCoord=Point1:GetCoordinate()
+if Altitude then
+FromCoord:SetAltitude(Altitude)
+ToCoord:SetAltitude(Altitude)
+end
+local Route={}
+Route[#Route+1]=FromCoord:WaypointAir(AltType,COORDINATE.WaypointType.TurningPoint,COORDINATE.WaypointAction.TurningPoint,Speed,true,nil,DCSTasks,description,timeReFuAr)
+Route[#Route+1]=ToCoord:WaypointAir(AltType,COORDINATE.WaypointType.TurningPoint,COORDINATE.WaypointAction.TurningPoint,Speed,true,nil,DCSTasks,description,timeReFuAr)
+local TaskRouteToZone=PatrolGroup:TaskFunction("CONTROLLABLE.PatrolRaceTrack",Point2,Point1,Altitude,Speed,Formation,Delay)
+PatrolGroup:SetTaskWaypoint(Route[#Route],TaskRouteToZone)
+PatrolGroup:Route(Route,Delay)
+end
+return self
+end
 GROUP={
 ClassName="GROUP",
 }
@@ -25523,9 +25552,6 @@ local DCSUnit=Unit.getByName(self.UnitName)
 if DCSUnit then
 return DCSUnit
 end
-if self.DCSUnit then
-return self.DCSUnit
-end
 return nil
 end
 function UNIT:GetAltitude(FromGround)
@@ -25742,7 +25768,7 @@ end
 local typename=self:GetTypeName()
 if typename=="IL-78M"then
 system=1
-elseif typename=="KC130"then
+elseif typename=="KC130"or typename=="KC130J"then
 system=1
 elseif typename=="KC135BDA"then
 system=1
@@ -25750,6 +25776,10 @@ elseif typename=="KC135MPRS"then
 system=1
 elseif typename=="S-3B Tanker"then
 system=1
+elseif typename=="KC_10_Extender"then
+system=1
+elseif typename=="KC_10_Extender_D"then
+system=0
 end
 end
 return tanker,system
@@ -46157,8 +46187,10 @@ if request then
 self:Request(request)
 end
 end
+if self.verbosity>2 then
 self:_PrintQueue(self.queue,"Queue waiting")
 self:_PrintQueue(self.pending,"Queue pending")
+end
 self:_UpdateWarehouseMarkText()
 if self.Debug then
 self:_DisplayStockItems(self.stock)
@@ -46405,9 +46437,9 @@ self:F({groupname=group:GetName(),ngroups=ngroups,forceattribute=forceattribute,
 local n=ngroups or 1
 local function _GetObjectSize(DCSdesc)
 if DCSdesc.box then
-local x=DCSdesc.box.max.x+math.abs(DCSdesc.box.min.x)
-local y=DCSdesc.box.max.y+math.abs(DCSdesc.box.min.y)
-local z=DCSdesc.box.max.z+math.abs(DCSdesc.box.min.z)
+local x=DCSdesc.box.max.x-DCSdesc.box.min.x
+local y=DCSdesc.box.max.y-DCSdesc.box.min.y
+local z=DCSdesc.box.max.z-DCSdesc.box.min.z
 return math.max(x,z),x,y,z
 end
 return 0,0,0,0
@@ -47088,8 +47120,12 @@ self:T(self.lid..text)
 local groupname=asset.spawngroupname
 local NoTriggerEvent=true
 if request.transporttype==WAREHOUSE.TransportType.SELFPROPELLED then
+if request.cargogroupset then
 request.cargogroupset:Remove(groupname,NoTriggerEvent)
 self:T(self.lid..string.format("Removed selfpropelled cargo %s: ncargo=%d.",groupname,request.cargogroupset:Count()))
+else
+self:E(self.lid..string.format("ERROR: cargogroupset is nil for request ID=%s!",tostring(request.uid)))
+end
 else
 local istransport=not asset.iscargo
 if istransport==true then
@@ -47657,7 +47693,11 @@ self:_DebugMessage(string.format("Warehouse %s alias %s was destroyed!",warehous
 self:Destroyed()
 end
 if self.airbase and self.airbasename and self.airbasename==EventData.IniUnitName then
+if self:IsRunwayOperational()then
 self:RunwayDestroyed()
+else
+self.runwaydestroyed=timer.getAbsTime()
+end
 end
 end
 self:T2(self.lid..string.format("Warehouse %s captured event dead or crash or unit %s",self.alias,tostring(EventData.IniUnitName)))
@@ -59945,9 +59985,10 @@ modex=nil,
 eplrs=nil,
 recovery=nil,
 terminaltype=nil,
+unlimitedfuel=false,
 }
 _RECOVERYTANKERID=0
-RECOVERYTANKER.version="1.0.9"
+RECOVERYTANKER.version="1.0.10"
 function RECOVERYTANKER:New(carrierunit,tankergroupname)
 local self=BASE:Inherit(self,FSM:New())
 if type(carrierunit)=="string"then
@@ -59992,6 +60033,10 @@ self:AddTransition("Returning","Returned","Returned")
 self:AddTransition("*","Status","*")
 self:AddTransition("Running","PatternUpdate","*")
 self:AddTransition("*","Stop","Stopped")
+return self
+end
+function RECOVERYTANKER:SetUnlimitedFuel(OnOff)
+self.unlimitedfuel=OnOff
 return self
 end
 function RECOVERYTANKER:SetSpeed(speed)
@@ -60165,6 +60210,13 @@ self:HandleEvent(EVENTS.RefuelingStop,self._RefuelingStop)
 self:HandleEvent(EVENTS.Crash,self._OnEventCrashOrDead)
 self:HandleEvent(EVENTS.Dead,self._OnEventCrashOrDead)
 local Spawn=SPAWN:NewWithAlias(self.tankergroupname,self.alias)
+if self.unlimitedfuel then
+Spawn:OnSpawnGroup(
+function(grp)
+grp:CommandSetUnlimitedFuel(self.unlimitedfuel)
+end
+)
+end
 Spawn:InitRadioCommsOnOff(true)
 Spawn:InitRadioFrequency(self.RadioFreq)
 Spawn:InitRadioModulation(self.RadioModu)
