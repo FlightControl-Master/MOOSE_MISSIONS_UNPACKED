@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-11-03T16:33:45+01:00-9d500186d1131fec9f307c818c6855d033c7c06a ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-11-09T15:09:01+01:00-db06154ad7bf6f914fd3e25334a3d666551e1988 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 env.setErrorMessageBoxEnabled(false)
@@ -6411,7 +6411,7 @@ if Event.id and Event.id==EVENTS.MissionEnd then
 self.MissionEnd=true
 end
 if Event.initiator then
-Event.IniObjectCategory=Event.initiator:getCategory()
+Event.IniObjectCategory=Object.getCategory(Event.initiator)
 if Event.IniObjectCategory==Object.Category.STATIC then
 if Event.id==31 then
 Event.IniDCSUnit=Event.initiator
@@ -6442,8 +6442,7 @@ local Unit=UNIT:FindByName(Event.IniDCSUnitName)
 if Unit then
 Event.IniObjectCategory=Object.Category.UNIT
 end
-end
-if Event.IniObjectCategory==Object.Category.UNIT then
+elseif Event.IniObjectCategory==Object.Category.UNIT then
 Event.IniDCSUnit=Event.initiator
 Event.IniDCSUnitName=Event.IniDCSUnit:getName()
 Event.IniUnitName=Event.IniDCSUnitName
@@ -6459,11 +6458,16 @@ Event.IniGroup=GROUP:FindByName(Event.IniDCSGroupName)
 Event.IniGroupName=Event.IniDCSGroupName
 end
 Event.IniPlayerName=Event.IniDCSUnit:getPlayerName()
+if Event.IniPlayerName then
+local PID=NET.GetPlayerIDByName(nil,Event.IniPlayerName)
+if PID then
+Event.IniPlayerUCID=net.get_player_info(tonumber(PID),'ucid')
+end
+end
 Event.IniCoalition=Event.IniDCSUnit:getCoalition()
 Event.IniTypeName=Event.IniDCSUnit:getTypeName()
 Event.IniCategory=Event.IniDCSUnit:getDesc().category
-end
-if Event.IniObjectCategory==Object.Category.CARGO then
+elseif Event.IniObjectCategory==Object.Category.CARGO then
 Event.IniDCSUnit=Event.initiator
 Event.IniDCSUnitName=Event.IniDCSUnit:getName()
 Event.IniUnitName=Event.IniDCSUnitName
@@ -6471,16 +6475,14 @@ Event.IniUnit=CARGO:FindByName(Event.IniDCSUnitName)
 Event.IniCoalition=Event.IniDCSUnit:getCoalition()
 Event.IniCategory=Event.IniDCSUnit:getDesc().category
 Event.IniTypeName=Event.IniDCSUnit:getTypeName()
-end
-if Event.IniObjectCategory==Object.Category.SCENERY then
+elseif Event.IniObjectCategory==Object.Category.SCENERY then
 Event.IniDCSUnit=Event.initiator
 Event.IniDCSUnitName=Event.IniDCSUnit:getName()
 Event.IniUnitName=Event.IniDCSUnitName
 Event.IniUnit=SCENERY:Register(Event.IniDCSUnitName,Event.initiator)
 Event.IniCategory=Event.IniDCSUnit:getDesc().category
 Event.IniTypeName=Event.initiator:isExist()and Event.IniDCSUnit:getTypeName()or"SCENERY"
-end
-if Event.IniObjectCategory==Object.Category.BASE then
+elseif Event.IniObjectCategory==Object.Category.BASE then
 Event.IniDCSUnit=Event.initiator
 Event.IniDCSUnitName=Event.IniDCSUnit:getName()
 Event.IniUnitName=Event.IniDCSUnitName
@@ -6495,7 +6497,7 @@ end
 end
 end
 if Event.target then
-Event.TgtObjectCategory=Event.target:getCategory()
+Event.TgtObjectCategory=Object.getCategory(Event.target)
 if Event.TgtObjectCategory==Object.Category.UNIT then
 Event.TgtDCSUnit=Event.target
 Event.TgtDCSGroup=Event.TgtDCSUnit:getGroup()
@@ -6509,11 +6511,16 @@ Event.TgtGroup=GROUP:FindByName(Event.TgtDCSGroupName)
 Event.TgtGroupName=Event.TgtDCSGroupName
 end
 Event.TgtPlayerName=Event.TgtDCSUnit:getPlayerName()
+if Event.TgtPlayerName then
+local PID=NET.GetPlayerIDByName(nil,Event.TgtPlayerName)
+if PID then
+Event.TgtPlayerUCID=net.get_player_info(tonumber(PID),'ucid')
+end
+end
 Event.TgtCoalition=Event.TgtDCSUnit:getCoalition()
 Event.TgtCategory=Event.TgtDCSUnit:getDesc().category
 Event.TgtTypeName=Event.TgtDCSUnit:getTypeName()
-end
-if Event.TgtObjectCategory==Object.Category.STATIC then
+elseif Event.TgtObjectCategory==Object.Category.STATIC then
 Event.TgtDCSUnit=Event.target
 if Event.target:isExist()and Event.id~=33 then
 Event.TgtDCSUnitName=Event.TgtDCSUnit:getName()
@@ -6540,8 +6547,7 @@ else
 Event.TgtTypeName="Static"
 end
 end
-end
-if Event.TgtObjectCategory==Object.Category.SCENERY then
+elseif Event.TgtObjectCategory==Object.Category.SCENERY then
 Event.TgtDCSUnit=Event.target
 Event.TgtDCSUnitName=Event.TgtDCSUnit:getName()
 Event.TgtUnitName=Event.TgtDCSUnitName
@@ -9661,6 +9667,7 @@ function DATABASE:New()
 local self=BASE:Inherit(self,BASE:New())
 self:SetEventPriority(1)
 self:HandleEvent(EVENTS.Birth,self._EventOnBirth)
+self:HandleEvent(EVENTS.PlayerEnterUnit,self._EventOnPlayerEnterUnit)
 self:HandleEvent(EVENTS.Dead,self._EventOnDeadOrCrash)
 self:HandleEvent(EVENTS.Crash,self._EventOnDeadOrCrash)
 self:HandleEvent(EVENTS.RemoveUnit,self._EventOnDeadOrCrash)
@@ -10307,28 +10314,39 @@ end
 function DATABASE:_EventOnPlayerEnterUnit(Event)
 self:F2({Event})
 if Event.IniDCSUnit then
-if Event.IniObjectCategory==1 then
-self:AddUnit(Event.IniDCSUnitName)
-Event.IniUnit=self:FindUnit(Event.IniDCSUnitName)
-self:AddGroup(Event.IniDCSGroupName)
-local PlayerName=Event.IniDCSUnit:getPlayerName()
-if PlayerName then
-if not self.PLAYERS[PlayerName]then
-self:AddPlayer(Event.IniDCSUnitName,PlayerName)
+if Event.IniObjectCategory==1 and Event.IniGroup and Event.IniGroup:IsGround()then
+local IsPlayer=Event.IniDCSUnit:getPlayerName()
+if IsPlayer then
+self:I(string.format("Player '%s' joined GROUND unit '%s' of group '%s'",tostring(Event.IniPlayerName),tostring(Event.IniDCSUnitName),tostring(Event.IniDCSGroupName)))
+local client=self.CLIENTS[Event.IniDCSUnitName]
+if not client then
+client=self:AddClient(Event.IniDCSUnitName)
 end
-local Settings=SETTINGS:Set(PlayerName)
+client:AddPlayer(Event.IniPlayerName)
+if not self.PLAYERS[Event.IniPlayerName]then
+self:AddPlayer(Event.IniUnitName,Event.IniPlayerName)
+end
+local Settings=SETTINGS:Set(Event.IniPlayerName)
 Settings:SetPlayerMenu(Event.IniUnit)
-else
-self:E("ERROR: getPlayerName() returned nil for event PlayerEnterUnit")
 end
 end
 end
 end
 function DATABASE:_EventOnPlayerLeaveUnit(Event)
 self:F2({Event})
+local function FindPlayerName(UnitName)
+local playername=nil
+for _name,_unitname in pairs(self.PLAYERS)do
+if _unitname==UnitName then
+playername=_name
+break
+end
+end
+return playername
+end
 if Event.IniUnit then
 if Event.IniObjectCategory==1 then
-local PlayerName=Event.IniUnit:GetPlayerName()
+local PlayerName=Event.IniUnit:GetPlayerName()or FindPlayerName(Event.IniUnitName)
 if PlayerName then
 self:I(string.format("Player '%s' left unit %s",tostring(PlayerName),tostring(Event.IniUnitName)))
 local Settings=SETTINGS:Set(PlayerName)
@@ -16739,7 +16757,8 @@ _MESSAGESRS.MSRS:SetVoice(voice or _MESSAGESRS.Voice)
 if coordinate then
 _MESSAGESRS.MSRS:SetCoordinate(coordinate)
 end
-_MESSAGESRS.SRSQ:NewTransmission(self.MessageText,nil,_MESSAGESRS.MSRS,nil,nil,nil,nil,nil,frequency,modulation,gender or _MESSAGESRS.Gender,culture or _MESSAGESRS.Culture,voice or _MESSAGESRS.Voice,volume,self.MessageCategory)
+local category=string.gsub(self.MessageCategory,":","")
+_MESSAGESRS.SRSQ:NewTransmission(self.MessageText,nil,_MESSAGESRS.MSRS,nil,nil,nil,nil,nil,frequency,modulation,gender or _MESSAGESRS.Gender,culture or _MESSAGESRS.Culture,voice or _MESSAGESRS.Voice,volume,category,coordinate)
 end
 return self
 end
@@ -24066,6 +24085,25 @@ function GROUP:FindByName(GroupName)
 local GroupFound=_DATABASE:FindGroup(GroupName)
 return GroupFound
 end
+function GROUP:FindByMatching(Pattern)
+local GroupFound=nil
+for name,group in pairs(_DATABASE.GROUPS)do
+if string.match(name,Pattern)then
+GroupFound=group
+break
+end
+end
+return GroupFound
+end
+function GROUP:FindAllByMatching(Pattern)
+local GroupsFound={}
+for name,group in pairs(_DATABASE.GROUPS)do
+if string.match(name,Pattern)then
+GroupsFound[#GroupsFound+1]=group
+end
+end
+return GroupsFound
+end
 function GROUP:GetDCSObject()
 local DCSGroup=Group.getByName(self.GroupName)
 if DCSGroup then
@@ -25547,6 +25585,25 @@ function UNIT:FindByName(UnitName)
 local UnitFound=_DATABASE:FindUnit(UnitName)
 return UnitFound
 end
+function UNIT:FindByMatching(Pattern)
+local GroupFound=nil
+for name,group in pairs(_DATABASE.UNITS)do
+if string.match(name,Pattern)then
+GroupFound=group
+break
+end
+end
+return GroupFound
+end
+function UNIT:FindAllByMatching(Pattern)
+local GroupsFound={}
+for name,group in pairs(_DATABASE.UNITS)do
+if string.match(name,Pattern)then
+GroupsFound[#GroupsFound+1]=group
+end
+end
+return GroupsFound
+end
 function UNIT:Name()
 return self.UnitName
 end
@@ -26567,6 +26624,18 @@ end
 else
 MESSAGE:New(Message,MessageDuration,MessageCategory):ToClient(self)
 end
+end
+end
+function CLIENT:GetUCID()
+local PID=NET.GetPlayerIDByName(nil,self:GetPlayerName())
+return net.get_player_info(tonumber(PID),'ucid')
+end
+function CLIENT:GetPlayerInfo(Attribute)
+local PID=NET.GetPlayerIDByName(nil,self:GetPlayerName())
+if PID then
+return net.get_player_info(tonumber(PID),Attribute)
+else
+return nil
 end
 end
 STATIC={
@@ -28595,7 +28664,7 @@ end
 do
 NET={
 ClassName="NET",
-Version="0.1.2",
+Version="0.1.3",
 BlockTime=600,
 BlockedPilots={},
 BlockedUCIDs={},
@@ -28659,20 +28728,23 @@ local PlayerSide,PlayerSlot=self:GetSlot(data.IniUnit)
 local TNow=timer.getTime()
 self:T(self.lid.."Event for: "..name.." | UCID: "..ucid)
 if data.id==EVENTS.PlayerEnterUnit or data.id==EVENTS.PlayerEnterAircraft then
-self:T(self.lid.."Pilot Joining: "..name.." | UCID: "..ucid)
+self:T(self.lid.."Pilot Joining: "..name.." | UCID: "..ucid.." | Event ID: "..data.id)
 local blocked=self:IsAnyBlocked(ucid,name,PlayerID,PlayerSide,PlayerSlot)
 if blocked and PlayerID and tonumber(PlayerID)~=1 then
 local outcome=net.force_player_slot(tonumber(PlayerID),0,'')
 else
+local client=CLIENT:FindByPlayerName(name)or data.IniUnit
+if not self.KnownPilots[name]or(self.KnownPilots[name]and TNow-self.KnownPilots[name].timestamp>3)then
+self:__PlayerJoined(1,client,name)
 self.KnownPilots[name]={
 name=name,
 ucid=ucid,
 id=PlayerID,
 side=PlayerSide,
 slot=PlayerSlot,
+timestamp=TNow,
 }
-local client=CLIENT:FindByPlayerName(name)or data.IniUnit
-self:__PlayerJoined(1,client,name)
+end
 return self
 end
 end
@@ -28824,11 +28896,9 @@ return self
 end
 function NET:GetPlayerIDByName(Name)
 if not Name then return nil end
-local playerList=self:GetPlayerList()
-self:T({playerList})
+local playerList=net.get_player_list()
 for i=1,#playerList do
 local playerName=net.get_name(i)
-self:T({playerName})
 if playerName==Name then
 return playerList[i]
 end
