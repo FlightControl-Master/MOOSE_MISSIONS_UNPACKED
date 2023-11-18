@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-11-09T15:09:01+01:00-db06154ad7bf6f914fd3e25334a3d666551e1988 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-11-17T15:06:52+01:00-6bba2fec0bd1a2fe530d490607871413af2a5253 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 env.setErrorMessageBoxEnabled(false)
@@ -6568,7 +6568,7 @@ end
 if Event.place then
 if Event.id==EVENTS.LandingAfterEjection then
 else
-if Event.place:isExist()and Event.place:getCategory()~=Object.Category.SCENERY then
+if Event.place:isExist()and Object.getCategory(Event.place)~=Object.Category.SCENERY then
 Event.Place=AIRBASE:Find(Event.place)
 Event.PlaceName=Event.Place:GetName()
 end
@@ -8368,7 +8368,7 @@ radius=ZoneRadius,
 }
 local function EvaluateZone(ZoneObject)
 if ZoneObject then
-local ObjectCategory=ZoneObject:getCategory()
+local ObjectCategory=Object.getCategory(ZoneObject)
 if(ObjectCategory==Object.Category.UNIT and ZoneObject:isExist()and ZoneObject:isActive())or(ObjectCategory==Object.Category.STATIC and ZoneObject:isExist())then
 local CoalitionDCSUnit=ZoneObject:getCoalition()
 local Include=false
@@ -9212,7 +9212,7 @@ radius=ZoneRadius,
 }
 local function EvaluateZone(ZoneObject)
 if ZoneObject then
-local ObjectCategory=ZoneObject:getCategory()
+local ObjectCategory=Object.getCategory(ZoneObject)
 if(ObjectCategory==Object.Category.UNIT and ZoneObject:isExist()and ZoneObject:isActive())or(ObjectCategory==Object.Category.STATIC and ZoneObject:isExist())then
 local CoalitionDCSUnit=ZoneObject:getCoalition()
 local Include=false
@@ -11691,6 +11691,16 @@ end
 end
 return CountU
 end
+function SET_UNIT:GetAliveSet()
+local AliveSet=SET_UNIT:New()
+for GroupName,GroupObject in pairs(self.Set)do
+local GroupObject=GroupObject
+if GroupObject and GroupObject:IsAlive()then
+AliveSet:Add(GroupName,GroupObject)
+end
+end
+return AliveSet.Set or{},AliveSet
+end
 function SET_UNIT:_ContinousZoneFilter()
 local Database=_DATABASE.UNITS
 for ObjectName,Object in pairs(Database)do
@@ -11915,7 +11925,13 @@ self:F({MaxThreatLevelA2G=MaxThreatLevelA2G,MaxThreatText=MaxThreatText})
 return MaxThreatLevelA2G,MaxThreatText
 end
 function SET_UNIT:GetCoordinate()
-local Coordinate=self:GetRandom():GetCoordinate()
+local Coordinate=nil
+local unit=self:GetRandom()
+if self:Count()==1 and unit then
+return unit:GetCoordinate()
+end
+if unit then
+local Coordinate=unit:GetCoordinate()
 local x1=Coordinate.x
 local x2=Coordinate.x
 local y1=Coordinate.y
@@ -11925,7 +11941,7 @@ local z2=Coordinate.z
 local MaxVelocity=0
 local AvgHeading=nil
 local MovingCount=0
-for UnitName,UnitData in pairs(self:GetSet())do
+for UnitName,UnitData in pairs(self:GetAliveSet())do
 local Unit=UnitData
 local Coordinate=Unit:GetCoordinate()
 x1=(Coordinate.x<x1)and Coordinate.x or x1
@@ -11949,6 +11965,7 @@ Coordinate.z=(z2-z1)/2+z1
 Coordinate:SetHeading(AvgHeading)
 Coordinate:SetVelocity(MaxVelocity)
 self:F({Coordinate=Coordinate})
+end
 return Coordinate
 end
 function SET_UNIT:GetVelocity()
@@ -12802,6 +12819,31 @@ local timing=self.ZoneTimerInterval or 30
 self.ZoneTimer:Start(timing,timing)
 end
 self:_FilterStart()
+end
+return self
+end
+function SET_CLIENT:_EventPlayerEnterUnit(Event)
+self:I("_EventPlayerEnterUnit")
+if Event.IniDCSUnit then
+if Event.IniObjectCategory==1 and Event.IniGroup and Event.IniGroup:IsGround()then
+local ObjectName,Object=self:AddInDatabase(Event)
+self:I(ObjectName,UTILS.PrintTableToLog(Object))
+if Object and self:IsIncludeObject(Object)then
+self:Add(ObjectName,Object)
+end
+end
+end
+return self
+end
+function SET_CLIENT:_EventPlayerLeaveUnit(Event)
+self:I("_EventPlayerLeaveUnit")
+if Event.IniDCSUnit then
+if Event.IniObjectCategory==1 and Event.IniGroup and Event.IniGroup:IsGround()then
+local ObjectName,Object=self:FindInDatabase(Event)
+if ObjectName then
+self:Remove(ObjectName)
+end
+end
 end
 return self
 end
@@ -14886,7 +14928,7 @@ local gotunits=false
 local gotscenery=false
 local function EvaluateZone(ZoneObject)
 if ZoneObject then
-local ObjectCategory=ZoneObject:getCategory()
+local ObjectCategory=Object.getCategory(ZoneObject)
 if ObjectCategory==Object.Category.UNIT and ZoneObject:isExist()then
 table.insert(Units,UNIT:Find(ZoneObject))
 gotunits=true
@@ -16736,29 +16778,40 @@ return self
 end
 _MESSAGESRS={}
 function MESSAGE.SetMSRS(PathToSRS,Port,PathToCredentials,Frequency,Modulation,Gender,Culture,Voice,Coalition,Volume,Label,Coordinate)
-_MESSAGESRS.MSRS=MSRS:New(PathToSRS,Frequency,Modulation,Volume)
-_MESSAGESRS.MSRS:SetCoalition(Coalition)
+_MESSAGESRS.MSRS=MSRS:New(PathToSRS,Frequency or 243,Modulation or radio.modulation.AM,Volume)
+_MESSAGESRS.frequency=Frequency
+_MESSAGESRS.modulation=Modulation or radio.modulation.AM
+_MESSAGESRS.MSRS:SetCoalition(Coalition or coalition.side.NEUTRAL)
+_MESSAGESRS.coalition=Coalition or coalition.side.NEUTRAL
+_MESSAGESRS.coordinate=Coordinate
 _MESSAGESRS.MSRS:SetCoordinate(Coordinate)
 _MESSAGESRS.MSRS:SetCulture(Culture)
-_MESSAGESRS.Culture=Culture
+_MESSAGESRS.Culture=Culture or"en-GB"
 _MESSAGESRS.MSRS:SetGender(Gender)
-_MESSAGESRS.Gender=Gender
+_MESSAGESRS.Gender=Gender or"female"
 _MESSAGESRS.MSRS:SetGoogle(PathToCredentials)
+_MESSAGESRS.google=PathToCredentials
 _MESSAGESRS.MSRS:SetLabel(Label or"MESSAGE")
-_MESSAGESRS.MSRS:SetPort(Port)
-_MESSAGESRS.MSRS:SetVoice(Voice)
-_MESSAGESRS.Voice=Voice
+_MESSAGESRS.label=Label or"MESSAGE"
+_MESSAGESRS.MSRS:SetPort(Port or 5002)
+_MESSAGESRS.port=Port or 5002
+_MESSAGESRS.volume=Volume or 1
+_MESSAGESRS.MSRS:SetVolume(_MESSAGESRS.volume)
+if Voice then _MESSAGESRS.MSRS:SetVoice(Voice)end
+_MESSAGESRS.voice=Voice
 _MESSAGESRS.SRSQ=MSRSQUEUE:New(Label or"MESSAGE")
-env.info(_MESSAGESRS.MSRS.provider,false)
 end
 function MESSAGE:ToSRS(frequency,modulation,gender,culture,voice,coalition,volume,coordinate)
+local tgender=gender or _MESSAGESRS.Gender
 if _MESSAGESRS.SRSQ then
-_MESSAGESRS.MSRS:SetVoice(voice or _MESSAGESRS.Voice)
+if voice then
+_MESSAGESRS.MSRS:SetVoice(voice or _MESSAGESRS.voice)
+end
 if coordinate then
 _MESSAGESRS.MSRS:SetCoordinate(coordinate)
 end
 local category=string.gsub(self.MessageCategory,":","")
-_MESSAGESRS.SRSQ:NewTransmission(self.MessageText,nil,_MESSAGESRS.MSRS,nil,nil,nil,nil,nil,frequency,modulation,gender or _MESSAGESRS.Gender,culture or _MESSAGESRS.Culture,voice or _MESSAGESRS.Voice,volume,category,coordinate)
+_MESSAGESRS.SRSQ:NewTransmission(self.MessageText,nil,_MESSAGESRS.MSRS,nil,nil,nil,nil,nil,frequency or _MESSAGESRS.frequency,modulation or _MESSAGESRS.modulation,gender or _MESSAGESRS.Gender,culture or _MESSAGESRS.Culture,nil,volume or _MESSAGESRS.volume,category,coordinate or _MESSAGESRS.coordinate)
 end
 return self
 end
@@ -19437,11 +19490,11 @@ function SPOT:onafterLasing(From,Event,To)
 self:T({From,Event,To})
 if self.Lasing then
 if self.Target and self.Target:IsAlive()then
-self.SpotIR:setPoint(self.Target:GetPointVec3():AddY(1):AddY(math.random(-100,100)/100):AddX(math.random(-100,100)/100):GetVec3())
+self.SpotIR:setPoint(self.Target:GetPointVec3():AddY(1):AddY(math.random(-100,100)/200):AddX(math.random(-100,100)/200):GetVec3())
 self.SpotLaser:setPoint(self.Target:GetPointVec3():AddY(1):GetVec3())
 self:__Lasing(0.2)
 elseif self.TargetCoord then
-local irvec3={x=self.TargetCoord.x+math.random(-100,100)/100,y=self.TargetCoord.y+math.random(-100,100)/100,z=self.TargetCoord.z}
+local irvec3={x=self.TargetCoord.x+math.random(-100,100)/200,y=self.TargetCoord.y+math.random(-100,100)/200,z=self.TargetCoord.z}
 local lsvec3={x=self.TargetCoord.x,y=self.TargetCoord.y,z=self.TargetCoord.z}
 self.SpotIR:setPoint(irvec3)
 self.SpotLaser:setPoint(lsvec3)
@@ -19824,7 +19877,7 @@ OBJECT={
 ClassName="OBJECT",
 ObjectName="",
 }
-function OBJECT:New(ObjectName,Test)
+function OBJECT:New(ObjectName)
 local self=BASE:Inherit(self,BASE:New())
 self:F2(ObjectName)
 self.ObjectName=ObjectName
@@ -19836,7 +19889,7 @@ if DCSObject then
 local ObjectID=DCSObject:getID()
 return ObjectID
 end
-BASE:E({"Cannot GetID",Name=self.ObjectName,Class=self:GetClassName()})
+self:E({"Cannot GetID",Name=self.ObjectName,Class=self:GetClassName()})
 return nil
 end
 function OBJECT:Destroy()
@@ -19845,7 +19898,7 @@ if DCSObject then
 DCSObject:destroy(false)
 return true
 end
-BASE:E({"Cannot Destroy",Name=self.ObjectName,Class=self:GetClassName()})
+self:E({"Cannot Destroy",Name=self.ObjectName,Class=self:GetClassName()})
 return nil
 end
 IDENTIFIABLE={
@@ -27140,7 +27193,7 @@ end
 function AIRBASE:GetWarehouse()
 local warehouse=nil
 local airbase=self:GetDCSObject()
-if airbase then
+if airbase and Airbase.getWarehouse then
 warehouse=airbase:getWarehouse()
 end
 return warehouse
@@ -28445,7 +28498,7 @@ local target=nil
 if self.weapon then
 local object=self.weapon:getTarget()
 if object then
-local category=object:getCategory()
+local category=Object.getCategory(object)
 local name=object:getName()
 self:T(self.lid..string.format("Got Target Object %s, category=%d",object:getName(),category))
 if category==Object.Category.UNIT then
@@ -29102,7 +29155,9 @@ STORAGE.version="0.0.1"
 function STORAGE:New(AirbaseName)
 local self=BASE:Inherit(self,BASE:New())
 self.airbase=Airbase.getByName(AirbaseName)
+if Airbase.getWarehouse then
 self.warehouse=self.airbase:getWarehouse()
+end
 self.lid=string.format("STORAGE %s",AirbaseName)
 return self
 end
@@ -31968,6 +32023,7 @@ SEAD.Harms={
 ["BGM_109"]="BGM_109",
 ["AGM_154"]="AGM_154",
 ["HY-2"]="HY-2",
+["ADM_141A"]="ADM_141A",
 }
 SEAD.HarmData={
 ["AGM_88"]={150,3},
@@ -31984,6 +32040,7 @@ SEAD.HarmData={
 ["BGM_109"]={460,0.705},
 ["AGM_154"]={130,0.61},
 ["HY-2"]={90,1},
+["ADM_141A"]={126,0.6},
 }
 function SEAD:New(SEADGroupPrefixes,Padding)
 local self=BASE:Inherit(self,FSM:New())
@@ -32006,7 +32063,7 @@ self:HandleEvent(EVENTS.Shot,self.HandleEventShot)
 self:SetStartState("Running")
 self:AddTransition("*","ManageEvasion","*")
 self:AddTransition("*","CalculateHitZone","*")
-self:I("*** SEAD - Started Version 0.4.4")
+self:I("*** SEAD - Started Version 0.4.5")
 return self
 end
 function SEAD:UpdateSet(SEADGroupPrefixes)
@@ -32135,7 +32192,7 @@ end
 end
 return self
 end
-function SEAD:onafterManageEvasion(From,Event,To,_targetskill,_targetgroup,SEADPlanePos,SEADWeaponName,SEADGroup,timeoffset)
+function SEAD:onafterManageEvasion(From,Event,To,_targetskill,_targetgroup,SEADPlanePos,SEADWeaponName,SEADGroup,timeoffset,Weapon)
 local timeoffset=timeoffset or 0
 if _targetskill=="Random"then
 local Skills={"Average","Good","High","Excellent"}
@@ -32155,6 +32212,10 @@ local wpndata=SEAD.HarmData[data]
 reach=wpndata[1]*1.1
 local mach=wpndata[2]
 wpnspeed=math.floor(mach*340.29)
+if Weapon then
+wpnspeed=Weapon:GetSpeed()
+self:T(string.format("*** SEAD - Weapon Speed from WEAPON: %f m/s",wpnspeed))
+end
 end
 local _tti=math.floor(_distance/wpnspeed)-timeoffset
 if _distance>0 then
@@ -32225,6 +32286,7 @@ local SEADUnit=EventData.IniDCSUnit
 local SEADUnitName=EventData.IniDCSUnitName
 local SEADWeapon=EventData.Weapon
 local SEADWeaponName=EventData.WeaponName
+local WeaponWrapper=WEAPON:New(EventData.Weapon)
 self:T("*** SEAD - Missile Launched = "..SEADWeaponName)
 if self:_CheckHarms(SEADWeaponName)then
 self:T('*** SEAD - Weapon Match')
@@ -32241,7 +32303,7 @@ self:__CalculateHitZone(20,SEADWeapon,pos0,fheight,SEADGroup,SEADWeaponName)
 end
 return self
 end
-local targetcat=_target:getCategory()
+local targetcat=Object.getCategory(_target)
 local _targetUnit=nil
 local _targetgroup=nil
 self:T(string.format("*** Targetcat = %d",targetcat))
@@ -32278,7 +32340,11 @@ break
 end
 end
 if SEADGroupFound==true then
-self:ManageEvasion(_targetskill,_targetgroup,SEADPlanePos,SEADWeaponName,SEADGroup)
+if string.find(SEADWeaponName,"ADM_141",1,true)then
+self:__ManageEvasion(2,_targetskill,_targetgroup,SEADPlanePos,SEADWeaponName,SEADGroup,0,WeaponWrapper)
+else
+self:ManageEvasion(_targetskill,_targetgroup,SEADPlanePos,SEADWeaponName,SEADGroup,0,WeaponWrapper)
+end
 end
 end
 return self
@@ -39500,6 +39566,7 @@ soundpath="Range Soundfiles/",
 targetsheet=nil,
 targetpath=nil,
 targetprefix=nil,
+Coalition=nil,
 }
 RANGE.Defaults={
 goodhitrange=25,
@@ -39569,10 +39636,11 @@ IRExitRange={filename="IR-ExitRange.ogg",duration=3.10},
 RANGE.Names={}
 RANGE.MenuF10={}
 RANGE.MenuF10Root=nil
-RANGE.version="2.7.1"
-function RANGE:New(RangeName)
+RANGE.version="2.7.3"
+function RANGE:New(RangeName,Coalition)
 local self=BASE:Inherit(self,FSM:New())
 self.rangename=RangeName or"Practice Range"
+self.Coalition=Coalition
 self.lid=string.format("RANGE %s | ",self.rangename)
 local text=string.format("Script version %s - creating new RANGE object %s.",RANGE.version,self.rangename)
 self:I(self.lid..text)
@@ -40107,7 +40175,13 @@ local _callsign=_unit:GetCallsign()
 local text=string.format("Player %s, callsign %s entered unit %s (UID %d) of group %s (GID %d)",_playername,_callsign,_unitName,_uid,_group:GetName(),_gid)
 self:T(self.lid..text)
 self.strafeStatus[_uid]=nil
+if self.Coalition then
+if EventData.IniCoalition==self.Coalition then
 self:ScheduleOnce(0.1,self._AddF10Commands,self,_unitName)
+end
+else
+self:ScheduleOnce(0.1,self._AddF10Commands,self,_unitName)
+end
 self.PlayerSettings[_playername]={}
 self.PlayerSettings[_playername].smokebombimpact=self.defaultsmokebomb
 self.PlayerSettings[_playername].flaredirecthits=false
@@ -50078,7 +50152,9 @@ MANTIS.SamData={
 ["SA-20A"]={Range=150,Blindspot=5,Height=27,Type="Long",Radar="S-300PMU1"},
 ["SA-20B"]={Range=200,Blindspot=4,Height=27,Type="Long",Radar="S-300PMU2"},
 ["HQ-2"]={Range=50,Blindspot=6,Height=35,Type="Medium",Radar="HQ_2_Guideline_LN"},
-["SHORAD"]={Range=3,Blindspot=0,Height=3,Type="Short",Radar="Igla"}
+["SHORAD"]={Range=3,Blindspot=0,Height=3,Type="Short",Radar="Igla"},
+["TAMIR IDFA"]={Range=20,Blindspot=0.6,Height=12.3,Type="Short",Radar="IRON_DOME_LN"},
+["STUNNER IDFA"]={Range=250,Blindspot=1,Height=45,Type="Long",Radar="DAVID_SLING_LN"},
 }
 MANTIS.SamDataHDS={
 ["SA-2 HDS"]={Range=56,Blindspot=7,Height=30,Type="Medium",Radar="V759"},
@@ -50125,6 +50201,7 @@ MANTIS.SamDataCH={
 }
 do
 function MANTIS:New(name,samprefix,ewrprefix,hq,coalition,dynamic,awacs,EmOnOff,Padding,Zones)
+local self=BASE:Inherit(self,FSM:New())
 self.SAM_Templates_Prefix=samprefix or"Red SAM"
 self.EWR_Templates_Prefix=ewrprefix or"Red EWR"
 self.HQ_Template_CC=hq or nil
@@ -50175,6 +50252,9 @@ self.maxclassic=6
 self.autoshorad=true
 self.ShoradGroupSet=SET_GROUP:New()
 self.FilterZones=Zones
+self.SkateZones=nil
+self.SkateNumber=3
+self.shootandscoot=false
 self.UseEmOnOff=true
 if EmOnOff==false then
 self.UseEmOnOff=false
@@ -50184,7 +50264,6 @@ self.advAwacs=true
 else
 self.advAwacs=false
 end
-local self=BASE:Inherit(self,FSM:New())
 self.lid=string.format("MANTIS %s | ",self.name)
 if self.debug then
 BASE:TraceOnOff(true)
@@ -50223,7 +50302,7 @@ end
 if self.HQ_Template_CC then
 self.HQ_CC=GROUP:FindByName(self.HQ_Template_CC)
 end
-self.version="0.8.14"
+self.version="0.8.15"
 self:I(string.format("***** Starting MANTIS Version %s *****",self.version))
 self:SetStartState("Stopped")
 self:AddTransition("Stopped","Start","Running")
@@ -50252,6 +50331,13 @@ function MANTIS:SetEWRGrouping(radius)
 self:T(self.lid.."SetEWRGrouping")
 local radius=radius or 5000
 self.grouping=radius
+return self
+end
+function MANTIS:AddScootZones(ZoneSet,Number)
+self:T(self.lid.." AddScootZones")
+self.SkateZones=ZoneSet
+self.SkateNumber=Number or 3
+self.shootandscoot=true
 return self
 end
 function MANTIS:AddZones(AcceptZones,RejectZones,ConflictZones)
@@ -50949,6 +51035,10 @@ self.Shorad=SHORAD:New(self.name.."-SHORAD",self.name.."-SHORAD",self.SAM_Group,
 self.Shorad:SetDefenseLimits(80,95)
 self.ShoradLink=true
 self.Shorad.Groupset=self.ShoradGroupSet
+self.Shorad.debug=self.debug
+end
+if self.shootandscoot and self.SkateZones then
+self.Shorad:AddScootZones(self.SkateZones,self.SkateNumber or 3)
 end
 self:__Status(-math.random(1,10))
 return self
@@ -51051,12 +51141,14 @@ DefendHarms=true,
 DefendMavs=true,
 DefenseLowProb=70,
 DefenseHighProb=90,
-UseEmOnOff=false,
+UseEmOnOff=true,
+shootandscoot=false,
+SkateNumber=3,
+SkateZones=nil,
 }
 do
 SHORAD.Harms={
 ["AGM_88"]="AGM_88",
-["AGM_45"]="AGM_45",
 ["AGM_122"]="AGM_122",
 ["AGM_84"]="AGM_84",
 ["AGM_45"]="AGM_45",
@@ -51067,6 +51159,8 @@ SHORAD.Harms={
 ["X_25"]="X_25",
 ["X_31"]="X_31",
 ["Kh25"]="Kh25",
+["HY-2"]="HY-2",
+["ADM_141A"]="ADM_141A",
 }
 SHORAD.Mavs={
 ["AGM"]="AGM",
@@ -51092,14 +51186,16 @@ self.DefendHarms=true
 self.DefendMavs=true
 self.DefenseLowProb=70
 self.DefenseHighProb=90
-self.UseEmOnOff=UseEmOnOff or false
-self:I("*** SHORAD - Started Version 0.3.1")
+self.UseEmOnOff=true
+if UseEmOnOff==false then self.UseEmOnOff=UseEmOnOff end
+self:I("*** SHORAD - Started Version 0.3.2")
 self.lid=string.format("SHORAD %s | ",self.name)
 self:_InitState()
 self:HandleEvent(EVENTS.Shot,self.HandleEventShot)
 self:SetStartState("Running")
 self:AddTransition("*","WakeUpShorad","*")
 self:AddTransition("*","CalculateHitZone","*")
+self:AddTransition("*","ShootAndScoot","*")
 return self
 end
 function SHORAD:_InitState()
@@ -51122,12 +51218,19 @@ math.random()
 end
 return self
 end
+function SHORAD:AddScootZones(ZoneSet,Number)
+self:T(self.lid.." AddScootZones")
+self.SkateZones=ZoneSet
+self.SkateNumber=Number or 3
+self.shootandscoot=true
+return self
+end
 function SHORAD:SwitchDebug(onoff)
 self:T({onoff})
 if onoff then
 self:SwitchDebugOn()
 else
-self.SwitchDebugOff()
+self:SwitchDebugOff()
 end
 return self
 end
@@ -51289,6 +51392,7 @@ local targetzone=ZONE_RADIUS:New("Shorad",targetvec2,Radius)
 local groupset=self.Groupset
 local shoradset=groupset:GetAliveSet()
 local function SleepShorad(group)
+if group and group:IsAlive()then
 local groupname=group:GetName()
 self.ActiveGroups[groupname]=nil
 if self.UseEmOnOff then
@@ -51299,7 +51403,12 @@ end
 local text=string.format("Sleeping SHORAD %s",group:GetName())
 self:T(text)
 local m=MESSAGE:New(text,10,"SHORAD"):ToAllIf(self.debug)
+if self.shootandscoot then
+self:__ShootAndScoot(1,group)
 end
+end
+end
+local TDiff=4
 for _,_group in pairs(shoradset)do
 if _group:IsAnyInZone(targetzone)then
 local text=string.format("Waking up SHORAD %s",_group:GetName())
@@ -51313,7 +51422,11 @@ local groupname=_group:GetName()
 if self.ActiveGroups[groupname]==nil then
 self.ActiveGroups[groupname]={Timing=ActiveTimer}
 local endtime=timer.getTime()+(ActiveTimer*math.random(75,100)/100)
-timer.scheduleFunction(SleepShorad,_group,endtime)
+self.ActiveGroups[groupname].Timer=TIMER:New(SleepShorad,_group):Start(endtime)
+if self.shootandscoot then
+self:__ShootAndScoot(TDiff,_group)
+TDiff=TDiff+1
+end
 end
 end
 end
@@ -51370,6 +51483,31 @@ end
 end
 return self
 end
+function SHORAD:onafterShootAndScoot(From,Event,To,Shorad)
+self:T({From,Event,To})
+local possibleZones={}
+local mindist=100
+local maxdist=3000
+if Shorad and Shorad:IsAlive()then
+local NowCoord=Shorad:GetCoordinate()
+for _,_zone in pairs(self.SkateZones.Set)do
+local zone=_zone
+local dist=NowCoord:Get2DDistance(zone:GetCoordinate())
+if dist>=mindist and dist<=maxdist then
+possibleZones[#possibleZones+1]=zone
+if#possibleZones==self.SkateNumber then break end
+end
+end
+if#possibleZones>0 and Shorad:GetVelocityKMH()<2 then
+local rand=math.floor(math.random(1,#possibleZones*1000)/1000+0.5)
+if rand==0 then rand=1 end
+self:T(self.lid.." ShootAndScoot to zone "..rand)
+local ToCoordinate=possibleZones[rand]:GetCoordinate()
+Shorad:RouteGroundTo(ToCoordinate,20,"Cone",1)
+end
+end
+return self
+end
 function SHORAD:HandleEventShot(EventData)
 self:T({EventData})
 self:T(self.lid.." HandleEventShot")
@@ -51396,7 +51534,7 @@ self:__CalculateHitZone(20,ShootingWeapon,pos0,fheight,EventData.IniGroup)
 end
 return self
 end
-local targetcat=targetdata:getCategory()
+local targetcat=Object.getCategory(targetdata)
 self:T(string.format("Target Category (3=STATIC, 1=UNIT)= %s",tostring(targetcat)))
 self:T({targetdata})
 local targetunit=nil
@@ -62384,7 +62522,7 @@ end
 alltext=alltext..";\n"..subtitle
 local _RUNACT
 if not self.ATISforFARPs then
-local subtitle
+local subtitle=""
 if runwayLanding then
 local actrun=self.gettext:GetEntry("ACTIVELANDING",self.locale)
 subtitle=string.format("%s %s",actrun,runwayLanding)
@@ -78199,7 +78337,7 @@ end
 if self.google then
 command=command..string.format(' --ssml -G "%s"',self.google)
 end
-self:T("MSRS command="..command)
+self:I("MSRS command="..command)
 return command
 end
 function MSRS:LoadConfigFile(Path,Filename,ConfigLoaded)
@@ -78221,7 +78359,7 @@ self.culture=MSRS_Config.Culture or"en-GB"
 self.gender=MSRS_Config.Gender or"male"
 self.google=MSRS_Config.Google
 self.Label=MSRS_Config.Label or"MSRS"
-self.voice=MSRS_Config.Voice or MSRS.Voices.Microsoft.Hazel
+self.voice=MSRS_Config.Voice
 if MSRS_Config.GRPC then
 self.provider=MSRS_Config.GRPC.DefaultProvider
 if MSRS_Config.GRPC[MSRS_Config.GRPC.DefaultProvider]then
@@ -78245,7 +78383,7 @@ MSRS.culture=MSRS_Config.Culture or"en-GB"
 MSRS.gender=MSRS_Config.Gender or"male"
 MSRS.google=MSRS_Config.Google
 MSRS.Label=MSRS_Config.Label or"MSRS"
-MSRS.voice=MSRS_Config.Voice or MSRS.Voices.Microsoft.Hazel
+MSRS.voice=MSRS_Config.Voice
 if MSRS_Config.GRPC then
 MSRS.provider=MSRS_Config.GRPC.DefaultProvider
 if MSRS_Config.GRPC[MSRS_Config.GRPC.DefaultProvider]then
@@ -78429,7 +78567,7 @@ self.lid=string.format("MSRSQUEUE %s | ",self.alias)
 return self
 end
 function MSRSQUEUE:Clear()
-self:I(self.lid.."Clearning MSRSQUEUE")
+self:I(self.lid.."Clearing MSRSQUEUE")
 self.queue={}
 return self
 end
@@ -78486,7 +78624,7 @@ end
 transmission.gender=gender
 transmission.culture=culture
 transmission.voice=voice
-transmission.gender=volume
+transmission.volume=volume
 transmission.label=label
 transmission.coordinate=coordinate
 self:AddTransmission(transmission)
