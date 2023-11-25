@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-11-17T15:06:52+01:00-6bba2fec0bd1a2fe530d490607871413af2a5253 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-11-24T12:17:25+01:00-b635490e47fbcc8e11a760c69aec77921d1ddda9 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 env.setErrorMessageBoxEnabled(false)
@@ -1817,8 +1817,14 @@ end
 function UTILS.VecSubstract(a,b)
 return{x=a.x-b.x,y=a.y-b.y,z=a.z-b.z}
 end
+function UTILS.VecSubtract(a,b)
+return UTILS.VecSubstract(a,b)
+end
 function UTILS.Vec2Substract(a,b)
 return{x=a.x-b.x,y=a.y-b.y}
+end
+function UTILS.Vec2Subtract(a,b)
+return UTILS.Vec2Substract(a,b)
 end
 function UTILS.VecAdd(a,b)
 return{x=a.x+b.x,y=a.y+b.y,z=a.z+b.z}
@@ -2479,7 +2485,7 @@ filename=path.."\\"..filename
 end
 local exists=UTILS.CheckFileExists(Path,Filename)
 if not exists then
-BASE:E(string.format("ERROR: File %s does not exist!",filename))
+BASE:I(string.format("ERROR: File %s does not exist!",filename))
 return false
 end
 local file=assert(io.open(filename,"rb"))
@@ -2990,6 +2996,280 @@ fix_coordinate:LineToAll(point_two,coalition,color,alpha,lineType)
 point_four:LineToAll(point_three,coalition,color,alpha,lineType)
 circle_center_fix_four:CircleToAll(UTILS.NMToMeters(turn_radius),coalition,color,alpha,nil,0,lineType)
 circle_center_two_three:CircleToAll(UTILS.NMToMeters(turn_radius),coalition,color,alpha,nil,0,lineType)
+end
+function UTILS.TimeNow()
+return UTILS.SecondsToClock(timer.getAbsTime(),false,false)
+end
+function UTILS.TimeDifferenceInSeconds(start_time,end_time)
+return UTILS.ClockToSeconds(end_time)-UTILS.ClockToSeconds(start_time)
+end
+function UTILS.TimeLaterThan(time_string)
+if timer.getAbsTime()>UTILS.ClockToSeconds(time_string)then
+return true
+end
+return false
+end
+function UTILS.TimeBefore(time_string)
+if timer.getAbsTime()<UTILS.ClockToSeconds(time_string)then
+return true
+end
+return false
+end
+function UTILS.CombineTimeStrings(time_string_01,time_string_02)
+local hours1,minutes1,seconds1=time_string_01:match("(%d+):(%d+):(%d+)")
+local hours2,minutes2,seconds2=time_string_02:match("(%d+):(%d+):(%d+)")
+local total_seconds=tonumber(seconds1)+tonumber(seconds2)+tonumber(minutes1)*60+tonumber(minutes2)*60+tonumber(hours1)*3600+tonumber(hours2)*3600
+total_seconds=total_seconds%(24*3600)
+if total_seconds<0 then
+total_seconds=total_seconds+24*3600
+end
+local hours=math.floor(total_seconds/3600)
+total_seconds=total_seconds-hours*3600
+local minutes=math.floor(total_seconds/60)
+local seconds=total_seconds%60
+return string.format("%02d:%02d:%02d",hours,minutes,seconds)
+end
+function UTILS.SubtractTimeStrings(time_string_01,time_string_02)
+local hours1,minutes1,seconds1=time_string_01:match("(%d+):(%d+):(%d+)")
+local hours2,minutes2,seconds2=time_string_02:match("(%d+):(%d+):(%d+)")
+local total_seconds=tonumber(seconds1)-tonumber(seconds2)+tonumber(minutes1)*60-tonumber(minutes2)*60+tonumber(hours1)*3600-tonumber(hours2)*3600
+total_seconds=total_seconds%(24*3600)
+if total_seconds<0 then
+total_seconds=total_seconds+24*3600
+end
+local hours=math.floor(total_seconds/3600)
+total_seconds=total_seconds-hours*3600
+local minutes=math.floor(total_seconds/60)
+local seconds=total_seconds%60
+return string.format("%02d:%02d:%02d",hours,minutes,seconds)
+end
+function UTILS.TimeBetween(start_time,end_time)
+return UTILS.TimeLaterThan(start_time)and UTILS.TimeBefore(end_time)
+end
+function UTILS.PercentageChance(chance)
+chance=chance or math.random(0,100)
+chance=UTILS.Clamp(chance,0,100)
+local percentage=math.random(0,100)
+if percentage<chance then
+return true
+end
+return false
+end
+function UTILS.Clamp(value,min,max)
+if value<min then value=min end
+if value>max then value=max end
+return value
+end
+function UTILS.ClampAngle(value)
+if value>360 then return value-360 end
+if value<0 then return value+360 end
+return value
+end
+function UTILS.RemapValue(value,old_min,old_max,new_min,new_max)
+new_min=new_min or 0
+new_max=new_max or 100
+local old_range=old_max-old_min
+local new_range=new_max-new_min
+local percentage=(value-old_min)/old_range
+return(new_range*percentage)+new_min
+end
+function UTILS.RandomPointInTriangle(pt1,pt2,pt3)
+local pt={math.random(),math.random()}
+table.sort(pt)
+local s=pt[1]
+local t=pt[2]-pt[1]
+local u=1-pt[2]
+return{x=s*pt1.x+t*pt2.x+u*pt3.x,
+y=s*pt1.y+t*pt2.y+u*pt3.y}
+end
+function UTILS.AngleBetween(angle,min,max)
+angle=(360+(angle%360))%360
+min=(360+min%360)%360
+max=(360+max%360)%360
+if min<max then return min<=angle and angle<=max end
+return min<=angle or angle<=max
+end
+function UTILS.WriteJSON(data,file_path)
+package.path=package.path..";.\\Scripts\\?.lua"
+local JSON=require("json")
+local pretty_json_text=JSON:encode_pretty(data)
+local write_file=io.open(file_path,"w")
+write_file:write(pretty_json_text)
+write_file:close()
+end
+function UTILS.ReadJSON(file_path)
+package.path=package.path..";.\\Scripts\\?.lua"
+local JSON=require("json")
+local read_file=io.open(file_path,"r")
+local contents=read_file:read("*a")
+io.close(read_file)
+return JSON:decode(contents)
+end
+function UTILS.GetZoneProperties(zone_name)
+local return_table={}
+for _,zone in pairs(env.mission.triggers.zones)do
+if zone["name"]==zone_name then
+if table.length(zone["properties"])>0 then
+for _,property in pairs(zone["properties"])do
+return_table[property["key"]]=property["value"]
+end
+return return_table
+else
+BASE:I(string.format("%s doesn't have any properties",zone_name))
+return{}
+end
+end
+end
+end
+function UTILS.RotatePointAroundPivot(point,pivot,angle)
+local radians=math.rad(angle)
+local x=point.x-pivot.x
+local y=point.y-pivot.y
+local rotated_x=x*math.cos(radians)-y*math.sin(radians)
+local rotatex_y=x*math.sin(radians)+y*math.cos(radians)
+local original_x=rotated_x+pivot.x
+local original_y=rotatex_y+pivot.y
+return{x=original_x,y=original_y}
+end
+function UTILS.UniqueName(base)
+base=base or""
+local ran=tostring(math.random(0,1000000))
+if base==""then
+return ran
+end
+return base.."_"..ran
+end
+function string.startswith(str,value)
+return string.sub(str,1,string.len(value))==value
+end
+function string.endswith(str,value)
+return value==""or str:sub(-#value)==value
+end
+function string.split(input,separator)
+local parts={}
+for part in input:gmatch("[^"..separator.."]+")do
+table.insert(parts,part)
+end
+return parts
+end
+function string.contains(str,value)
+return string.match(str,value)
+end
+function table.contains(tbl,element)
+if element==nil or tbl==nil then return false end
+local index=1
+while tbl[index]do
+if tbl[index]==element then
+return true
+end
+index=index+1
+end
+return false
+end
+function table.contains_key(tbl,key)
+if tbl[key]~=nil then return true else return false end
+end
+function table.insert_unique(tbl,element)
+if element==nil or tbl==nil then return end
+if not table.contains(tbl,element)then
+table.insert(tbl,element)
+end
+end
+function table.remove_by_value(tbl,element)
+local indices_to_remove={}
+local index=1
+for _,value in pairs(tbl)do
+if value==element then
+table.insert(indices_to_remove,index)
+end
+index=index+1
+end
+for _,idx in pairs(indices_to_remove)do
+table.remove(tbl,idx)
+end
+end
+function table.remove_key(table,key)
+local element=table[key]
+table[key]=nil
+return element
+end
+function table.index_of(table,element)
+for i,v in ipairs(table)do
+if v==element then
+return i
+end
+end
+return nil
+end
+function table.length(T)
+local count=0
+for _ in pairs(T)do count=count+1 end
+return count
+end
+function table.slice(tbl,first,last)
+local sliced={}
+local start=first or 1
+local stop=last or table.length(tbl)
+local count=1
+for key,value in pairs(tbl)do
+if count>=start and count<=stop then
+sliced[key]=value
+end
+count=count+1
+end
+return sliced
+end
+function table.count_value(tbl,value)
+local count=0
+for _,item in pairs(tbl)do
+if item==value then count=count+1 end
+end
+return count
+end
+function table.combine(t1,t2)
+if t1==nil and t2==nil then
+BASE:E("Both tables were empty!")
+end
+if t1==nil then return t2 end
+if t2==nil then return t1 end
+for i=1,#t2 do
+t1[#t1+1]=t2[i]
+end
+return t1
+end
+function table.merge(t1,t2)
+for k,v in pairs(t2)do
+if(type(v)=="table")and(type(t1[k]or false)=="table")then
+table.merge(t1[k],t2[k])
+else
+t1[k]=v
+end
+end
+return t1
+end
+function table.add(tbl,item)
+tbl[#tbl+1]=item
+end
+function table.shuffle(tbl)
+local new_table={}
+for _,value in ipairs(tbl)do
+local pos=math.random(1,#new_table+1)
+table.insert(new_table,pos,value)
+end
+return new_table
+end
+function table.find_key_value_pair(tbl,key,value)
+for k,v in pairs(tbl)do
+if type(v)=="table"then
+local result=table.find_key_value_pair(v,key,value)
+if result~=nil then
+return result
+end
+elseif k==key and v==value then
+return tbl
+end
+end
+return nil
 end
 PROFILER={
 ClassName="PROFILER",
@@ -5888,6 +6168,14 @@ UnitDeleteTask=world.event.S_EVENT_UNIT_DELETE_TASK or-1,
 SimulationStart=world.event.S_EVENT_SIMULATION_START or-1,
 WeaponRearm=world.event.S_EVENT_WEAPON_REARM or-1,
 WeaponDrop=world.event.S_EVENT_WEAPON_DROP or-1,
+UnitTaskTimeout=world.event.S_EVENT_UNIT_TASK_TIMEOUT or-1,
+UnitTaskStage=world.event.S_EVENT_UNIT_TASK_STAGE or-1,
+MacSubtaskScore=world.event.S_EVENT_MAC_SUBTASK_SCORE or-1,
+MacExtraScore=world.event.S_EVENT_MAC_EXTRA_SCORE or-1,
+MissionRestart=world.event.S_EVENT_MISSION_RESTART or-1,
+MissionWinner=world.event.S_EVENT_MISSION_WINNER or-1,
+PostponedTakeoff=world.event.S_EVENT_POSTPONED_TAKEOFF or-1,
+PostponedLand=world.event.S_EVENT_POSTPONED_LAND or-1,
 }
 local _EVENTMETA={
 [world.event.S_EVENT_SHOT]={
@@ -6200,6 +6488,54 @@ Order=1,
 Side="I",
 Event="OnEventWeaponDrop",
 Text="S_EVENT_WEAPON_DROP"
+},
+[EVENTS.UnitTaskTimeout]={
+Order=1,
+Side="I",
+Event="OnEventUnitTaskTimeout",
+Text="S_EVENT_UNIT_TASK_TIMEOUT "
+},
+[EVENTS.UnitTaskStage]={
+Order=1,
+Side="I",
+Event="OnEventUnitTaskStage",
+Text="S_EVENT_UNIT_TASK_STAGE "
+},
+[EVENTS.MacSubtaskScore]={
+Order=1,
+Side="I",
+Event="OnEventMacSubtaskScore",
+Text="S_EVENT_MAC_SUBTASK_SCORE"
+},
+[EVENTS.MacExtraScore]={
+Order=1,
+Side="I",
+Event="OnEventMacExtraScore",
+Text="S_EVENT_MAC_EXTRA_SCOREP"
+},
+[EVENTS.MissionRestart]={
+Order=1,
+Side="I",
+Event="OnEventMissionRestart",
+Text="S_EVENT_MISSION_RESTART"
+},
+[EVENTS.MissionWinner]={
+Order=1,
+Side="I",
+Event="OnEventMissionWinner",
+Text="S_EVENT_MISSION_WINNER"
+},
+[EVENTS.PostponedTakeoff]={
+Order=1,
+Side="I",
+Event="OnEventPostponedTakeoff",
+Text="S_EVENT_POSTPONED_TAKEOFF"
+},
+[EVENTS.PostponedLand]={
+Order=1,
+Side="I",
+Event="OnEventPostponedLand",
+Text="S_EVENT_POSTPONED_LAND"
 },
 }
 function EVENT:New()
@@ -6524,11 +6860,13 @@ elseif Event.TgtObjectCategory==Object.Category.STATIC then
 Event.TgtDCSUnit=Event.target
 if Event.target:isExist()and Event.id~=33 then
 Event.TgtDCSUnitName=Event.TgtDCSUnit:getName()
+if Event.TgtDCSUnitName and Event.TgtDCSUnitName~=""then
 Event.TgtUnitName=Event.TgtDCSUnitName
 Event.TgtUnit=STATIC:FindByName(Event.TgtDCSUnitName,false)
 Event.TgtCoalition=Event.TgtDCSUnit:getCoalition()
 Event.TgtCategory=Event.TgtDCSUnit:getDesc().category
 Event.TgtTypeName=Event.TgtDCSUnit:getTypeName()
+end
 else
 Event.TgtDCSUnitName=string.format("No target object for Event ID %s",tostring(Event.id))
 Event.TgtUnitName=Event.TgtDCSUnitName
@@ -18799,9 +19137,25 @@ Callsign[2]=((SpawnIndex-1)%10)+1
 local CallsignName=SpawnTemplate.units[UnitID].callsign["name"]
 CallsignName=string.match(CallsignName,"^(%a+)")
 local CallsignLen=CallsignName:len()
+SpawnTemplate.units[UnitID].callsign[2]=UnitID
 SpawnTemplate.units[UnitID].callsign["name"]=CallsignName:sub(1,CallsignLen)..SpawnTemplate.units[UnitID].callsign[2]..SpawnTemplate.units[UnitID].callsign[3]
 else
 SpawnTemplate.units[UnitID].callsign=Callsign+SpawnIndex
+end
+end
+local AddProps=SpawnTemplate.units[UnitID].AddPropAircraft
+if AddProps then
+if SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16 then
+SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16=SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16+UnitID-1
+if SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16<10000 then
+SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16=string.format("0%d",SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16)
+end
+end
+if SpawnTemplate.units[UnitID].AddPropAircraft.VoiceCallsignNumber then
+SpawnTemplate.units[UnitID].AddPropAircraft.VoiceCallsignNumber=SpawnTemplate.units[UnitID].AddPropAircraft.VoiceCallsignNumber+UnitID-1
+end
+if SpawnTemplate.units[UnitID].datalinks and SpawnTemplate.units[UnitID].datalinks.Link16 and SpawnTemplate.units[UnitID].datalinks.Link16.settings then
+SpawnTemplate.units[UnitID].datalinks.Link16.settings.flightLead=UnitID==1 and true or false
 end
 end
 end
@@ -28443,6 +28797,13 @@ self.launcherUnit=UNIT:Find(self.launcher)
 end
 self.coordinate=COORDINATE:NewFromVec3(self.launcher:getPoint())
 self.lid=string.format("[%s] %s | ",self.typeName,self.name)
+if self.launcherUnit then
+self.releaseHeading=self.launcherUnit:GetHeading()
+self.releaseAltitudeASL=self.launcherUnit:GetAltitude()
+self.releaseAltitudeAGL=self.launcherUnit:GetAltitude(true)
+self.releaseCoordinate=self.launcherUnit:GetCoordinate()
+self.releasePitch=self.launcherUnit:GetPitch()
+end
 self:SetTimeStepTrack()
 self:SetDistanceInterceptPoint()
 local text=string.format("Weapon v%s\nName=%s, TypeName=%s, Category=%s, Coalition=%d, Country=%d, Launcher=%s",
@@ -28588,6 +28949,26 @@ end
 function WEAPON:GetImpactCoordinate()
 return self.impactCoord
 end
+function WEAPON:GetReleaseHeading(AccountForMagneticInclination)
+AccountForMagneticInclination=AccountForMagneticInclination or true
+if AccountForMagneticInclination then return UTILS.ClampAngle(self.releaseHeading-UTILS.GetMagneticDeclination())else return UTILS.ClampAngle(self.releaseHeading)end
+end
+function WEAPON:GetReleaseAltitudeASL()
+return self.releaseAltitudeASL
+end
+function WEAPON:GetReleaseAltitudeAGL()
+return self.releaseAltitudeAGL
+end
+function WEAPON:GetReleaseCoordinate()
+return self.releaseCoordinate
+end
+function WEAPON:GetReleasePitch()
+return self.releasePitch
+end
+function WEAPON:GetImpactHeading(AccountForMagneticInclination)
+AccountForMagneticInclination=AccountForMagneticInclination or true
+if AccountForMagneticInclination then return UTILS.ClampAngle(self.impactHeading-UTILS.GetMagneticDeclination())else return self.impactHeading end
+end
 function WEAPON:InAir()
 local inAir=nil
 if self.weapon then
@@ -28659,6 +29040,7 @@ if status then
 self.pos3=pos3
 self.vec3=UTILS.DeepCopy(self.pos3.p)
 self.coordinate:UpdateFromVec3(self.vec3)
+self.last_velocity=self.weapon:getVelocity()
 self.tracking=true
 if self.trackFunc then
 self.trackFunc(self,unpack(self.trackArg))
@@ -28686,6 +29068,7 @@ self:I(self.lid..string.format("FF d(ip, vec3)=%.3f meters",d))
 end
 self.impactVec3=ip or self.vec3
 self.impactCoord=COORDINATE:NewFromVec3(self.vec3)
+self.impactHeading=UTILS.VecHdg(self.last_velocity)
 if self.impactMark then
 self.impactCoord:MarkToAll(string.format("Impact point of weapon %s\ntype=%s\nlauncher=%s",self.name,self.typeName,self.launcherName))
 end
@@ -33446,7 +33829,7 @@ AirbaseNames=nil,
 }
 function ATC_GROUND:New(Airbases,AirbaseList)
 local self=BASE:Inherit(self,BASE:New())
-self:E({self.ClassName,Airbases})
+self:T({self.ClassName,Airbases})
 self.Airbases=Airbases
 self.AirbaseList=AirbaseList
 self.SetClient=SET_CLIENT:New():FilterCategories("plane"):FilterStart()
@@ -33525,7 +33908,7 @@ function(Client)
 if Client:IsAlive()then
 local IsOnGround=Client:InAir()==false
 for AirbaseID,AirbaseMeta in pairs(self.Airbases)do
-self:E(AirbaseID,AirbaseMeta.KickSpeed)
+self:T(AirbaseID,AirbaseMeta.KickSpeed)
 if AirbaseMeta.Monitor==true and Client:IsInZone(AirbaseMeta.ZoneBoundary)then
 local NotInRunwayZone=true
 for ZoneRunwayID,ZoneRunway in pairs(AirbaseMeta.ZoneRunways)do
@@ -33534,7 +33917,7 @@ end
 if NotInRunwayZone then
 if IsOnGround then
 local Taxi=Client:GetState(self,"Taxi")
-self:E(Taxi)
+self:T(Taxi)
 if Taxi==false then
 local Velocity=VELOCITY:New(AirbaseMeta.KickSpeed or self.KickSpeed)
 Client:Message("Welcome to "..AirbaseID..". The maximum taxiing speed is "..
@@ -33654,12 +34037,18 @@ KickSpeed=nil,
 }
 function ATC_GROUND_UNIVERSAL:New(AirbaseList)
 local self=BASE:Inherit(self,BASE:New())
-self:E({self.ClassName})
+self:T({self.ClassName})
 self.Airbases={}
 for _name,_ in pairs(_DATABASE.AIRBASES)do
 self.Airbases[_name]={}
 end
 self.AirbaseList=AirbaseList
+if not self.AirbaseList then
+self.AirbaseList={}
+for _name,_ in pairs(_DATABASE.AIRBASES)do
+self.AirbaseList[_name]=_name
+end
+end
 self.SetClient=SET_CLIENT:New():FilterCategories("plane"):FilterStart()
 for AirbaseID,Airbase in pairs(self.Airbases)do
 if Airbase.ZoneBoundary then
@@ -33758,12 +34147,13 @@ self:SetMaximumKickSpeed(UTILS.MiphToMps(MaximumKickSpeedMiph),Airbase)
 return self
 end
 function ATC_GROUND_UNIVERSAL:_AirbaseMonitor()
+self:I("_AirbaseMonitor")
 self.SetClient:ForEachClient(
 function(Client)
 if Client:IsAlive()then
 local IsOnGround=Client:InAir()==false
 for AirbaseID,AirbaseMeta in pairs(self.Airbases)do
-self:E(AirbaseID,AirbaseMeta.KickSpeed)
+self:T(AirbaseID,AirbaseMeta.KickSpeed)
 if AirbaseMeta.Monitor==true and Client:IsInZone(AirbaseMeta.ZoneBoundary)then
 local NotInRunwayZone=true
 if AirbaseMeta.ZoneRunways then
@@ -33775,7 +34165,7 @@ end
 if NotInRunwayZone then
 if IsOnGround then
 local Taxi=Client:GetState(self,"Taxi")
-self:E(Taxi)
+self:T(Taxi)
 if Taxi==false then
 local Velocity=VELOCITY:New(AirbaseMeta.KickSpeed or self.KickSpeed)
 Client:Message("Welcome to "..AirbaseID..". The maximum taxiing speed is "..
@@ -33887,7 +34277,7 @@ return true
 end
 function ATC_GROUND_UNIVERSAL:Start(RepeatScanSeconds)
 RepeatScanSeconds=RepeatScanSeconds or 0.05
-self.AirbaseMonitor=SCHEDULER:New(self,self._AirbaseMonitor,{self},0,2,RepeatScanSeconds)
+self.AirbaseMonitor=SCHEDULER:New(self,self._AirbaseMonitor,{self},0,RepeatScanSeconds)
 return self
 end
 ATC_GROUND_CAUCASUS={
@@ -33901,7 +34291,7 @@ return self
 end
 function ATC_GROUND_CAUCASUS:Start(RepeatScanSeconds)
 RepeatScanSeconds=RepeatScanSeconds or 0.05
-self.AirbaseMonitor=SCHEDULER:New(self,self._AirbaseMonitor,{self},0,2,RepeatScanSeconds)
+self.AirbaseMonitor=SCHEDULER:New(self,self._AirbaseMonitor,{self},0,RepeatScanSeconds)
 end
 ATC_GROUND_NEVADA={
 ClassName="ATC_GROUND_NEVADA",
@@ -33914,7 +34304,7 @@ return self
 end
 function ATC_GROUND_NEVADA:Start(RepeatScanSeconds)
 RepeatScanSeconds=RepeatScanSeconds or 0.05
-self.AirbaseMonitor=SCHEDULER:New(self,self._AirbaseMonitor,{self},0,2,RepeatScanSeconds)
+self.AirbaseMonitor=SCHEDULER:New(self,self._AirbaseMonitor,{self},0,RepeatScanSeconds)
 end
 ATC_GROUND_NORMANDY={
 ClassName="ATC_GROUND_NORMANDY",
@@ -33927,7 +34317,7 @@ return self
 end
 function ATC_GROUND_NORMANDY:Start(RepeatScanSeconds)
 RepeatScanSeconds=RepeatScanSeconds or 0.05
-self.AirbaseMonitor=SCHEDULER:New(self,self._AirbaseMonitor,{self},0,2,RepeatScanSeconds)
+self.AirbaseMonitor=SCHEDULER:New(self,self._AirbaseMonitor,{self},0,RepeatScanSeconds)
 end
 ATC_GROUND_PERSIANGULF={
 ClassName="ATC_GROUND_PERSIANGULF",
@@ -33939,20 +34329,20 @@ self:SetMaximumKickSpeedKmph(150)
 end
 function ATC_GROUND_PERSIANGULF:Start(RepeatScanSeconds)
 RepeatScanSeconds=RepeatScanSeconds or 0.05
-self.AirbaseMonitor=SCHEDULER:New(self,self._AirbaseMonitor,{self},0,2,RepeatScanSeconds)
+self.AirbaseMonitor=SCHEDULER:New(self,self._AirbaseMonitor,{self},0,RepeatScanSeconds)
 end
 ATC_GROUND_MARIANAISLANDS={
 ClassName="ATC_GROUND_MARIANAISLANDS",
 }
 function ATC_GROUND_MARIANAISLANDS:New(AirbaseNames)
-local self=BASE:Inherit(self,ATC_GROUND_UNIVERSAL:New(self.Airbases,AirbaseNames))
+local self=BASE:Inherit(self,ATC_GROUND_UNIVERSAL:New(AirbaseNames))
 self:SetKickSpeedKmph(50)
 self:SetMaximumKickSpeedKmph(150)
 return self
 end
 function ATC_GROUND_MARIANAISLANDS:Start(RepeatScanSeconds)
 RepeatScanSeconds=RepeatScanSeconds or 0.05
-self.AirbaseMonitor=SCHEDULER:New(self,self._AirbaseMonitor,{self},0,2,RepeatScanSeconds)
+self.AirbaseMonitor=SCHEDULER:New(self,self._AirbaseMonitor,{self},0,RepeatScanSeconds)
 end
 do
 DETECTION_BASE={
@@ -50333,11 +50723,13 @@ local radius=radius or 5000
 self.grouping=radius
 return self
 end
-function MANTIS:AddScootZones(ZoneSet,Number)
+function MANTIS:AddScootZones(ZoneSet,Number,Random,Formation)
 self:T(self.lid.." AddScootZones")
 self.SkateZones=ZoneSet
 self.SkateNumber=Number or 3
 self.shootandscoot=true
+self.ScootRandom=Random
+self.ScootFormation=Formation or"Cone"
 return self
 end
 function MANTIS:AddZones(AcceptZones,RejectZones,ConflictZones)
@@ -51037,8 +51429,8 @@ self.ShoradLink=true
 self.Shorad.Groupset=self.ShoradGroupSet
 self.Shorad.debug=self.debug
 end
-if self.shootandscoot and self.SkateZones then
-self.Shorad:AddScootZones(self.SkateZones,self.SkateNumber or 3)
+if self.shootandscoot and self.SkateZones and self.Shorad then
+self.Shorad:AddScootZones(self.SkateZones,self.SkateNumber or 3,self.ScootRandom,self.ScootFormation)
 end
 self:__Status(-math.random(1,10))
 return self
@@ -51145,6 +51537,9 @@ UseEmOnOff=true,
 shootandscoot=false,
 SkateNumber=3,
 SkateZones=nil,
+minscootdist=100,
+minscootdist=3000,
+scootrandomcoord=false,
 }
 do
 SHORAD.Harms={
@@ -51188,7 +51583,7 @@ self.DefenseLowProb=70
 self.DefenseHighProb=90
 self.UseEmOnOff=true
 if UseEmOnOff==false then self.UseEmOnOff=UseEmOnOff end
-self:I("*** SHORAD - Started Version 0.3.2")
+self:I("*** SHORAD - Started Version 0.3.4")
 self.lid=string.format("SHORAD %s | ",self.name)
 self:_InitState()
 self:HandleEvent(EVENTS.Shot,self.HandleEventShot)
@@ -51218,11 +51613,13 @@ math.random()
 end
 return self
 end
-function SHORAD:AddScootZones(ZoneSet,Number)
+function SHORAD:AddScootZones(ZoneSet,Number,Random,Formation)
 self:T(self.lid.." AddScootZones")
 self.SkateZones=ZoneSet
 self.SkateNumber=Number or 3
 self.shootandscoot=true
+self.scootrandomcoord=Random
+self.scootformation=Formation or"Cone"
 return self
 end
 function SHORAD:SwitchDebug(onoff)
@@ -51486,8 +51883,8 @@ end
 function SHORAD:onafterShootAndScoot(From,Event,To,Shorad)
 self:T({From,Event,To})
 local possibleZones={}
-local mindist=100
-local maxdist=3000
+local mindist=self.minscootdist or 100
+local maxdist=self.maxscootdist or 3000
 if Shorad and Shorad:IsAlive()then
 local NowCoord=Shorad:GetCoordinate()
 for _,_zone in pairs(self.SkateZones.Set)do
@@ -51503,7 +51900,11 @@ local rand=math.floor(math.random(1,#possibleZones*1000)/1000+0.5)
 if rand==0 then rand=1 end
 self:T(self.lid.." ShootAndScoot to zone "..rand)
 local ToCoordinate=possibleZones[rand]:GetCoordinate()
-Shorad:RouteGroundTo(ToCoordinate,20,"Cone",1)
+if self.scootrandomcoord then
+ToCoordinate=possibleZones[rand]:GetRandomCoordinate(nil,nil,{land.SurfaceType.LAND,land.SurfaceType.ROAD})
+end
+local formation=self.scootformation or"Cone"
+Shorad:RouteGroundTo(ToCoordinate,20,formation,1)
 end
 end
 return self
@@ -63257,7 +63658,7 @@ MOVE="move",
 SHIP="ship",
 BEACON="beacon",
 }
-CTLD.UnitTypes={
+CTLD.UnitTypeCapabilities={
 ["SA342Mistral"]={type="SA342Mistral",crates=false,troops=true,cratelimit=0,trooplimit=4,length=12,cargoweightlimit=400},
 ["SA342L"]={type="SA342L",crates=false,troops=true,cratelimit=0,trooplimit=2,length=12,cargoweightlimit=400},
 ["SA342M"]={type="SA342M",crates=false,troops=true,cratelimit=0,trooplimit=4,length=12,cargoweightlimit=400},
@@ -63274,7 +63675,7 @@ CTLD.UnitTypes={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.41"
+CTLD.version="1.0.43"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -63319,6 +63720,8 @@ self:AddTransition("*","TroopsRTB","*")
 self:AddTransition("*","CratesDropped","*")
 self:AddTransition("*","CratesBuild","*")
 self:AddTransition("*","CratesRepaired","*")
+self:AddTransition("*","CratesBuildStarted","*")
+self:AddTransition("*","CratesRepairStarted","*")
 self:AddTransition("*","Load","*")
 self:AddTransition("*","Save","*")
 self:AddTransition("*","Stop","Stopped")
@@ -63414,7 +63817,7 @@ function CTLD:_GetUnitCapabilities(Unit)
 self:T(self.lid.." _GetUnitCapabilities")
 local _unit=Unit
 local unittype=_unit:GetTypeName()
-local capabilities=self.UnitTypes[unittype]
+local capabilities=self.UnitTypeCapabilities[unittype]
 if not capabilities or capabilities=={}then
 capabilities={}
 capabilities.troops=false
@@ -63738,6 +64141,7 @@ local desttimer=TIMER:New(function()NearestGroup:Destroy(false)end,self)
 desttimer:Start(self.repairtime-1)
 local buildtimer=TIMER:New(self._BuildObjectFromCrates,self,Group,Unit,object,true,NearestGroup:GetCoordinate())
 buildtimer:Start(self.repairtime)
+self:__CratesRepairStarted(1,Group,Unit)
 else
 if not Engineering then
 self:_SendMessage("Can't repair this unit with "..build.Name,10,false,Group)
@@ -64646,6 +65050,7 @@ if self.buildtime and self.buildtime>0 then
 local buildtimer=TIMER:New(self._BuildObjectFromCrates,self,Group,Unit,build,false,Group:GetCoordinate())
 buildtimer:Start(self.buildtime)
 self:_SendMessage(string.format("Build started, ready in %d seconds!",self.buildtime),15,false,Group)
+self:__CratesBuildStarted(1,Group,Unit)
 else
 self:_BuildObjectFromCrates(Group,Unit,build)
 end
@@ -64890,8 +65295,14 @@ local capabilities=self:_GetUnitCapabilities(_unit)
 local cantroops=capabilities.troops
 local cancrates=capabilities.crates
 local topmenu=MENU_GROUP:New(_group,"CTLD",nil)
-local toptroops=MENU_GROUP:New(_group,"Manage Troops",topmenu)
-local topcrates=MENU_GROUP:New(_group,"Manage Crates",topmenu)
+local toptroops=nil
+local topcrates=nil
+if cantroops then
+toptroops=MENU_GROUP:New(_group,"Manage Troops",topmenu)
+end
+if cancrates then
+topcrates=MENU_GROUP:New(_group,"Manage Crates",topmenu)
+end
 local listmenu=MENU_GROUP_COMMAND:New(_group,"List boarded cargo",topmenu,self._ListCargo,self,_group,_unit)
 local invtry=MENU_GROUP_COMMAND:New(_group,"Inventory",topmenu,self._ListInventory,self,_group,_unit)
 local rbcns=MENU_GROUP_COMMAND:New(_group,"List active zone beacons",topmenu,self._ListRadioBeacons,self,_group,_unit)
@@ -65467,7 +65878,7 @@ self:_SendMessage(string.format("Negative, need to be closer than %dnm to a zone
 end
 return self
 end
-function CTLD:UnitCapabilities(Unittype,Cancrates,Cantroops,Cratelimit,Trooplimit,Length,Maxcargoweight)
+function CTLD:SetUnitCapabilities(Unittype,Cancrates,Cantroops,Cratelimit,Trooplimit,Length,Maxcargoweight)
 self:T(self.lid.." UnitCapabilities")
 local unittype=nil
 local unit=nil
@@ -65481,7 +65892,7 @@ return self
 end
 local length=20
 local maxcargo=500
-local existingcaps=self.UnitTypes[unittype]
+local existingcaps=self.UnitTypeCapabilities[unittype]
 if existingcaps then
 length=existingcaps.length or 20
 maxcargo=existingcaps.cargoweightlimit or 500
@@ -65494,7 +65905,12 @@ capabilities.cratelimit=Cratelimit or 0
 capabilities.trooplimit=Trooplimit or 0
 capabilities.length=Length or length
 capabilities.cargoweightlimit=Maxcargoweight or maxcargo
-self.UnitTypes[unittype]=capabilities
+self.UnitTypeCapabilities[unittype]=capabilities
+return self
+end
+function CTLD:UnitCapabilities(Unittype,Cancrates,Cantroops,Cratelimit,Trooplimit,Length,Maxcargoweight)
+self:I(self.lid.."This function been replaced with `SetUnitCapabilities()` - pls use the new one going forward!")
+self:SetUnitCapabilities(Unittype,Cancrates,Cantroops,Cratelimit,Trooplimit,Length,Maxcargoweight)
 return self
 end
 function CTLD:IsCorrectHover(Unit)
@@ -77869,8 +78285,9 @@ AltBackend=nil,
 ConfigFileName="Moose_MSRS.lua",
 ConfigFilePath="Config\\",
 ConfigLoaded=false,
+ttsprovider="Microsoft",
 }
-MSRS.version="0.1.2"
+MSRS.version="0.1.3"
 MSRS.Voices={
 Microsoft={
 ["Hedda"]="Microsoft Hedda Desktop",
@@ -77991,8 +78408,7 @@ Backend.Vars.Volume=Volume
 Backend.Functions=Backend.Functions or{}
 return self:_NewAltBackend(Backend)
 end
-local success=self:LoadConfigFile(nil,nil,self.ConfigLoaded)
-if(not success)and(not self.ConfigLoaded)then
+if not self.ConfigLoaded then
 self:SetPath(PathToSRS)
 self:SetPort()
 self:SetFrequencies(Frequency)
@@ -78031,7 +78447,7 @@ while(self.path:sub(-1)=="/"or self.path:sub(-1)==[[\]])and n<=nmax do
 self.path=self.path:sub(1,#self.path-1)
 n=n+1
 end
-self:I(string.format("SRS path=%s",self:GetPath()))
+self:T(string.format("SRS path=%s",self:GetPath()))
 end
 return self
 end
@@ -78137,6 +78553,7 @@ self.APIKey=PathToCredentials
 self.provider="gcloud"
 self.GRPCOptions.DefaultProvider="gcloud"
 self.GRPCOptions.gcloud.key=PathToCredentials
+self.ttsprovider="Google"
 end
 return self
 end
@@ -78147,6 +78564,14 @@ self.provider="gcloud"
 self.GRPCOptions.DefaultProvider="gcloud"
 self.GRPCOptions.gcloud.key=APIKey
 end
+return self
+end
+function MSRS:SetTTSProviderGoogle()
+self.ttsprovider="Google"
+return self
+end
+function MSRS:SetTTSProviderMicrosoft()
+self.ttsprovider="Microsoft"
 return self
 end
 function MSRS:Help()
@@ -78334,16 +78759,22 @@ if coordinate then
 local lat,lon,alt=self:_GetLatLongAlt(coordinate)
 command=command..string.format(" -L %.4f -O %.4f -A %d",lat,lon,alt)
 end
-if self.google then
+if self.google and self.ttsprovider=="Google"then
 command=command..string.format(' --ssml -G "%s"',self.google)
 end
-self:I("MSRS command="..command)
+self:T("MSRS command="..command)
 return command
 end
-function MSRS:LoadConfigFile(Path,Filename,ConfigLoaded)
+function MSRS:LoadConfigFile(Path,Filename)
+if lfs==nil then
+env.info("*****Note - lfs and os need to be desanitized for MSRS to work!")
+return false
+end
 local path=Path or lfs.writedir()..MSRS.ConfigFilePath
 local file=Filename or MSRS.ConfigFileName or"Moose_MSRS.lua"
-if UTILS.CheckFileExists(path,file)and not ConfigLoaded then
+local pathandfile=path..file
+local filexsists=UTILS.FileExists(pathandfile)
+if filexsists and not MSRS.ConfigLoaded then
 assert(loadfile(path..file))()
 if MSRS_Config then
 if self then
@@ -78358,6 +78789,9 @@ end
 self.culture=MSRS_Config.Culture or"en-GB"
 self.gender=MSRS_Config.Gender or"male"
 self.google=MSRS_Config.Google
+if MSRS_Config.Provider then
+self.ttsprovider=MSRS_Config.Provider
+end
 self.Label=MSRS_Config.Label or"MSRS"
 self.voice=MSRS_Config.Voice
 if MSRS_Config.GRPC then
@@ -78382,6 +78816,9 @@ end
 MSRS.culture=MSRS_Config.Culture or"en-GB"
 MSRS.gender=MSRS_Config.Gender or"male"
 MSRS.google=MSRS_Config.Google
+if MSRS_Config.Provider then
+MSRS.ttsprovider=MSRS_Config.Provider
+end
 MSRS.Label=MSRS_Config.Label or"MSRS"
 MSRS.voice=MSRS_Config.Voice
 if MSRS_Config.GRPC then
@@ -78396,9 +78833,10 @@ end
 MSRS.ConfigLoaded=true
 end
 end
-env.info("MSRS - Sucessfully loaded default configuration from disk!",false)
-else
-env.info("MSRS - Cannot load default configuration from disk!",false)
+env.info("MSRS - Successfully loaded default configuration from disk!",false)
+end
+if not filexsists then
+env.info("MSRS - Cannot find default configuration file!",false)
 return false
 end
 return true
@@ -78731,6 +79169,7 @@ end
 self:_CheckRadioQueue(dt)
 end
 end
+MSRS.LoadConfigFile()
 COMMANDCENTER={
 ClassName="COMMANDCENTER",
 CommandCenterName="",
