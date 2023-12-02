@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-11-24T12:17:25+01:00-b635490e47fbcc8e11a760c69aec77921d1ddda9 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-11-30T23:29:29+01:00-4b8d120f20b4b695a32595b6aa26f03753a3f1e1 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 env.setErrorMessageBoxEnabled(false)
@@ -415,6 +415,12 @@ UCAV="WingLoong",
 Reaper="MQ-9",
 Predator="MQ-1A",
 }
+}
+ENUMS.Link16Power={
+none=0,
+low=1,
+medium=2,
+high=3,
 }
 ENUMS.Storage={
 weapons={
@@ -1278,17 +1284,17 @@ end
 end
 function UTILS.PrintTableToLog(table,indent)
 if not table then
-BASE:E("No table passed!")
+env.warning("No table passed!")
 return
 end
 if not indent then indent=0 end
 for k,v in pairs(table)do
 if type(v)=="table"then
-BASE:I(string.rep("  ",indent)..tostring(k).." = {")
+env.info(string.rep("  ",indent)..tostring(k).." = {")
 UTILS.PrintTableToLog(v,indent+1)
-BASE:I(string.rep("  ",indent).."}")
+env.info(string.rep("  ",indent).."}")
 else
-BASE:I(string.rep("  ",indent)..tostring(k).." = "..tostring(v))
+env.info(string.rep("  ",indent)..tostring(k).." = "..tostring(v))
 end
 end
 end
@@ -3270,6 +3276,26 @@ return tbl
 end
 end
 return nil
+end
+function UTILS.DecimalToOctal(Number)
+if Number<8 then return Number end
+local number=tonumber(Number)
+local octal=""
+local n=1
+while number>7 do
+local number1=number%8
+octal=string.format("%d",number1)..octal
+local number2=math.abs(number/8)
+if number2<8 then
+octal=string.format("%d",number2)..octal
+end
+number=number2
+n=n+1
+end
+return tonumber(octal)
+end
+function UTILS.OctalToDecimal(Number)
+return tonumber(Number,8)
 end
 PROFILER={
 ClassName="PROFILER",
@@ -17719,6 +17745,7 @@ self.SpawnInitModexPrefix=nil
 self.SpawnInitModexPostfix=nil
 self.SpawnInitAirbase=nil
 self.TweakedTemplate=false
+self.SpawnRandomCallsign=false
 self.SpawnGroups={}
 else
 error("SPAWN:New: There is no group declared in the mission editor with SpawnTemplatePrefix = '"..SpawnTemplatePrefix.."'")
@@ -18006,6 +18033,10 @@ self.SpawnRandomizeZones=true
 for SpawnGroupID=1,self.SpawnMaxGroups do
 self:_RandomizeZones(SpawnGroupID)
 end
+return self
+end
+function SPAWN:InitRandomizeCallsign()
+self.SpawnRandomCallsign=true
 return self
 end
 function SPAWN:InitPositionCoordinate(Coordinate)
@@ -19129,6 +19160,48 @@ SpawnTemplate.units[UnitID].name=string.format('%s#%03d-%02d',UnitPrefix,SpawnIn
 SpawnTemplate.units[UnitID].unitId=nil
 end
 end
+if self.SpawnRandomCallsign and SpawnTemplate.units[1].callsign then
+if type(SpawnTemplate.units[1].callsign)~="number"then
+local min=1
+local max=8
+local ctable=CALLSIGN.Aircraft
+if string.find(SpawnTemplate.units[1].type,"A-10",1,true)then
+max=12
+end
+if string.find(SpawnTemplate.units[1].type,"18",1,true)then
+min=9
+max=20
+ctable=CALLSIGN.F18
+end
+if string.find(SpawnTemplate.units[1].type,"16",1,true)then
+min=9
+max=20
+ctable=CALLSIGN.F16
+end
+if SpawnTemplate.units[1].type=="F-15E"then
+min=9
+max=18
+ctable=CALLSIGN.F15E
+end
+local callsignnr=math.random(min,max)
+local callsignname="Enfield"
+for name,value in pairs(ctable)do
+if value==callsignnr then
+callsignname=name
+end
+end
+for UnitID=1,#SpawnTemplate.units do
+SpawnTemplate.units[UnitID].callsign[1]=callsignnr
+SpawnTemplate.units[UnitID].callsign[2]=UnitID
+SpawnTemplate.units[UnitID].callsign[3]="1"
+SpawnTemplate.units[UnitID].callsign["name"]=tostring(callsignname)..tostring(UnitID).."1"
+end
+else
+for UnitID=1,#SpawnTemplate.units do
+SpawnTemplate.units[UnitID].callsign=math.random(1,999)
+end
+end
+end
 for UnitID=1,#SpawnTemplate.units do
 local Callsign=SpawnTemplate.units[UnitID].callsign
 if Callsign then
@@ -19146,16 +19219,46 @@ end
 local AddProps=SpawnTemplate.units[UnitID].AddPropAircraft
 if AddProps then
 if SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16 then
-SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16=SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16+UnitID-1
-if SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16<10000 then
-SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16=string.format("0%d",SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16)
+if tonumber(SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16)~=nil then
+local octal=SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16
+local decimal=UTILS.OctalToDecimal(octal)+UnitID-1
+SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16=string.format("%05d",UTILS.DecimalToOctal(decimal))
+else
+local STN=math.floor(UTILS.RandomGaussian(4088/2,nil,1000,4088))
+STN=STN+UnitID-1
+local OSTN=UTILS.DecimalToOctal(STN)
+SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16=string.format("%05d",OSTN)
+end
+end
+if SpawnTemplate.units[UnitID].AddPropAircraft.SADL_TN then
+if tonumber(SpawnTemplate.units[UnitID].AddPropAircraft.SADL_TN)~=nil then
+local octal=SpawnTemplate.units[UnitID].AddPropAircraft.SADL_TN
+local decimal=UTILS.OctalToDecimal(octal)+UnitID-1
+SpawnTemplate.units[UnitID].AddPropAircraft.SADL_TN=string.format("%04d",UTILS.DecimalToOctal(decimal))
+else
+local STN=math.floor(UTILS.RandomGaussian(504/2,nil,100,504))
+STN=STN+UnitID-1
+local OSTN=UTILS.DecimalToOctal(STN)
+SpawnTemplate.units[UnitID].AddPropAircraft.SADL_TN=string.format("%04d",OSTN)
 end
 end
 if SpawnTemplate.units[UnitID].AddPropAircraft.VoiceCallsignNumber then
-SpawnTemplate.units[UnitID].AddPropAircraft.VoiceCallsignNumber=SpawnTemplate.units[UnitID].AddPropAircraft.VoiceCallsignNumber+UnitID-1
+SpawnTemplate.units[UnitID].AddPropAircraft.VoiceCallsignNumber=SpawnTemplate.units[UnitID].callsign[2]..SpawnTemplate.units[UnitID].callsign[3]
+end
+if SpawnTemplate.units[UnitID].AddPropAircraft.VoiceCallsignLabel then
+local CallsignName=SpawnTemplate.units[UnitID].callsign["name"]
+CallsignName=string.match(CallsignName,"^(%a+)")
+local label="NY"
+if not string.find(CallsignName," ")then
+label=string.upper(string.match(CallsignName,"^%a")..string.match(CallsignName,"%a$"))
+end
+SpawnTemplate.units[UnitID].AddPropAircraft.VoiceCallsignLabel=label
 end
 if SpawnTemplate.units[UnitID].datalinks and SpawnTemplate.units[UnitID].datalinks.Link16 and SpawnTemplate.units[UnitID].datalinks.Link16.settings then
 SpawnTemplate.units[UnitID].datalinks.Link16.settings.flightLead=UnitID==1 and true or false
+end
+if SpawnTemplate.units[UnitID].datalinks and SpawnTemplate.units[UnitID].datalinks.SADL and SpawnTemplate.units[UnitID].datalinks.SADL.settings then
+SpawnTemplate.units[UnitID].datalinks.SADL.settings.flightLead=UnitID==1 and true or false
 end
 end
 end
@@ -25960,6 +26063,34 @@ local tankertask=self:EnRouteTaskTanker()
 self:PushTask(tankertask,delay+2)
 return self
 end
+function GROUP:GetGroupSTN()
+local tSTN={}
+local units=self:GetUnits()
+local gname=self:GetName()
+gname=string.gsub(gname,"(#%d+)$","")
+local report=REPORT:New()
+report:Add("Link16 S/TN Report")
+report:Add("Group: "..gname)
+report:Add("==================")
+for _,_unit in pairs(units)do
+local unit=_unit
+if unit and unit:IsAlive()then
+local STN,VCL,VCN,Lead=unit:GetSTN()
+local name=unit:GetName()
+tSTN[name]={
+STN=STN,
+VCL=VCL,
+VCN=VCN,
+Lead=Lead,
+}
+local lead=Lead==true and"(*)"or""
+report:Add(string.format("| %s%s %s %s",tostring(VCL),tostring(VCN),tostring(STN),lead))
+end
+end
+report:Add("==================")
+local text=report:Text()
+return tSTN,text
+end
 UNIT={
 ClassName="UNIT",
 UnitName=nil,
@@ -26753,6 +26884,30 @@ self:F2(self.UnitName)
 local name=self.UnitName
 local skill=_DATABASE.Templates.Units[name].Template.skill or"Random"
 return skill
+end
+function UNIT:GetSTN()
+self:F2(self.UnitName)
+local STN=nil
+local VCL=nil
+local VCN=nil
+local FGL=false
+local template=self:GetTemplate()
+if template.AddPropAircraft then
+if template.AddPropAircraft.STN_L16 then
+STN=template.AddPropAircraft.STN_L16
+elseif template.AddPropAircraft.SADL_TN then
+STN=template.AddPropAircraft.SADL_TN
+end
+VCN=template.AddPropAircraft.VoiceCallsignNumber
+VCL=template.AddPropAircraft.VoiceCallsignLabel
+end
+if template.datalinks and template.datalinks.Link16 and template.datalinks.Link16.settings then
+FGL=template.datalinks.Link16.settings.flightLead
+end
+if template.datalinks and template.datalinks.SADL and template.datalinks.SADL.settings then
+FGL=template.datalinks.SADL.settings.flightLead
+end
+return STN,VCL,VCN,FGL
 end
 CLIENT={
 ClassName="CLIENT",
@@ -48608,11 +48763,22 @@ local _assetattribute
 local _assetcategory
 local _assetairstart=false
 if _nassets>0 then
+local asset=_assets[1]
 _assetattribute=_assets[1].attribute
 _assetcategory=_assets[1].category
 _assetairstart=_assets[1].takeoffType and _assets[1].takeoffType==COORDINATE.WaypointType.TurningPoint or false
 if _assetcategory==Group.Category.AIRPLANE or _assetcategory==Group.Category.HELICOPTER then
 if self.airbase and self.airbase:GetCoalition()==self:GetCoalition()then
+if self.airbase.storage then
+local nS=self.airbase.storage:GetAmount(asset.unittype)
+local nA=asset.nunits*request.nasset
+if nS<nA then
+local text=string.format("Warehouse %s: Request denied! DCS Warehouse has only %d assets of type %s ==> NOT enough to spawn the requested %d asset units (%d groups)",
+self.alias,nS,asset.unittype,nA,request.nasset)
+self:_InfoMessage(text,5)
+return false
+end
+end
 if self:IsRunwayOperational()or _assetairstart then
 if _assetairstart then
 else
@@ -48674,6 +48840,7 @@ local text=string.format("Warehouse %s: Request denied! Not close enough to spaw
 self:_InfoMessage(text,5)
 return false
 end
+elseif _assetcategory==Group.Category.AIRPLANE or _assetcategory==Group.Category.HELICOPTER then
 end
 end
 request.cargoassets=_assets
