@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-11-30T23:29:29+01:00-4b8d120f20b4b695a32595b6aa26f03753a3f1e1 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-12-07T16:08:47+01:00-6903e252d2461b7827a5b07df2bfff5937044f52 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 env.setErrorMessageBoxEnabled(false)
@@ -1283,20 +1283,32 @@ end
 end
 end
 function UTILS.PrintTableToLog(table,indent)
+local text="\n"
 if not table then
 env.warning("No table passed!")
-return
+return nil
 end
 if not indent then indent=0 end
 for k,v in pairs(table)do
+if string.find(k," ")then k='"'..k..'"'end
 if type(v)=="table"then
 env.info(string.rep("  ",indent)..tostring(k).." = {")
-UTILS.PrintTableToLog(v,indent+1)
-env.info(string.rep("  ",indent).."}")
+text=text..string.rep("  ",indent)..tostring(k).." = {\n"
+text=text..tostring(UTILS.PrintTableToLog(v,indent+1)).."\n"
+env.info(string.rep("  ",indent).."},")
+text=text..string.rep("  ",indent).."},\n"
 else
-env.info(string.rep("  ",indent)..tostring(k).." = "..tostring(v))
+local value
+if tostring(v)=="true"or tostring(v)=="false"or tonumber(v)~=nil then
+value=v
+else
+value='"'..tostring(v)..'"'
+end
+env.info(string.rep("  ",indent)..tostring(k).." = "..tostring(value)..",\n")
+text=text..string.rep("  ",indent)..tostring(k).." = "..tostring(value)..",\n"
 end
 end
+return text
 end
 function UTILS.TableShow(tbl,loc,indent,tableshow_tbls)
 tableshow_tbls=tableshow_tbls or{}
@@ -6924,7 +6936,7 @@ if Event.weapon then
 Event.Weapon=Event.weapon
 Event.WeaponName=Event.Weapon:getTypeName()
 Event.WeaponUNIT=CLIENT:Find(Event.Weapon,'',true)
-Event.WeaponPlayerName=Event.WeaponUNIT and Event.Weapon:getPlayerName()
+Event.WeaponPlayerName=Event.WeaponUNIT and Event.Weapon.getPlayerName and Event.Weapon:getPlayerName()
 Event.WeaponCoalition=Event.WeaponUNIT and Event.Weapon:getCoalition()
 Event.WeaponCategory=Event.WeaponUNIT and Event.Weapon:getDesc().category
 Event.WeaponTypeName=Event.WeaponUNIT and Event.Weapon:getTypeName()
@@ -8472,7 +8484,13 @@ if Delay and Delay>0 then
 self:ScheduleOnce(Delay,ZONE_BASE.UndrawZone,self)
 else
 if self.DrawID then
+if type(self.DrawID)~="table"then
 UTILS.RemoveMark(self.DrawID)
+else
+for _,mark_id in pairs(self.DrawID)do
+UTILS.RemoveMark(mark_id)
+end
+end
 end
 end
 return self
@@ -9187,8 +9205,68 @@ local PointVec2=POINT_VEC2:NewFromVec2(self:GetRandomVec2())
 self:T3({PointVec2})
 return PointVec2
 end
+_ZONE_TRIANGLE={
+ClassName="ZONE_TRIANGLE",
+Points={},
+Coords={},
+CenterVec2={x=0,y=0},
+SurfaceArea=0,
+DrawIDs={}
+}
+function _ZONE_TRIANGLE:New(p1,p2,p3)
+local self=BASE:Inherit(self,ZONE_BASE:New())
+self.Points={p1,p2,p3}
+local center_x=(p1.x+p2.x+p3.x)/3
+local center_y=(p1.y+p2.y+p3.y)/3
+self.CenterVec2={x=center_x,y=center_y}
+for _,pt in pairs({p1,p2,p3})do
+table.add(self.Coords,COORDINATE:NewFromVec2(pt))
+end
+self.SurfaceArea=math.abs((p2.x-p1.x)*(p3.y-p1.y)-(p3.x-p1.x)*(p2.y-p1.y))*0.5
+return self
+end
+function _ZONE_TRIANGLE:ContainsPoint(pt,points)
+points=points or self.Points
+local function sign(p1,p2,p3)
+return(p1.x-p3.x)*(p2.y-p3.y)-(p2.x-p3.x)*(p1.y-p3.y)
+end
+local d1=sign(pt,self.Points[1],self.Points[2])
+local d2=sign(pt,self.Points[2],self.Points[3])
+local d3=sign(pt,self.Points[3],self.Points[1])
+local has_neg=(d1<0)or(d2<0)or(d3<0)
+local has_pos=(d1>0)or(d2>0)or(d3>0)
+return not(has_neg and has_pos)
+end
+function _ZONE_TRIANGLE:GetRandomVec2(points)
+points=points or self.Points
+local pt={math.random(),math.random()}
+table.sort(pt)
+local s=pt[1]
+local t=pt[2]-pt[1]
+local u=1-pt[2]
+return{x=s*points[1].x+t*points[2].x+u*points[3].x,
+y=s*points[1].y+t*points[2].y+u*points[3].y}
+end
+function _ZONE_TRIANGLE:Draw(Coalition,Color,Alpha,FillColor,FillAlpha,LineType,ReadOnly)
+Coalition=Coalition or-1
+Color=Color or{1,0,0}
+Alpha=Alpha or 1
+FillColor=FillColor or Color
+if not FillColor then UTILS.DeepCopy(Color)end
+FillAlpha=FillAlpha or Alpha
+if not FillAlpha then FillAlpha=1 end
+for i=1,#self.Coords do
+local c1=self.Coords[i]
+local c2=self.Coords[i%#self.Coords+1]
+table.add(self.DrawIDs,c1:LineToAll(c2,Coalition,Color,Alpha,LineType,ReadOnly))
+end
+return self.DrawIDs
+end
 ZONE_POLYGON_BASE={
 ClassName="ZONE_POLYGON_BASE",
+_Triangles={},
+SurfaceArea=0,
+DrawID={}
 }
 function ZONE_POLYGON_BASE:New(ZoneName,PointsArray)
 local self=BASE:Inherit(self,ZONE_BASE:New(ZoneName))
@@ -9200,8 +9278,83 @@ self._.Polygon[i]={}
 self._.Polygon[i].x=PointsArray[i].x
 self._.Polygon[i].y=PointsArray[i].y
 end
+self._Triangles=self:_Triangulate()
+self.SurfaceArea=self:_CalculateSurfaceArea()
 end
 return self
+end
+function ZONE_POLYGON_BASE:_Triangulate()
+local points=self._.Polygon
+local triangles={}
+local function get_orientation(shape_points)
+local sum=0
+for i=1,#shape_points do
+local j=i%#shape_points+1
+sum=sum+(shape_points[j].x-shape_points[i].x)*(shape_points[j].y+shape_points[i].y)
+end
+return sum>=0 and"clockwise"or"counter-clockwise"
+end
+local function ensure_clockwise(shape_points)
+local orientation=get_orientation(shape_points)
+if orientation=="counter-clockwise"then
+local reversed={}
+for i=#shape_points,1,-1 do
+table.insert(reversed,shape_points[i])
+end
+return reversed
+end
+return shape_points
+end
+local function is_clockwise(p1,p2,p3)
+local cross_product=(p2.x-p1.x)*(p3.y-p1.y)-(p2.y-p1.y)*(p3.x-p1.x)
+return cross_product<0
+end
+local function divide_recursively(shape_points)
+if#shape_points==3 then
+table.insert(triangles,_ZONE_TRIANGLE:New(shape_points[1],shape_points[2],shape_points[3]))
+elseif#shape_points>3 then
+for i,p1 in ipairs(shape_points)do
+local p2=shape_points[(i%#shape_points)+1]
+local p3=shape_points[(i+1)%#shape_points+1]
+local triangle=_ZONE_TRIANGLE:New(p1,p2,p3)
+local is_ear=true
+if not is_clockwise(p1,p2,p3)then
+is_ear=false
+else
+for _,point in ipairs(shape_points)do
+if point~=p1 and point~=p2 and point~=p3 and triangle:ContainsPoint(point)then
+is_ear=false
+break
+end
+end
+end
+if is_ear then
+local is_valid_triangle=true
+for _,point in ipairs(points)do
+if point~=p1 and point~=p2 and point~=p3 and triangle:ContainsPoint(point)then
+is_valid_triangle=false
+break
+end
+end
+if is_valid_triangle then
+table.insert(triangles,triangle)
+local remaining_points={}
+for j,point in ipairs(shape_points)do
+if point~=p2 then
+table.insert(remaining_points,point)
+end
+end
+divide_recursively(remaining_points)
+break
+end
+else
+end
+end
+end
+end
+points=ensure_clockwise(points)
+divide_recursively(points)
+return triangles
 end
 function ZONE_POLYGON_BASE:UpdateFromVec2(Vec2Array)
 self._.Polygon={}
@@ -9210,6 +9363,8 @@ self._.Polygon[i]={}
 self._.Polygon[i].x=Vec2Array[i].x
 self._.Polygon[i].y=Vec2Array[i].y
 end
+self._Triangles=self:_Triangulate()
+self.SurfaceArea=self:_CalculateSurfaceArea()
 return self
 end
 function ZONE_POLYGON_BASE:UpdateFromVec3(Vec3Array)
@@ -9219,7 +9374,16 @@ self._.Polygon[i]={}
 self._.Polygon[i].x=Vec3Array[i].x
 self._.Polygon[i].y=Vec3Array[i].z
 end
+self._Triangles=self:_Triangulate()
+self.SurfaceArea=self:_CalculateSurfaceArea()
 return self
+end
+function ZONE_POLYGON_BASE:_CalculateSurfaceArea()
+local area=0
+for _,triangle in pairs(self._Triangles)do
+area=area+triangle.SurfaceArea
+end
+return area
 end
 function ZONE_POLYGON_BASE:GetVec2()
 self:F(self.ZoneName)
@@ -9303,31 +9467,41 @@ i=i+1
 end
 return self
 end
-function ZONE_POLYGON_BASE:DrawZone(Coalition,Color,Alpha,FillColor,FillAlpha,LineType,ReadOnly)
+function ZONE_POLYGON_BASE:DrawZone(Coalition,Color,Alpha,FillColor,FillAlpha,LineType,ReadOnly,IncludeTriangles)
 if self._.Polygon and#self._.Polygon>=3 then
-local coordinate=COORDINATE:NewFromVec2(self._.Polygon[1])
 Coalition=Coalition or self:GetDrawCoalition()
 self:SetDrawCoalition(Coalition)
 Color=Color or self:GetColorRGB()
 Alpha=Alpha or 1
 self:SetColor(Color,Alpha)
 FillColor=FillColor or self:GetFillColorRGB()
-if not FillColor then UTILS.DeepCopy(Color)end
+if not FillColor then
+UTILS.DeepCopy(Color)
+end
 FillAlpha=FillAlpha or self:GetFillColorAlpha()
-if not FillAlpha then FillAlpha=0.15 end
+if not FillAlpha then
+FillAlpha=0.15
+end
 self:SetFillColor(FillColor,FillAlpha)
-if#self._.Polygon==4 then
-local Coord2=COORDINATE:NewFromVec2(self._.Polygon[2])
-local Coord3=COORDINATE:NewFromVec2(self._.Polygon[3])
-local Coord4=COORDINATE:NewFromVec2(self._.Polygon[4])
-self.DrawID=coordinate:QuadToAll(Coord2,Coord3,Coord4,Coalition,Color,Alpha,FillColor,FillAlpha,LineType,ReadOnly)
+IncludeTriangles=IncludeTriangles or false
+if IncludeTriangles then
+for _,triangle in pairs(self._Triangles)do
+local draw_ids=triangle:Draw()
+table.combine(self.DrawID,draw_ids)
+end
 else
-local Coordinates=self:GetVerticiesCoordinates()
-table.remove(Coordinates,1)
-self.DrawID=coordinate:MarkupToAllFreeForm(Coordinates,Coalition,Color,Alpha,FillColor,FillAlpha,LineType,ReadOnly)
+local coords=self:GetVerticiesCoordinates()
+for i=1,#coords do
+local c1=coords[i]
+local c2=coords[i%#coords+1]
+table.add(self.DrawID,c1:LineToAll(c2,Coalition,Color,Alpha,LineType,ReadOnly))
+end
 end
 end
 return self
+end
+function ZONE_POLYGON_BASE:GetSurfaceArea()
+return self.SurfaceArea
 end
 function ZONE_POLYGON_BASE:GetRadius()
 local center=self:GetVec2()
@@ -9437,17 +9611,18 @@ local InZone=self:IsVec2InZone({x=Vec3.x,y=Vec3.z})
 return InZone
 end
 function ZONE_POLYGON_BASE:GetRandomVec2()
-local BS=self:GetBoundingSquare()
-local Nmax=1000;local n=0
-while n<Nmax do
-local Vec2={x=math.random(BS.x1,BS.x2),y=math.random(BS.y1,BS.y2)}
-if self:IsVec2InZone(Vec2)then
-return Vec2
+local weights={}
+for _,triangle in pairs(self._Triangles)do
+weights[triangle]=triangle.SurfaceArea/self.SurfaceArea
 end
-n=n+1
+local random_weight=math.random()
+local accumulated_weight=0
+for triangle,weight in pairs(weights)do
+accumulated_weight=accumulated_weight+weight
+if accumulated_weight>=random_weight then
+return triangle:GetRandomVec2()
 end
-self:E("Could not find a random point in the polygon zone!")
-return nil
+end
 end
 function ZONE_POLYGON_BASE:GetRandomPointVec2()
 self:F2()
@@ -9526,6 +9701,7 @@ i=i+1
 end
 return self
 end
+do
 ZONE_POLYGON={
 ClassName="ZONE_POLYGON",
 }
@@ -9547,6 +9723,36 @@ local ZoneGroup=GROUP:FindByName(GroupName)
 local GroupPoints=ZoneGroup:GetTaskRoute()
 local self=BASE:Inherit(self,ZONE_POLYGON_BASE:New(GroupName,GroupPoints))
 self:F({GroupName,ZoneGroup,self._.Polygon})
+_EVENTDISPATCHER:CreateEventNewZone(self)
+return self
+end
+function ZONE_POLYGON:NewFromDrawing(DrawingName)
+local points={}
+for _,layer in pairs(env.mission.drawings.layers)do
+for _,object in pairs(layer["objects"])do
+if object["name"]==DrawingName then
+if(object["primitiveType"]=="Line"and object["closed"]==true)or(object["polygonMode"]=="free")then
+for _,point in UTILS.spairs(object["points"])do
+local p={x=object["mapX"]+point["x"],
+y=object["mapY"]+point["y"]}
+table.add(points,p)
+end
+elseif object["polygonMode"]=="rect"then
+local angle=object["angle"]
+local half_width=object["width"]/2
+local half_height=object["height"]/2
+local center={x=object["mapX"],y=object["mapY"]}
+local p1=UTILS.RotatePointAroundPivot({x=center.x-half_height,y=center.y+half_width},center,angle)
+local p2=UTILS.RotatePointAroundPivot({x=center.x+half_height,y=center.y+half_width},center,angle)
+local p3=UTILS.RotatePointAroundPivot({x=center.x+half_height,y=center.y-half_width},center,angle)
+local p4=UTILS.RotatePointAroundPivot({x=center.x-half_height,y=center.y-half_width},center,angle)
+points={p1,p2,p3,p4}
+else
+end
+end
+end
+end
+local self=BASE:Inherit(self,ZONE_POLYGON_BASE:New(DrawingName,points))
 _EVENTDISPATCHER:CreateEventNewZone(self)
 return self
 end
@@ -9736,6 +9942,7 @@ end
 function ZONE_POLYGON:IsNoneInZone()
 return self:CountScannedCoalitions()==0
 end
+end
 do
 ZONE_ELASTIC={
 ClassName="ZONE_ELASTIC",
@@ -9827,6 +10034,124 @@ table.insert(h,pt)
 end
 table.remove(h,#h)
 return h
+end
+end
+ZONE_OVAL={
+ClassName="OVAL",
+ZoneName="",
+MajorAxis=nil,
+MinorAxis=nil,
+Angle=0,
+DrawPoly=nil
+}
+function ZONE_OVAL:New(name,vec2,major_axis,minor_axis,angle)
+self=BASE:Inherit(self,ZONE_BASE:New())
+self.ZoneName=name
+self.CenterVec2=vec2
+self.MajorAxis=major_axis
+self.MinorAxis=minor_axis
+self.Angle=angle or 0
+_DATABASE:AddZone(name,self)
+return self
+end
+function ZONE_OVAL:NewFromDrawing(DrawingName)
+self=BASE:Inherit(self,ZONE_BASE:New(DrawingName))
+for _,layer in pairs(env.mission.drawings.layers)do
+for _,object in pairs(layer["objects"])do
+if string.find(object["name"],DrawingName,1,true)then
+if object["polygonMode"]=="oval"then
+self.CenterVec2={x=object["mapX"],y=object["mapY"]}
+self.MajorAxis=object["r1"]
+self.MinorAxis=object["r2"]
+self.Angle=object["angle"]
+end
+end
+end
+end
+_DATABASE:AddZone(DrawingName,self)
+return self
+end
+function ZONE_OVAL:GetMajorAxis()
+return self.MajorAxis
+end
+function ZONE_OVAL:GetMinorAxis()
+return self.MinorAxis
+end
+function ZONE_OVAL:GetAngle()
+return self.Angle
+end
+function ZONE_OVAL:GetVec2()
+return self.CenterVec2
+end
+function ZONE_OVAL:IsVec2InZone(vec2)
+local cos,sin=math.cos,math.sin
+local dx=vec2.x-self.CenterVec2.x
+local dy=vec2.y-self.CenterVec2.y
+local rx=dx*cos(self.Angle)+dy*sin(self.Angle)
+local ry=-dx*sin(self.Angle)+dy*cos(self.Angle)
+return rx*rx/(self.MajorAxis*self.MajorAxis)+ry*ry/(self.MinorAxis*self.MinorAxis)<=1
+end
+function ZONE_OVAL:GetBoundingSquare()
+local min_x=self.CenterVec2.x-self.MajorAxis
+local min_y=self.CenterVec2.y-self.MinorAxis
+local max_x=self.CenterVec2.x+self.MajorAxis
+local max_y=self.CenterVec2.y+self.MinorAxis
+return{
+{x=min_x,y=min_x},{x=max_x,y=min_y},{x=max_x,y=max_y},{x=min_x,y=max_y}
+}
+end
+function ZONE_OVAL:PointsOnEdge(num_points)
+num_points=num_points or 40
+local points={}
+local dtheta=2*math.pi/num_points
+for i=0,num_points-1 do
+local theta=i*dtheta
+local x=self.CenterVec2.x+self.MajorAxis*math.cos(theta)*math.cos(self.Angle)-self.MinorAxis*math.sin(theta)*math.sin(self.Angle)
+local y=self.CenterVec2.y+self.MajorAxis*math.cos(theta)*math.sin(self.Angle)+self.MinorAxis*math.sin(theta)*math.cos(self.Angle)
+table.insert(points,{x=x,y=y})
+end
+return points
+end
+function ZONE_OVAL:GetRandomVec2()
+local theta=math.rad(self.Angle)
+local random_point=math.sqrt(math.random())
+local phi=math.random()*2*math.pi
+local x_c=random_point*math.cos(phi)
+local y_c=random_point*math.sin(phi)
+local x_e=x_c*self.MajorAxis
+local y_e=y_c*self.MinorAxis
+local rx=(x_e*math.cos(theta)-y_e*math.sin(theta))+self.CenterVec2.x
+local ry=(x_e*math.sin(theta)+y_e*math.cos(theta))+self.CenterVec2.y
+return{x=rx,y=ry}
+end
+function ZONE_OVAL:GetRandomPointVec2()
+return POINT_VEC2:NewFromVec2(self:GetRandomVec2())
+end
+function ZONE_OVAL:GetRandomPointVec3()
+return POINT_VEC2:NewFromVec3(self:GetRandomVec2())
+end
+function ZONE_OVAL:DrawZone(Coalition,Color,Alpha,FillColor,FillAlpha,LineType)
+Coalition=Coalition or self:GetDrawCoalition()
+self:SetDrawCoalition(Coalition)
+Color=Color or self:GetColorRGB()
+Alpha=Alpha or 1
+self:SetColor(Color,Alpha)
+FillColor=FillColor or self:GetFillColorRGB()
+if not FillColor then
+UTILS.DeepCopy(Color)
+end
+FillAlpha=FillAlpha or self:GetFillColorAlpha()
+if not FillAlpha then
+FillAlpha=0.15
+end
+LineType=LineType or 1
+self:SetFillColor(FillColor,FillAlpha)
+self.DrawPoly=ZONE_POLYGON:NewFromPointsArray(self.ZoneName,self:PointsOnEdge(80))
+self.DrawPoly:DrawZone(Coalition,Color,Alpha,FillColor,FillAlpha,LineType)
+end
+function ZONE_OVAL:UndrawZone()
+if self.DrawPoly then
+self.DrawPoly:UndrawZone()
 end
 end
 do
@@ -11140,7 +11465,10 @@ self:T3({LastObject})
 return LastObject
 end
 function SET_BASE:GetRandom()
-local tablemax=table.maxn(self.Index)
+local tablemax=0
+for _,_ind in pairs(self.Index)do
+tablemax=tablemax+1
+end
 local RandomItem=self.Set[self.Index[math.random(1,tablemax)]]
 self:T3({RandomItem})
 return RandomItem
@@ -12290,12 +12618,13 @@ return MaxThreatLevelA2G,MaxThreatText
 end
 function SET_UNIT:GetCoordinate()
 local Coordinate=nil
-local unit=self:GetRandom()
+local unit=self:GetFirst()
 if self:Count()==1 and unit then
 return unit:GetCoordinate()
 end
 if unit then
-local Coordinate=unit:GetCoordinate()
+Coordinate=unit:GetCoordinate()
+self:T2(UTILS.PrintTableToLog(Coordinate:GetVec3()))
 local x1=Coordinate.x
 local x2=Coordinate.x
 local y1=Coordinate.y
@@ -12305,16 +12634,16 @@ local z2=Coordinate.z
 local MaxVelocity=0
 local AvgHeading=nil
 local MovingCount=0
-for UnitName,UnitData in pairs(self:GetAliveSet())do
+for UnitName,UnitData in pairs(self.Set)do
 local Unit=UnitData
-local Coordinate=Unit:GetCoordinate()
-x1=(Coordinate.x<x1)and Coordinate.x or x1
-x2=(Coordinate.x>x2)and Coordinate.x or x2
-y1=(Coordinate.y<y1)and Coordinate.y or y1
-y2=(Coordinate.y>y2)and Coordinate.y or y2
-z1=(Coordinate.y<z1)and Coordinate.z or z1
-z2=(Coordinate.y>z2)and Coordinate.z or z2
-local Velocity=Coordinate:GetVelocity()
+local Coord=Unit:GetCoordinate()
+x1=(Coord.x<x1)and Coord.x or x1
+x2=(Coord.x>x2)and Coord.x or x2
+y1=(Coord.y<y1)and Coord.y or y1
+y2=(Coord.y>y2)and Coord.y or y2
+z1=(Coord.y<z1)and Coord.z or z1
+z2=(Coord.y>z2)and Coord.z or z2
+local Velocity=Coord:GetVelocity()
 if Velocity~=0 then
 MaxVelocity=(MaxVelocity<Velocity)and Velocity or MaxVelocity
 local Heading=Coordinate:GetHeading()
@@ -12328,7 +12657,7 @@ Coordinate.y=(y2-y1)/2+y1
 Coordinate.z=(z2-z1)/2+z1
 Coordinate:SetHeading(AvgHeading)
 Coordinate:SetVelocity(MaxVelocity)
-self:F({Coordinate=Coordinate})
+self:T2(UTILS.PrintTableToLog(Coordinate:GetVec3()))
 end
 return Coordinate
 end
@@ -16519,6 +16848,9 @@ end
 end
 return BRAANATO
 end
+function COORDINATE.GetBullseyeCoordinate(Coalition)
+return COORDINATE:NewFromVec3(coalition.getMainRefPoint(Coalition))
+end
 function COORDINATE:ToStringBULLS(Coalition,Settings,MagVar)
 local BullsCoordinate=COORDINATE:NewFromVec3(coalition.getMainRefPoint(Coalition))
 local DirectionVec3=BullsCoordinate:GetDirectionVec3(self)
@@ -17098,7 +17430,7 @@ end
 if CoalitionSide then
 if self.MessageDuration~=0 then
 self:T(self.MessageCategory..self.MessageText:gsub("\n$",""):gsub("\n$","").." / "..self.MessageDuration)
-trigger.action.outTextForCoalition(CoalitionSide,self.MessageText:gsub("\n$",""):gsub("\n$",""),self.MessageDuration,self.ClearScreen)
+trigger.action.outTextForCoalition(CoalitionSide,self.MessageCategory..self.MessageText:gsub("\n$",""):gsub("\n$",""),self.MessageDuration,self.ClearScreen)
 end
 end
 self.CoalitionSide=CoalitionSide
@@ -19242,10 +19574,10 @@ local OSTN=UTILS.DecimalToOctal(STN)
 SpawnTemplate.units[UnitID].AddPropAircraft.SADL_TN=string.format("%04d",OSTN)
 end
 end
-if SpawnTemplate.units[UnitID].AddPropAircraft.VoiceCallsignNumber then
+if SpawnTemplate.units[UnitID].AddPropAircraft.VoiceCallsignNumber and type(Callsign)~="number"then
 SpawnTemplate.units[UnitID].AddPropAircraft.VoiceCallsignNumber=SpawnTemplate.units[UnitID].callsign[2]..SpawnTemplate.units[UnitID].callsign[3]
 end
-if SpawnTemplate.units[UnitID].AddPropAircraft.VoiceCallsignLabel then
+if SpawnTemplate.units[UnitID].AddPropAircraft.VoiceCallsignLabel and type(Callsign)~="number"then
 local CallsignName=SpawnTemplate.units[UnitID].callsign["name"]
 CallsignName=string.match(CallsignName,"^(%a+)")
 local label="NY"
@@ -19260,6 +19592,21 @@ end
 if SpawnTemplate.units[UnitID].datalinks and SpawnTemplate.units[UnitID].datalinks.SADL and SpawnTemplate.units[UnitID].datalinks.SADL.settings then
 SpawnTemplate.units[UnitID].datalinks.SADL.settings.flightLead=UnitID==1 and true or false
 end
+end
+end
+for UnitID=1,#SpawnTemplate.units do
+if SpawnTemplate.units[UnitID].datalinks and SpawnTemplate.units[UnitID].datalinks.Link16 and SpawnTemplate.units[UnitID].datalinks.Link16.network then
+local team={}
+local isF16=string.find(SpawnTemplate.units[UnitID].type,"F-16",1,true)and true or false
+for ID=1,#SpawnTemplate.units do
+local member={}
+member.missionUnitId=ID
+if isF16 then
+member.TDOA=true
+end
+table.insert(team,member)
+end
+SpawnTemplate.units[UnitID].datalinks.Link16.network.teamMembers=team
 end
 end
 self:T3({"Template:",SpawnTemplate})
@@ -23565,7 +23912,7 @@ if DCSControllable then
 local Controller=self:_GetController()
 if Controller then
 if self:IsAir()then
-self:SetOption(AI.Option.Air.val.MISSILE_ATTACK,range)
+self:SetOption(AI.Option.Air.id.MISSILE_ATTACK,range)
 end
 end
 return self
@@ -27432,6 +27779,13 @@ AIRBASE.Normandy={
 ["Broglie"]="Broglie",
 ["Bernay_Saint_Martin"]="Bernay Saint Martin",
 ["Saint_Andre_de_lEure"]="Saint-Andre-de-lEure",
+["Biggin_Hill"]="Biggin Hill",
+["Manston"]="Manston",
+["Detling"]="Detling",
+["Lympne"]="Lympne",
+["Abbeville_Drucat"]="Abbeville Drucat",
+["Merville_Calonne"]="Merville Calonne",
+["Saint_Omer_Wizernes"]="Saint-Omer Wizernes",
 }
 AIRBASE.PersianGulf={
 ["Abu_Dhabi_International_Airport"]="Abu Dhabi Intl",
@@ -40440,6 +40794,10 @@ end
 return self
 end
 function RANGE:SetSRSRangeControl(frequency,modulation,voice,culture,gender,relayunitname)
+if not self.instructmsrs then
+self:E(self.lid.."Use myrange:SetSRS() once first before using myrange:SetSRSRangeControl!")
+return self
+end
 self.rangecontrolfreq=frequency or 256
 self.controlmsrs:SetFrequencies(self.rangecontrolfreq)
 self.controlmsrs:SetModulations(modulation or radio.modulation.AM)
@@ -40455,6 +40813,10 @@ end
 return self
 end
 function RANGE:SetSRSRangeInstructor(frequency,modulation,voice,culture,gender,relayunitname)
+if not self.instructmsrs then
+self:E(self.lid.."Use myrange:SetSRS() once first before using myrange:SetSRSRangeInstructor!")
+return self
+end
 self.instructorfreq=frequency or 305
 self.instructmsrs:SetFrequencies(self.instructorfreq)
 self.instructmsrs:SetModulations(modulation or radio.modulation.AM)
@@ -62152,7 +62514,7 @@ DELIMITER="Punto",
 }
 ATIS.locale="en"
 _ATIS={}
-ATIS.version="0.10.3"
+ATIS.version="0.10.4"
 function ATIS:New(AirbaseName,Frequency,Modulation)
 local self=BASE:Inherit(self,FSM:New())
 self.airbasename=AirbaseName
@@ -62461,7 +62823,16 @@ self:E(self.lid..string.format("EXPERIMENTAL: Starting ATIS for Helipad %s! SRS 
 self.ATISforFARPs=true
 self.useSRS=true
 end
+if type(self.frequency)=="table"then
+local frequency=table.concat(self.frequency,"/")
+local modulation=self.modulation
+if type(self.modulation)=="table"then
+modulation=table.concat(self.modulation,"/")
+end
+self:I(self.lid..string.format("Starting ATIS v%s for airbase %s on %s MHz Modulation=%s",ATIS.version,self.airbasename,frequency,modulation))
+else
 self:I(self.lid..string.format("Starting ATIS v%s for airbase %s on %.3f MHz Modulation=%d",ATIS.version,self.airbasename,self.frequency,self.modulation))
+end
 if not self.useSRS then
 self.radioqueue=RADIOQUEUE:New(self.frequency,self.modulation,string.format("ATIS %s",self.airbasename))
 self.radioqueue:SetSenderCoordinate(self.airbase:GetCoordinate())
@@ -62493,7 +62864,17 @@ if ru then
 relayunitstatus=tostring(ru:IsAlive())
 end
 end
-local text=string.format("State %s: Freq=%.3f MHz %s",fsmstate,self.frequency,UTILS.GetModulationName(self.modulation))
+local text=""
+if type(self.frequency)=="table"then
+local frequency=table.concat(self.frequency,"/")
+local modulation=self.modulation
+if type(self.modulation)=="table"then
+modulation=table.concat(self.modulation,"/")
+end
+text=string.format("State %s: Freq=%s MHz %s",fsmstate,frequency,modulation)
+else
+text=string.format("State %s: Freq=%.3f MHz %s",fsmstate,self.frequency,UTILS.GetModulationName(self.modulation))
+end
 if self.useSRS then
 text=text..string.format(", SRS path=%s (%s), gender=%s, culture=%s, voice=%s",tostring(self.msrs.path),tostring(self.msrs.port),tostring(self.msrs.gender),tostring(self.msrs.culture),tostring(self.msrs.voice))
 else
@@ -63378,7 +63759,17 @@ function ATIS:UpdateMarker(information,runact,wind,altimeter,temperature)
 if self.markerid then
 self.airbase:GetCoordinate():RemoveMark(self.markerid)
 end
-local text=string.format("ATIS on %.3f %s, %s:\n",self.frequency,UTILS.GetModulationName(self.modulation),tostring(information))
+local text=""
+if type(self.frequency)=="table"then
+local frequency=table.concat(self.frequency,"/")
+local modulation=self.modulation
+if type(modulation)=="table"then
+modulation=table.concat(self.modulation,"/")
+end
+text=string.format("ATIS on %s %s, %s:\n",tostring(frequency),tostring(modulation),tostring(information))
+else
+text=string.format("ATIS on %.3f %s, %s:\n",self.frequency,UTILS.GetModulationName(self.modulation),tostring(information))
+end
 text=text..string.format("%s\n",tostring(runact))
 text=text..string.format("%s\n",tostring(wind))
 text=text..string.format("%s\n",tostring(altimeter))
@@ -63842,7 +64233,7 @@ CTLD.UnitTypeCapabilities={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.43"
+CTLD.version="1.0.44"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -64633,6 +65024,34 @@ self:_SendMessage(string.format("No (loadable) crates within %d meters!",finddis
 end
 return self
 end
+function CTLD:_RemoveCratesNearby(_group,_unit)
+self:T(self.lid.." _RemoveCratesNearby")
+local finddist=self.CrateDistance or 35
+local crates,number=self:_FindCratesNearby(_group,_unit,finddist,true)
+if number>0 then
+local text=REPORT:New("Removing Crates Found Nearby:")
+text:Add("------------------------------------------------------------")
+for _,_entry in pairs(crates)do
+local entry=_entry
+local name=entry:GetName()
+local dropped=entry:WasDropped()
+if dropped then
+text:Add(string.format("Crate for %s, %dkg removed",name,entry.PerCrateMass))
+else
+text:Add(string.format("Crate for %s, %dkg removed",name,entry.PerCrateMass))
+end
+entry:GetPositionable():Destroy(false)
+end
+if text:GetCount()==1 then
+text:Add("        N O N E")
+end
+text:Add("------------------------------------------------------------")
+self:_SendMessage(text:Text(),30,true,_group)
+else
+self:_SendMessage(string.format("No (loadable) crates within %d meters!",finddist),10,false,_group)
+end
+return self
+end
 function CTLD:_GetDistance(_point1,_point2)
 self:T(self.lid.." _GetDistance")
 if _point1 and _point2 then
@@ -64971,6 +65390,26 @@ else
 return false
 end
 end
+function CTLD:_GetUnitPositions(Coordinate,Radius,Heading,Template)
+local Positions={}
+local template=_DATABASE:GetGroupTemplate(Template)
+UTILS.PrintTableToLog(template)
+local numbertroops=#template.units
+local newcenter=Coordinate:Translate(Radius,((Heading+270)%360))
+for i=1,360,math.floor(360/numbertroops)do
+local phead=((Heading+270+i)%360)
+local post=newcenter:Translate(Radius,phead)
+local pos1=post:GetVec2()
+local p1t={
+x=pos1.x,
+y=pos1.y,
+heading=phead,
+}
+table.insert(Positions,p1t)
+end
+UTILS.PrintTableToLog(Positions)
+return Positions
+end
 function CTLD:_UnloadTroops(Group,Unit)
 self:T(self.lid.." _UnloadTroops")
 local droppingatbase=false
@@ -65011,14 +65450,25 @@ factor=cargo:GetCratesNeeded()or 1
 zoneradius=Unit:GetVelocityMPS()or 100
 end
 local zone=ZONE_GROUP:New(string.format("Unload zone-%s",unitname),Group,zoneradius*factor)
-local randomcoord=zone:GetRandomCoordinate(10,30*factor):GetVec2()
+local randomcoord=zone:GetRandomCoordinate(10,30*factor)
+local heading=Group:GetHeading()or 0
+if hoverunload or grounded then
+randomcoord=Group:GetCoordinate()
+local Angle=(heading+270)%360
+local offset=hoverunload and 1.5 or 5
+randomcoord:Translate(offset,Angle,nil,true)
+end
+local tempcount=0
 for _,_template in pairs(temptable)do
 self.TroopCounter=self.TroopCounter+1
+tempcount=tempcount+1
 local alias=string.format("%s-%d",_template,math.random(1,100000))
+local rad=2.5+tempcount
+local Positions=self:_GetUnitPositions(randomcoord,rad,heading,_template)
 self.DroppedTroops[self.TroopCounter]=SPAWN:NewWithAlias(_template,alias)
-:InitRandomizeUnits(true,20,2)
 :InitDelayOff()
-:SpawnFromVec2(randomcoord)
+:InitSetUnitAbsolutePositions(Positions)
+:SpawnFromVec2(randomcoord:GetVec2())
 self:__TroopsDeployed(1,Group,Unit,self.DroppedTroops[self.TroopCounter],type)
 end
 cargo:SetWasDropped(true)
@@ -65511,6 +65961,7 @@ if cancrates then
 local loadmenu=MENU_GROUP_COMMAND:New(_group,"Load crates",topcrates,self._LoadCratesNearby,self,_group,_unit)
 local cratesmenu=MENU_GROUP:New(_group,"Get Crates",topcrates)
 local packmenu=MENU_GROUP_COMMAND:New(_group,"Pack crates",topcrates,self._PackCratesNearby,self,_group,_unit)
+local removecratesmenu=MENU_GROUP:New(_group,"Remove crates",topcrates)
 if self.usesubcats then
 local subcatmenus={}
 for _name,_entry in pairs(self.subcats)do
@@ -65545,6 +65996,7 @@ menus[menucount]=MENU_GROUP_COMMAND:New(_group,menutext,cratesmenu,self._GetCrat
 end
 end
 listmenu=MENU_GROUP_COMMAND:New(_group,"List crates nearby",topcrates,self._ListCratesNearby,self,_group,_unit)
+removecrates=MENU_GROUP_COMMAND:New(_group,"Remove crates nearby",removecratesmenu,self._RemoveCratesNearby,self,_group,_unit)
 local unloadmenu=MENU_GROUP_COMMAND:New(_group,"Drop crates",topcrates,self._UnloadCrates,self,_group,_unit)
 if not self.nobuildmenu then
 local buildmenu=MENU_GROUP_COMMAND:New(_group,"Build crates",topcrates,self._BuildCrates,self,_group,_unit)
