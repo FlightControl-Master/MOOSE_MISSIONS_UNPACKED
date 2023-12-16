@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-12-07T16:08:47+01:00-6903e252d2461b7827a5b07df2bfff5937044f52 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2023-12-14T12:43:36+01:00-e84e16f58bf975dc7bdd9787ad227f286010efe0 ***')
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 env.setErrorMessageBoxEnabled(false)
@@ -12617,47 +12617,40 @@ self:F({MaxThreatLevelA2G=MaxThreatLevelA2G,MaxThreatText=MaxThreatText})
 return MaxThreatLevelA2G,MaxThreatText
 end
 function SET_UNIT:GetCoordinate()
+local function GetSetVec3(units)
+local x=0
+local y=0
+local z=0
+local n=0
+for _,unit in pairs(units)do
+local vec3=nil
+if unit and unit:IsAlive()then
+vec3=unit:GetVec3()
+end
+if vec3 then
+x=x+vec3.x
+y=y+vec3.y
+z=z+vec3.z
+n=n+1
+end
+end
+if n>0 then
+local Vec3={x=x/n,y=y/n,z=z/n}
+return Vec3
+end
+return nil
+end
 local Coordinate=nil
-local unit=self:GetFirst()
-if self:Count()==1 and unit then
-return unit:GetCoordinate()
+local Vec3=GetSetVec3(self.Set)
+if Vec3 then
+Coordinate=COORDINATE:NewFromVec3(Vec3)
 end
-if unit then
-Coordinate=unit:GetCoordinate()
-self:T2(UTILS.PrintTableToLog(Coordinate:GetVec3()))
-local x1=Coordinate.x
-local x2=Coordinate.x
-local y1=Coordinate.y
-local y2=Coordinate.y
-local z1=Coordinate.z
-local z2=Coordinate.z
-local MaxVelocity=0
-local AvgHeading=nil
-local MovingCount=0
-for UnitName,UnitData in pairs(self.Set)do
-local Unit=UnitData
-local Coord=Unit:GetCoordinate()
-x1=(Coord.x<x1)and Coord.x or x1
-x2=(Coord.x>x2)and Coord.x or x2
-y1=(Coord.y<y1)and Coord.y or y1
-y2=(Coord.y>y2)and Coord.y or y2
-z1=(Coord.y<z1)and Coord.z or z1
-z2=(Coord.y>z2)and Coord.z or z2
-local Velocity=Coord:GetVelocity()
-if Velocity~=0 then
-MaxVelocity=(MaxVelocity<Velocity)and Velocity or MaxVelocity
-local Heading=Coordinate:GetHeading()
-AvgHeading=AvgHeading and(AvgHeading+Heading)or Heading
-MovingCount=MovingCount+1
-end
-end
-AvgHeading=AvgHeading and(AvgHeading/MovingCount)
-Coordinate.x=(x2-x1)/2+x1
-Coordinate.y=(y2-y1)/2+y1
-Coordinate.z=(z2-z1)/2+z1
-Coordinate:SetHeading(AvgHeading)
-Coordinate:SetVelocity(MaxVelocity)
-self:T2(UTILS.PrintTableToLog(Coordinate:GetVec3()))
+if Coordinate then
+local heading=self:GetHeading()or 0
+local velocity=self:GetVelocity()or 0
+Coordinate:SetHeading(heading)
+Coordinate:SetVelocity(velocity)
+self:I(UTILS.PrintTableToLog(Coordinate))
 end
 return Coordinate
 end
@@ -16899,6 +16892,36 @@ local lat,lon=coord.LOtoLL(self:GetVec3())
 local MGRS=coord.LLtoMGRS(lat,lon)
 return"MGRS "..UTILS.tostringMGRS(MGRS,MGRS_Accuracy)
 end
+function COORDINATE:NewFromMGRSString(MGRSString)
+local myparts=UTILS.Split(MGRSString," ")
+local northing=tostring(myparts[5])or""
+local easting=tostring(myparts[4])or""
+if string.len(easting)<5 then easting=easting..string.rep("0",5-string.len(easting))end
+if string.len(northing)<5 then northing=northing..string.rep("0",5-string.len(northing))end
+local MGRS={
+UTMZone=myparts[2],
+MGRSDigraph=myparts[3],
+Easting=easting,
+Northing=northing,
+}
+local lat,lon=coord.MGRStoLL(MGRS)
+local point=coord.LLtoLO(lat,lon,0)
+local coord=COORDINATE:NewFromVec2({x=point.x,y=point.z})
+return coord
+end
+function COORDINATE:NewFromMGRS(UTMZone,MGRSDigraph,Easting,Northing)
+if string.len(Easting)<5 then Easting=Easting..string.rep("0",5-string.len(Easting))end
+if string.len(Northing)<5 then Northing=Northing..string.rep("0",5-string.len(Northing))end
+local MGRS={
+UTMZone=UTMZone,
+MGRSDigraph=MGRSDigraph,
+Easting=Easting,
+Northing=Northing,
+}
+local lat,lon=coord.MGRStoLL(MGRS)
+local point=coord.LLtoLO(lat,lon,0)
+local coord=COORDINATE:NewFromVec2({x=point.x,y=point.z})
+end
 function COORDINATE:ToStringFromRP(ReferenceCoord,ReferenceName,Controllable,Settings,MagVar)
 self:F2({ReferenceCoord=ReferenceCoord,ReferenceName=ReferenceName})
 local Settings=Settings or(Controllable and _DATABASE:GetPlayerSettings(Controllable:GetPlayerName()))or _SETTINGS
@@ -18371,6 +18394,14 @@ function SPAWN:InitRandomizeCallsign()
 self.SpawnRandomCallsign=true
 return self
 end
+function SPAWN:InitCallSign(ID,Name,Minor,Major)
+self.SpawnInitCallSign=true
+self.SpawnInitCallSignID=ID or 1
+self.SpawnInitCallSignMinor=Minor or 1
+self.SpawnInitCallSignMajor=Major or 1
+self.SpawnInitCallSignName=string.lower(Name)or"enfield"
+return self
+end
 function SPAWN:InitPositionCoordinate(Coordinate)
 self:T({self.SpawnTemplatePrefix,Coordinate:GetVec2()})
 self:InitPositionVec2(Coordinate:GetVec2())
@@ -19534,17 +19565,28 @@ SpawnTemplate.units[UnitID].callsign=math.random(1,999)
 end
 end
 end
+if self.SpawnInitCallSign then
+for UnitID=1,#SpawnTemplate.units do
+local Callsign=SpawnTemplate.units[UnitID].callsign
+if Callsign and type(Callsign)~="number"then
+SpawnTemplate.units[UnitID].callsign[1]=self.SpawnInitCallSignID
+SpawnTemplate.units[UnitID].callsign[2]=self.SpawnInitCallSignMinor
+SpawnTemplate.units[UnitID].callsign[3]=self.SpawnInitCallSignMajor
+SpawnTemplate.units[UnitID].callsign["name"]=string.format("%s%d%d",self.SpawnInitCallSignName,self.SpawnInitCallSignMinor,self.SpawnInitCallSignMajor)
+end
+end
+end
 for UnitID=1,#SpawnTemplate.units do
 local Callsign=SpawnTemplate.units[UnitID].callsign
 if Callsign then
-if type(Callsign)~="number"then
+if type(Callsign)~="number"and not self.SpawnInitCallSign then
 Callsign[2]=((SpawnIndex-1)%10)+1
 local CallsignName=SpawnTemplate.units[UnitID].callsign["name"]
 CallsignName=string.match(CallsignName,"^(%a+)")
 local CallsignLen=CallsignName:len()
 SpawnTemplate.units[UnitID].callsign[2]=UnitID
 SpawnTemplate.units[UnitID].callsign["name"]=CallsignName:sub(1,CallsignLen)..SpawnTemplate.units[UnitID].callsign[2]..SpawnTemplate.units[UnitID].callsign[3]
-else
+elseif type(Callsign)=="number"then
 SpawnTemplate.units[UnitID].callsign=Callsign+SpawnIndex
 end
 end
@@ -25434,6 +25476,7 @@ if vec3 then
 local coord=COORDINATE:NewFromVec3(vec3)
 local Heading=self:GetHeading()
 coord.Heading=Heading
+return coord
 else
 BASE:E({"Cannot GetAverageCoordinate",Group=self,Alive=self:IsAlive()})
 return nil
@@ -35004,6 +35047,28 @@ DetectionAccepted=false
 end
 end
 end
+if self.RadarBlur then
+MESSAGE:New("Radar Blur",10):ToLogIf(self.debug):ToAllIf(self.verbose)
+local minheight=self.RadarBlurMinHeight or 250
+local thresheight=self.RadarBlurThresHeight or 90
+local thresblur=self.RadarBlurThresBlur or 85
+local dist=math.floor(Distance)
+if dist<=self.RadarBlurClosing then
+thresheight=(((dist*dist)/self.RadarBlurClosingSquare)*thresheight)
+thresblur=(((dist*dist)/self.RadarBlurClosingSquare)*thresblur)
+end
+local fheight=math.floor(math.random(1,10000)/100)
+local fblur=math.floor(math.random(1,10000)/100)
+local unit=UNIT:FindByName(DetectedObjectName)
+if unit and unit:IsAlive()then
+local AGL=unit:GetAltitude(true)
+MESSAGE:New("Unit "..DetectedObjectName.." is at "..math.floor(AGL).."m. Distance "..math.floor(Distance).."km.",10):ToLogIf(self.debug):ToAllIf(self.verbose)
+MESSAGE:New(string.format("fheight = %d/%d | fblur = %d/%d",fheight,thresheight,fblur,thresblur),10):ToLogIf(self.debug):ToAllIf(self.verbose)
+if fblur>thresblur then DetectionAccepted=false end
+if AGL<=minheight and fheight<thresheight then DetectionAccepted=false end
+MESSAGE:New("Detection Accepted = "..tostring(DetectionAccepted),10):ToLogIf(self.debug):ToAllIf(self.verbose)
+end
+end
 if not self.DetectedObjects[DetectedObjectName]and TargetIsVisible and self.DistanceProbability then
 local DistanceFactor=Distance/4
 local DistanceProbabilityReversed=(1-self.DistanceProbability)*DistanceFactor
@@ -35162,6 +35227,15 @@ end
 else
 self._.FilterCategories[FilterCategories]=FilterCategories
 end
+return self
+end
+function DETECTION_BASE:SetRadarBlur(minheight,thresheight,thresblur,closing)
+self.RadarBlur=true
+self.RadarBlurMinHeight=minheight or 250
+self.RadarBlurThresHeight=thresheight or 90
+self.RadarBlurThresBlur=thresblur or 85
+self.RadarBlurClosing=closing or 20
+self.RadarBlurClosingSquare=self.RadarBlurClosing*self.RadarBlurClosing
 return self
 end
 end
@@ -40772,15 +40846,15 @@ self.trackmissiles=false
 return self
 end
 function RANGE:SetSRS(PathToSRS,Port,Coalition,Frequency,Modulation,Volume,PathToGoogleKey)
-if PathToSRS then
+if PathToSRS or MSRS.path then
 self.useSRS=true
-self.controlmsrs=MSRS:New(PathToSRS,Frequency or 256,Modulation or radio.modulation.AM,Volume or 1.0)
-self.controlmsrs:SetPort(Port)
+self.controlmsrs=MSRS:New(PathToSRS or MSRS.path,Frequency or 256,Modulation or radio.modulation.AM,Volume or 1.0)
+self.controlmsrs:SetPort(Port or MSRS.port)
 self.controlmsrs:SetCoalition(Coalition or coalition.side.BLUE)
 self.controlmsrs:SetLabel("RANGEC")
 self.controlsrsQ=MSRSQUEUE:New("CONTROL")
-self.instructmsrs=MSRS:New(PathToSRS,Frequency or 305,Modulation or radio.modulation.AM,Volume or 1.0)
-self.instructmsrs:SetPort(Port)
+self.instructmsrs=MSRS:New(PathToSRS or MSRS.path,Frequency or 305,Modulation or radio.modulation.AM,Volume or 1.0)
+self.instructmsrs:SetPort(Port or MSRS.port)
 self.instructmsrs:SetCoalition(Coalition or coalition.side.BLUE)
 self.instructmsrs:SetLabel("RANGEI")
 self.instructsrsQ=MSRSQUEUE:New("INSTRUCT")
@@ -78031,6 +78105,15 @@ if Delay>0 then
 SCHEDULER:New(nil,USERSOUND.ToUnit,{self,Unit},Delay)
 else
 trigger.action.outSoundForUnit(Unit:GetID(),self.UserSoundFileName)
+end
+return self
+end
+function USERSOUND:ToClient(Client,Delay)
+Delay=Delay or 0
+if Delay>0 then
+SCHEDULER:New(nil,USERSOUND.ToClient,{self,Client},Delay)
+else
+trigger.action.outSoundForUnit(Client:GetID(),self.UserSoundFileName)
 end
 return self
 end
