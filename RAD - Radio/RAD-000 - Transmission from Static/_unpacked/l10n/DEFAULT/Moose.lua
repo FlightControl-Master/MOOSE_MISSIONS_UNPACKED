@@ -1,4 +1,29 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2023-12-29T15:02:41+01:00-9cc32ff8dc99a113b8040aa860aea35f723e3dac ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-01-05T16:08:46+01:00-84230e2360d2d89f2ad3560e38caef9427948d8c ***')
+ModuleLoader='Scripts/Moose/Modules.lua'
+local f=io.open(ModuleLoader,"r")
+if f~=nil then
+io.close(f)
+env.info('*** MOOSE DYNAMIC INCLUDE START *** ')
+local base=_G
+__Moose={}
+__Moose.Include=function(IncludeFile)
+if not __Moose.Includes[IncludeFile]then
+__Moose.Includes[IncludeFile]=IncludeFile
+local f=assert(base.loadfile(IncludeFile))
+if f==nil then
+error("Moose: Could not load Moose file "..IncludeFile)
+else
+env.info("Moose: "..IncludeFile.." dynamically loaded.")
+return f()
+end
+end
+end
+__Moose.Includes={}
+__Moose.Include('Scripts/Moose/Modules.lua')
+BASE:TraceOnOff(true)
+env.info('*** MOOSE INCLUDE END *** ')
+do return end
+end
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
 env.setErrorMessageBoxEnabled(false)
@@ -379,6 +404,7 @@ Galaxy="C-5",
 Hawkeye="E-2D",
 Sentry="E-3A",
 Stratotanker="KC-135",
+Gasstation="KC-135MPRS",
 Extender="KC-10",
 Orion="P-3C",
 Viking="S-3B",
@@ -11428,12 +11454,11 @@ end
 function SET_BASE:_EvalFilterFunctions(Object)
 for _,_condition in pairs(self.Filter.Functions or{})do
 local condition=_condition
-local istrue=condition.func(Object,unpack(condition.arg))
-if istrue then
-return true
-end
-end
+if condition.func(Object,unpack(condition.arg))==false then
 return false
+end
+end
+return true
 end
 function SET_BASE:Clear(TriggerEvent)
 for Name,Object in pairs(self.Set)do
@@ -11577,6 +11602,17 @@ for _,_ind in pairs(self.Index)do
 tablemax=tablemax+1
 end
 local RandomItem=self.Set[self.Index[math.random(1,tablemax)]]
+self:T3({RandomItem})
+return RandomItem
+end
+function SET_BASE:GetRandomSurely()
+local tablemax=0
+local sorted={}
+for _,_obj in pairs(self.Set)do
+tablemax=tablemax+1
+sorted[tablemax]=_obj
+end
+local RandomItem=sorted[math.random(1,tablemax)]
 self:T3({RandomItem})
 return RandomItem
 end
@@ -12248,7 +12284,7 @@ MGroupActive=true
 end
 MGroupInclude=MGroupInclude and MGroupActive
 end
-if self.Filter.Coalitions then
+if self.Filter.Coalitions and MGroupInclude then
 local MGroupCoalition=false
 for CoalitionID,CoalitionName in pairs(self.Filter.Coalitions)do
 self:T3({"Coalition:",MGroup:GetCoalition(),self.FilterMeta.Coalitions[CoalitionName],CoalitionName})
@@ -12258,7 +12294,7 @@ end
 end
 MGroupInclude=MGroupInclude and MGroupCoalition
 end
-if self.Filter.Categories then
+if self.Filter.Categories and MGroupInclude then
 local MGroupCategory=false
 for CategoryID,CategoryName in pairs(self.Filter.Categories)do
 self:T3({"Category:",MGroup:GetCategory(),self.FilterMeta.Categories[CategoryName],CategoryName})
@@ -12268,7 +12304,7 @@ end
 end
 MGroupInclude=MGroupInclude and MGroupCategory
 end
-if self.Filter.Countries then
+if self.Filter.Countries and MGroupInclude then
 local MGroupCountry=false
 for CountryID,CountryName in pairs(self.Filter.Countries)do
 self:T3({"Country:",MGroup:GetCountry(),CountryName})
@@ -12278,7 +12314,7 @@ end
 end
 MGroupInclude=MGroupInclude and MGroupCountry
 end
-if self.Filter.GroupPrefixes then
+if self.Filter.GroupPrefixes and MGroupInclude then
 local MGroupPrefix=false
 for GroupPrefixId,GroupPrefix in pairs(self.Filter.GroupPrefixes)do
 self:T3({"Prefix:",string.find(MGroup:GetName(),GroupPrefix,1),GroupPrefix})
@@ -12288,7 +12324,7 @@ end
 end
 MGroupInclude=MGroupInclude and MGroupPrefix
 end
-if self.Filter.Zones then
+if self.Filter.Zones and MGroupInclude then
 local MGroupZone=false
 for ZoneName,Zone in pairs(self.Filter.Zones)do
 if MGroup:IsInZone(Zone)then
@@ -12297,8 +12333,9 @@ end
 end
 MGroupInclude=MGroupInclude and MGroupZone
 end
-if self.Filter.Functions then
-local MGroupFunc=self:_EvalFilterFunctions(MGroup)
+if self.Filter.Functions and MGroupInclude then
+local MGroupFunc=false
+MGroupFunc=self:_EvalFilterFunctions(MGroup)
 MGroupInclude=MGroupInclude and MGroupFunc
 end
 self:T2(MGroupInclude)
@@ -12883,7 +12920,7 @@ MUnitActive=true
 end
 MUnitInclude=MUnitInclude and MUnitActive
 end
-if self.Filter.Coalitions then
+if self.Filter.Coalitions and MUnitInclude then
 local MUnitCoalition=false
 for CoalitionID,CoalitionName in pairs(self.Filter.Coalitions)do
 self:F({"Coalition:",MUnit:GetCoalition(),self.FilterMeta.Coalitions[CoalitionName],CoalitionName})
@@ -12893,7 +12930,7 @@ end
 end
 MUnitInclude=MUnitInclude and MUnitCoalition
 end
-if self.Filter.Categories then
+if self.Filter.Categories and MUnitInclude then
 local MUnitCategory=false
 for CategoryID,CategoryName in pairs(self.Filter.Categories)do
 self:T3({"Category:",MUnit:GetDesc().category,self.FilterMeta.Categories[CategoryName],CategoryName})
@@ -12903,7 +12940,7 @@ end
 end
 MUnitInclude=MUnitInclude and MUnitCategory
 end
-if self.Filter.Types then
+if self.Filter.Types and MUnitInclude then
 local MUnitType=false
 for TypeID,TypeName in pairs(self.Filter.Types)do
 self:T3({"Type:",MUnit:GetTypeName(),TypeName})
@@ -12913,7 +12950,7 @@ end
 end
 MUnitInclude=MUnitInclude and MUnitType
 end
-if self.Filter.Countries then
+if self.Filter.Countries and MUnitInclude then
 local MUnitCountry=false
 for CountryID,CountryName in pairs(self.Filter.Countries)do
 self:T3({"Country:",MUnit:GetCountry(),CountryName})
@@ -12923,7 +12960,7 @@ end
 end
 MUnitInclude=MUnitInclude and MUnitCountry
 end
-if self.Filter.UnitPrefixes then
+if self.Filter.UnitPrefixes and MUnitInclude then
 local MUnitPrefix=false
 for UnitPrefixId,UnitPrefix in pairs(self.Filter.UnitPrefixes)do
 self:T3({"Prefix:",string.find(MUnit:GetName(),UnitPrefix,1),UnitPrefix})
@@ -12933,7 +12970,7 @@ end
 end
 MUnitInclude=MUnitInclude and MUnitPrefix
 end
-if self.Filter.RadarTypes then
+if self.Filter.RadarTypes and MUnitInclude then
 local MUnitRadar=false
 for RadarTypeID,RadarType in pairs(self.Filter.RadarTypes)do
 self:T3({"Radar:",RadarType})
@@ -12946,7 +12983,7 @@ end
 end
 MUnitInclude=MUnitInclude and MUnitRadar
 end
-if self.Filter.SEAD then
+if self.Filter.SEAD and MUnitInclude then
 local MUnitSEAD=false
 if MUnit:HasSEAD()==true then
 self:T3("SEAD Found")
@@ -12955,7 +12992,7 @@ end
 MUnitInclude=MUnitInclude and MUnitSEAD
 end
 end
-if self.Filter.Zones then
+if self.Filter.Zones and MUnitInclude then
 local MGroupZone=false
 for ZoneName,Zone in pairs(self.Filter.Zones)do
 self:T3("Zone:",ZoneName)
@@ -12965,7 +13002,7 @@ end
 end
 MUnitInclude=MUnitInclude and MGroupZone
 end
-if self.Filter.Functions then
+if self.Filter.Functions and MUnitInclude then
 local MUnitFunc=self:_EvalFilterFunctions(MUnit)
 MUnitInclude=MUnitInclude and MUnitFunc
 end
@@ -13719,7 +13756,7 @@ MClientActive=true
 end
 MClientInclude=MClientInclude and MClientActive
 end
-if self.Filter.Coalitions then
+if self.Filter.Coalitions and MClientInclude then
 local MClientCoalition=false
 for CoalitionID,CoalitionName in pairs(self.Filter.Coalitions)do
 local ClientCoalitionID=_DATABASE:GetCoalitionFromClientTemplate(MClientName)
@@ -13731,7 +13768,7 @@ end
 self:T({"Evaluated Coalition",MClientCoalition})
 MClientInclude=MClientInclude and MClientCoalition
 end
-if self.Filter.Categories then
+if self.Filter.Categories and MClientInclude then
 local MClientCategory=false
 for CategoryID,CategoryName in pairs(self.Filter.Categories)do
 local ClientCategoryID=_DATABASE:GetCategoryFromClientTemplate(MClientName)
@@ -13743,7 +13780,7 @@ end
 self:T({"Evaluated Category",MClientCategory})
 MClientInclude=MClientInclude and MClientCategory
 end
-if self.Filter.Types then
+if self.Filter.Types and MClientInclude then
 local MClientType=false
 for TypeID,TypeName in pairs(self.Filter.Types)do
 self:T3({"Type:",MClient:GetTypeName(),TypeName})
@@ -13754,7 +13791,7 @@ end
 self:T({"Evaluated Type",MClientType})
 MClientInclude=MClientInclude and MClientType
 end
-if self.Filter.Countries then
+if self.Filter.Countries and MClientInclude then
 local MClientCountry=false
 for CountryID,CountryName in pairs(self.Filter.Countries)do
 local ClientCountryID=_DATABASE:GetCountryFromClientTemplate(MClientName)
@@ -13766,7 +13803,7 @@ end
 self:T({"Evaluated Country",MClientCountry})
 MClientInclude=MClientInclude and MClientCountry
 end
-if self.Filter.ClientPrefixes then
+if self.Filter.ClientPrefixes and MClientInclude then
 local MClientPrefix=false
 for ClientPrefixId,ClientPrefix in pairs(self.Filter.ClientPrefixes)do
 self:T3({"Prefix:",string.find(MClient.UnitName,ClientPrefix,1),ClientPrefix})
@@ -13777,7 +13814,7 @@ end
 self:T({"Evaluated Prefix",MClientPrefix})
 MClientInclude=MClientInclude and MClientPrefix
 end
-if self.Filter.Zones then
+if self.Filter.Zones and MClientInclude then
 local MClientZone=false
 for ZoneName,Zone in pairs(self.Filter.Zones)do
 self:T3("Zone:",ZoneName)
@@ -13788,7 +13825,7 @@ end
 end
 MClientInclude=MClientInclude and MClientZone
 end
-if self.Filter.Playernames then
+if self.Filter.Playernames and MClientInclude then
 local MClientPlayername=false
 local playername=MClient:GetPlayerName()or"Unknown"
 for _,_Playername in pairs(self.Filter.Playernames)do
@@ -13799,7 +13836,7 @@ end
 self:T({"Evaluated Playername",MClientPlayername})
 MClientInclude=MClientInclude and MClientPlayername
 end
-if self.Filter.Callsigns then
+if self.Filter.Callsigns and MClientInclude then
 local MClientCallsigns=false
 local callsign=MClient:GetCallsign()
 for _,_Callsign in pairs(self.Filter.Callsigns)do
@@ -13810,7 +13847,7 @@ end
 self:T({"Evaluated Callsign",MClientCallsigns})
 MClientInclude=MClientInclude and MClientCallsigns
 end
-if self.Filter.Functions then
+if self.Filter.Functions and MClientInclude then
 local MClientFunc=self:_EvalFilterFunctions(MClient)
 MClientInclude=MClientInclude and MClientFunc
 end
@@ -14222,7 +14259,7 @@ end
 self:T({"Evaluated Coalition",MAirbaseCoalition})
 MAirbaseInclude=MAirbaseInclude and MAirbaseCoalition
 end
-if self.Filter.Categories then
+if self.Filter.Categories and MAirbaseInclude then
 local MAirbaseCategory=false
 for CategoryID,CategoryName in pairs(self.Filter.Categories)do
 local AirbaseCategoryID=_DATABASE:GetCategoryFromAirbase(MAirbaseName)
@@ -15305,7 +15342,7 @@ MGroupActive=true
 end
 MGroupInclude=MGroupInclude and MGroupActive
 end
-if self.Filter.Coalitions then
+if self.Filter.Coalitions and MGroupInclude then
 local MGroupCoalition=false
 for CoalitionID,CoalitionName in pairs(self.Filter.Coalitions)do
 if self.FilterMeta.Coalitions[CoalitionName]and self.FilterMeta.Coalitions[CoalitionName]==MGroup:GetCoalition()then
@@ -15314,7 +15351,7 @@ end
 end
 MGroupInclude=MGroupInclude and MGroupCoalition
 end
-if self.Filter.Categories then
+if self.Filter.Categories and MGroupInclude then
 local MGroupCategory=false
 for CategoryID,CategoryName in pairs(self.Filter.Categories)do
 if self.FilterMeta.Categories[CategoryName]and self.FilterMeta.Categories[CategoryName]==MGroup:GetCategory()then
@@ -15323,7 +15360,7 @@ end
 end
 MGroupInclude=MGroupInclude and MGroupCategory
 end
-if self.Filter.Countries then
+if self.Filter.Countries and MGroupInclude then
 local MGroupCountry=false
 for CountryID,CountryName in pairs(self.Filter.Countries)do
 if country.id[CountryName]==MGroup:GetCountry()then
@@ -15332,7 +15369,7 @@ end
 end
 MGroupInclude=MGroupInclude and MGroupCountry
 end
-if self.Filter.GroupPrefixes then
+if self.Filter.GroupPrefixes and MGroupInclude then
 local MGroupPrefix=false
 for GroupPrefixId,GroupPrefix in pairs(self.Filter.GroupPrefixes)do
 if string.find(MGroup:GetName(),GroupPrefix:gsub("-","%%-"),1)then
@@ -15472,7 +15509,11 @@ self:ForEach(IteratorFunction,arg,self:GetSet())
 return self
 end
 function SET_SCENERY:GetCoordinate()
-local Coordinate=self:GetRandom():GetCoordinate()
+local Coordinate=COORDINATE:New({0,0,0})
+local Item=self:GetRandomSurely()
+if Item then
+Coordinate:GetCoordinate()
+end
 local x1=Coordinate.x
 local x2=Coordinate.x
 local y1=Coordinate.y
@@ -16999,6 +17040,11 @@ end
 function COORDINATE:GetLLDDM()
 return coord.LOtoLL(self:GetVec3())
 end
+function COORDINATE:ToStringLL(Settings)
+local LL_Accuracy=Settings and Settings.LL_Accuracy or _SETTINGS.LL_Accuracy
+local lat,lon=coord.LOtoLL(self:GetVec3())
+return string.format('%f',lat)..' '..string.format('%f',lon)
+end
 function COORDINATE:ToStringLLDMS(Settings)
 local LL_Accuracy=Settings and Settings.LL_Accuracy or _SETTINGS.LL_Accuracy
 local lat,lon=coord.LOtoLL(self:GetVec3())
@@ -17620,7 +17666,7 @@ return self
 end
 _MESSAGESRS={}
 function MESSAGE.SetMSRS(PathToSRS,Port,PathToCredentials,Frequency,Modulation,Gender,Culture,Voice,Coalition,Volume,Label,Coordinate)
-_MESSAGESRS.MSRS=MSRS:New(PathToSRS,Frequency or 243,Modulation or radio.modulation.AM,Volume)
+_MESSAGESRS.MSRS=MSRS:New(PathToSRS,Frequency or 243,Modulation or radio.modulation.AM)
 _MESSAGESRS.frequency=Frequency
 _MESSAGESRS.modulation=Modulation or radio.modulation.AM
 _MESSAGESRS.MSRS:SetCoalition(Coalition or coalition.side.NEUTRAL)
@@ -17631,7 +17677,7 @@ _MESSAGESRS.MSRS:SetCulture(Culture)
 _MESSAGESRS.Culture=Culture or"en-GB"
 _MESSAGESRS.MSRS:SetGender(Gender)
 _MESSAGESRS.Gender=Gender or"female"
-_MESSAGESRS.MSRS:SetGoogle(PathToCredentials)
+_MESSAGESRS.MSRS:SetProviderOptionsGoogle(PathToCredentials)
 _MESSAGESRS.MSRS:SetLabel(Label or"MESSAGE")
 _MESSAGESRS.label=Label or"MESSAGE"
 _MESSAGESRS.MSRS:SetPort(Port or 5002)
@@ -17652,7 +17698,7 @@ if coordinate then
 _MESSAGESRS.MSRS:SetCoordinate(coordinate)
 end
 local category=string.gsub(self.MessageCategory,":","")
-_MESSAGESRS.SRSQ:NewTransmission(self.MessageText,nil,_MESSAGESRS.MSRS,nil,nil,nil,nil,nil,frequency or _MESSAGESRS.frequency,modulation or _MESSAGESRS.modulation,gender or _MESSAGESRS.Gender,culture or _MESSAGESRS.Culture,nil,volume or _MESSAGESRS.volume,category,coordinate or _MESSAGESRS.coordinate)
+_MESSAGESRS.SRSQ:NewTransmission(self.MessageText,nil,_MESSAGESRS.MSRS,0.5,1,nil,nil,nil,frequency or _MESSAGESRS.frequency,modulation or _MESSAGESRS.modulation,gender or _MESSAGESRS.Gender,culture or _MESSAGESRS.Culture,nil,volume or _MESSAGESRS.volume,category,coordinate or _MESSAGESRS.coordinate)
 end
 return self
 end
@@ -26615,6 +26661,32 @@ report:Add("==================")
 local text=report:Text()
 return tSTN,text
 end
+function GROUP:IsSAM()
+local issam=false
+local units=self:GetUnits()
+for _,_unit in pairs(units or{})do
+local unit=_unit
+if unit:HasSEAD()and unit:IsGround()and(not unit:HasAttribute("Mobile AAA"))then
+issam=true
+break
+end
+end
+return issam
+end
+function GROUP:IsAAA()
+local issam=false
+local units=self:GetUnits()
+for _,_unit in pairs(units or{})do
+local unit=_unit
+local desc=unit:GetDesc()or{}
+local attr=desc.attributes or{}
+if unit:HasSEAD()then return false end
+if attr["AAA"]or attr["SAM related"]then
+issam=true
+end
+end
+return issam
+end
 UNIT={
 ClassName="UNIT",
 UnitName=nil,
@@ -30871,7 +30943,7 @@ self:SetEventPriority(5)
 return self
 end
 function CARGO_UNIT:onenterUnBoarding(From,Event,To,ToPointVec2,NearRadius)
-self:F({From,Event,To,ToPointVec2,NearRadius})
+self:T({From,Event,To,ToPointVec2,NearRadius})
 local Angle=180
 local Speed=60
 local DeployDistance=9
@@ -30894,7 +30966,7 @@ self.CargoObject:ReSpawnAt(ToPointVec2,CargoDeployHeading)
 else
 self.CargoObject:ReSpawnAt(FromPointVec2,CargoDeployHeading)
 end
-self:F({"CargoUnits:",self.CargoObject:GetGroup():GetName()})
+self:T({"CargoUnits:",self.CargoObject:GetGroup():GetName()})
 self.CargoCarrier=nil
 local Points={}
 Points[#Points+1]=FromPointVec2:WaypointGround(Speed,"Vee")
@@ -30910,7 +30982,7 @@ end
 end
 end
 function CARGO_UNIT:onleaveUnBoarding(From,Event,To,ToPointVec2,NearRadius)
-self:F({From,Event,To,ToPointVec2,NearRadius})
+self:T({From,Event,To,ToPointVec2,NearRadius})
 local Angle=180
 local Speed=10
 local Distance=5
@@ -30919,7 +30991,7 @@ return true
 end
 end
 function CARGO_UNIT:onafterUnBoarding(From,Event,To,ToPointVec2,NearRadius)
-self:F({From,Event,To,ToPointVec2,NearRadius})
+self:T({From,Event,To,ToPointVec2,NearRadius})
 self.CargoInAir=self.CargoObject:InAir()
 self:T(self.CargoInAir)
 if not self.CargoInAir then
@@ -30927,7 +30999,7 @@ end
 self:__UnLoad(1,ToPointVec2,NearRadius)
 end
 function CARGO_UNIT:onenterUnLoaded(From,Event,To,ToPointVec2)
-self:F({ToPointVec2,From,Event,To})
+self:T({ToPointVec2,From,Event,To})
 local Angle=180
 local Speed=10
 local Distance=5
@@ -30948,7 +31020,7 @@ self.OnUnLoadedCallBack=nil
 end
 end
 function CARGO_UNIT:onafterBoard(From,Event,To,CargoCarrier,NearRadius,...)
-self:F({From,Event,To,CargoCarrier,NearRadius=NearRadius})
+self:T({From,Event,To,CargoCarrier,NearRadius=NearRadius})
 self.CargoInAir=self.CargoObject:InAir()
 local Desc=self.CargoObject:GetDesc()
 local MaxSpeed=Desc.speedMaxOffRoad
@@ -30982,8 +31054,8 @@ end
 end
 end
 function CARGO_UNIT:onafterBoarding(From,Event,To,CargoCarrier,NearRadius,...)
-self:F({From,Event,To,CargoCarrier:GetName(),NearRadius=NearRadius})
-self:F({IsAlive=self.CargoObject:IsAlive()})
+self:T({From,Event,To,CargoCarrier:GetName(),NearRadius=NearRadius})
+self:T({IsAlive=self.CargoObject:IsAlive()})
 if CargoCarrier and CargoCarrier:IsAlive()then
 if(CargoCarrier:IsAir()and not CargoCarrier:InAir())or true then
 local NearRadius=NearRadius or CargoCarrier:GetBoundingRadius(NearRadius)+5
@@ -31021,11 +31093,11 @@ self:CancelBoarding(CargoCarrier,NearRadius,...)
 self.CargoObject:SetCommand(self.CargoObject:CommandStopRoute(true))
 end
 else
-self:E("Something is wrong")
+self:T("Something is wrong")
 end
 end
 function CARGO_UNIT:onenterLoaded(From,Event,To,CargoCarrier)
-self:F({From,Event,To,CargoCarrier})
+self:T({From,Event,To,CargoCarrier})
 self.CargoCarrier=CargoCarrier
 if self.CargoObject then
 self.CargoObject:Destroy(false)
@@ -31052,7 +31124,7 @@ ClassName="CARGO_SLINGLOAD"
 }
 function CARGO_SLINGLOAD:New(CargoStatic,Type,Name,LoadRadius,NearRadius)
 local self=BASE:Inherit(self,CARGO_REPRESENTABLE:New(CargoStatic,Type,Name,nil,LoadRadius,NearRadius))
-self:F({Type,Name,NearRadius})
+self:T({Type,Name,NearRadius})
 self.CargoObject=CargoStatic
 _EVENTDISPATCHER:CreateEventNewCargo(self)
 self:HandleEvent(EVENTS.Dead,self.OnEventCargoDead)
@@ -31163,7 +31235,7 @@ ClassName="CARGO_CRATE"
 }
 function CARGO_CRATE:New(CargoStatic,Type,Name,LoadRadius,NearRadius)
 local self=BASE:Inherit(self,CARGO_REPRESENTABLE:New(CargoStatic,Type,Name,nil,LoadRadius,NearRadius))
-self:F({Type,Name,NearRadius})
+self:T({Type,Name,NearRadius})
 self.CargoObject=CargoStatic
 _EVENTDISPATCHER:CreateEventNewCargo(self)
 self:HandleEvent(EVENTS.Dead,self.OnEventCargoDead)
@@ -31266,21 +31338,21 @@ end
 return Alive
 end
 function CARGO_CRATE:RouteTo(Coordinate)
-self:F({Coordinate=Coordinate})
+self:T({Coordinate=Coordinate})
 end
 function CARGO_CRATE:IsNear(CargoCarrier,NearRadius)
-self:F({NearRadius=NearRadius})
+self:T({NearRadius=NearRadius})
 return self:IsNear(CargoCarrier:GetCoordinate(),NearRadius)
 end
 function CARGO_CRATE:Respawn()
-self:F({"Respawning crate "..self:GetName()})
+self:T({"Respawning crate "..self:GetName()})
 if self.CargoObject then
 self.CargoObject:ReSpawn()
 self:__Reset(-0.1)
 end
 end
 function CARGO_CRATE:onafterReset()
-self:F({"Reset crate "..self:GetName()})
+self:T({"Reset crate "..self:GetName()})
 if self.CargoObject then
 self:SetDeployed(false)
 self:SetStartState("UnLoaded")
@@ -31419,7 +31491,7 @@ self.CargoObject=_DATABASE:Spawn(GroupTemplate)
 end
 end
 function CARGO_GROUP:OnEventCargoDead(EventData)
-self:E(EventData)
+self:T(EventData)
 local Destroyed=false
 if self:IsDestroyed()or self:IsUnLoaded()or self:IsBoarding()or self:IsUnboarding()then
 Destroyed=true
@@ -31441,7 +31513,7 @@ end
 end
 if Destroyed then
 self:Destroyed()
-self:E({"Cargo group destroyed"})
+self:T({"Cargo group destroyed"})
 end
 end
 function CARGO_GROUP:onafterBoard(From,Event,To,CargoCarrier,NearRadius,...)
@@ -40982,15 +41054,17 @@ end
 function RANGE:SetSRS(PathToSRS,Port,Coalition,Frequency,Modulation,Volume,PathToGoogleKey)
 if PathToSRS or MSRS.path then
 self.useSRS=true
-self.controlmsrs=MSRS:New(PathToSRS or MSRS.path,Frequency or 256,Modulation or radio.modulation.AM,Volume or 1.0)
+self.controlmsrs=MSRS:New(PathToSRS or MSRS.path,Frequency or 256,Modulation or radio.modulation.AM)
 self.controlmsrs:SetPort(Port or MSRS.port)
 self.controlmsrs:SetCoalition(Coalition or coalition.side.BLUE)
 self.controlmsrs:SetLabel("RANGEC")
+self.controlmsrs:SetVolume(Volume or 1.0)
 self.controlsrsQ=MSRSQUEUE:New("CONTROL")
-self.instructmsrs=MSRS:New(PathToSRS or MSRS.path,Frequency or 305,Modulation or radio.modulation.AM,Volume or 1.0)
+self.instructmsrs=MSRS:New(PathToSRS or MSRS.path,Frequency or 305,Modulation or radio.modulation.AM)
 self.instructmsrs:SetPort(Port or MSRS.port)
 self.instructmsrs:SetCoalition(Coalition or coalition.side.BLUE)
 self.instructmsrs:SetLabel("RANGEI")
+self.instructmsrs:SetVolume(Volume or 1.0)
 self.instructsrsQ=MSRSQUEUE:New("INSTRUCT")
 if PathToGoogleKey then
 self.controlmsrs:SetGoogle(PathToGoogleKey)
@@ -59767,6 +59841,10 @@ self:E(self.lid..string.format("ERROR: Unknown radio alias %s!",tostring(radio.a
 end
 if pilotcall then
 Sender="PilotCall"
+end
+if Sender==""then
+self:E(self.lid..string.format("ERROR: Sender unknown!"))
+return
 end
 local numbers=_split(number)
 local wait=0
@@ -79256,9 +79334,10 @@ return string.format('%x',v)
 end)
 end
 function MSRS:New(Path,Frequency,Modulation,Backend)
+local self=BASE:Inherit(self,BASE:New())
+self:F({Path,Frequency,Modulation,Backend})
 Frequency=Frequency or 143
 Modulation=Modulation or radio.modulation.AM
-local self=BASE:Inherit(self,BASE:New())
 self.lid=string.format("%s-%s | ","unknown",self.version)
 if not self.ConfigLoaded then
 self:SetPath(Path)
@@ -79269,6 +79348,7 @@ self:SetGender()
 self:SetCoalition()
 self:SetLabel()
 self:SetVolume()
+self:SetBackend(Backend)
 else
 if Path then
 self:SetPath(Path)
@@ -79279,6 +79359,9 @@ end
 if Modulation then
 self:SetModulations(Modulation)
 end
+if Backend then
+self:SetBackend(Backend)
+end
 end
 self.lid=string.format("%s-%s | ",self.name,self.version)
 if not io or not os then
@@ -79287,14 +79370,29 @@ end
 return self
 end
 function MSRS:SetBackend(Backend)
-self.backend=Backend or MSRS.Backend.SRSEXE
+self:F({Backend=Backend})
+Backend=Backend or MSRS.Backend.SRSEXE
+local function Checker(back)
+local ok=false
+for _,_backend in pairs(MSRS.Backend)do
+if tostring(back)==_backend then ok=true end
+end
+return ok
+end
+if Checker(Backend)then
+self.backend=Backend
+else
+MESSAGE:New("ERROR: Backend "..tostring(Backend).." is not supported!",30,"MSRS",true):ToLog():ToAll()
+end
 return self
 end
 function MSRS:SetBackendGRPC()
+self:F()
 self:SetBackend(MSRS.Backend.GRPC)
 return self
 end
-function MSRS:SetBackendSRSEXE(Backend)
+function MSRS:SetBackendSRSEXE()
+self:F()
 self:SetBackend(MSRS.Backend.SRSEXE)
 return self
 end
@@ -79308,19 +79406,21 @@ function MSRS:GetBackend()
 return self.backend
 end
 function MSRS:SetPath(Path)
+self:F({Path=Path})
 self.path=Path or"C:\\Program Files\\DCS-SimpleRadio-Standalone"
 local n=1;local nmax=1000
 while(self.path:sub(-1)=="/"or self.path:sub(-1)==[[\]])and n<=nmax do
 self.path=self.path:sub(1,#self.path-1)
 n=n+1
 end
-self:T(string.format("SRS path=%s",self:GetPath()))
+self:F(string.format("SRS path=%s",self:GetPath()))
 return self
 end
 function MSRS:GetPath()
 return self.path
 end
 function MSRS:SetVolume(Volume)
+self:F({Volume=Volume})
 local volume=Volume or 1
 if volume>1 then volume=1 elseif volume<0 then volume=0 end
 self.volume=volume
@@ -79330,6 +79430,7 @@ function MSRS:GetVolume()
 return self.volume
 end
 function MSRS:SetLabel(Label)
+self:F({Label=Label})
 self.Label=Label or"ROBOT"
 return self
 end
@@ -79337,6 +79438,7 @@ function MSRS:GetLabel()
 return self.Label
 end
 function MSRS:SetPort(Port)
+self:F({Port=Port})
 self.port=Port or 5002
 self:T(string.format("SRS port=%s",self:GetPort()))
 return self
@@ -79345,6 +79447,7 @@ function MSRS:GetPort()
 return self.port
 end
 function MSRS:SetCoalition(Coalition)
+self:F({Coalition=Coalition})
 self.coalition=Coalition or 0
 return self
 end
@@ -79352,10 +79455,12 @@ function MSRS:GetCoalition()
 return self.coalition
 end
 function MSRS:SetFrequencies(Frequencies)
+self:F(Frequencies)
 self.frequencies=UTILS.EnsureTable(Frequencies,false)
 return self
 end
 function MSRS:AddFrequencies(Frequencies)
+self:F(Frequencies)
 for _,_freq in pairs(UTILS.EnsureTable(Frequencies,false))do
 self:T(self.lid..string.format("Adding frequency %s",tostring(_freq)))
 table.insert(self.frequencies,_freq)
@@ -79366,12 +79471,14 @@ function MSRS:GetFrequencies()
 return self.frequencies
 end
 function MSRS:SetModulations(Modulations)
+self:F(Modulations)
 self.modulations=UTILS.EnsureTable(Modulations,false)
 self:T(self.lid.."Modulations:")
 self:T(self.modulations)
 return self
 end
 function MSRS:AddModulations(Modulations)
+self:F(Modulations)
 for _,_mod in pairs(UTILS.EnsureTable(Modulations,false))do
 table.insert(self.modulations,_mod)
 end
@@ -79381,37 +79488,45 @@ function MSRS:GetModulations()
 return self.modulations
 end
 function MSRS:SetGender(Gender)
+self:F({Gender=Gender})
 Gender=Gender or"female"
 self.gender=Gender:lower()
 self:T("Setting gender to "..tostring(self.gender))
 return self
 end
 function MSRS:SetCulture(Culture)
+self:F({Culture=Culture})
 self.culture=Culture
 return self
 end
 function MSRS:SetVoice(Voice)
+self:F({Voice=Voice})
 self.voice=Voice
 return self
 end
 function MSRS:SetVoiceProvider(Voice,Provider)
+self:F({Voice=Voice,Provider=Provider})
 self.poptions=self.poptions or{}
 self.poptions[Provider or self:GetProvider()]=Voice
 return self
 end
 function MSRS:SetVoiceWindows(Voice)
+self:F({Voice=Voice})
 self:SetVoiceProvider(Voice or"Microsoft Hazel Desktop",MSRS.Provider.WINDOWS)
 return self
 end
 function MSRS:SetVoiceGoogle(Voice)
+self:F({Voice=Voice})
 self:SetVoiceProvider(Voice or MSRS.Voices.Google.Standard.en_GB_Standard_A,MSRS.Provider.GOOGLE)
 return self
 end
 function MSRS:SetVoiceAzure(Voice)
+self:F({Voice=Voice})
 self:SetVoiceProvider(Voice or"en-US-AriaNeural",MSRS.Provider.AZURE)
 return self
 end
 function MSRS:SetVoiceAmazon(Voice)
+self:F({Voice=Voice})
 self:SetVoiceProvider(Voice or"Brian",MSRS.Provider.AMAZON)
 return self
 end
@@ -79424,10 +79539,12 @@ return self.voice
 end
 end
 function MSRS:SetCoordinate(Coordinate)
+self:F(Coordinate)
 self.coordinate=Coordinate
 return self
 end
 function MSRS:SetGoogle(PathToCredentials)
+self:F({PathToCredentials=PathToCredentials})
 if PathToCredentials then
 self.provider=MSRS.Provider.GOOGLE
 self:SetProviderOptionsGoogle(PathToCredentials,PathToCredentials)
@@ -79435,6 +79552,7 @@ end
 return self
 end
 function MSRS:SetGoogleAPIKey(APIKey)
+self:F({APIKey=APIKey})
 if APIKey then
 self.provider=MSRS.Provider.GOOGLE
 if self.poptions[MSRS.Provider.GOOGLE]then
@@ -79446,6 +79564,7 @@ end
 return self
 end
 function MSRS:SetProvider(Provider)
+self:F({Provider=Provider})
 self.provider=Provider or MSRS.Provider.WINDOWS
 return self
 end
@@ -79453,6 +79572,7 @@ function MSRS:GetProvider()
 return self.provider or MSRS.Provider.WINDOWS
 end
 function MSRS:SetProviderOptions(Provider,CredentialsFile,AccessKey,SecretKey,Region)
+self:F({Provider,CredentialsFile,AccessKey,SecretKey,Region})
 local option=MSRS._CreateProviderOptions(Provider,CredentialsFile,AccessKey,SecretKey,Region)
 if self then
 self.poptions=self.poptions or{}
@@ -79464,6 +79584,7 @@ end
 return option
 end
 function MSRS._CreateProviderOptions(Provider,CredentialsFile,AccessKey,SecretKey,Region)
+BASE:F({Provider,CredentialsFile,AccessKey,SecretKey,Region})
 local option={}
 option.provider=Provider
 option.credentials=CredentialsFile
@@ -79473,14 +79594,17 @@ option.region=Region
 return option
 end
 function MSRS:SetProviderOptionsGoogle(CredentialsFile,AccessKey)
+self:F({CredentialsFile,AccessKey})
 self:SetProviderOptions(MSRS.Provider.GOOGLE,CredentialsFile,AccessKey)
 return self
 end
 function MSRS:SetProviderOptionsAmazon(AccessKey,SecretKey,Region)
+self:F({AccessKey,SecretKey,Region})
 self:SetProviderOptions(MSRS.Provider.AMAZON,nil,AccessKey,SecretKey,Region)
 return self
 end
 function MSRS:SetProviderOptionsAzure(AccessKey,Region)
+self:F({AccessKey,Region})
 self:SetProviderOptions(MSRS.Provider.AZURE,nil,AccessKey,nil,Region)
 return self
 end
@@ -79488,22 +79612,27 @@ function MSRS:GetProviderOptions(Provider)
 return self.poptions[Provider or self.provider]or{}
 end
 function MSRS:SetTTSProviderGoogle()
+self:F()
 self:SetProvider(MSRS.Provider.GOOGLE)
 return self
 end
 function MSRS:SetTTSProviderMicrosoft()
+self:F()
 self:SetProvider(MSRS.Provider.WINDOWS)
 return self
 end
 function MSRS:SetTTSProviderAzure()
+self:F()
 self:SetProvider(MSRS.Provider.AZURE)
 return self
 end
 function MSRS:SetTTSProviderAmazon()
+self:F()
 self:SetProvider(MSRS.Provider.AMAZON)
 return self
 end
 function MSRS:Help()
+self:F()
 local path=self:GetPath()
 local exe="DCS-SR-ExternalAudio.exe"
 local filename=os.getenv('TMP').."\\MSRS-help-"..MSRS.uuid()..".txt"
@@ -79519,10 +79648,16 @@ env.info("======================================================================
 return self
 end
 function MSRS:PlaySoundFile(Soundfile,Delay)
+self:F({Soundfile,Delay})
+local soundfile=Soundfile:GetName()
+local exists=UTILS.FileExists(soundfile)
+if not exists then
+self:E("ERROR: MSRS sound file does not exist! File="..soundfile)
+return self
+end
 if Delay and Delay>0 then
 self:ScheduleOnce(Delay,MSRS.PlaySoundFile,self,Soundfile,0)
 else
-local soundfile=Soundfile:GetName()
 local command=self:_GetCommand()
 command=command..' --file="'..tostring(soundfile)..'"'
 self:_ExecCommand(command)
@@ -79530,6 +79665,7 @@ end
 return self
 end
 function MSRS:PlaySoundText(SoundText,Delay)
+self:F({SoundText,Delay})
 if Delay and Delay>0 then
 self:ScheduleOnce(Delay,MSRS.PlaySoundText,self,SoundText,0)
 else
@@ -79544,6 +79680,7 @@ end
 return self
 end
 function MSRS:PlayText(Text,Delay,Coordinate)
+self:F({Text,Delay,Coordinate})
 if Delay and Delay>0 then
 self:ScheduleOnce(Delay,MSRS.PlayText,self,Text,nil,Coordinate)
 else
@@ -79557,6 +79694,7 @@ end
 return self
 end
 function MSRS:PlayTextExt(Text,Delay,Frequencies,Modulations,Gender,Culture,Voice,Volume,Label,Coordinate)
+self:T({Text,Delay,Frequencies,Modulations,Gender,Culture,Voice,Volume,Label,Coordinate})
 if Delay and Delay>0 then
 self:ScheduleOnce(Delay,MSRS.PlayTextExt,self,Text,0,Frequencies,Modulations,Gender,Culture,Voice,Volume,Label,Coordinate)
 else
@@ -79573,6 +79711,7 @@ end
 return self
 end
 function MSRS:PlayTextFile(TextFile,Delay)
+self:F({TextFile,Delay})
 if Delay and Delay>0 then
 self:ScheduleOnce(Delay,MSRS.PlayTextFile,self,TextFile,0)
 else
@@ -79591,6 +79730,7 @@ end
 return self
 end
 function MSRS:_GetLatLongAlt(Coordinate)
+self:F({Coordinate=Coordinate})
 local lat=0.0
 local lon=0.0
 local alt=0.0
@@ -79600,6 +79740,7 @@ end
 return lat,lon,math.floor(alt)
 end
 function MSRS:_GetCommand(freqs,modus,coal,gender,voice,culture,volume,speed,port,label,coordinate)
+self:F({freqs,modus,coal,gender,voice,culture,volume,speed,port,label,coordinate})
 local path=self:GetPath()
 local exe="DCS-SR-ExternalAudio.exe"
 local fullPath=string.format("%s\\%s",path,exe)
@@ -79646,6 +79787,7 @@ self:T("MSRS command from _GetCommand="..command)
 return command
 end
 function MSRS:_ExecCommand(command)
+self:F({command=command})
 if string.find(command,"CommandNotFound")then return 0 end
 local batContent=command.." && exit"
 local filename=os.getenv('TMP').."\\MSRS-"..MSRS.uuid()..".bat"
@@ -79689,8 +79831,8 @@ end
 return res
 end
 function MSRS:_DCSgRPCtts(Text,Frequencies,Gender,Culture,Voice,Volume,Label,Coordinate)
-self:T("MSRS_BACKEND_DCSGRPC:_DCSgRPCtts()")
-self:T({Text,Frequencies,Gender,Culture,Voice,Volume,Label,Coordinate})
+self:F("MSRS_BACKEND_DCSGRPC:_DCSgRPCtts()")
+self:F({Text,Frequencies,Gender,Culture,Voice,Volume,Label,Coordinate})
 local options={}
 local ssml=Text or''
 Frequencies=UTILS.EnsureTable(Frequencies,true)or self:GetFrequencies()
@@ -79702,6 +79844,7 @@ options.position.lat,options.position.lon,options.position.alt=self:_GetLatLongA
 end
 options.coalition=UTILS.GetCoalitionName(self.coalition):lower()
 local provider=self.provider or MSRS.Provider.WINDOWS
+self:F({provider=provider})
 options.provider={}
 options.provider[provider]=self:GetProviderOptions(provider)
 Voice=Voice or self:GetVoice(self.provider)or self.voice
@@ -79722,10 +79865,9 @@ ssml=string.format("<voice%s%s>%s</voice>",gender,language,Text)
 end
 end
 for _,freq in pairs(Frequencies)do
-self:T("GRPC.tts")
-self:T(ssml)
-self:T(freq)
-self:T(options)
+self:F("Calling GRPC.tts with the following parameter:")
+self:F({ssml=ssml,freq=freq,options=options})
+self:F(options.provider[provider])
 GRPC.tts(ssml,freq*1e6,options)
 end
 end
@@ -79812,7 +79954,7 @@ self.lid=string.format("MSRSQUEUE %s | ",self.alias)
 return self
 end
 function MSRSQUEUE:Clear()
-self:I(self.lid.."Clearing MSRSQUEUE")
+self:T(self.lid.."Clearing MSRSQUEUE")
 self.queue={}
 return self
 end
@@ -79858,24 +80000,25 @@ transmission.msrs=msrs
 transmission.Tplay=tstart or timer.getAbsTime()
 transmission.subtitle=subtitle
 transmission.interval=interval or 0
-transmission.frequency=frequency
-transmission.modulation=modulation
+transmission.frequency=frequency or msrs.frequencies
+transmission.modulation=modulation or msrs.modulations
 transmission.subgroups=subgroups
 if transmission.subtitle then
 transmission.subduration=subduration or transmission.duration
 else
 transmission.subduration=0
 end
-transmission.gender=gender
-transmission.culture=culture
-transmission.voice=voice
-transmission.volume=volume
-transmission.label=label
-transmission.coordinate=coordinate
+transmission.gender=gender or msrs.gender
+transmission.culture=culture or msrs.culture
+transmission.voice=voice or msrs.voice
+transmission.volume=volume or msrs.volume
+transmission.label=label or msrs.Label
+transmission.coordinate=coordinate or msrs.coordinate
 self:AddTransmission(transmission)
 return transmission
 end
 function MSRSQUEUE:Broadcast(transmission)
+self:T(self.lid.."Broadcast")
 if transmission.frequency then
 transmission.msrs:PlayTextExt(transmission.text,nil,transmission.frequency,transmission.modulation,transmission.gender,transmission.culture,transmission.voice,transmission.volume,transmission.label,transmission.coordinate)
 else
