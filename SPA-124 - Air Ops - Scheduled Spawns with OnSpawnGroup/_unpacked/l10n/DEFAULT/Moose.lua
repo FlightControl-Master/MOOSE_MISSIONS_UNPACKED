@@ -1,5 +1,9 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-01-05T16:08:46+01:00-84230e2360d2d89f2ad3560e38caef9427948d8c ***')
-ModuleLoader='Scripts/Moose/Modules.lua'
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-01-12T16:05:14+01:00-bb07e1935e694b761e9ce3917e40fe716ef8edb7 ***')
+if not MOOSE_DEVELOPMENT_FOLDER then
+MOOSE_DEVELOPMENT_FOLDER='Scripts'
+end
+ModuleLoader=MOOSE_DEVELOPMENT_FOLDER..'/Moose/Modules.lua'
+if io then
 local f=io.open(ModuleLoader,"r")
 if f~=nil then
 io.close(f)
@@ -19,10 +23,13 @@ end
 end
 end
 __Moose.Includes={}
-__Moose.Include('Scripts/Moose/Modules.lua')
+__Moose.Include(MOOSE_DEVELOPMENT_FOLDER..'/Moose/Modules.lua')
 BASE:TraceOnOff(true)
 env.info('*** MOOSE INCLUDE END *** ')
 do return end
+end
+else
+env.info('*** MOOSE DYNAMIC INCLUDE NOT POSSIBLE (Desanitize io to use it) *** ')
 end
 env.info('*** MOOSE STATIC INCLUDE START *** ')
 ENUMS={}
@@ -2435,14 +2442,26 @@ _start=_start+50000
 end
 return FreeVHFFrequencies
 end
-function UTILS.GenerateUHFrequencies()
+function UTILS.GenerateUHFrequencies(Start,End)
 local FreeUHFFrequencies={}
 local _start=220000000
+if not Start then
 while _start<399000000 do
 if _start~=243000000 then
 table.insert(FreeUHFFrequencies,_start)
 end
 _start=_start+500000
+end
+else
+local myend=End*1000000 or 399000000
+local mystart=Start*1000000 or 220000000
+while _start<399000000 do
+if _start~=243000000 and(_start<mystart or _start>myend)then
+print(_start)
+table.insert(FreeUHFFrequencies,_start)
+end
+_start=_start+500000
+end
 end
 return FreeUHFFrequencies
 end
@@ -11029,7 +11048,12 @@ local DCSAirbaseName=airbase:getName()
 local airbaseID=airbase:getID()
 local airbase=self:AddAirbase(DCSAirbaseName)
 local airbaseUID=airbase:GetID(true)
-local text=string.format("Register %s: %s (UID=%d), Runways=%d, Parking=%d [",AIRBASE.CategoryName[airbase.category],tostring(DCSAirbaseName),airbaseUID,#airbase.runways,airbase.NparkingTotal)
+local typename=airbase:GetTypeName()
+local category=airbase.category
+if category==Airbase.Category.SHIP and typename=="FARP_SINGLE_01"then
+category=Airbase.Category.HELIPAD
+end
+local text=string.format("Register %s: %s (UID=%d), Runways=%d, Parking=%d [",AIRBASE.CategoryName[category],tostring(DCSAirbaseName),airbaseUID,#airbase.runways,airbase.NparkingTotal)
 for _,terminalType in pairs(AIRBASE.TerminalType)do
 if airbase.NparkingTerminal and airbase.NparkingTerminal[terminalType]then
 text=text..string.format("%d=%d ",terminalType,airbase.NparkingTerminal[terminalType])
@@ -12089,7 +12113,7 @@ end
 end
 function SET_GROUP:AddInDatabase(Event)
 self:F3({Event})
-if Event.IniObjectCategory==1 then
+if Event.IniObjectCategory==Object.Category.UNIT then
 if not self.Database[Event.IniDCSGroupName]then
 self.Database[Event.IniDCSGroupName]=GROUP:Register(Event.IniDCSGroupName)
 self:T3(self.Database[Event.IniDCSGroupName])
@@ -12587,7 +12611,7 @@ return self
 end
 function SET_UNIT:AddInDatabase(Event)
 self:F3({Event})
-if Event.IniObjectCategory==1 then
+if Event.IniObjectCategory==Object.Category.UNIT then
 if not self.Database[Event.IniDCSUnitName]then
 self.Database[Event.IniDCSUnitName]=UNIT:Register(Event.IniDCSUnitName)
 self:T3(self.Database[Event.IniDCSUnitName])
@@ -13665,7 +13689,7 @@ end
 function SET_CLIENT:_EventPlayerEnterUnit(Event)
 self:I("_EventPlayerEnterUnit")
 if Event.IniDCSUnit then
-if Event.IniObjectCategory==1 and Event.IniGroup and Event.IniGroup:IsGround()then
+if Event.IniObjectCategory==Object.Category.UNIT and Event.IniGroup and Event.IniGroup:IsGround()then
 local ObjectName,Object=self:AddInDatabase(Event)
 self:I(ObjectName,UTILS.PrintTableToLog(Object))
 if Object and self:IsIncludeObject(Object)then
@@ -13678,7 +13702,7 @@ end
 function SET_CLIENT:_EventPlayerLeaveUnit(Event)
 self:I("_EventPlayerLeaveUnit")
 if Event.IniDCSUnit then
-if Event.IniObjectCategory==1 and Event.IniGroup and Event.IniGroup:IsGround()then
+if Event.IniObjectCategory==Object.Category.UNIT and Event.IniGroup and Event.IniGroup:IsGround()then
 local ObjectName,Object=self:FindInDatabase(Event)
 if ObjectName then
 self:Remove(ObjectName)
@@ -15307,6 +15331,20 @@ end
 end
 return self
 end
+function SET_OPSGROUP:_EventOnBirth(Event)
+self:F3({Event})
+if Event.IniDCSUnit and Event.IniDCSGroup then
+local DCSgroup=Event.IniDCSGroup
+if DCSgroup:getInitialSize()==DCSgroup:getSize()then
+local groupname,group=self:AddInDatabase(Event)
+if group and group:CountAliveUnits()==DCSgroup:getInitialSize()then
+if group and self:IsIncludeObject(group)then
+self:Add(groupname,group)
+end
+end
+end
+end
+end
 function SET_OPSGROUP:_EventOnDeadOrCrash(Event)
 self:F({Event})
 if Event.IniDCSUnit then
@@ -15319,7 +15357,7 @@ end
 end
 end
 function SET_OPSGROUP:AddInDatabase(Event)
-if Event.IniObjectCategory==1 then
+if Event.IniObjectCategory==Object.Category.UNIT then
 if not self.Database[Event.IniDCSGroupName]then
 self.Database[Event.IniDCSGroupName]=GROUP:Register(Event.IniDCSGroupName)
 end
@@ -17666,27 +17704,33 @@ return self
 end
 _MESSAGESRS={}
 function MESSAGE.SetMSRS(PathToSRS,Port,PathToCredentials,Frequency,Modulation,Gender,Culture,Voice,Coalition,Volume,Label,Coordinate)
-_MESSAGESRS.MSRS=MSRS:New(PathToSRS,Frequency or 243,Modulation or radio.modulation.AM)
-_MESSAGESRS.frequency=Frequency
-_MESSAGESRS.modulation=Modulation or radio.modulation.AM
-_MESSAGESRS.MSRS:SetCoalition(Coalition or coalition.side.NEUTRAL)
-_MESSAGESRS.coalition=Coalition or coalition.side.NEUTRAL
+_MESSAGESRS.PathToSRS=PathToSRS or MSRS.path or"C:\\Program Files\\DCS-SimpleRadio-Standalone"
+_MESSAGESRS.frequency=Frequency or MSRS.frequencies or 243
+_MESSAGESRS.modulation=Modulation or MSRS.modulations or radio.modulation.AM
+_MESSAGESRS.MSRS=MSRS:New(_MESSAGESRS.PathToSRS,_MESSAGESRS.frequency,_MESSAGESRS.modulation)
+_MESSAGESRS.coalition=Coalition or MSRS.coalition or coalition.side.NEUTRAL
+_MESSAGESRS.MSRS:SetCoalition(_MESSAGESRS.coalition)
 _MESSAGESRS.coordinate=Coordinate
+if Coordinate then
 _MESSAGESRS.MSRS:SetCoordinate(Coordinate)
+end
+_MESSAGESRS.Culture=Culture or MSRS.culture or"en-GB"
 _MESSAGESRS.MSRS:SetCulture(Culture)
-_MESSAGESRS.Culture=Culture or"en-GB"
+_MESSAGESRS.Gender=Gender or MSRS.gender or"female"
 _MESSAGESRS.MSRS:SetGender(Gender)
-_MESSAGESRS.Gender=Gender or"female"
+if PathToCredentials then
 _MESSAGESRS.MSRS:SetProviderOptionsGoogle(PathToCredentials)
+_MESSAGESRS.MSRS:SetProvider(MSRS.Provider.GOOGLE)
+end
+_MESSAGESRS.label=Label or MSRS.Label or"MESSAGE"
 _MESSAGESRS.MSRS:SetLabel(Label or"MESSAGE")
-_MESSAGESRS.label=Label or"MESSAGE"
+_MESSAGESRS.port=Port or MSRS.port or 5002
 _MESSAGESRS.MSRS:SetPort(Port or 5002)
-_MESSAGESRS.port=Port or 5002
-_MESSAGESRS.volume=Volume or 1
+_MESSAGESRS.volume=Volume or MSRS.volume or 1
 _MESSAGESRS.MSRS:SetVolume(_MESSAGESRS.volume)
 if Voice then _MESSAGESRS.MSRS:SetVoice(Voice)end
-_MESSAGESRS.voice=Voice
-_MESSAGESRS.SRSQ=MSRSQUEUE:New(Label or"MESSAGE")
+_MESSAGESRS.voice=Voice or MSRS.voice
+_MESSAGESRS.SRSQ=MSRSQUEUE:New(_MESSAGESRS.label)
 end
 function MESSAGE:ToSRS(frequency,modulation,gender,culture,voice,coalition,volume,coordinate)
 local tgender=gender or _MESSAGESRS.Gender
@@ -18725,6 +18769,7 @@ if self.SpawnGroups[self.SpawnIndex].Visible then
 self.SpawnGroups[self.SpawnIndex].Group:Activate()
 else
 local SpawnTemplate=self.SpawnGroups[self.SpawnIndex].SpawnTemplate
+local SpawnZone=self.SpawnGroups[self.SpawnIndex].SpawnZone
 self:T(SpawnTemplate.name)
 if SpawnTemplate then
 local PointVec3=POINT_VEC3:New(SpawnTemplate.route.points[1].x,SpawnTemplate.route.points[1].alt,SpawnTemplate.route.points[1].y)
@@ -18744,6 +18789,23 @@ end
 if self.SpawnRandomizeUnits then
 for UnitID=1,#SpawnTemplate.units do
 local RandomVec2=PointVec3:GetRandomVec2InRadius(self.SpawnOuterRadius,self.SpawnInnerRadius)
+if(SpawnZone)then
+local inZone=SpawnZone:IsVec2InZone(RandomVec2)
+local numTries=1
+while(not inZone)and(numTries<20)do
+if not inZone then
+RandomVec2=PointVec3:GetRandomVec2InRadius(self.SpawnOuterRadius,self.SpawnInnerRadius)
+numTries=numTries+1
+inZone=SpawnZone:IsVec2InZone(RandomVec2)
+self:I("Retrying "..numTries.."spawn "..SpawnTemplate.name.." in Zone "..SpawnZone:GetName().."!")
+self:I(SpawnZone)
+end
+end
+if(not inZone)then
+self:I("Could not place unit within zone and within radius!")
+RandomVec2=SpawnZone:GetRandomVec2()
+end
+end
 SpawnTemplate.units[UnitID].x=RandomVec2.x
 SpawnTemplate.units[UnitID].y=RandomVec2.y
 self:T('SpawnTemplate.units['..UnitID..'].x = '..SpawnTemplate.units[UnitID].x..', SpawnTemplate.units['..UnitID..'].y = '..SpawnTemplate.units[UnitID].y)
@@ -18781,11 +18843,13 @@ local cosHeading=math.cos(headingRad)
 local sinHeading=math.sin(headingRad)
 local unitVarRad=math.rad(self.SpawnInitGroupUnitVar or 0)
 for UnitID=1,#SpawnTemplate.units do
+if not self.SpawnRandomizeUnits then
 if UnitID>1 then
 local unitXOff=SpawnTemplate.units[UnitID].x-pivotX
 local unitYOff=SpawnTemplate.units[UnitID].y-pivotY
 SpawnTemplate.units[UnitID].x=pivotX+(unitXOff*cosHeading)-(unitYOff*sinHeading)
 SpawnTemplate.units[UnitID].y=pivotY+(unitYOff*cosHeading)+(unitXOff*sinHeading)
+end
 end
 local unitHeading=SpawnTemplate.units[UnitID].heading+headingRad
 SpawnTemplate.units[UnitID].heading=_HeadingRad(_RandomInRange(unitHeading-unitVarRad,unitHeading+unitVarRad))
@@ -19911,6 +19975,7 @@ self:T("Preparing Spawn in Zone",SpawnZone:GetName())
 local SpawnVec2=SpawnZone:GetRandomVec2()
 self:T({SpawnVec2=SpawnVec2})
 local SpawnTemplate=self.SpawnGroups[SpawnIndex].SpawnTemplate
+self.SpawnGroups[SpawnIndex].SpawnZone=SpawnZone
 self:T({Route=SpawnTemplate.route})
 for UnitID=1,#SpawnTemplate.units do
 local UnitTemplate=SpawnTemplate.units[UnitID]
@@ -24150,6 +24215,41 @@ return self
 end
 return nil
 end
+function CONTROLLABLE:SetOptionRadarUsing(Option)
+self:F2({self.ControllableName})
+if self:IsAir()then
+self:SetOption(AI.Option.Air.id.RADAR_USING,Option)
+end
+return self
+end
+function CONTROLLABLE:SetOptionRadarUsingNever()
+self:F2({self.ControllableName})
+if self:IsAir()then
+self:SetOption(AI.Option.Air.id.RADAR_USING,0)
+end
+return self
+end
+function CONTROLLABLE:SetOptionRadarUsingForAttackOnly()
+self:F2({self.ControllableName})
+if self:IsAir()then
+self:SetOption(AI.Option.Air.id.RADAR_USING,1)
+end
+return self
+end
+function CONTROLLABLE:SetOptionRadarUsingForSearchIfRequired()
+self:F2({self.ControllableName})
+if self:IsAir()then
+self:SetOption(AI.Option.Air.id.RADAR_USING,2)
+end
+return self
+end
+function CONTROLLABLE:SetOptionRadarUsingForContinousSearch()
+self:F2({self.ControllableName})
+if self:IsAir()then
+self:SetOption(AI.Option.Air.id.RADAR_USING,3)
+end
+return self
+end
 function CONTROLLABLE:RelocateGroundRandomInRadius(speed,radius,onroad,shortcut,formation,onland)
 self:F2({self.ControllableName})
 local _coord=self:GetCoordinate()
@@ -25372,7 +25472,14 @@ if DCSGroup then
 local DCSUnits=DCSGroup:getUnits()or{}
 local Units={}
 for Index,UnitData in pairs(DCSUnits)do
+local unit=UNIT:Find(UnitData)
+if unit then
 Units[#Units+1]=UNIT:Find(UnitData)
+else
+local UnitName=UnitData:getName()
+unit=_DATABASE:AddUnit(UnitName)
+Units[#Units+1]=unit
+end
 end
 self:T3(Units)
 return Units
@@ -31800,6 +31907,7 @@ self:SetMessagesScore(true)
 self:SetMessagesZone(true)
 self:SetScaleDestroyScore(10)
 self:SetScaleDestroyPenalty(30)
+self:SetScoreIncrementOnHit(0)
 self:SetFratricide(self.ScaleDestroyPenalty*3)
 self.penaltyonfratricide=true
 self:SetCoalitionChangePenalty(self.ScaleDestroyPenalty)
@@ -31874,6 +31982,10 @@ return self
 end
 function SCORING:SetMessagesHit(OnOff)
 self.MessagesHit=OnOff
+return self
+end
+function SCORING:SetScoreIncrementOnHit(score)
+self.ScoreIncrementOnHit=score
 return self
 end
 function SCORING:IfMessagesHit()
@@ -32098,6 +32210,7 @@ local PlayerName=Event.IniUnit:GetPlayerName()
 Event.IniUnit.BirthTime=timer.getTime()
 if PlayerName then
 self:_AddPlayerFromUnit(Event.IniUnit)
+self.Players[PlayerName].PlayerKills=0
 self:SetScoringMenu(Event.IniGroup)
 end
 end
@@ -32221,6 +32334,8 @@ MESSAGE.Type.Update)
 end
 self:ScoreCSV(InitPlayerName,TargetPlayerName,"HIT_PENALTY",1,-10,InitUnitName,InitUnitCoalition,InitUnitCategory,InitUnitType,TargetUnitName,TargetUnitCoalition,TargetUnitCategory,TargetUnitType)
 else
+Player.Score=Player.Score+self.ScoreIncrementOnHit
+PlayerHit.Score=PlayerHit.Score+self.ScoreIncrementOnHit
 PlayerHit.ScoreHit=PlayerHit.ScoreHit+1
 if TargetPlayerName~=nil then
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..InitPlayerName.."' hit enemy player '"..TargetPlayerName.."' "..TargetUnitCategory.." ( "..TargetType.." ) "..PlayerHit.ScoreHit.." times. "..
@@ -32296,6 +32411,8 @@ MESSAGE.Type.Update
 :ToCoalitionIf(Event.WeaponCoalition,self:IfMessagesHit()and self:IfMessagesToCoalition())
 self:ScoreCSV(Event.WeaponPlayerName,TargetPlayerName,"HIT_PENALTY",1,-10,Event.WeaponName,Event.WeaponCoalition,Event.WeaponCategory,Event.WeaponTypeName,TargetUnitName,TargetUnitCoalition,TargetUnitCategory,TargetUnitType)
 else
+Player.Score=Player.Score+self.ScoreIncrementOnHit
+PlayerHit.Score=PlayerHit.Score+self.ScoreIncrementOnHit
 PlayerHit.ScoreHit=PlayerHit.ScoreHit+1
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..Event.WeaponPlayerName.."' hit enemy target "..TargetUnitCategory.." ( "..TargetType.." ) "..
 "Score: "..PlayerHit.Score..".  Score Total:"..Player.Score-Player.Penalty,
@@ -32374,13 +32491,16 @@ self:F({ThreatLevel=ThreatPenalty,ThreatLevelTarget=ThreatLevelTarget,ThreatType
 Player.Penalty=Player.Penalty+ThreatPenalty
 TargetDestroy.Penalty=TargetDestroy.Penalty+ThreatPenalty
 TargetDestroy.PenaltyDestroy=TargetDestroy.PenaltyDestroy+1
+self:OnKillPvP(Player,TargetPlayerName,true,TargetThreatLevel,Player.ThreatLevel,ThreatPenalty)
 if Player.HitPlayers[TargetPlayerName]then
+self:OnKillPvP(Player,TargetPlayerName,true)
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..PlayerName.."' destroyed friendly player '"..TargetPlayerName.."' "..TargetUnitCategory.." ( "..ThreatTypeTarget.." ) "..
 "Penalty: -"..ThreatPenalty.." = "..Player.Score-Player.Penalty,
 MESSAGE.Type.Information)
 :ToAllIf(self:IfMessagesDestroy()and self:IfMessagesToAll())
 :ToCoalitionIf(InitCoalition,self:IfMessagesDestroy()and self:IfMessagesToCoalition())
 else
+self:OnKillPvE(Player,TargetUnitName,true,TargetThreatLevel,Player.ThreatLevel,ThreatPenalty)
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..PlayerName.."' destroyed friendly target "..TargetUnitCategory.." ( "..ThreatTypeTarget.." ) "..
 "Penalty: -"..ThreatPenalty.." = "..Player.Score-Player.Penalty,
 MESSAGE.Type.Information)
@@ -32399,12 +32519,19 @@ Player.Score=Player.Score+ThreatScore
 TargetDestroy.Score=TargetDestroy.Score+ThreatScore
 TargetDestroy.ScoreDestroy=TargetDestroy.ScoreDestroy+1
 if Player.HitPlayers[TargetPlayerName]then
+if Player.PlayerKills~=nil then
+Player.PlayerKills=Player.PlayerKills+1
+else
+Player.PlayerKills=1
+end
+self:OnKillPvP(Player,TargetPlayerName,false,TargetThreatLevel,Player.ThreatLevel,ThreatScore)
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..PlayerName.."' destroyed enemy player '"..TargetPlayerName.."' "..TargetUnitCategory.." ( "..ThreatTypeTarget.." ) "..
 "Score: +"..ThreatScore.." = "..Player.Score-Player.Penalty,
 MESSAGE.Type.Information)
 :ToAllIf(self:IfMessagesDestroy()and self:IfMessagesToAll())
 :ToCoalitionIf(InitCoalition,self:IfMessagesDestroy()and self:IfMessagesToCoalition())
 else
+self:OnKillPvE(Player,TargetUnitName,false,TargetThreatLevel,Player.ThreatLevel,ThreatScore)
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..PlayerName.."' destroyed enemy "..TargetUnitCategory.." ( "..ThreatTypeTarget.." ) "..
 "Score: +"..ThreatScore.." = "..Player.Score-Player.Penalty,
 MESSAGE.Type.Information)
@@ -32827,6 +32954,10 @@ end
 function SCORING:SwitchAutoSave(OnOff)
 self.AutoSave=OnOff
 return self
+end
+function SCORING:OnKillPvP(Player,TargetPlayerName,IsTeamKill,TargetThreatLevel,PlayerThreatLevel,Score)
+end
+function SCORING:OnKillPvE(Player,TargetUnitName,IsTeamKill,TargetThreatLevel,PlayerThreatLevel,Score)
 end
 CLEANUP_AIRBASE={
 ClassName="CLEANUP_AIRBASE",
@@ -44573,7 +44704,7 @@ end
 end
 function ARTY:onafterRespawn(Controllable,From,Event,To)
 self:_EventFromTo("onafterRespawn",Event,From,To)
-env.info("FF Respawning arty group")
+self:I("Respawning arty group")
 local group=self.Controllable
 self.Controllable=group:Respawn()
 self.respawning=false
@@ -53514,7 +53645,7 @@ end
 function AIRBOSS:EnableSRS(PathToSRS,Port,Culture,Gender,Voice,GoogleCreds,Volume,AltBackend)
 local Frequency=self.AirbossRadio.frequency
 local Modulation=self.AirbossRadio.modulation
-self.SRS=MSRS:New(PathToSRS,Frequency,Modulation,Volume,AltBackend)
+self.SRS=MSRS:New(PathToSRS,Frequency,Modulation,AltBackend)
 self.SRS:SetCoalition(self:GetCoalition())
 self.SRS:SetCoordinate(self:GetCoordinate())
 self.SRS:SetCulture(Culture or"en-US")
@@ -53523,6 +53654,7 @@ self.SRS:SetPath(PathToSRS)
 self.SRS:SetPort(Port or 5002)
 self.SRS:SetLabel(self.AirbossRadio.alias or"AIRBOSS")
 self.SRS:SetCoordinate(self.carrier:GetCoordinate())
+self.SRS:SetVolume(Volume or 1)
 if GoogleCreds then
 self.SRS:SetGoogle(GoogleCreds)
 end
@@ -63071,24 +63203,40 @@ end
 end
 end
 function ATIS:SetSRS(PathToSRS,Gender,Culture,Voice,Port,GoogleKey)
-if PathToSRS or MSRS.path then
 self.useSRS=true
-self.msrs=MSRS:New(PathToSRS,self.frequency,self.modulation)
-self.msrs:SetGender(Gender)
-self.msrs:SetCulture(Culture)
-self.msrs:SetVoice(Voice)
-self.msrs:SetPort(Port)
+local path=PathToSRS or MSRS.path
+local gender=Gender or MSRS.gender
+local culture=Culture or MSRS.culture
+local voice=Voice or MSRS.voice
+local port=Port or MSRS.port or 5002
+self.msrs=MSRS:New(path,self.frequency,self.modulation)
+self.msrs:SetGender(gender)
+self.msrs:SetCulture(culture)
+self.msrs:SetPort(port)
 self.msrs:SetCoalition(self:GetCoalition())
 self.msrs:SetLabel("ATIS")
-self.msrs:SetGoogle(GoogleKey)
+if GoogleKey then
+self.msrs:SetProviderOptionsGoogle(GoogleKey,GoogleKey)
+self.msrs:SetProvider(MSRS.Provider.GOOGLE)
+end
+if(not GoogleKey)and self.msrs:GetProvider()==MSRS.Provider.GOOGLE then
+voice=Voice or MSRS.poptions.gcloud.voice
+end
+self.msrs:SetVoice(voice)
 self.msrs:SetCoordinate(self.airbase:GetCoordinate())
 self.msrsQ=MSRSQUEUE:New("ATIS")
 self.msrsQ:SetTransmitOnlyWithPlayers(self.TransmitOnlyWithPlayers)
 if self.dTQueueCheck<=10 then
 self:SetQueueUpdateTime(90)
 end
+return self
+end
+function ATIS:SetSRSProvider(Provider)
+self:T(self.lid.."SetSRSProvider")
+if self.msrs then
+self.msrs:SetProvider(Provider)
 else
-self:E(self.lid..string.format("ERROR: No SRS path specified!"))
+MESSAGE:New(self.lid.."Set up SRS first before trying to change the provider!",30,"ATIS"):ToAll():ToLog()
 end
 return self
 end
@@ -64679,7 +64827,7 @@ end
 function CTLD:_GenerateUHFrequencies()
 self:T(self.lid.." _GenerateUHFrequencies")
 self.FreeUHFFrequencies={}
-self.FreeUHFFrequencies=UTILS.GenerateUHFrequencies()
+self.FreeUHFFrequencies=UTILS.GenerateUHFrequencies(243,320)
 return self
 end
 function CTLD:_GenerateFMFrequencies()
@@ -68192,7 +68340,7 @@ CSAR.AircraftType["Bell-47"]=2
 CSAR.AircraftType["UH-60L"]=10
 CSAR.AircraftType["AH-64D_BLK_II"]=2
 CSAR.AircraftType["Bronco-OV-10A"]=2
-CSAR.version="1.0.18"
+CSAR.version="1.0.19"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Template,Alias})
@@ -68469,7 +68617,7 @@ end
 self:T({_spawnedGroup,_alias})
 local _GroupName=_spawnedGroup:GetName()or _alias
 self:_CreateDownedPilotTrack(_spawnedGroup,_GroupName,_coalition,_unitName,_text,_typeName,_freq,_playerName,wetfeet)
-self:_InitSARForPilot(_spawnedGroup,_unitName,_freq,noMessage)
+self:_InitSARForPilot(_spawnedGroup,_unitName,_freq,noMessage,_playerName)
 return self
 end
 function CSAR:_SpawnCsarAtZone(_zone,_coalition,_description,_randomPoint,_nomessage,unitname,typename,forcedesc)
@@ -68704,7 +68852,7 @@ end
 end
 return self
 end
-function CSAR:_InitSARForPilot(_downedGroup,_GroupName,_freq,_nomessage)
+function CSAR:_InitSARForPilot(_downedGroup,_GroupName,_freq,_nomessage,_playername)
 self:T(self.lid.." _InitSARForPilot")
 local _leader=_downedGroup:GetUnit(1)
 local _groupName=_GroupName
@@ -68723,7 +68871,7 @@ end
 for _,_heliName in pairs(self.csarUnits)do
 self:_CheckWoundedGroupStatus(_heliName,_groupName)
 end
-self:__PilotDown(2,_downedGroup,_freqk,_groupName,_coordinatesText)
+self:__PilotDown(2,_downedGroup,_freqk,_groupName,_coordinatesText,_playername)
 return self
 end
 function CSAR:_CheckNameInDownedPilots(name)
@@ -69196,7 +69344,7 @@ self:T(self.lid.." _DisplayToAllSAR")
 local messagetime=_messagetime or self.messageTime
 if self.msrs then
 local voice=self.CSARVoice or MSRS.Voices.Google.Standard.en_GB_Standard_F
-if self.msrs.google==nil then
+if self.msrs:GetProvider()==MSRS.Provider.WINDOWS then
 voice=self.CSARVoiceMS or MSRS.Voices.Microsoft.Hedda
 end
 self:I("Voice = "..voice)
@@ -69499,7 +69647,8 @@ self.msrs:SetCoalition(self.coalition)
 self.msrs:SetVoice(self.SRSVoice)
 self.msrs:SetGender(self.SRSGender)
 if self.SRSGPathToCredentials then
-self.msrs:SetGoogle(self.SRSGPathToCredentials)
+self.msrs:SetProviderOptionsGoogle(self.SRSGPathToCredentials,self.SRSGPathToCredentials)
+self.msrs:SetProvider(MSRS.Provider.GOOGLE)
 end
 self.msrs:SetVolume(self.SRSVolume)
 self.msrs:SetLabel("CSAR")
@@ -69650,8 +69799,8 @@ end
 end
 return self
 end
-function CSAR:onbeforePilotDown(From,Event,To,Group,Frequency,Leadername,CoordinatesText)
-self:T({From,Event,To,Group,Frequency,Leadername,CoordinatesText})
+function CSAR:onbeforePilotDown(From,Event,To,Group,Frequency,Leadername,CoordinatesText,Playername)
+self:T({From,Event,To,Group,Frequency,Leadername,CoordinatesText,tostring(Playername)})
 return self
 end
 function CSAR:onbeforeLanded(From,Event,To,HeliName,Airbase)
@@ -78700,8 +78849,10 @@ self.power=power or 100
 return self
 end
 function RADIOQUEUE:SetSRS(PathToSRS,Port)
-self.msrs=MSRS:New(PathToSRS,self.frequency/1000000,self.modulation)
-self.msrs:SetPort(Port)
+local path=PathToSRS or MSRS.path
+local port=Port or MSRS.port
+self.msrs=MSRS:New(path,self.frequency/1000000,self.modulation)
+self.msrs:SetPort(port)
 return self
 end
 function RADIOQUEUE:SetDigit(digit,filename,duration,path,subtitle,subduration)
@@ -79224,6 +79375,39 @@ Microsoft={
 ["David"]="Microsoft David Desktop",
 ["Zira"]="Microsoft Zira Desktop",
 ["Hortense"]="Microsoft Hortense Desktop",
+["de-DE-Hedda"]="Microsoft Hedda Desktop",
+["en-GB-Hazel"]="Microsoft Hazel Desktop",
+["en-US-David"]="Microsoft David Desktop",
+["en-US-Zira"]="Microsoft Zira Desktop",
+["fr-FR-Hortense"]="Microsoft Hortense Desktop",
+},
+MicrosoftGRPC={
+["Hazel"]="Hazel",
+["George"]="George",
+["Susan"]="Susan",
+["David"]="David",
+["Zira"]="Zira",
+["Mark"]="Mark",
+["James"]="James",
+["Catherine"]="Catherine",
+["Richard"]="Richard",
+["Linda"]="Linda",
+["Ravi"]="Ravi",
+["Heera"]="Heera",
+["Sean"]="Sean",
+["en_GB_Hazel"]="Hazel",
+["en_GB_George"]="George",
+["en_GB_Susan"]="Susan",
+["en_US_David"]="David",
+["en_US_Zira"]="Zira",
+["en_US_Mark"]="Mark",
+["en_AU_James"]="James",
+["en_AU_Catherine"]="Catherine",
+["en_CA_Richard"]="Richard",
+["en_CA_Linda"]="Linda",
+["en_IN_Ravi"]="Ravi",
+["en_IN_Heera"]="Heera",
+["en_IR_Sean"]="Sean",
 },
 Google={
 Standard={
@@ -79564,15 +79748,20 @@ end
 return self
 end
 function MSRS:SetProvider(Provider)
-self:F({Provider=Provider})
+BASE:F({Provider=Provider})
+if self then
 self.provider=Provider or MSRS.Provider.WINDOWS
 return self
+else
+MSRS.provider=Provider or MSRS.Provider.WINDOWS
+end
+return
 end
 function MSRS:GetProvider()
 return self.provider or MSRS.Provider.WINDOWS
 end
 function MSRS:SetProviderOptions(Provider,CredentialsFile,AccessKey,SecretKey,Region)
-self:F({Provider,CredentialsFile,AccessKey,SecretKey,Region})
+BASE:F({Provider,CredentialsFile,AccessKey,SecretKey,Region})
 local option=MSRS._CreateProviderOptions(Provider,CredentialsFile,AccessKey,SecretKey,Region)
 if self then
 self.poptions=self.poptions or{}
