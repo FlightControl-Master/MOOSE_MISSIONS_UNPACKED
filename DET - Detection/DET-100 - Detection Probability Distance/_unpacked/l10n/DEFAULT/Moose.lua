@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-01-12T16:05:14+01:00-bb07e1935e694b761e9ce3917e40fe716ef8edb7 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-01-19T19:06:52+01:00-581138b5bc552e623588cf79a907602d62660bc9 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -11919,7 +11919,7 @@ end
 function SET_GROUP:AddGroup(group,DontSetCargoBayLimit)
 self:Add(group:GetName(),group)
 if not DontSetCargoBayLimit then
-for UnitID,UnitData in pairs(group:GetUnits())do
+for UnitID,UnitData in pairs(group:GetUnits()or{})do
 if UnitData and UnitData:IsAlive()then
 UnitData:SetCargoBayWeightLimit()
 end
@@ -22564,18 +22564,36 @@ self:SetCommand(CommandSetFuel)
 end
 return self
 end
-function CONTROLLABLE:CommandSetFrequency(Frequency,Modulation,Delay)
+function CONTROLLABLE:CommandSetFrequency(Frequency,Modulation,Power,Delay)
 local CommandSetFrequency={
 id='SetFrequency',
 params={
 frequency=Frequency*1000000,
 modulation=Modulation or radio.modulation.AM,
+power=Power or 10,
 },
 }
 if Delay and Delay>0 then
-SCHEDULER:New(nil,self.CommandSetFrequency,{self,Frequency,Modulation},Delay)
+SCHEDULER:New(nil,self.CommandSetFrequency,{self,Frequency,Modulation,Power})
 else
 self:SetCommand(CommandSetFrequency)
+end
+return self
+end
+function CONTROLLABLE:CommandSetFrequencyForUnit(Frequency,Modulation,Power,UnitID,Delay)
+local CommandSetFrequencyForUnit={
+id='SetFrequencyForUnit',
+params={
+frequency=Frequency*1000000,
+modulation=Modulation or radio.modulation.AM,
+unitId=UnitID or self:GetID(),
+power=Power or 10,
+},
+}
+if Delay and Delay>0 then
+SCHEDULER:New(nil,self.CommandSetFrequencyForUnit,{self,Frequency,Modulation,Power,UnitID})
+else
+self:SetCommand(CommandSetFrequencyForUnit)
 end
 return self
 end
@@ -28922,7 +28940,12 @@ local function _createRunway(name,course,width,length,center)
 local bearing=-1*course
 local heading=math.deg(bearing)
 local runway={}
+local namefromheading=math.floor(heading/10)
+if self.AirbaseName==AIRBASE.Syria.Beirut_Rafic_Hariri and math.abs(namefromheading-name)>1 then
+runway.name=string.format("%02d",tonumber(namefromheading))
+else
 runway.name=string.format("%02d",tonumber(name))
+end
 runway.magheading=tonumber(runway.name)*10
 runway.heading=heading
 runway.width=width or 0
@@ -62754,7 +62777,7 @@ ATIS.Messages={
 EN=
 {
 HOURS="hours",
-TIME="hours",
+TIME="Hours",
 NOCLOUDINFO="Cloud coverage information not available",
 OVERCAST="Overcast",
 BROKEN="Broken clouds",
