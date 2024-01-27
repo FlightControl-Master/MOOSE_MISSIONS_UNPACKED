@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-01-19T19:06:52+01:00-581138b5bc552e623588cf79a907602d62660bc9 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-01-24T14:47:00+01:00-d984a1b1429dbaad99745c1be8296b3450e126a0 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -20823,7 +20823,7 @@ ClassName="PATHLINE",
 lid=nil,
 points={},
 }
-PATHLINE.version="0.1.0"
+PATHLINE.version="0.1.1"
 function PATHLINE:New(Name)
 local self=BASE:Inherit(self,BASE:New())
 self.name=Name or"Unknown Path"
@@ -20888,11 +20888,12 @@ table.insert(vecs,point.vec2)
 end
 return vecs
 end
-function PATHLINE:GetCoordinats()
+function PATHLINE:GetCoordinates()
 local vecs={}
 for _,_point in pairs(self.points)do
 local point=_point
 local coord=COORDINATE:NewFromVec3(point.vec3)
+table.insert(vecs,coord)
 end
 return vecs
 end
@@ -20901,7 +20902,7 @@ local N=self:GetNumberOfPoints()
 n=n or 1
 local point=nil
 if n>=1 and n<=N then
-point=self.point[n]
+point=self.points[n]
 else
 self:E(self.lid..string.format("ERROR: No point in pathline for N=%s",tostring(n)))
 end
@@ -29307,11 +29308,25 @@ end
 function SCENERY:GetLife0()
 return self.Life0 or 0
 end
-function SCENERY:IsAlive()
+function SCENERY:IsAlive(Threshold)
+if not Threshold then
 return self:GetLife()>=1 and true or false
+else
+return self:GetRelativeLife()>Threshold and true or false
 end
-function SCENERY:IsDead()
+end
+function SCENERY:IsDead(Threshold)
+if not Threshold then
 return self:GetLife()<1 and true or false
+else
+return self:GetRelativeLife()<=Threshold and true or false
+end
+end
+function SCENERY:GetRelativeLife()
+local life=self:GetLife()
+local life0=self:GetLife0()
+local rlife=math.floor((life/life0)*100)
+return rlife
 end
 function SCENERY:GetThreatLevel()
 return 0,"Scenery"
@@ -47668,6 +47683,7 @@ if self:IsRunwayOperational()==false then
 local Trepair=self:GetRunwayRepairtime()
 self:I(self.lid..string.format("Runway destroyed! Will be repaired in %d sec",Trepair))
 if Trepair==0 then
+self.runwaydestroyed=nil
 self:RunwayRepaired()
 end
 end
@@ -48568,11 +48584,13 @@ function WAREHOUSE:onafterRunwayDestroyed(From,Event,To)
 local text=string.format("Warehouse %s: Runway %s destroyed!",self.alias,self.airbasename)
 self:_InfoMessage(text)
 self.runwaydestroyed=timer.getAbsTime()
+return self
 end
 function WAREHOUSE:onafterRunwayRepaired(From,Event,To)
 local text=string.format("Warehouse %s: Runway %s repaired!",self.alias,self.airbasename)
 self:_InfoMessage(text)
 self.runwaydestroyed=nil
+return self
 end
 function WAREHOUSE:onafterAssetSpawned(From,Event,To,group,asset,request)
 local text=string.format("Asset %s from request id=%d was spawned!",asset.spawngroupname,request.uid)
@@ -58204,13 +58222,12 @@ local GXX,nXX=self:_Flightdata2Text(playerData,AIRBOSS.GroovePos.XX)
 local GIM,nIM=self:_Flightdata2Text(playerData,AIRBOSS.GroovePos.IM)
 local GIC,nIC=self:_Flightdata2Text(playerData,AIRBOSS.GroovePos.IC)
 local GAR,nAR=self:_Flightdata2Text(playerData,AIRBOSS.GroovePos.AR)
+local vtol=playerData.actype==AIRBOSS.AircraftCarrier.AV8B
 local G=GXX.." "..GIM.." ".." "..GIC.." "..GAR
 local N=nXX+nIM+nIC+nAR
-local Nv=nXX+nIM
 local nL=count(G,'_')/2
 local nS=count(G,'%(')
 local nN=N-nS-nL
-local nNv=Nv-nS-nL
 local Tgroove=playerData.Tgroove
 local TgrooveUnicorn=Tgroove and(Tgroove>=15.0 and Tgroove<=18.99)or false
 local TgrooveVstolUnicorn=Tgroove and(Tgroove>=60.0 and Tgroove<=65.0)and playerData.actype==AIRBOSS.AircraftCarrier.AV8B or false
@@ -58221,16 +58238,29 @@ grade="_OK_"
 points=5.0
 G="Unicorn"
 else
-if nL>1 and playerData.actype==AIRBOSS.AircraftCarrier.AV8B then
+if vtol then
+local Gb=GXX.." "..GIM
+local N=nXX+nIM
+local nL=count(Gb,'_')/2
+local nS=count(Gb,'%(')
+local nN=N-nS-nL
+local Gv=GIC.." "..GAR
+local Nv=nIC+nAR
+local nLv=count(Gv,'_')/2
+local nSv=count(Gv,'%(')
+local nNv=Nv-nSv-nLv
+if nL>0 or nLv>1 then
 grade="--"
 points=2.0
-elseif nNv>=1 and playerData.actype==AIRBOSS.AircraftCarrier.AV8B then
+elseif nN>0 or nNv>1 or nLv==1 then
 grade="(OK)"
 points=3.0
-elseif nNv<1 and playerData.actype==AIRBOSS.AircraftCarrier.AV8B then
+else
 grade="OK"
 points=4.0
-elseif nL>0 then
+end
+else
+if nL>0 then
 grade="--"
 points=2.0
 elseif nN>0 then
@@ -58239,6 +58269,7 @@ points=3.0
 else
 grade="OK"
 points=4.0
+end
 end
 end
 G=G:gsub("%)%(","")
