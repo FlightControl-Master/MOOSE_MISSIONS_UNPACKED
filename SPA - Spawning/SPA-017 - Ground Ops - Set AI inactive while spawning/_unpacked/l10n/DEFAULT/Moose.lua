@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-01-24T14:47:00+01:00-d984a1b1429dbaad99745c1be8296b3450e126a0 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-01-31T17:49:59+01:00-531132e8a733dfb2b93c622605f18565cf6241a2 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -1573,6 +1573,43 @@ end
 return string.format('%03d°',latDeg)..' '..string.format(minFrmtStr,latMin)..'\''..latHemi..'   '
 ..string.format('%03d°',lonDeg)..' '..string.format(minFrmtStr,lonMin)..'\''..lonHemi
 end
+end
+UTILS.tostringLLM2KData=function(lat,lon,acc)
+local latHemi,lonHemi
+if lat>0 then
+latHemi='N'
+else
+latHemi='S'
+end
+if lon>0 then
+lonHemi='E'
+else
+lonHemi='W'
+end
+lat=math.abs(lat)
+lon=math.abs(lon)
+local latDeg=math.floor(lat)
+local latMin=(lat-latDeg)*60
+local lonDeg=math.floor(lon)
+local lonMin=(lon-lonDeg)*60
+latMin=UTILS.Round(latMin,acc)
+lonMin=UTILS.Round(lonMin,acc)
+if latMin==60 then
+latMin=0
+latDeg=latDeg+1
+end
+if lonMin==60 then
+lonMin=0
+lonDeg=lonDeg+1
+end
+local minFrmtStr
+if acc<=0 then
+minFrmtStr='%02d'
+else
+local width=3+acc
+minFrmtStr='%0'..width..'.'..acc..'f'
+end
+return latHemi..string.format('%02d:',latDeg)..string.format(minFrmtStr,latMin),lonHemi..string.format('%02d:',lonDeg)..string.format(minFrmtStr,lonMin)
 end
 UTILS.tostringMGRS=function(MGRS,acc)
 if acc<=0 then
@@ -18940,7 +18977,7 @@ SpawnGroup:SetAIOnOff(self.AIOnOff)
 end
 self:T3(SpawnTemplate.name)
 if self.SpawnFunctionHook then
-self.SpawnHookScheduler:Schedule(nil,self.SpawnFunctionHook,{self.SpawnGroups[self.SpawnIndex].Group,unpack(self.SpawnFunctionArguments)},0.1)
+self.SpawnHookScheduler:Schedule(nil,self.SpawnFunctionHook,{self.SpawnGroups[self.SpawnIndex].Group,unpack(self.SpawnFunctionArguments)},0.3)
 end
 end
 self.SpawnGroups[self.SpawnIndex].Spawned=true
@@ -25762,8 +25799,9 @@ end
 if n>0 then
 local Vec3={x=x/n,y=y/n,z=z/n}
 return Vec3
+else
+return self:GetVec3()
 end
-return nil
 end
 function GROUP:GetPointVec2()
 self:F2(self.GroupName)
@@ -25784,8 +25822,13 @@ local Heading=self:GetHeading()
 coord.Heading=Heading
 return coord
 else
+local coord=self:GetCoordinate()
+if coord then
+return coord
+else
 BASE:E({"Cannot GetAverageCoordinate",Group=self,Alive=self:IsAlive()})
 return nil
+end
 end
 end
 function GROUP:GetCoordinate()
