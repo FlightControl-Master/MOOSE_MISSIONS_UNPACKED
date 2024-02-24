@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-02-13T16:43:45+01:00-7dcff7ec9c543cb6f06914b18b15774bdfd00569 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-02-23T11:33:02+01:00-ced01a993db12edafdfffc3e55ff22e0ad498053 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -5018,6 +5018,7 @@ local text=UTILS.PrintTableToLog({Arguments},0,true)
 text=string.gsub(text,"\n","")
 text=string.gsub(text,"%(%(","%(")
 text=string.gsub(text,"%)%)","%)")
+text=string.gsub(text,"(%s+)","")
 return text
 end
 function BASE:_F(Arguments,DebugInfoCurrentParam,DebugInfoFromParam)
@@ -8740,6 +8741,7 @@ end
 function ZONE_RADIUS:BoundZone(Points,CountryID,UnBound)
 local Point={}
 local Vec2=self:GetVec2()
+local countryID=CountryID or country.id.USA
 Points=Points and Points or 360
 local Angle
 local RadialBase=math.pi*2
@@ -8747,7 +8749,7 @@ for Angle=0,360,(360/Points)do
 local Radial=Angle*RadialBase/360
 Point.x=Vec2.x+math.cos(Radial)*self:GetRadius()
 Point.y=Vec2.y+math.sin(Radial)*self:GetRadius()
-local CountryName=_DATABASE.COUNTRY_NAME[CountryID]
+local CountryName=_DATABASE.COUNTRY_NAME[countryID]
 local Tire={
 ["country"]=CountryName,
 ["category"]="Fortifications",
@@ -8759,7 +8761,7 @@ local Tire={
 ["name"]=string.format("%s-Tire #%0d",self:GetName(),Angle),
 ["heading"]=0,
 }
-local Group=coalition.addStaticObject(CountryID,Tire)
+local Group=coalition.addStaticObject(countryID,Tire)
 if UnBound and UnBound==true then
 Group:destroy()
 end
@@ -10486,6 +10488,8 @@ FLIGHTCONTROLS={},
 OPSZONES={},
 PATHLINES={},
 STORAGES={},
+STNS={},
+SADL={},
 }
 local _DATABASECoalition=
 {
@@ -10930,6 +10934,26 @@ self.Templates.ClientsByName[UnitTemplate.name].CoalitionID=CoalitionSide
 self.Templates.ClientsByName[UnitTemplate.name].CountryID=CountryID
 self.Templates.ClientsByID[UnitTemplate.unitId]=UnitTemplate
 end
+if UnitTemplate.AddPropAircraft then
+if UnitTemplate.AddPropAircraft.STN_L16 then
+local stn=UTILS.OctalToDecimal(UnitTemplate.AddPropAircraft.STN_L16)
+if stn==nil or stn<1 then
+self:E("WARNING: Invalid STN "..tostring(UnitTemplate.AddPropAircraft.STN_L16).." for "..UnitTemplate.name)
+else
+self.STNS[stn]=UnitTemplate.name
+self:I("Register STN "..tostring(UnitTemplate.AddPropAircraft.STN_L16).." for "..UnitTemplate.name)
+end
+end
+if UnitTemplate.AddPropAircraft.SADL_TN then
+local sadl=UTILS.OctalToDecimal(UnitTemplate.AddPropAircraft.SADL_TN)
+if sadl==nil or sadl<1 then
+self:E("WARNING: Invalid SADL "..tostring(UnitTemplate.AddPropAircraft.SADL_TN).." for "..UnitTemplate.name)
+else
+self.SADL[sadl]=UnitTemplate.name
+self:I("Register SADL "..tostring(UnitTemplate.AddPropAircraft.SADL_TN).." for "..UnitTemplate.name)
+end
+end
+end
 UnitNames[#UnitNames+1]=self.Templates.Units[UnitTemplate.name].UnitName
 end
 self:T({Group=self.Templates.Groups[GroupTemplateName].GroupName,
@@ -10939,6 +10963,66 @@ Country=self.Templates.Groups[GroupTemplateName].CountryID,
 Units=UnitNames
 }
 )
+end
+function DATABASE:GetNextSTN(octal,unitname)
+local first=UTILS.OctalToDecimal(octal)
+if self.STNS[first]==unitname then return octal end
+local nextoctal=77777
+local found=false
+if 32767-first<10 then
+first=0
+end
+for i=first+1,32767 do
+if self.STNS[i]==nil then
+found=true
+nextoctal=UTILS.DecimalToOctal(i)
+self.STNS[i]=unitname
+self:T("Register STN "..tostring(nextoctal).." for "..unitname)
+break
+end
+end
+if not found then
+self:E(string.format("WARNING: No next free STN past %05d found!",octal))
+local NewSTNS={}
+for _id,_name in pairs(self.STNS)do
+if self.UNITS[_name]~=nil then
+NewSTNS[_id]=_name
+end
+end
+self.STNS=nil
+self.STNS=NewSTNS
+end
+return nextoctal
+end
+function DATABASE:GetNextSADL(octal,unitname)
+local first=UTILS.OctalToDecimal(octal)
+if self.SADL[first]==unitname then return octal end
+local nextoctal=7777
+local found=false
+if 4095-first<10 then
+first=0
+end
+for i=first+1,4095 do
+if self.STNS[i]==nil then
+found=true
+nextoctal=UTILS.DecimalToOctal(i)
+self.SADL[i]=unitname
+self:T("Register SADL "..tostring(nextoctal).." for "..unitname)
+break
+end
+end
+if not found then
+self:E(string.format("WARNING: No next free SADL past %04d found!",octal))
+local NewSTNS={}
+for _id,_name in pairs(self.SADL)do
+if self.UNITS[_name]~=nil then
+NewSTNS[_id]=_name
+end
+end
+self.SADL=nil
+self.SADL=NewSTNS
+end
+return nextoctal
 end
 function DATABASE:GetGroupTemplate(GroupName)
 local GroupTemplate=self.Templates.Groups[GroupName].Template
@@ -18539,6 +18623,56 @@ self.SpawnInitSkill="High"
 end
 return self
 end
+function SPAWN:InitSTN(Octal)
+self:F({Octal=Octal})
+self.SpawnInitSTN=Octal or 77777
+local num=UTILS.OctalToDecimal(Octal)
+if num==nil or num<1 then
+self:E("WARNING - STN "..tostring(Octal).." is not valid!")
+return self
+end
+if _DATABASE.STNS[num]~=nil then
+self:E("WARNING - STN already assigned: "..tostring(Octal).." is used for ".._DATABASE.STNS[Octal])
+end
+return self
+end
+function SPAWN:InitSADL(Octal)
+self:F({Octal=Octal})
+self.SpawnInitSADL=Octal or 7777
+local num=UTILS.OctalToDecimal(Octal)
+if num==nil or num<1 then
+self:E("WARNING - SADL "..tostring(Octal).." is not valid!")
+return self
+end
+if _DATABASE.SADL[num]~=nil then
+self:E("WARNING - SADL already assigned: "..tostring(Octal).." is used for ".._DATABASE.SADL[Octal])
+end
+return self
+end
+function SPAWN:InitSpeedMps(MPS)
+self:F({MPS=MPS})
+if MPS==nil or tonumber(MPS)<0 then
+MPS=125
+end
+self.InitSpeed=MPS
+return self
+end
+function SPAWN:InitSpeedKnots(Knots)
+self:F({Knots=Knots})
+if Knots==nil or tonumber(Knots)<0 then
+Knots=300
+end
+self.InitSpeed=UTILS.KnotsToMps(Knots)
+return self
+end
+function SPAWN:InitSpeedKph(KPH)
+self:F({KPH=KPH})
+if KPH==nil or tonumber(KPH)<0 then
+KPH=UTILS.KnotsToKmph(300)
+end
+self.InitSpeed=UTILS.KmphToMps(KPH)
+return self
+end
 function SPAWN:InitRadioCommsOnOff(switch)
 self:F({switch=switch})
 self.SpawnInitRadio=switch or true
@@ -19874,30 +20008,51 @@ elseif type(Callsign)=="number"then
 SpawnTemplate.units[UnitID].callsign=Callsign+SpawnIndex
 end
 end
+if self.InitSpeed then
+SpawnTemplate.units[UnitID].speed=self.InitSpeed
+end
 local AddProps=SpawnTemplate.units[UnitID].AddPropAircraft
 if AddProps then
 if SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16 then
+if self.SpawnInitSTN then
+local octal=self.SpawnInitSTN
+if UnitID>1 then
+octal=_DATABASE:GetNextSTN(self.SpawnInitSTN,SpawnTemplate.units[UnitID].name)
+end
+SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16=string.format("%05d",octal)
+else
 if tonumber(SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16)~=nil then
 local octal=SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16
-local decimal=UTILS.OctalToDecimal(octal)+UnitID-1
-SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16=string.format("%05d",UTILS.DecimalToOctal(decimal))
+local num=UTILS.OctalToDecimal(octal)
+if _DATABASE.STNS[num]~=nil or UnitID>1 then
+octal=_DATABASE:GetNextSTN(octal,SpawnTemplate.units[UnitID].name)
+end
+SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16=string.format("%05d",octal)
 else
-local STN=math.floor(UTILS.RandomGaussian(4088/2,nil,1000,4088))
-STN=STN+UnitID-1
-local OSTN=UTILS.DecimalToOctal(STN)
+local OSTN=_DATABASE:GetNextSTN(1,SpawnTemplate.units[UnitID].name)
 SpawnTemplate.units[UnitID].AddPropAircraft.STN_L16=string.format("%05d",OSTN)
 end
 end
+end
 if SpawnTemplate.units[UnitID].AddPropAircraft.SADL_TN then
+if self.SpawnInitSADL then
+local octal=self.SpawnInitSADL
+if UnitID>1 then
+octal=_DATABASE:GetNextSADL(self.SpawnInitSADL,SpawnTemplate.units[UnitID].name)
+end
+SpawnTemplate.units[UnitID].AddPropAircraft.SADL_TN=string.format("%04d",octal)
+else
 if tonumber(SpawnTemplate.units[UnitID].AddPropAircraft.SADL_TN)~=nil then
 local octal=SpawnTemplate.units[UnitID].AddPropAircraft.SADL_TN
-local decimal=UTILS.OctalToDecimal(octal)+UnitID-1
-SpawnTemplate.units[UnitID].AddPropAircraft.SADL_TN=string.format("%04d",UTILS.DecimalToOctal(decimal))
+local num=UTILS.OctalToDecimal(octal)
+if _DATABASE.SADL[num]~=nil or UnitID>1 then
+octal=_DATABASE:GetNextSADL(self.SpawnInitSADL,SpawnTemplate.units[UnitID].name)
+end
+SpawnTemplate.units[UnitID].AddPropAircraft.SADL_TN=string.format("%04d",octal)
 else
-local STN=math.floor(UTILS.RandomGaussian(504/2,nil,100,504))
-STN=STN+UnitID-1
-local OSTN=UTILS.DecimalToOctal(STN)
+local OSTN=_DATABASE:GetNextSADL(1,SpawnTemplate.units[UnitID].name)
 SpawnTemplate.units[UnitID].AddPropAircraft.SADL_TN=string.format("%04d",OSTN)
+end
 end
 end
 if SpawnTemplate.units[UnitID].AddPropAircraft.VoiceCallsignNumber and type(Callsign)~="number"then
@@ -28201,7 +28356,7 @@ AIRBASE.Normandy={
 ["Fecamp_Benouville"]="Fecamp-Benouville",
 ["Farnborough"]="Farnborough",
 ["Friston"]="Friston",
-["Deanland "]="Deanland ",
+["Deanland"]="Deanland",
 ["Triqueville"]="Triqueville",
 ["Poix"]="Poix",
 ["Orly"]="Orly",
@@ -28273,64 +28428,70 @@ AIRBASE.TheChannel={
 }
 AIRBASE.Syria={
 ["Kuweires"]="Kuweires",
-["Marj_Ruhayyil"]="Marj Ruhayyil",
-["Kiryat_Shmona"]="Kiryat Shmona",
-["Marj_as_Sultan_North"]="Marj as Sultan North",
-["Eyn_Shemer"]="Eyn Shemer",
 ["Incirlik"]="Incirlik",
-["Damascus"]="Damascus",
-["Bassel_Al_Assad"]="Bassel Al-Assad",
-["Rosh_Pina"]="Rosh Pina",
+["King_Abdullah_II"]="King Abdullah II",
+["Akrotiri"]="Akrotiri",
 ["Aleppo"]="Aleppo",
-["Al_Qusayr"]="Al Qusayr",
-["Wujah_Al_Hajar"]="Wujah Al Hajar",
-["Al_Dumayr"]="Al-Dumayr",
-["Gazipasa"]="Gazipasa",
+["Abu_al_Duhur"]="Abu al-Duhur",
 ["Hatay"]="Hatay",
-["Pinarbashi"]="Pinarbashi",
 ["Paphos"]="Paphos",
+["At_Tanf"]="At Tanf",
+["Tal_Siman"]="Tal Siman",
+["Rayak"]="Rayak",
+["Muwaffaq_Salti"]="Muwaffaq Salti",
+["Naqoura"]="Naqoura",
+["Gaziantep"]="Gaziantep",
+["Al_Qusayr"]="Al Qusayr",
+["Al_Dumayr"]="Al-Dumayr",
 ["Kingsfield"]="Kingsfield",
-["Thalah"]="Tha'lah",
+["Marj_as_Sultan_North"]="Marj as Sultan North",
+["Beirut_Rafic_Hariri"]="Beirut-Rafic Hariri",
+["Palmyra"]="Palmyra",
+["Hama"]="Hama",
+["Eyn_Shemer"]="Eyn Shemer",
+["Sanliurfa"]="Sanliurfa",
+["Amman"]="Amman",
+["Deir_ez_Zor"]="Deir ez-Zor",
+["Taftanaz"]="Taftanaz",
+["Damascus"]="Damascus",
+["Gazipasa"]="Gazipasa",
+["Herzliya"]="Herzliya",
+["H4"]="H4",
+["Tiyas"]="Tiyas",
+["Lakatamia"]="Lakatamia",
+["Kharab_Ishk"]="Kharab Ishk",
 ["Haifa"]="Haifa",
 ["Khalkhalah"]="Khalkhalah",
 ["Megiddo"]="Megiddo",
-["Lakatamia"]="Lakatamia",
-["Rayak"]="Rayak",
-["Larnaca"]="Larnaca",
+["An_Nasiriyah"]="An Nasiriyah",
+["Bassel_Al_Assad"]="Bassel Al-Assad",
+["Ruwayshid"]="Ruwayshid",
 ["Mezzeh"]="Mezzeh",
 ["Gecitkale"]="Gecitkale",
-["Akrotiri"]="Akrotiri",
-["Naqoura"]="Naqoura",
-["Gaziantep"]="Gaziantep",
-["Sayqal"]="Sayqal",
-["Tiyas"]="Tiyas",
-["Shayrat"]="Shayrat",
-["Taftanaz"]="Taftanaz",
-["H4"]="H4",
-["King_Hussein_Air_College"]="King Hussein Air College",
-["Rene_Mouawad"]="Rene Mouawad",
-["Jirah"]="Jirah",
+["Nicosia"]="Nicosia",
 ["Ramat_David"]="Ramat David",
-["Qabr_as_Sitt"]="Qabr as Sitt",
-["Minakh"]="Minakh",
-["Adana_Sakirpasa"]="Adana Sakirpasa",
-["Palmyra"]="Palmyra",
-["Hama"]="Hama",
-["Ercan"]="Ercan",
-["Marj_as_Sultan_South"]="Marj as Sultan South",
-["Tabqa"]="Tabqa",
-["Beirut_Rafic_Hariri"]="Beirut-Rafic Hariri",
-["An_Nasiriyah"]="An Nasiriyah",
-["Abu_al_Duhur"]="Abu al-Duhur",
-["At_Tanf"]="At Tanf",
-["H3"]="H3",
+["Tha_lah"]="Tha'lah",
 ["H3_Northwest"]="H3 Northwest",
+["Sayqal"]="Sayqal",
+["Jirah"]="Jirah",
+["Shayrat"]="Shayrat",
+["Adana_Sakirpasa"]="Adana Sakirpasa",
+["Wujah_Al_Hajar"]="Wujah Al Hajar",
+["Pinarbashi"]="Pinarbashi",
 ["H3_Southwest"]="H3 Southwest",
-["Kharab_Ishk"]="Kharab Ishk",
-["Ruwayshid"]="Ruwayshid",
-["Sanliurfa"]="Sanliurfa",
-["Tal_Siman"]="Tal Siman",
-["Deir_ez_Zor"]="Deir ez-Zor",
+["Rosh_Pina"]="Rosh Pina",
+["Kiryat_Shmona"]="Kiryat Shmona",
+["H3"]="H3",
+["Qabr_as_Sitt"]="Qabr as Sitt",
+["Prince_Hassan"]="Prince Hassan",
+["Larnaca"]="Larnaca",
+["King_Hussein_Air_College"]="King Hussein Air College",
+["Ercan"]="Ercan",
+["Marj_Ruhayyil"]="Marj Ruhayyil",
+["Tabqa"]="Tabqa",
+["Marj_as_Sultan_South"]="Marj as Sultan South",
+["Rene_Mouawad"]="Rene Mouawad",
+["Minakh"]="Minakh",
 }
 AIRBASE.MarianaIslands={
 ["Rota_Intl"]="Rota Intl",
@@ -57225,7 +57386,7 @@ local rho=groovedata.Rho
 local lineupError=groovedata.LUE
 local glideslopeError=groovedata.GSE
 local AoA=groovedata.AoA
-if rho<=RXX and playerData.step==AIRBOSS.PatternStep.GROOVE_XX and(math.abs(groovedata.Roll)<=4.0 or playerData.unit:IsInZone(self:_GetZoneLineup()))then
+if rho<=RXX and playerData.step==AIRBOSS.PatternStep.GROOVE_XX and(math.abs(groovedata.Roll)<=4.0 and playerData.unit:IsInZone(self:_GetZoneLineup()))then
 playerData.TIG0=timer.getTime()
 self:RadioTransmission(self.LSORadio,self.LSOCall.CALLTHEBALL,nil,nil,nil,true)
 playerData.Tlso=timer.getTime()
