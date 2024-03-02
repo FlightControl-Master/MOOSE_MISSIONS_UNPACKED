@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-02-23T11:33:02+01:00-ced01a993db12edafdfffc3e55ff22e0ad498053 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-03-01T17:22:22+01:00-57ce6bcec2c62de42049c0a4cbc7db387339e5e5 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -3398,6 +3398,71 @@ end
 function UTILS.OctalToDecimal(Number)
 return tonumber(Number,8)
 end
+function UTILS.SaveSetOfOpsGroups(Set,Path,Filename,Structured)
+local filename=Filename or"SetOfGroups"
+local data="--Save SET of groups: (name,legion,template,alttemplate,units,position.x,position.y,position.z,strucdata) "..Filename.."\n"
+local List=Set:GetSetObjects()
+for _,_group in pairs(List)do
+local group=_group:GetGroup()
+if group and group:IsAlive()then
+local name=group:GetName()
+local template=string.gsub(name,"(.AID.%d+$","")
+if string.find(template,"#")then
+template=string.gsub(name,"#(%d+)$","")
+end
+local alttemplate=_group.templatename or"none"
+local legiono=_group.legion
+local legion="none"
+if legiono and type(legiono)=="table"and legiono.ClassName then
+legion=legiono:GetName()
+local asset=legiono:GetAssetByName(name)
+alttemplate=asset.templatename
+end
+local units=group:CountAliveUnits()
+local position=group:GetVec3()
+if Structured then
+local structure=UTILS.GetCountPerTypeName(group)
+local strucdata=""
+for typen,anzahl in pairs(structure)do
+strucdata=strucdata..typen.."=="..anzahl..";"
+end
+data=string.format("%s%s,%s,%s,%s,%d,%d,%d,%d,%s\n",data,name,legion,template,alttemplate,units,position.x,position.y,position.z,strucdata)
+else
+data=string.format("%s%s,%s,%s,%s,%d,%d,%d,%d\n",data,name,legion,template,alttemplate,units,position.x,position.y,position.z)
+end
+end
+end
+local outcome=UTILS.SaveToFile(Path,Filename,data)
+return outcome
+end
+function UTILS.LoadSetOfOpsGroups(Path,Filename)
+local filename=Filename or"SetOfGroups"
+local datatable={}
+if UTILS.CheckFileExists(Path,filename)then
+local outcome,loadeddata=UTILS.LoadFromFile(Path,Filename)
+table.remove(loadeddata,1)
+for _id,_entry in pairs(loadeddata)do
+local dataset=UTILS.Split(_entry,",")
+local groupname=dataset[1]
+local legion=dataset[2]
+local template=dataset[3]
+local alttemplate=dataset[4]
+local size=tonumber(dataset[5])
+local posx=tonumber(dataset[6])
+local posy=tonumber(dataset[7])
+local posz=tonumber(dataset[8])
+local structure=dataset[9]
+local coordinate=COORDINATE:NewFromVec3({x=posx,y=posy,z=posz})
+if size>0 then
+local data={groupname=groupname,size=size,coordinate=coordinate,template=template,structure=structure,legion=legion,alttemplate=alttemplate}
+table.insert(datatable,data)
+end
+end
+else
+return nil
+end
+return datatable
+end
 PROFILER={
 ClassName="PROFILER",
 Counters={},
@@ -5622,6 +5687,7 @@ return self
 end
 function BEACON:AATACAN(TACANChannel,Message,Bearing,BeaconDuration)
 self:F({TACANChannel,Message,Bearing,BeaconDuration})
+self:E("This method is DEPRECATED! Please use ActivateTACAN() instead.")
 local IsValid=true
 if not self.Positionable:IsAir()then
 self:E({"The POSITIONABLE you want to attach the AA Tacan Beacon is not an aircraft ! The BEACON is not emitting",self.Positionable})
@@ -12959,7 +13025,7 @@ local heading=self:GetHeading()or 0
 local velocity=self:GetVelocity()or 0
 Coordinate:SetHeading(heading)
 Coordinate:SetVelocity(velocity)
-self:I(UTILS.PrintTableToLog(Coordinate))
+self:T(UTILS.PrintTableToLog(Coordinate))
 end
 return Coordinate
 end
@@ -13826,7 +13892,7 @@ self:I("_EventPlayerEnterUnit")
 if Event.IniDCSUnit then
 if Event.IniObjectCategory==Object.Category.UNIT and Event.IniGroup and Event.IniGroup:IsGround()then
 local ObjectName,Object=self:AddInDatabase(Event)
-self:I(ObjectName,UTILS.PrintTableToLog(Object))
+self:T(ObjectName,UTILS.PrintTableToLog(Object))
 if Object and self:IsIncludeObject(Object)then
 self:Add(ObjectName,Object)
 end
@@ -23395,7 +23461,7 @@ local TaskRoute=PatrolGroup:TaskFunction("CONTROLLABLE.PatrolRoute")
 self:F({Waypoints=Waypoints})
 local Waypoint=Waypoints[#Waypoints]
 PatrolGroup:SetTaskWaypoint(Waypoint,TaskRoute)
-PatrolGroup:Route(Waypoints)
+PatrolGroup:Route(Waypoints,2)
 end
 end
 function CONTROLLABLE:PatrolRouteRandom(Speed,Formation,ToWaypoint)
@@ -27621,7 +27687,9 @@ local ThreatLevels={
 }
 if Attributes["Fighters"]then ThreatLevel=10
 elseif Attributes["Multirole fighters"]then ThreatLevel=9
+elseif Attributes["Interceptors"]then ThreatLevel=9
 elseif Attributes["Battleplanes"]then ThreatLevel=8
+elseif Attributes["Battle airplanes"]then ThreatLevel=8
 elseif Attributes["Attack helicopters"]then ThreatLevel=7
 elseif Attributes["Strategic bombers"]then ThreatLevel=6
 elseif Attributes["Bombers"]then ThreatLevel=5
@@ -28261,152 +28329,155 @@ CategoryName={
 activerwyno=nil,
 }
 AIRBASE.Caucasus={
-["Gelendzhik"]="Gelendzhik",
-["Krasnodar_Pashkovsky"]="Krasnodar-Pashkovsky",
-["Sukhumi_Babushara"]="Sukhumi-Babushara",
-["Gudauta"]="Gudauta",
-["Batumi"]="Batumi",
-["Senaki_Kolkhi"]="Senaki-Kolkhi",
-["Kobuleti"]="Kobuleti",
-["Kutaisi"]="Kutaisi",
-["Tbilisi_Lochini"]="Tbilisi-Lochini",
-["Soganlug"]="Soganlug",
-["Vaziani"]="Vaziani",
 ["Anapa_Vityazevo"]="Anapa-Vityazevo",
-["Krasnodar_Center"]="Krasnodar-Center",
-["Novorossiysk"]="Novorossiysk",
-["Krymsk"]="Krymsk",
-["Maykop_Khanskaya"]="Maykop-Khanskaya",
-["Sochi_Adler"]="Sochi-Adler",
-["Mineralnye_Vody"]="Mineralnye Vody",
-["Nalchik"]="Nalchik",
-["Mozdok"]="Mozdok",
+["Batumi"]="Batumi",
 ["Beslan"]="Beslan",
+["Gelendzhik"]="Gelendzhik",
+["Gudauta"]="Gudauta",
+["Kobuleti"]="Kobuleti",
+["Krasnodar_Center"]="Krasnodar-Center",
+["Krasnodar_Pashkovsky"]="Krasnodar-Pashkovsky",
+["Krymsk"]="Krymsk",
+["Kutaisi"]="Kutaisi",
+["Maykop_Khanskaya"]="Maykop-Khanskaya",
+["Mineralnye_Vody"]="Mineralnye Vody",
+["Mozdok"]="Mozdok",
+["Nalchik"]="Nalchik",
+["Novorossiysk"]="Novorossiysk",
+["Senaki_Kolkhi"]="Senaki-Kolkhi",
+["Sochi_Adler"]="Sochi-Adler",
+["Soganlug"]="Soganlug",
+["Sukhumi_Babushara"]="Sukhumi-Babushara",
+["Tbilisi_Lochini"]="Tbilisi-Lochini",
+["Vaziani"]="Vaziani",
 }
 AIRBASE.Nevada={
-["Creech_AFB"]="Creech",
-["Groom_Lake_AFB"]="Groom Lake",
-["McCarran_International_Airport"]="McCarran International",
-["Nellis_AFB"]="Nellis",
-["Beatty_Airport"]="Beatty",
-["Boulder_City_Airport"]="Boulder City",
+["Beatty"]="Beatty",
+["Boulder_City"]="Boulder City",
+["Creech"]="Creech",
 ["Echo_Bay"]="Echo Bay",
-["Henderson_Executive_Airport"]="Henderson Executive",
-["Jean_Airport"]="Jean",
-["Laughlin_Airport"]="Laughlin",
+["Groom_Lake"]="Groom Lake",
+["Henderson_Executive"]="Henderson Executive",
+["Jean"]="Jean",
+["Laughlin"]="Laughlin",
 ["Lincoln_County"]="Lincoln County",
+["McCarran_International"]="McCarran International",
 ["Mesquite"]="Mesquite",
-["Mina_Airport"]="Mina",
+["Mina"]="Mina",
+["Nellis"]="Nellis",
 ["North_Las_Vegas"]="North Las Vegas",
-["Pahute_Mesa_Airstrip"]="Pahute Mesa",
-["Tonopah_Airport"]="Tonopah",
-["Tonopah_Test_Range_Airfield"]="Tonopah Test Range",
+["Pahute_Mesa"]="Pahute Mesa",
+["Tonopah"]="Tonopah",
+["Tonopah_Test_Range"]="Tonopah Test Range",
 }
 AIRBASE.Normandy={
-["Saint_Pierre_du_Mont"]="Saint Pierre du Mont",
-["Lignerolles"]="Lignerolles",
-["Cretteville"]="Cretteville",
-["Maupertus"]="Maupertus",
-["Brucheville"]="Brucheville",
-["Meautis"]="Meautis",
-["Cricqueville_en_Bessin"]="Cricqueville-en-Bessin",
-["Lessay"]="Lessay",
-["Sainte_Laurent_sur_Mer"]="Sainte-Laurent-sur-Mer",
-["Biniville"]="Biniville",
-["Cardonville"]="Cardonville",
-["Deux_Jumeaux"]="Deux Jumeaux",
-["Chippelle"]="Chippelle",
-["Beuzeville"]="Beuzeville",
-["Azeville"]="Azeville",
-["Picauville"]="Picauville",
-["Le_Molay"]="Le Molay",
-["Longues_sur_Mer"]="Longues-sur-Mer",
-["Carpiquet"]="Carpiquet",
-["Bazenville"]="Bazenville",
-["Sainte_Croix_sur_Mer"]="Sainte-Croix-sur-Mer",
-["Beny_sur_Mer"]="Beny-sur-Mer",
-["Rucqueville"]="Rucqueville",
-["Sommervieu"]="Sommervieu",
-["Lantheuil"]="Lantheuil",
-["Evreux"]="Evreux",
-["Chailey"]="Chailey",
-["Needs_Oar_Point"]="Needs Oar Point",
-["Funtington"]="Funtington",
-["Tangmere"]="Tangmere",
-["Ford"]="Ford",
+["Abbeville_Drucat"]="Abbeville Drucat",
+["Amiens_Glisy"]="Amiens-Glisy",
 ["Argentan"]="Argentan",
-["Goulet"]="Goulet",
+["Avranches_Le_Val_Saint_Pere"]="Avranches Le Val-Saint-Pere",
+["Azeville"]="Azeville",
 ["Barville"]="Barville",
-["Essay"]="Essay",
-["Hauterive"]="Hauterive",
-["Lymington"]="Lymington",
-["Vrigny"]="Vrigny",
-["Odiham"]="Odiham",
-["Conches"]="Conches",
-["West_Malling"]="West Malling",
-["Villacoublay"]="Villacoublay",
-["Kenley"]="Kenley",
+["Bazenville"]="Bazenville",
+["Beaumont_le_Roger"]="Beaumont-le-Roger",
 ["Beauvais_Tille"]="Beauvais-Tille",
+["Beny_sur_Mer"]="Beny-sur-Mer",
+["Bernay_Saint_Martin"]="Bernay Saint Martin",
+["Beuzeville"]="Beuzeville",
+["Biggin_Hill"]="Biggin Hill",
+["Biniville"]="Biniville",
+["Broglie"]="Broglie",
+["Brucheville"]="Brucheville",
+["Cardonville"]="Cardonville",
+["Carpiquet"]="Carpiquet",
+["Chailey"]="Chailey",
+["Chippelle"]="Chippelle",
+["Conches"]="Conches",
 ["Cormeilles_en_Vexin"]="Cormeilles-en-Vexin",
 ["Creil"]="Creil",
-["Guyancourt"]="Guyancourt",
-["Lonrai"]="Lonrai",
-["Dinan_Trelivan"]="Dinan-Trelivan",
-["Heathrow"]="Heathrow",
-["Fecamp_Benouville"]="Fecamp-Benouville",
-["Farnborough"]="Farnborough",
-["Friston"]="Friston",
+["Cretteville"]="Cretteville",
+["Cricqueville_en_Bessin"]="Cricqueville-en-Bessin",
 ["Deanland"]="Deanland",
-["Triqueville"]="Triqueville",
-["Poix"]="Poix",
+["Deauville"]="Deauville",
+["Detling"]="Detling",
+["Deux_Jumeaux"]="Deux Jumeaux",
+["Dinan_Trelivan"]="Dinan-Trelivan",
+["Dunkirk_Mardyck"]="Dunkirk-Mardyck",
+["Essay"]="Essay",
+["Evreux"]="Evreux",
+["Farnborough"]="Farnborough",
+["Fecamp_Benouville"]="Fecamp-Benouville",
+["Flers"]="Flers",
+["Ford"]="Ford",
+["Friston"]="Friston",
+["Funtington"]="Funtington",
+["Goulet"]="Goulet",
+["Gravesend"]="Gravesend",
+["Guyancourt"]="Guyancourt",
+["Hauterive"]="Hauterive",
+["Heathrow"]="Heathrow",
+["High_Halden"]="High Halden",
+["Kenley"]="Kenley",
+["Lantheuil"]="Lantheuil",
+["Le_Molay"]="Le Molay",
+["Lessay"]="Lessay",
+["Lignerolles"]="Lignerolles",
+["Longues_sur_Mer"]="Longues-sur-Mer",
+["Lonrai"]="Lonrai",
+["Lymington"]="Lymington",
+["Lympne"]="Lympne",
+["Manston"]="Manston",
+["Maupertus"]="Maupertus",
+["Meautis"]="Meautis",
+["Merville_Calonne"]="Merville Calonne",
+["Needs_Oar_Point"]="Needs Oar Point",
+["Odiham"]="Odiham",
 ["Orly"]="Orly",
-["Stoney_Cross"]="Stoney Cross",
-["Amiens_Glisy"]="Amiens-Glisy",
+["Picauville"]="Picauville",
+["Poix"]="Poix",
 ["Ronai"]="Ronai",
 ["Rouen_Boos"]="Rouen-Boos",
-["Deauville"]="Deauville",
-["Saint_Aubin"]="Saint-Aubin",
-["Flers"]="Flers",
-["Avranches_Le_Val_Saint_Pere"]="Avranches Le Val-Saint-Pere",
-["Gravesend"]="Gravesend",
-["Beaumont_le_Roger"]="Beaumont-le-Roger",
-["Broglie"]="Broglie",
-["Bernay_Saint_Martin"]="Bernay Saint Martin",
+["Rucqueville"]="Rucqueville",
 ["Saint_Andre_de_lEure"]="Saint-Andre-de-lEure",
-["Biggin_Hill"]="Biggin Hill",
-["Manston"]="Manston",
-["Detling"]="Detling",
-["Lympne"]="Lympne",
-["Abbeville_Drucat"]="Abbeville Drucat",
-["Merville_Calonne"]="Merville Calonne",
+["Saint_Aubin"]="Saint-Aubin",
 ["Saint_Omer_Wizernes"]="Saint-Omer Wizernes",
+["Saint_Pierre_du_Mont"]="Saint Pierre du Mont",
+["Sainte_Croix_sur_Mer"]="Sainte-Croix-sur-Mer",
+["Sainte_Laurent_sur_Mer"]="Sainte-Laurent-sur-Mer",
+["Sommervieu"]="Sommervieu",
+["Stoney_Cross"]="Stoney Cross",
+["Tangmere"]="Tangmere",
+["Triqueville"]="Triqueville",
+["Villacoublay"]="Villacoublay",
+["Vrigny"]="Vrigny",
+["West_Malling"]="West Malling",
 }
 AIRBASE.PersianGulf={
-["Abu_Dhabi_International_Airport"]="Abu Dhabi Intl",
-["Abu_Musa_Island_Airport"]="Abu Musa Island",
-["Al_Ain_International_Airport"]="Al Ain Intl",
-["Al_Bateen_Airport"]="Al-Bateen",
-["Al_Dhafra_AB"]="Al Dhafra AFB",
+["Abu_Dhabi_Intl"]="Abu Dhabi Intl",
+["Abu_Musa_Island"]="Abu Musa Island",
+["Al_Ain_Intl"]="Al Ain Intl",
+["Al_Bateen"]="Al-Bateen",
+["Al_Dhafra_AFB"]="Al Dhafra AFB",
 ["Al_Maktoum_Intl"]="Al Maktoum Intl",
-["Al_Minhad_AB"]="Al Minhad AFB",
+["Al_Minhad_AFB"]="Al Minhad AFB",
 ["Bandar_Abbas_Intl"]="Bandar Abbas Intl",
 ["Bandar_Lengeh"]="Bandar Lengeh",
-["Bandar_e_Jask_airfield"]="Bandar-e-Jask",
+["Bandar_e_Jask"]="Bandar-e-Jask",
 ["Dubai_Intl"]="Dubai Intl",
 ["Fujairah_Intl"]="Fujairah Intl",
 ["Havadarya"]="Havadarya",
-["Jiroft_Airport"]="Jiroft",
-["Kerman_Airport"]="Kerman",
+["Jiroft"]="Jiroft",
+["Kerman"]="Kerman",
 ["Khasab"]="Khasab",
-["Kish_International_Airport"]="Kish Intl",
-["Lar_Airbase"]="Lar",
-["Lavan_Island_Airport"]="Lavan Island",
-["Liwa_Airbase"]="Liwa AFB",
+["Kish_Intl"]="Kish Intl",
+["Lar"]="Lar",
+["Lavan_Island"]="Lavan Island",
+["Liwa_AFB"]="Liwa AFB",
 ["Qeshm_Island"]="Qeshm Island",
-["Ras_Al_Khaimah"]="Ras Al Khaimah Intl",
-["Sas_Al_Nakheel_Airport"]="Sas Al Nakheel",
+["Quasoura_airport"]="Quasoura_airport",
+["Ras_Al_Khaimah_Intl"]="Ras Al Khaimah Intl",
+["Sas_Al_Nakheel"]="Sas Al Nakheel",
 ["Sharjah_Intl"]="Sharjah Intl",
-["Shiraz_International_Airport"]="Shiraz Intl",
+["Shiraz_Intl"]="Shiraz Intl",
 ["Sir_Abu_Nuayr"]="Sir Abu Nuayr",
 ["Sirri_Island"]="Sirri Island",
 ["Tunb_Island_AFB"]="Tunb Island AFB",
@@ -28414,156 +28485,156 @@ AIRBASE.PersianGulf={
 }
 AIRBASE.TheChannel={
 ["Abbeville_Drucat"]="Abbeville Drucat",
+["Biggin_Hill"]="Biggin Hill",
+["Detling"]="Detling",
+["Dunkirk_Mardyck"]="Dunkirk Mardyck",
+["Eastchurch"]="Eastchurch",
+["Hawkinge"]="Hawkinge",
+["Headcorn"]="Headcorn",
+["High_Halden"]="High Halden",
+["Lympne"]="Lympne",
+["Manston"]="Manston",
 ["Merville_Calonne"]="Merville Calonne",
 ["Saint_Omer_Longuenesse"]="Saint Omer Longuenesse",
-["Dunkirk_Mardyck"]="Dunkirk Mardyck",
-["Manston"]="Manston",
-["Hawkinge"]="Hawkinge",
-["Lympne"]="Lympne",
-["Detling"]="Detling",
-["High_Halden"]="High Halden",
-["Biggin_Hill"]="Biggin Hill",
-["Eastchurch"]="Eastchurch",
-["Headcorn"]="Headcorn",
 }
 AIRBASE.Syria={
-["Kuweires"]="Kuweires",
-["Incirlik"]="Incirlik",
-["King_Abdullah_II"]="King Abdullah II",
-["Akrotiri"]="Akrotiri",
-["Aleppo"]="Aleppo",
 ["Abu_al_Duhur"]="Abu al-Duhur",
-["Hatay"]="Hatay",
-["Paphos"]="Paphos",
+["Adana_Sakirpasa"]="Adana Sakirpasa",
+["Akrotiri"]="Akrotiri",
+["Al_Dumayr"]="Al-Dumayr",
+["Al_Qusayr"]="Al Qusayr",
+["Aleppo"]="Aleppo",
+["Amman"]="Amman",
+["An_Nasiriyah"]="An Nasiriyah",
 ["At_Tanf"]="At Tanf",
-["Tal_Siman"]="Tal Siman",
-["Rayak"]="Rayak",
+["Bassel_Al_Assad"]="Bassel Al-Assad",
+["Beirut_Rafic_Hariri"]="Beirut-Rafic Hariri",
+["Damascus"]="Damascus",
+["Deir_ez_Zor"]="Deir ez-Zor",
+["Ercan"]="Ercan",
+["Eyn_Shemer"]="Eyn Shemer",
+["Gaziantep"]="Gaziantep",
+["Gazipasa"]="Gazipasa",
+["Gecitkale"]="Gecitkale",
+["H3"]="H3",
+["H3_Northwest"]="H3 Northwest",
+["H3_Southwest"]="H3 Southwest",
+["H4"]="H4",
+["Haifa"]="Haifa",
+["Hama"]="Hama",
+["Hatay"]="Hatay",
+["Herzliya"]="Herzliya",
+["Incirlik"]="Incirlik",
+["Jirah"]="Jirah",
+["Khalkhalah"]="Khalkhalah",
+["Kharab_Ishk"]="Kharab Ishk",
+["King_Abdullah_II"]="King Abdullah II",
+["King_Hussein_Air_College"]="King Hussein Air College",
+["Kingsfield"]="Kingsfield",
+["Kiryat_Shmona"]="Kiryat Shmona",
+["Kuweires"]="Kuweires",
+["Lakatamia"]="Lakatamia",
+["Larnaca"]="Larnaca",
+["Marj_Ruhayyil"]="Marj Ruhayyil",
+["Marj_as_Sultan_North"]="Marj as Sultan North",
+["Marj_as_Sultan_South"]="Marj as Sultan South",
+["Megiddo"]="Megiddo",
+["Mezzeh"]="Mezzeh",
+["Minakh"]="Minakh",
 ["Muwaffaq_Salti"]="Muwaffaq Salti",
 ["Naqoura"]="Naqoura",
-["Gaziantep"]="Gaziantep",
-["Al_Qusayr"]="Al Qusayr",
-["Al_Dumayr"]="Al-Dumayr",
-["Kingsfield"]="Kingsfield",
-["Marj_as_Sultan_North"]="Marj as Sultan North",
-["Beirut_Rafic_Hariri"]="Beirut-Rafic Hariri",
-["Palmyra"]="Palmyra",
-["Hama"]="Hama",
-["Eyn_Shemer"]="Eyn Shemer",
-["Sanliurfa"]="Sanliurfa",
-["Amman"]="Amman",
-["Deir_ez_Zor"]="Deir ez-Zor",
-["Taftanaz"]="Taftanaz",
-["Damascus"]="Damascus",
-["Gazipasa"]="Gazipasa",
-["Herzliya"]="Herzliya",
-["H4"]="H4",
-["Tiyas"]="Tiyas",
-["Lakatamia"]="Lakatamia",
-["Kharab_Ishk"]="Kharab Ishk",
-["Haifa"]="Haifa",
-["Khalkhalah"]="Khalkhalah",
-["Megiddo"]="Megiddo",
-["An_Nasiriyah"]="An Nasiriyah",
-["Bassel_Al_Assad"]="Bassel Al-Assad",
-["Ruwayshid"]="Ruwayshid",
-["Mezzeh"]="Mezzeh",
-["Gecitkale"]="Gecitkale",
 ["Nicosia"]="Nicosia",
-["Ramat_David"]="Ramat David",
-["Tha_lah"]="Tha'lah",
-["H3_Northwest"]="H3 Northwest",
-["Sayqal"]="Sayqal",
-["Jirah"]="Jirah",
-["Shayrat"]="Shayrat",
-["Adana_Sakirpasa"]="Adana Sakirpasa",
-["Wujah_Al_Hajar"]="Wujah Al Hajar",
+["Palmyra"]="Palmyra",
+["Paphos"]="Paphos",
 ["Pinarbashi"]="Pinarbashi",
-["H3_Southwest"]="H3 Southwest",
-["Rosh_Pina"]="Rosh Pina",
-["Kiryat_Shmona"]="Kiryat Shmona",
-["H3"]="H3",
-["Qabr_as_Sitt"]="Qabr as Sitt",
 ["Prince_Hassan"]="Prince Hassan",
-["Larnaca"]="Larnaca",
-["King_Hussein_Air_College"]="King Hussein Air College",
-["Ercan"]="Ercan",
-["Marj_Ruhayyil"]="Marj Ruhayyil",
-["Tabqa"]="Tabqa",
-["Marj_as_Sultan_South"]="Marj as Sultan South",
+["Qabr_as_Sitt"]="Qabr as Sitt",
+["Ramat_David"]="Ramat David",
+["Rayak"]="Rayak",
 ["Rene_Mouawad"]="Rene Mouawad",
-["Minakh"]="Minakh",
+["Rosh_Pina"]="Rosh Pina",
+["Ruwayshid"]="Ruwayshid",
+["Sanliurfa"]="Sanliurfa",
+["Sayqal"]="Sayqal",
+["Shayrat"]="Shayrat",
+["Tabqa"]="Tabqa",
+["Taftanaz"]="Taftanaz",
+["Tal_Siman"]="Tal Siman",
+["Tha_lah"]="Tha'lah",
+["Tiyas"]="Tiyas",
+["Wujah_Al_Hajar"]="Wujah Al Hajar",
 }
 AIRBASE.MarianaIslands={
-["Rota_Intl"]="Rota Intl",
 ["Andersen_AFB"]="Andersen AFB",
 ["Antonio_B_Won_Pat_Intl"]="Antonio B. Won Pat Intl",
-["Saipan_Intl"]="Saipan Intl",
-["Tinian_Intl"]="Tinian Intl",
+["North_West_Field"]="North West Field",
 ["Olf_Orote"]="Olf Orote",
 ["Pagan_Airstrip"]="Pagan Airstrip",
-["North_West_Field"]="North West Field",
+["Rota_Intl"]="Rota Intl",
+["Saipan_Intl"]="Saipan Intl",
+["Tinian_Intl"]="Tinian Intl",
 }
 AIRBASE.SouthAtlantic={
-["Port_Stanley"]="Port Stanley",
+["Almirante_Schroeders"]="Almirante Schroeders",
+["Caleta_Tortel"]="Caleta Tortel",
+["Comandante_Luis_Piedrabuena"]="Comandante Luis Piedrabuena",
+["Cullen"]="Cullen",
+["El_Calafate"]="El Calafate",
+["Franco_Bianco"]="Franco Bianco",
+["Gobernador_Gregores"]="Gobernador Gregores",
+["Goose_Green"]="Goose Green",
+["Gull_Point"]="Gull Point",
+["Hipico_Flying_Club"]="Hipico Flying Club",
 ["Mount_Pleasant"]="Mount Pleasant",
-["San_Carlos_FOB"]="San Carlos FOB",
-["Rio_Grande"]="Rio Grande",
+["O_Higgins"]="O'Higgins",
+["Pampa_Guanaco"]="Pampa Guanaco",
+["Port_Stanley"]="Port Stanley",
+["Porvenir"]="Porvenir",
+["Puerto_Natales"]="Puerto Natales",
+["Puerto_Santa_Cruz"]="Puerto Santa Cruz",
+["Puerto_Williams"]="Puerto Williams",
+["Punta_Arenas"]="Punta Arenas",
+["Rio_Chico"]="Rio Chico",
 ["Rio_Gallegos"]="Rio Gallegos",
+["Rio_Grande"]="Rio Grande",
+["Rio_Turbio"]="Rio Turbio",
+["San_Carlos_FOB"]="San Carlos FOB",
+["San_Julian"]="San Julian",
+["Tolhuin"]="Tolhuin",
 ["Ushuaia"]="Ushuaia",
 ["Ushuaia_Helo_Port"]="Ushuaia Helo Port",
-["Punta_Arenas"]="Punta Arenas",
-["Pampa_Guanaco"]="Pampa Guanaco",
-["San_Julian"]="San Julian",
-["Puerto_Williams"]="Puerto Williams",
-["Puerto_Natales"]="Puerto Natales",
-["El_Calafate"]="El Calafate",
-["Puerto_Santa_Cruz"]="Puerto Santa Cruz",
-["Comandante_Luis_Piedrabuena"]="Comandante Luis Piedrabuena",
-["Aerodromo_De_Tolhuin"]="Aerodromo De Tolhuin",
-["Porvenir_Airfield"]="Porvenir Airfield",
-["Almirante_Schroeders"]="Almirante Schroeders",
-["Rio_Turbio"]="Rio Turbio",
-["Rio_Chico"]="Rio Chico",
-["Franco_Bianco"]="Franco Bianco",
-["Goose_Green"]="Goose Green",
-["Hipico_Flying_Club"]="Hipico Flying Club",
-["CaletaTortel"]="CaletaTortel",
-["Aeropuerto_de_Gobernador_Gregores"]="Aeropuerto de Gobernador Gregores",
-["Aerodromo_O_Higgins"]="Aerodromo O'Higgins",
-["Cullen_Airport"]="Cullen Airport",
-["Gull_Point"]="Gull Point",
 }
 AIRBASE.Sinai={
-["Hatzerim"]="Hatzerim",
+["Abu_Rudeis"]="Abu Rudeis",
 ["Abu_Suwayr"]="Abu Suwayr",
-["Sde_Dov"]="Sde Dov",
-["AzZaqaziq"]="AzZaqaziq",
-["Hatzor"]="Hatzor",
-["Kedem"]="Kedem",
-["Nevatim"]="Nevatim",
-["Cairo_International_Airport"]="Cairo International Airport",
 ["Al_Ismailiyah"]="Al Ismailiyah",
-["As_Salihiyah"]="As Salihiyah",
-["Fayed"]="Fayed",
-["Bilbeis_Air_Base"]="Bilbeis Air Base",
-["Ramon_Airbase"]="Ramon Airbase",
-["Kibrit_Air_Base"]="Kibrit Air Base",
-["El_Arish"]="El Arish",
-["Ovda"]="Ovda",
-["Melez"]="Melez",
 ["Al_Mansurah"]="Al Mansurah",
-["Palmahim"]="Palmahim",
+["As_Salihiyah"]="As Salihiyah",
+["AzZaqaziq"]="AzZaqaziq",
 ["Baluza"]="Baluza",
-["El_Gora"]="El Gora",
+["Ben_Gurion"]="Ben-Gurion",
+["Bilbeis_Air_Base"]="Bilbeis Air Base",
+["Bir_Hasanah"]="Bir Hasanah",
+["Cairo_International_Airport"]="Cairo International Airport",
+["Cairo_West"]="Cairo West",
 ["Difarsuwar_Airfield"]="Difarsuwar Airfield",
-["Wadi_al_Jandali"]="Wadi al Jandali",
+["El_Arish"]="El Arish",
+["El_Gora"]="El Gora",
+["Fayed"]="Fayed",
+["Hatzerim"]="Hatzerim",
+["Hatzor"]="Hatzor",
+["Inshas_Airbase"]="Inshas Airbase",
+["Kedem"]="Kedem",
+["Kibrit_Air_Base"]="Kibrit Air Base",
+["Melez"]="Melez",
+["Nevatim"]="Nevatim",
+["Ovda"]="Ovda",
+["Palmahim"]="Palmahim",
+["Ramon_Airbase"]="Ramon Airbase",
+["Sde_Dov"]="Sde Dov",
 ["St_Catherine"]="St Catherine",
 ["Tel_Nof"]="Tel Nof",
-["Abu_Rudeis"]="Abu Rudeis",
-["Inshas_Airbase"]="Inshas Airbase",
-["Ben_Gurion"]="Ben-Gurion",
-["Bir_Hasanah"]="Bir Hasanah",
-["Cairo_West"]="Cairo West",
+["Wadi_al_Jandali"]="Wadi al Jandali",
 }
 AIRBASE.TerminalType={
 Runway=16,
@@ -32141,7 +32212,7 @@ ClassName="SCORING",
 ClassID=0,
 Players={},
 AutoSave=true,
-version="1.17.1"
+version="1.18.2"
 }
 local _SCORINGCoalition={
 [1]="Red",
@@ -32228,6 +32299,21 @@ local ScoreUnits=ScoreGroup:GetUnits()
 for ScoreUnitID,ScoreUnit in pairs(ScoreUnits)do
 local UnitName=ScoreUnit:GetName()
 self.ScoringObjects[UnitName]=Score
+end
+return self
+end
+function SCORING:AddScoreSetGroup(Set,Score)
+local set=Set:GetSetObjects()
+for _,_group in pairs(set)do
+if _group and _group:IsAlive()then
+self:AddScoreGroup(_group,Score)
+end
+end
+local function AddScore(group)
+self:AddScoreGroup(group,Score)
+end
+function Set:OnAfterAdded(From,Event,To,ObjectName,Object)
+AddScore(Object)
 end
 return self
 end
@@ -32754,16 +32840,15 @@ self:F({ThreatLevel=ThreatPenalty,ThreatLevelTarget=ThreatLevelTarget,ThreatType
 Player.Penalty=Player.Penalty+ThreatPenalty
 TargetDestroy.Penalty=TargetDestroy.Penalty+ThreatPenalty
 TargetDestroy.PenaltyDestroy=TargetDestroy.PenaltyDestroy+1
-self:OnKillPvP(Player,TargetPlayerName,true,TargetThreatLevel,Player.ThreatLevel,ThreatPenalty)
 if Player.HitPlayers[TargetPlayerName]then
-self:OnKillPvP(Player,TargetPlayerName,true)
+self:OnKillPvP(PlayerName,TargetPlayerName,true)
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..PlayerName.."' destroyed friendly player '"..TargetPlayerName.."' "..TargetUnitCategory.." ( "..ThreatTypeTarget.." ) "..
 "Penalty: -"..ThreatPenalty.." = "..Player.Score-Player.Penalty,
 MESSAGE.Type.Information)
 :ToAllIf(self:IfMessagesDestroy()and self:IfMessagesToAll())
 :ToCoalitionIf(InitCoalition,self:IfMessagesDestroy()and self:IfMessagesToCoalition())
 else
-self:OnKillPvE(Player,TargetUnitName,true,TargetThreatLevel,Player.ThreatLevel,ThreatPenalty)
+self:OnKillPvE(PlayerName,TargetUnitName,true,TargetThreatLevel,Player.ThreatLevel,ThreatPenalty)
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..PlayerName.."' destroyed friendly target "..TargetUnitCategory.." ( "..ThreatTypeTarget.." ) "..
 "Penalty: -"..ThreatPenalty.." = "..Player.Score-Player.Penalty,
 MESSAGE.Type.Information)
@@ -33218,9 +33303,9 @@ function SCORING:SwitchAutoSave(OnOff)
 self.AutoSave=OnOff
 return self
 end
-function SCORING:OnKillPvP(Player,TargetPlayerName,IsTeamKill,TargetThreatLevel,PlayerThreatLevel,Score)
+function SCORING:OnKillPvP(PlayerName,TargetPlayerName,IsTeamKill,TargetThreatLevel,PlayerThreatLevel,Score)
 end
-function SCORING:OnKillPvE(Player,TargetUnitName,IsTeamKill,TargetThreatLevel,PlayerThreatLevel,Score)
+function SCORING:OnKillPvE(PlayerName,TargetUnitName,IsTeamKill,TargetThreatLevel,PlayerThreatLevel,Score)
 end
 CLEANUP_AIRBASE={
 ClassName="CLEANUP_AIRBASE",
@@ -64608,6 +64693,7 @@ HasBeenDropped=false,
 PerCrateMass=0,
 Stock=nil,
 Mark=nil,
+DontShowInMenu=false,
 }
 CTLD_CARGO.Enum={
 VEHICLE="Vehicle",
@@ -64618,7 +64704,7 @@ REPAIR="Repair",
 ENGINEERS="Engineers",
 STATIC="Static",
 }
-function CTLD_CARGO:New(ID,Name,Templates,Sorte,HasBeenMoved,LoadDirectly,CratesNeeded,Positionable,Dropped,PerCrateMass,Stock,Subcategory)
+function CTLD_CARGO:New(ID,Name,Templates,Sorte,HasBeenMoved,LoadDirectly,CratesNeeded,Positionable,Dropped,PerCrateMass,Stock,Subcategory,DontShowInMenu)
 local self=BASE:Inherit(self,BASE:New())
 self:T({ID,Name,Templates,Sorte,HasBeenMoved,LoadDirectly,CratesNeeded,Positionable,Dropped})
 self.ID=ID or math.random(100000,1000000)
@@ -64634,6 +64720,7 @@ self.PerCrateMass=PerCrateMass or 0
 self.Stock=Stock or nil
 self.Mark=nil
 self.Subcategory=Subcategory or"Other"
+self.DontShowInMenu=DontShowInMenu or false
 return self
 end
 function CTLD_CARGO:GetID()
@@ -64948,7 +65035,7 @@ CTLD.UnitTypeCapabilities={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.45"
+CTLD.version="1.0.46"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -66110,7 +66197,6 @@ end
 function CTLD:_GetUnitPositions(Coordinate,Radius,Heading,Template)
 local Positions={}
 local template=_DATABASE:GetGroupTemplate(Template)
-UTILS.PrintTableToLog(template)
 local numbertroops=#template.units
 local newcenter=Coordinate:Translate(Radius,((Heading+270)%360))
 for i=1,360,math.floor(360/numbertroops)do
@@ -66124,7 +66210,6 @@ heading=phead,
 }
 table.insert(Positions,p1t)
 end
-UTILS.PrintTableToLog(Positions)
 return Positions
 end
 function CTLD:_UnloadTroops(Group,Unit)
@@ -66661,14 +66746,20 @@ end
 for _,_entry in pairs(self.Cargo_Troops)do
 local entry=_entry
 local subcat=entry.Subcategory
+local noshow=entry.DontShowInMenu
+if not noshow then
 menucount=menucount+1
 menus[menucount]=MENU_GROUP_COMMAND:New(_group,entry.Name,subcatmenus[subcat],self._LoadTroops,self,_group,_unit,entry)
+end
 end
 else
 for _,_entry in pairs(self.Cargo_Troops)do
 local entry=_entry
+local noshow=entry.DontShowInMenu
+if not noshow then
 menucount=menucount+1
 menus[menucount]=MENU_GROUP_COMMAND:New(_group,entry.Name,troopsmenu,self._LoadTroops,self,_group,_unit,entry)
+end
 end
 end
 local unloadmenu1=MENU_GROUP_COMMAND:New(_group,"Drop troops",toptroops,self._UnloadTroops,self,_group,_unit):Refresh()
@@ -66687,33 +66778,45 @@ end
 for _,_entry in pairs(self.Cargo_Crates)do
 local entry=_entry
 local subcat=entry.Subcategory
+local noshow=entry.DontShowInMenu
+if not noshow then
 menucount=menucount+1
 local menutext=string.format("Crate %s (%dkg)",entry.Name,entry.PerCrateMass or 0)
 menus[menucount]=MENU_GROUP_COMMAND:New(_group,menutext,subcatmenus[subcat],self._GetCrates,self,_group,_unit,entry)
+end
 end
 for _,_entry in pairs(self.Cargo_Statics)do
 local entry=_entry
 local subcat=entry.Subcategory
+local noshow=entry.DontShowInMenu
+if not noshow then
 menucount=menucount+1
 local menutext=string.format("Crate %s (%dkg)",entry.Name,entry.PerCrateMass or 0)
 menus[menucount]=MENU_GROUP_COMMAND:New(_group,menutext,subcatmenus[subcat],self._GetCrates,self,_group,_unit,entry)
 end
+end
 else
 for _,_entry in pairs(self.Cargo_Crates)do
 local entry=_entry
+local noshow=entry.DontShowInMenu
+if not noshow then
 menucount=menucount+1
 local menutext=string.format("Crate %s (%dkg)",entry.Name,entry.PerCrateMass or 0)
 menus[menucount]=MENU_GROUP_COMMAND:New(_group,menutext,cratesmenu,self._GetCrates,self,_group,_unit,entry)
+end
 end
 for _,_entry in pairs(self.Cargo_Statics)do
 local entry=_entry
+local noshow=entry.DontShowInMenu
+if not noshow then
 menucount=menucount+1
 local menutext=string.format("Crate %s (%dkg)",entry.Name,entry.PerCrateMass or 0)
 menus[menucount]=MENU_GROUP_COMMAND:New(_group,menutext,cratesmenu,self._GetCrates,self,_group,_unit,entry)
 end
 end
+end
 listmenu=MENU_GROUP_COMMAND:New(_group,"List crates nearby",topcrates,self._ListCratesNearby,self,_group,_unit)
-removecrates=MENU_GROUP_COMMAND:New(_group,"Remove crates nearby",removecratesmenu,self._RemoveCratesNearby,self,_group,_unit)
+local removecrates=MENU_GROUP_COMMAND:New(_group,"Remove crates nearby",removecratesmenu,self._RemoveCratesNearby,self,_group,_unit)
 local unloadmenu=MENU_GROUP_COMMAND:New(_group,"Drop crates",topcrates,self._UnloadCrates,self,_group,_unit)
 if not self.nobuildmenu then
 local buildmenu=MENU_GROUP_COMMAND:New(_group,"Build crates",topcrates,self._BuildCrates,self,_group,_unit)
