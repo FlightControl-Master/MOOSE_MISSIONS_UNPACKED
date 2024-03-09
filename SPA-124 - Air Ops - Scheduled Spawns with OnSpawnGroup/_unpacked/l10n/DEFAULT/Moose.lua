@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-03-01T17:22:22+01:00-57ce6bcec2c62de42049c0a4cbc7db387339e5e5 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-03-08T10:06:16+01:00-ab14fbd11c99666b2aa2676b3023c208e1e82dcc ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -2407,6 +2407,10 @@ return true
 end
 if type_name=="Bronco-OV-10A"then
 BASE:T(unit_name.." front door(s) are open")
+return true
+end
+if type_name=="MH-60R"and(unit:getDrawArgumentValue(403)>0 or unit:getDrawArgumentValue(403)==-1)then
+BASE:T(unit_name.." cargo door is open")
 return true
 end
 return false
@@ -20884,7 +20888,7 @@ MARKEROPS_BASE={
 ClassName="MARKEROPS",
 Tag="mytag",
 Keywords={},
-version="0.1.1",
+version="0.1.2",
 debug=false,
 Casesensitive=true,
 }
@@ -20924,13 +20928,14 @@ local coordtext=coord:ToStringLLDDM()
 local text=tostring(Event.text)
 local m=MESSAGE:New(string.format("Mark added at %s with text: %s",coordtext,text),10,"Info",false):ToAll()
 end
+local coalition=Event.IniCoalition
 if Event.id==world.event.S_EVENT_MARK_ADDED then
 self:T({event="S_EVENT_MARK_ADDED",carrier=self.groupname,vec3=Event.pos})
 local Eventtext=tostring(Event.text)
 if Eventtext~=nil then
 if self:_MatchTag(Eventtext)then
 local matchtable=self:_MatchKeywords(Eventtext)
-self:MarkAdded(Eventtext,matchtable,coord)
+self:MarkAdded(Eventtext,matchtable,coord,Event.idx,coalition)
 end
 end
 elseif Event.id==world.event.S_EVENT_MARK_CHANGE then
@@ -20939,7 +20944,7 @@ local Eventtext=tostring(Event.text)
 if Eventtext~=nil then
 if self:_MatchTag(Eventtext)then
 local matchtable=self:_MatchKeywords(Eventtext)
-self:MarkChanged(Eventtext,matchtable,coord,Event.idx)
+self:MarkChanged(Eventtext,matchtable,coord,Event.idx,coalition)
 end
 end
 elseif Event.id==world.event.S_EVENT_MARK_REMOVED then
@@ -20977,10 +20982,10 @@ end
 end
 return matchtable
 end
-function MARKEROPS_BASE:onbeforeMarkAdded(From,Event,To,Text,Keywords,Coord)
+function MARKEROPS_BASE:onbeforeMarkAdded(From,Event,To,Text,Keywords,Coord,MarkerID,CoalitionNumber)
 self:T({self.lid,From,Event,To,Text,Keywords,Coord:ToStringLLDDM()})
 end
-function MARKEROPS_BASE:onbeforeMarkChanged(From,Event,To,Text,Keywords,Coord)
+function MARKEROPS_BASE:onbeforeMarkChanged(From,Event,To,Text,Keywords,Coord,MarkerID,CoalitionNumber)
 self:T({self.lid,From,Event,To,Text,Keywords,Coord:ToStringLLDDM()})
 end
 function MARKEROPS_BASE:onbeforeMarkDeleted(From,Event,To)
@@ -24419,6 +24424,9 @@ return nil
 end
 function CONTROLLABLE:WayPointFunction(WayPoint,WayPointIndex,WayPointFunction,...)
 self:F2({WayPoint,WayPointIndex,WayPointFunction})
+if not self.WayPoints then
+self:WayPointInitialize()
+end
 table.insert(self.WayPoints[WayPoint].task.params.tasks,WayPointIndex)
 self.WayPoints[WayPoint].task.params.tasks[WayPointIndex]=self:TaskFunction(WayPointFunction,arg)
 return self
@@ -32872,14 +32880,14 @@ Player.PlayerKills=Player.PlayerKills+1
 else
 Player.PlayerKills=1
 end
-self:OnKillPvP(Player,TargetPlayerName,false,TargetThreatLevel,Player.ThreatLevel,ThreatScore)
+self:OnKillPvP(PlayerName,TargetPlayerName,false,TargetThreatLevel,Player.ThreatLevel,ThreatScore)
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..PlayerName.."' destroyed enemy player '"..TargetPlayerName.."' "..TargetUnitCategory.." ( "..ThreatTypeTarget.." ) "..
 "Score: +"..ThreatScore.." = "..Player.Score-Player.Penalty,
 MESSAGE.Type.Information)
 :ToAllIf(self:IfMessagesDestroy()and self:IfMessagesToAll())
 :ToCoalitionIf(InitCoalition,self:IfMessagesDestroy()and self:IfMessagesToCoalition())
 else
-self:OnKillPvE(Player,TargetUnitName,false,TargetThreatLevel,Player.ThreatLevel,ThreatScore)
+self:OnKillPvE(PlayerName,TargetUnitName,false,TargetThreatLevel,Player.ThreatLevel,ThreatScore)
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..PlayerName.."' destroyed enemy "..TargetUnitCategory.." ( "..ThreatTypeTarget.." ) "..
 "Score: +"..ThreatScore.." = "..Player.Score-Player.Penalty,
 MESSAGE.Type.Information)
@@ -65032,10 +65040,11 @@ CTLD.UnitTypeCapabilities={
 ["Mi-24V"]={type="Mi-24V",crates=true,troops=true,cratelimit=2,trooplimit=8,length=18,cargoweightlimit=700},
 ["Hercules"]={type="Hercules",crates=true,troops=true,cratelimit=7,trooplimit=64,length=25,cargoweightlimit=19000},
 ["UH-60L"]={type="UH-60L",crates=true,troops=true,cratelimit=2,trooplimit=20,length=16,cargoweightlimit=3500},
+["MH-60R"]={type="MH-60R",crates=true,troops=true,cratelimit=2,trooplimit=20,length=16,cargoweightlimit=3500},
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 }
-CTLD.version="1.0.46"
+CTLD.version="1.0.48"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -66198,7 +66207,8 @@ function CTLD:_GetUnitPositions(Coordinate,Radius,Heading,Template)
 local Positions={}
 local template=_DATABASE:GetGroupTemplate(Template)
 local numbertroops=#template.units
-local newcenter=Coordinate:Translate(Radius,((Heading+270)%360))
+local slightshift=math.abs(math.random(0,200)/100)
+local newcenter=Coordinate:Translate(Radius+slightshift,((Heading+270)%360))
 for i=1,360,math.floor(360/numbertroops)do
 local phead=((Heading+270+i)%360)
 local post=newcenter:Translate(Radius,phead)
@@ -68722,7 +68732,8 @@ CSAR.AircraftType["Bell-47"]=2
 CSAR.AircraftType["UH-60L"]=10
 CSAR.AircraftType["AH-64D_BLK_II"]=2
 CSAR.AircraftType["Bronco-OV-10A"]=2
-CSAR.version="1.0.19"
+CSAR.AircraftType["MH-60R"]=10
+CSAR.version="1.0.20"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Template,Alias})
