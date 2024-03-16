@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-03-08T10:06:16+01:00-ab14fbd11c99666b2aa2676b3023c208e1e82dcc ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-03-15T10:25:40+01:00-244abe2bbbfec9dbc38d56d626d34d287db14467 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -3466,6 +3466,14 @@ else
 return nil
 end
 return datatable
+end
+function UTILS.ClockHeadingString(refHdg,tgtHdg)
+local relativeAngle=tgtHdg-refHdg
+if relativeAngle<0 then
+relativeAngle=relativeAngle+360
+end
+local clockPos=math.ceil((relativeAngle%360)/30)
+return clockPos.." o'clock"
 end
 PROFILER={
 ClassName="PROFILER",
@@ -7123,6 +7131,7 @@ Event.MarkVec3=Event.pos
 Event.MarkCoordinate=COORDINATE:NewFromVec3(Event.pos)
 Event.MarkText=Event.text
 Event.MarkCoalition=Event.coalition
+Event.IniCoalition=Event.coalition
 Event.MarkGroupID=Event.groupID
 end
 if Event.cargo then
@@ -10349,7 +10358,7 @@ function ZONE_OVAL:GetRandomPointVec2()
 return POINT_VEC2:NewFromVec2(self:GetRandomVec2())
 end
 function ZONE_OVAL:GetRandomPointVec3()
-return POINT_VEC2:NewFromVec3(self:GetRandomVec2())
+return POINT_VEC3:NewFromVec3(self:GetRandomVec2())
 end
 function ZONE_OVAL:DrawZone(Coalition,Color,Alpha,FillColor,FillAlpha,LineType)
 Coalition=Coalition or self:GetDrawCoalition()
@@ -10941,7 +10950,7 @@ local SpawnCategoryID=SpawnTemplate.CategoryID
 SpawnTemplate.CoalitionID=nil
 SpawnTemplate.CountryID=nil
 SpawnTemplate.CategoryID=nil
-self:_RegisterGroupTemplate(SpawnTemplate,SpawnCoalitionID,SpawnCategoryID,SpawnCountryID)
+self:_RegisterGroupTemplate(SpawnTemplate,SpawnCoalitionID,SpawnCategoryID,SpawnCountryID,SpawnTemplate.name)
 self:T3(SpawnTemplate)
 coalition.addGroup(SpawnCountryID,SpawnCategoryID,SpawnTemplate)
 SpawnTemplate.CoalitionID=SpawnCoalitionID
@@ -12064,6 +12073,7 @@ Countries=nil,
 GroupPrefixes=nil,
 Zones=nil,
 Functions=nil,
+Alive=nil,
 },
 FilterMeta={
 Coalitions={
@@ -12268,6 +12278,10 @@ end
 function SET_GROUP:FilterActive(Active)
 Active=Active or not(Active==false)
 self.Filter.Active=Active
+return self
+end
+function SET_GROUP:FilterAlive()
+self.Filter.Alive=true
 return self
 end
 function SET_GROUP:FilterStart()
@@ -12505,6 +12519,14 @@ end
 function SET_GROUP:IsIncludeObject(MGroup)
 self:F2(MGroup)
 local MGroupInclude=true
+if self.Filter.Alive==true then
+local MGroupAlive=false
+self:F({Active=self.Filter.Active})
+if MGroup and MGroup:IsAlive()then
+MGroupAlive=true
+end
+MGroupInclude=MGroupInclude and MGroupAlive
+end
 if self.Filter.Active~=nil then
 local MGroupActive=false
 self:F({Active=self.Filter.Active})
@@ -18576,7 +18598,7 @@ BASE:I("ERROR: in function NewFromTemplate, required parameter SpawnTemplatePref
 return nil
 end
 if SpawnTemplate then
-self.SpawnTemplate=SpawnTemplate
+self.SpawnTemplate=UTILS.DeepCopy(SpawnTemplate)
 self.SpawnTemplatePrefix=SpawnTemplatePrefix
 self.SpawnAliasPrefix=SpawnAliasPrefix or SpawnTemplatePrefix
 self.SpawnTemplate.name=SpawnTemplatePrefix
@@ -20005,8 +20027,17 @@ SpawnTemplate.units[UnitID].unitId=nil
 end
 else
 for UnitID=1,#SpawnTemplate.units do
-local UnitPrefix,Rest=string.match(SpawnTemplate.units[UnitID].name,"^([^#]+)#?"):gsub("^%s*(.-)%s*$","%1")
+local SpawnInitKeepUnitIFF=false
+if string.find(SpawnTemplate.units[UnitID].name,"#IFF_",1,true)then
+SpawnInitKeepUnitIFF=true
+end
+local UnitPrefix,Rest
+if SpawnInitKeepUnitIFF==false then
+UnitPrefix,Rest=string.match(SpawnTemplate.units[UnitID].name,"^([^#]+)#?"):gsub("^%s*(.-)%s*$","%1")
 self:T({UnitPrefix,Rest})
+else
+UnitPrefix=SpawnTemplate.units[UnitID].name
+end
 SpawnTemplate.units[UnitID].name=string.format('%s#%03d-%02d',UnitPrefix,SpawnIndex,UnitID)
 SpawnTemplate.units[UnitID].unitId=nil
 end
@@ -20888,7 +20919,7 @@ MARKEROPS_BASE={
 ClassName="MARKEROPS",
 Tag="mytag",
 Keywords={},
-version="0.1.2",
+version="0.1.3",
 debug=false,
 Casesensitive=true,
 }
@@ -20928,9 +20959,9 @@ local coordtext=coord:ToStringLLDDM()
 local text=tostring(Event.text)
 local m=MESSAGE:New(string.format("Mark added at %s with text: %s",coordtext,text),10,"Info",false):ToAll()
 end
-local coalition=Event.IniCoalition
+local coalition=Event.MarkCoalition
 if Event.id==world.event.S_EVENT_MARK_ADDED then
-self:T({event="S_EVENT_MARK_ADDED",carrier=self.groupname,vec3=Event.pos})
+self:T({event="S_EVENT_MARK_ADDED",carrier=Event.IniGroupName,vec3=Event.pos})
 local Eventtext=tostring(Event.text)
 if Eventtext~=nil then
 if self:_MatchTag(Eventtext)then
@@ -20939,7 +20970,7 @@ self:MarkAdded(Eventtext,matchtable,coord,Event.idx,coalition)
 end
 end
 elseif Event.id==world.event.S_EVENT_MARK_CHANGE then
-self:T({event="S_EVENT_MARK_CHANGE",carrier=self.groupname,vec3=Event.pos})
+self:T({event="S_EVENT_MARK_CHANGE",carrier=Event.IniGroupName,vec3=Event.pos})
 local Eventtext=tostring(Event.text)
 if Eventtext~=nil then
 if self:_MatchTag(Eventtext)then
@@ -20948,7 +20979,7 @@ self:MarkChanged(Eventtext,matchtable,coord,Event.idx,coalition)
 end
 end
 elseif Event.id==world.event.S_EVENT_MARK_REMOVED then
-self:T({event="S_EVENT_MARK_REMOVED",carrier=self.groupname,vec3=Event.pos})
+self:T({event="S_EVENT_MARK_REMOVED",carrier=Event.IniGroupName,vec3=Event.pos})
 local Eventtext=tostring(Event.text)
 if Eventtext~=nil then
 if self:_MatchTag(Eventtext)then
@@ -24550,6 +24581,49 @@ self:SetOption(AI.Option.Air.id.RADAR_USING,3)
 end
 return self
 end
+function CONTROLLABLE:SetOptionWaypointPassReport(OnOff)
+self:F2({self.ControllableName})
+local onoff=(OnOff==nil or OnOff==true)and false or true
+if self:IsAir()then
+self:SetOption(AI.Option.Air.id.PROHIBIT_WP_PASS_REPORT,onoff)
+end
+return self
+end
+function CONTROLLABLE:SetOptionRadioSilence(OnOff)
+local onoff=(OnOff==true or OnOff==nil)and true or false
+self:F2({self.ControllableName})
+if self:IsAir()then
+self:SetOption(AI.Option.Air.id.SILENCE,onoff)
+end
+return self
+end
+function CONTROLLABLE:SetOptionRadioContact(Objects)
+self:F2({self.ControllableName})
+if not Objects then Objects={"Air"}end
+if type(Objects)~="table"then Objects={Objects}end
+if self:IsAir()then
+self:SetOption(AI.Option.Air.id.OPTION_RADIO_USAGE_CONTACT,Objects)
+end
+return self
+end
+function CONTROLLABLE:SetOptionRadioEngage(Objects)
+self:F2({self.ControllableName})
+if not Objects then Objects={"Air"}end
+if type(Objects)~="table"then Objects={Objects}end
+if self:IsAir()then
+self:SetOption(AI.Option.Air.id.OPTION_RADIO_USAGE_ENGAGE,Objects)
+end
+return self
+end
+function CONTROLLABLE:SetOptionRadioKill(Objects)
+self:F2({self.ControllableName})
+if not Objects then Objects={"Air"}end
+if type(Objects)~="table"then Objects={Objects}end
+if self:IsAir()then
+self:SetOption(AI.Option.Air.id.OPTION_RADIO_USAGE_KILL,Objects)
+end
+return self
+end
 function CONTROLLABLE:RelocateGroundRandomInRadius(speed,radius,onroad,shortcut,formation,onland)
 self:F2({self.ControllableName})
 local _coord=self:GetCoordinate()
@@ -25621,7 +25695,7 @@ end
 function GROUP:IsActive()
 self:F2(self.GroupName)
 local DCSGroup=self:GetDCSObject()
-if DCSGroup then
+if DCSGroup and DCSGroup:isExist()then
 local unit=DCSGroup:getUnit(1)
 if unit then
 local GroupIsActive=unit:isActive()
@@ -28326,6 +28400,25 @@ local SpawnStatic=SPAWNSTATIC:NewFromStatic(self.StaticName,self:GetCountry())
 SpawnStatic:SpawnFromCoordinate(Coordinate,Heading,self.StaticName)
 end
 return self
+end
+function STATIC:FindByMatching(Pattern)
+local GroupFound=nil
+for name,static in pairs(_DATABASE.STATICS)do
+if string.match(name,Pattern)then
+GroupFound=static
+break
+end
+end
+return GroupFound
+end
+function STATIC:FindAllByMatching(Pattern)
+local GroupsFound={}
+for name,static in pairs(_DATABASE.STATICS)do
+if string.match(name,Pattern)then
+GroupsFound[#GroupsFound+1]=static
+end
+end
+return GroupsFound
 end
 AIRBASE={
 ClassName="AIRBASE",
@@ -33803,7 +33896,6 @@ predpos:MarkToAll(string.format("height=%dm | heading=%d | velocity=%ddeg | Ropt
 targetzone:DrawZone(coalition.side.BLUE,{0,0,1},0.2,nil,nil,3,true)
 end
 local seadset=SET_GROUP:New():FilterPrefixes(self.SEADGroupPrefixes):FilterZones({targetzone}):FilterOnce()
-local tgtcoord=targetzone:GetRandomPointVec2()
 local tgtgrp=seadset:GetRandom()
 local _targetgroup=nil
 local _targetgroupname="none"
