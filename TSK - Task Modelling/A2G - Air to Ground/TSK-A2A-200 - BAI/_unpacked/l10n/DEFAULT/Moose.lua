@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-03-28T11:12:23+01:00-67b43e2c686a617bd0a129dde0c39cc2ffd11bef ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-04-04T17:22:46+02:00-18fd587ab0a20e10b83d43ec9dff086af8fb7ea6 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -5092,7 +5092,7 @@ self:I("Tracing method "..Method.." of class "..Class)
 end
 function BASE:_Serialize(Arguments)
 local text=UTILS.PrintTableToLog({Arguments},0,true)
-text=string.gsub(text,"\n","")
+text=string.gsub(text,"(\n+)","")
 text=string.gsub(text,"%(%(","%(")
 text=string.gsub(text,"%)%)","%)")
 text=string.gsub(text,"(%s+)","")
@@ -17345,17 +17345,18 @@ local coord=COORDINATE:NewFromVec2({x=point.x,y=point.z})
 return coord
 end
 function COORDINATE:NewFromMGRS(UTMZone,MGRSDigraph,Easting,Northing)
-if string.len(Easting)<5 then Easting=Easting..string.rep("0",5-string.len(Easting))end
-if string.len(Northing)<5 then Northing=Northing..string.rep("0",5-string.len(Northing))end
+if string.len(Easting)<5 then Easting=tostring(Easting..string.rep("0",5-string.len(Easting)))end
+if string.len(Northing)<5 then Northing=tostring(Northing..string.rep("0",5-string.len(Northing)))end
 local MGRS={
 UTMZone=UTMZone,
 MGRSDigraph=MGRSDigraph,
-Easting=Easting,
-Northing=Northing,
+Easting=tostring(Easting),
+Northing=tostring(Northing),
 }
 local lat,lon=coord.MGRStoLL(MGRS)
 local point=coord.LLtoLO(lat,lon,0)
 local coord=COORDINATE:NewFromVec2({x=point.x,y=point.z})
+return coord
 end
 function COORDINATE:ToStringFromRP(ReferenceCoord,ReferenceName,Controllable,Settings,MagVar)
 self:F2({ReferenceCoord=ReferenceCoord,ReferenceName=ReferenceName})
@@ -30765,7 +30766,7 @@ end
 function NET.Lua2Json(Lua)
 return net.lua2json(Lua)
 end
-function NET.Lua2Json(Json)
+function NET.Json2Lua(Json)
 return net.json2lua(Json)
 end
 function NET:DoStringIn(State,DoString)
@@ -83075,7 +83076,7 @@ local ActRouteTarget=ProcessUnit:GetProcess("Engaging","RouteToTargetZone")
 return ActRouteTarget:GetZone()
 end
 function TASK_A2G:SetGoalTotal()
-self.GoalTotal=self.TargetSetUnit:Count()
+self.GoalTotal=self.TargetSetUnit:CountAlive()
 end
 function TASK_A2G:GetGoalTotal()
 return self.GoalTotal
@@ -83088,7 +83089,7 @@ return Distance
 end
 function TASK_A2G:onafterGoal(TaskUnit,From,Event,To)
 local TargetSetUnit=self.TargetSetUnit
-if TargetSetUnit:Count()==0 then
+if TargetSetUnit:CountAlive()==0 then
 self:Success()
 end
 self:__Goal(-10)
@@ -83106,7 +83107,7 @@ ThreatLevel,ThreatText=self.TargetSetUnit:CalculateThreatLevelA2G()
 end
 self.TaskInfo:AddThreat(ThreatText,ThreatLevel,10,"MOD",true)
 if self.Detection then
-local DetectedItemsCount=self.TargetSetUnit:Count()
+local DetectedItemsCount=self.TargetSetUnit:CountAlive()
 local ReportTypes=REPORT:New()
 local TargetTypes={}
 for TargetUnitName,TargetUnit in pairs(self.TargetSetUnit:GetSet())do
@@ -83119,7 +83120,7 @@ end
 self.TaskInfo:AddTargetCount(DetectedItemsCount,11,"O",true)
 self.TaskInfo:AddTargets(DetectedItemsCount,ReportTypes:Text(", "),20,"D",true)
 else
-local DetectedItemsCount=self.TargetSetUnit:Count()
+local DetectedItemsCount=self.TargetSetUnit:CountAlive()
 local DetectedItemsTypes=self.TargetSetUnit:GetTypeNames()
 self.TaskInfo:AddTargetCount(DetectedItemsCount,11,"O",true)
 self.TaskInfo:AddTargets(DetectedItemsCount,DetectedItemsTypes,20,"D",true)
