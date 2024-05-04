@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-04-24T13:21:24+02:00-f9dcc9d95cb634584d108fa0360dee6ffc301975 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-05-01T13:52:10+02:00-fc52e06318016b2596cbaa4609f707a968d2c6ae ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -5618,6 +5618,7 @@ BEACON={
 ClassName="BEACON",
 Positionable=nil,
 name=nil,
+UniqueName=0,
 }
 BEACON.Type={
 NULL=0,
@@ -5777,6 +5778,7 @@ end
 function BEACON:RadioBeacon(FileName,Frequency,Modulation,Power,BeaconDuration)
 self:F({FileName,Frequency,Modulation,Power,BeaconDuration})
 local IsValid=false
+Modulation=Modulation or radio.modulation.AM
 if type(FileName)=="string"then
 if FileName:find(".ogg")or FileName:find(".wav")then
 if not FileName:find("l10n/DEFAULT/")then
@@ -5786,7 +5788,7 @@ IsValid=true
 end
 end
 if not IsValid then
-self:E({"File name invalid. Maybe something wrong with the extension ? ",FileName})
+self:E({"File name invalid. Maybe something wrong with the extension? ",FileName})
 end
 if type(Frequency)~="number"and IsValid then
 self:E({"Frequency invalid. ",Frequency})
@@ -5804,7 +5806,9 @@ end
 Power=math.floor(math.abs(Power))
 if IsValid then
 self:T2({"Activating Beacon on ",Frequency,Modulation})
-trigger.action.radioTransmission(FileName,self.Positionable:GetPositionVec3(),Modulation,true,Frequency,Power,tostring(self.ID))
+BEACON.UniqueName=BEACON.UniqueName+1
+self.BeaconName="MooseBeacon"..tostring(BEACON.UniqueName)
+trigger.action.radioTransmission(FileName,self.Positionable:GetPositionVec3(),Modulation,true,Frequency,Power,self.BeaconName)
 if BeaconDuration then
 SCHEDULER:New(nil,
 function()
@@ -5812,10 +5816,11 @@ self:StopRadioBeacon()
 end,{},BeaconDuration)
 end
 end
+return self
 end
 function BEACON:StopRadioBeacon()
 self:F()
-trigger.action.stopRadioTransmission(tostring(self.ID))
+trigger.action.stopRadioTransmission(self.BeaconName)
 return self
 end
 function BEACON:_TACANToFrequency(TACANChannel,TACANMode)
@@ -30144,6 +30149,9 @@ self.desc=WeaponObject:getDesc()
 self.category=self.desc.category
 if self:IsMissile()and self.desc.missileCategory then
 self.categoryMissile=self.desc.missileCategory
+if self.desc.guidance then
+self.guidance=self.desc.guidance
+end
 end
 self.typeName=WeaponObject:getTypeName()or"Unknown Type"
 self.name=WeaponObject:getName()
@@ -30357,6 +30365,15 @@ return self.category==Weapon.Category.SHELL
 end
 function WEAPON:IsTorpedo()
 return self.category==Weapon.Category.TORPEDO
+end
+function WEAPON:IsFoxOne()
+return self.guidance==Weapon.GuidanceType.RADAR_SEMI_ACTIVE
+end
+function WEAPON:IsFoxTwo()
+return self.guidance==Weapon.GuidanceType.IR
+end
+function WEAPON:IsFoxThree()
+return self.guidance==Weapon.GuidanceType.RADAR_ACTIVE
 end
 function WEAPON:Destroy(Delay)
 if Delay and Delay>0 then
@@ -65206,8 +65223,9 @@ CTLD.UnitTypeCapabilities={
 ["SH-60B"]={type="SH-60B",crates=true,troops=true,cratelimit=2,trooplimit=20,length=16,cargoweightlimit=3500},
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
+["OH-6A"]={type="OH-6A",crates=false,troops=true,cratelimit=0,trooplimit=4,length=7,cargoweightlimit=550},
 }
-CTLD.version="1.0.51"
+CTLD.version="1.0.52"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -68938,7 +68956,8 @@ CSAR.AircraftType["UH-60L"]=10
 CSAR.AircraftType["AH-64D_BLK_II"]=2
 CSAR.AircraftType["Bronco-OV-10A"]=2
 CSAR.AircraftType["MH-60R"]=10
-CSAR.version="1.0.21"
+CSAR.AircraftType["OH-6A"]=2
+CSAR.version="1.0.22"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Template,Alias})
