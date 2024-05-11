@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-05-01T13:52:10+02:00-fc52e06318016b2596cbaa4609f707a968d2c6ae ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-05-09T16:57:20+02:00-d0728afee7dfd03d459a2ff43d028e7f5d254756 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -2688,6 +2688,9 @@ local group=_group
 if group and group:IsAlive()then
 local name=group:GetName()
 local template=string.gsub(name,"-(.+)$","")
+if string.find(name,"AID")then
+template=string.gsub(name,"(.AID.%d+$","")
+end
 if string.find(template,"#")then
 template=string.gsub(name,"#(%d+)$","")
 end
@@ -3497,6 +3500,44 @@ relativeAngle=relativeAngle+360
 end
 local clockPos=math.ceil((relativeAngle%360)/30)
 return clockPos.." o'clock"
+end
+function UTILS.MGRSStringToSRSFriendly(Text,Slow)
+local Text=string.gsub(Text,"MGRS ","")
+Text=string.gsub(Text,"%s+","")
+Text=string.gsub(Text,"([%a%d])","%1;")
+Text=string.gsub(Text,"A","Alpha")
+Text=string.gsub(Text,"B","Bravo")
+Text=string.gsub(Text,"C","Charlie")
+Text=string.gsub(Text,"D","Delta")
+Text=string.gsub(Text,"E","Echo")
+Text=string.gsub(Text,"F","Foxtrot")
+Text=string.gsub(Text,"G","Golf")
+Text=string.gsub(Text,"H","Hotel")
+Text=string.gsub(Text,"I","India")
+Text=string.gsub(Text,"J","Juliett")
+Text=string.gsub(Text,"K","Kilo")
+Text=string.gsub(Text,"L","Lima")
+Text=string.gsub(Text,"M","Mike")
+Text=string.gsub(Text,"N","November")
+Text=string.gsub(Text,"O","Oscar")
+Text=string.gsub(Text,"P","Papa")
+Text=string.gsub(Text,"Q","Quebec")
+Text=string.gsub(Text,"R","Romeo")
+Text=string.gsub(Text,"S","Sierra")
+Text=string.gsub(Text,"T","Tango")
+Text=string.gsub(Text,"U","Uniform")
+Text=string.gsub(Text,"V","Victor")
+Text=string.gsub(Text,"W","Whiskey")
+Text=string.gsub(Text,"X","Xray")
+Text=string.gsub(Text,"Y","Yankee")
+Text=string.gsub(Text,"Z","Zulu")
+Text=string.gsub(Text,"0","zero")
+Text=string.gsub(Text,"9","niner")
+if Slow then
+Text='<prosody rate="slow">'..Text..'</prosody>'
+end
+Text="MGRS;"..Text
+return Text
 end
 PROFILER={
 ClassName="PROFILER",
@@ -18914,11 +18955,12 @@ self.SpawnRandomCallsign=true
 return self
 end
 function SPAWN:InitCallSign(ID,Name,Minor,Major)
+local Name=Name or"Enfield"
 self.SpawnInitCallSign=true
 self.SpawnInitCallSignID=ID or 1
 self.SpawnInitCallSignMinor=Minor or 1
 self.SpawnInitCallSignMajor=Major or 1
-self.SpawnInitCallSignName=string.lower(Name)or"enfield"
+self.SpawnInitCallSignName=string.lower(Name):gsub("^%l",string.upper)
 return self
 end
 function SPAWN:InitPositionCoordinate(Coordinate)
@@ -28800,6 +28842,21 @@ AIRBASE.Sinai={
 ["St_Catherine"]="St Catherine",
 ["Tel_Nof"]="Tel Nof",
 ["Wadi_al_Jandali"]="Wadi al Jandali",
+}
+AIRBASE.Kola={
+["Bas_100"]="Bas 100",
+["Bodo"]="Bodo",
+["Jokkmokk"]="Jokkmokk",
+["Kalixfors"]="Kalixfors",
+["Kemi_Tornio"]="Kemi Tornio",
+["Kiruna"]="Kiruna",
+["Lakselv"]="Lakselv",
+["Monchegorsk"]="Monchegorsk",
+["Murmansk_International"]="Murmansk International",
+["Olenegorsk"]="Olenegorsk",
+["Rovaniemi"]="Rovaniemi",
+["Severomorsk1"]="Severomorsk1",
+["Severomorsk3"]="Severomorsk3",
 }
 AIRBASE.TerminalType={
 Runway=16,
@@ -54002,6 +54059,13 @@ function AIRBOSS:SetLSOCallInterval(TimeInterval)
 self.LSOdT=TimeInterval or 4
 return self
 end
+function AIRBOSS:SetIntoWindLegacy(SwitchOn)
+if SwitchOn==nil then
+SwitchOn=true
+end
+self.intowindold=SwitchOn
+return self
+end
 function AIRBOSS:SetAirbossNiceGuy(Switch)
 if Switch==true or Switch==nil then
 self.airbossnice=true
@@ -55383,6 +55447,7 @@ HAWKEYE={file="PILOT-Hawkeye",suffix="ogg",loud=false,subtitle="",duration=0.63,
 TOMCAT={file="PILOT-Tomcat",suffix="ogg",loud=false,subtitle="",duration=0.66,subduration=5},
 HORNET={file="PILOT-Hornet",suffix="ogg",loud=false,subtitle="",duration=0.56,subduration=5},
 VIKING={file="PILOT-Viking",suffix="ogg",loud=false,subtitle="",duration=0.61,subduration=5},
+GREYHOUND={file="PILOT-Greyhound",suffix="ogg",loud=false,subtitle="",duration=0.61,subduration=5},
 BALL={file="PILOT-Ball",suffix="ogg",loud=false,subtitle="",duration=0.50,subduration=5},
 BINGOFUEL={file="PILOT-BingoFuel",suffix="ogg",loud=false,subtitle="",duration=0.80},
 GASATDIVERT={file="PILOT-GasAtDivert",suffix="ogg",loud=false,subtitle="",duration=1.80},
@@ -56010,7 +56075,7 @@ or flight.actype==AIRBOSS.AircraftCarrier.RHINOE
 or flight.actype==AIRBOSS.AircraftCarrier.RHINOF
 or flight.actype==AIRBOSS.AircraftCarrier.GROWLER then
 Speed=UTILS.KnotsToKmph(200)
-elseif flight.actype==AIRBOSS.AircraftCarrier.E2D then
+elseif flight.actype==AIRBOSS.AircraftCarrier.E2D or flight.actype==AIRBOSS.AircraftCarrier.C2A then
 Speed=UTILS.KnotsToKmph(150)
 elseif flight.actype==AIRBOSS.AircraftCarrier.F14A_AI or flight.actype==AIRBOSS.AircraftCarrier.F14A or flight.actype==AIRBOSS.AircraftCarrier.F14B then
 Speed=UTILS.KnotsToKmph(175)
@@ -58467,7 +58532,14 @@ local vpp=UTILS.VecDot(vT,zc)
 local vabs=UTILS.VecNorm(vT)
 return-vpa,vpp,vabs
 end
-function AIRBOSS:GetHeadingIntoWind_old(magnetic,coord)
+function AIRBOSS:GetHeadingIntoWind(vdeck,magnetic,coord)
+if self.intowindold then
+return self:GetHeadingIntoWind_old(vdeck,magnetic,coord)
+else
+return self:GetHeadingIntoWind_new(vdeck,magnetic,coord)
+end
+end
+function AIRBOSS:GetHeadingIntoWind_old(vdeck,magnetic,coord)
 local function adjustDegreesForWindSpeed(windSpeed)
 local degreesAdjustment=0
 if windSpeed>0 and windSpeed<3 then
@@ -58494,9 +58566,10 @@ end
 if intowind<0 then
 intowind=intowind+360
 end
-return intowind
+local vtot=math.max(vdeck-UTILS.MpsToKnots(vwind),4)
+return intowind,vtot
 end
-function AIRBOSS:GetHeadingIntoWind(vdeck,magnetic,coord)
+function AIRBOSS:GetHeadingIntoWind_new(vdeck,magnetic,coord)
 local Offset=self.carrierparam.rwyangle or 0
 local windfrom,vwind=self:GetWind(18,nil,coord)
 local Vmin=4
@@ -59830,6 +59903,8 @@ elseif actype==AIRBOSS.AircraftCarrier.AV8B then
 nickname="Harrier"
 elseif actype==AIRBOSS.AircraftCarrier.E2D then
 nickname="Hawkeye"
+elseif actype==AIRBOSS.AircraftCarrier.C2A then
+nickname="Greyhound"
 elseif actype==AIRBOSS.AircraftCarrier.F14A_AI or actype==AIRBOSS.AircraftCarrier.F14A or actype==AIRBOSS.AircraftCarrier.F14B then
 nickname="Tomcat"
 elseif actype==AIRBOSS.AircraftCarrier.FA18C or actype==AIRBOSS.AircraftCarrier.HORNET then
@@ -68957,7 +69032,7 @@ CSAR.AircraftType["AH-64D_BLK_II"]=2
 CSAR.AircraftType["Bronco-OV-10A"]=2
 CSAR.AircraftType["MH-60R"]=10
 CSAR.AircraftType["OH-6A"]=2
-CSAR.version="1.0.22"
+CSAR.version="1.0.23"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Template,Alias})
@@ -69157,7 +69232,6 @@ local _spawnedGroup=SPAWN
 :NewWithAlias(template,alias)
 :InitCoalition(coalition)
 :InitCountry(country)
-:InitAIOnOff(pilotcacontrol)
 :InitDelayOff()
 :SpawnFromCoordinate(point)
 return _spawnedGroup,alias
@@ -69479,10 +69553,24 @@ local _leadername=_leader:GetName()
 if not _nomessage then
 if _freq~=0 then
 local _text=string.format("%s requests SAR at %s, beacon at %.2f KHz",_groupName,_coordinatesText,_freqk)
+if self.coordtype~=2 then
 self:_DisplayToAllSAR(_text,self.coalition,self.messageTime)
 else
+self:_DisplayToAllSAR(_text,self.coalition,self.messageTime,false,true)
+local coordtext=UTILS.MGRSStringToSRSFriendly(_coordinatesText,true)
+local _text=string.format("%s requests SAR at %s, beacon at %.2f kilo hertz",_groupName,coordtext,_freqk)
+self:_DisplayToAllSAR(_text,self.coalition,self.messageTime,true,false)
+end
+else
 local _text=string.format("Pickup Zone at %s.",_coordinatesText)
+if self.coordtype~=2 then
 self:_DisplayToAllSAR(_text,self.coalition,self.messageTime)
+else
+self:_DisplayToAllSAR(_text,self.coalition,self.messageTime,false,true)
+local coordtext=UTILS.MGRSStringToSRSFriendly(_coordinatesText,true)
+local _text=string.format("Pickup Zone at %s.",coordtext)
+self:_DisplayToAllSAR(_text,self.coalition,self.messageTime,true,false)
+end
 end
 end
 for _,_heliName in pairs(self.csarUnits)do
@@ -69987,21 +70075,24 @@ self:_DisplayMessageToSAR(_heli,string.format("No Pilots within %s",dtext),self.
 end
 return self
 end
-function CSAR:_DisplayToAllSAR(_message,_side,_messagetime)
+function CSAR:_DisplayToAllSAR(_message,_side,_messagetime,ToSRS,ToScreen)
 self:T(self.lid.." _DisplayToAllSAR")
 local messagetime=_messagetime or self.messageTime
-if self.msrs then
+self:T({_message,ToSRS=ToSRS,ToScreen=ToScreen})
+if self.msrs and(ToSRS==true or ToSRS==nil)then
 local voice=self.CSARVoice or MSRS.Voices.Google.Standard.en_GB_Standard_F
 if self.msrs:GetProvider()==MSRS.Provider.WINDOWS then
 voice=self.CSARVoiceMS or MSRS.Voices.Microsoft.Hedda
 end
-self:I("Voice = "..voice)
+self:F("Voice = "..voice)
 self.SRSQueue:NewTransmission(_message,duration,self.msrs,tstart,2,subgroups,subtitle,subduration,self.SRSchannel,self.SRSModulation,gender,culture,voice,volume,label,self.coordinate)
 end
+if ToScreen==true or ToScreen==nil then
 for _,_unitName in pairs(self.csarUnits)do
 local _unit=self:_GetSARHeli(_unitName)
 if _unit and not self.suppressmessages then
 self:_DisplayMessageToSAR(_unit,_message,_messagetime)
+end
 end
 end
 return self
