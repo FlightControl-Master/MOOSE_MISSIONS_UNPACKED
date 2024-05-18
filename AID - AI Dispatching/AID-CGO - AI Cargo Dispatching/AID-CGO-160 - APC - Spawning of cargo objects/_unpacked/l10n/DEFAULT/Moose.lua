@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-05-09T16:57:20+02:00-d0728afee7dfd03d459a2ff43d028e7f5d254756 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-05-16T17:56:14+02:00-07a76ced889fd9ecd08ab8477db69e73254ec843 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -1044,7 +1044,8 @@ TheChannel="TheChannel",
 Syria="Syria",
 MarianaIslands="MarianaIslands",
 Falklands="Falklands",
-Sinai="SinaiMap"
+Sinai="SinaiMap",
+Kola="Kola"
 }
 CALLSIGN={
 Aircraft={
@@ -2070,6 +2071,8 @@ elseif map==DCSMAP.Falklands then
 declination=12
 elseif map==DCSMAP.Sinai then
 declination=4.8
+elseif map==DCSMAP.Kola then
+declination=15
 else
 declination=0
 end
@@ -18723,7 +18726,8 @@ return self
 end
 function SPAWN:InitKeepUnitNames(KeepUnitNames)
 self:F()
-self.SpawnInitKeepUnitNames=KeepUnitNames or true
+self.SpawnInitKeepUnitNames=false
+if KeepUnitNames==true then self.SpawnInitKeepUnitNames=true end
 return self
 end
 function SPAWN:InitLateActivated(LateActivated)
@@ -19158,8 +19162,6 @@ if not inZone then
 RandomVec2=PointVec3:GetRandomVec2InRadius(self.SpawnOuterRadius,self.SpawnInnerRadius)
 numTries=numTries+1
 inZone=SpawnZone:IsVec2InZone(RandomVec2)
-self:I("Retrying "..numTries.."spawn "..SpawnTemplate.name.." in Zone "..SpawnZone:GetName().."!")
-self:I(SpawnZone)
 end
 end
 if(not inZone)then
@@ -20010,14 +20012,14 @@ end
 return nil
 end
 function SPAWN:GetSpawnIndexFromGroup(SpawnGroup)
-self:F2({self.SpawnTemplatePrefix,self.SpawnAliasPrefix,SpawnGroup})
+self:F3({self.SpawnTemplatePrefix,self.SpawnAliasPrefix,SpawnGroup})
 local IndexString=string.match(SpawnGroup:GetName(),"#(%d*)$"):sub(2)
 local Index=tonumber(IndexString)
 self:T3(IndexString,Index)
 return Index
 end
 function SPAWN:_GetLastIndex()
-self:F({self.SpawnTemplatePrefix,self.SpawnAliasPrefix})
+self:F3({self.SpawnTemplatePrefix,self.SpawnAliasPrefix})
 return self.SpawnMaxGroups
 end
 function SPAWN:_InitializeSpawnGroups(SpawnIndex)
@@ -20115,7 +20117,9 @@ end
 end
 if self.SpawnInitKeepUnitNames==false then
 for UnitID=1,#SpawnTemplate.units do
+if not string.find(SpawnTemplate.units[UnitID].name,"#IFF_",1,true)then
 SpawnTemplate.units[UnitID].name=string.format(SpawnTemplate.name..'-%02d',UnitID)
+end
 SpawnTemplate.units[UnitID].unitId=nil
 end
 else
@@ -20127,11 +20131,9 @@ end
 local UnitPrefix,Rest
 if SpawnInitKeepUnitIFF==false then
 UnitPrefix,Rest=string.match(SpawnTemplate.units[UnitID].name,"^([^#]+)#?"):gsub("^%s*(.-)%s*$","%1")
-self:T({UnitPrefix,Rest})
-else
-UnitPrefix=SpawnTemplate.units[UnitID].name
-end
 SpawnTemplate.units[UnitID].name=string.format('%s#%03d-%02d',UnitPrefix,SpawnIndex,UnitID)
+self:T({UnitPrefix,Rest})
+end
 SpawnTemplate.units[UnitID].unitId=nil
 end
 end
@@ -52034,6 +52036,7 @@ SuppressedGroups={},
 automode=true,
 autoshorad=true,
 ShoradGroupSet=nil,
+checkforfriendlies=false,
 }
 MANTIS.AdvancedState={
 GREEN=0,
@@ -52559,6 +52562,10 @@ local set=dectset
 if dlink then
 set=self:_PreFilterHeight(height)
 end
+local friendlyset
+if self.checkforfriendlies==true then
+friendlyset=SET_GROUP:New():FilterCoalitions(self.Coalition):FilterCategories({"plane","helicopter"}):FilterOnce()
+end
 for _,_coord in pairs(set)do
 local coord=_coord
 local targetdistance=samcoordinate:DistanceFromPointVec2(coord)
@@ -52580,7 +52587,14 @@ local text=string.format("Checking SAM at %s | Targetdist %d | Rad %d | Inrange 
 local m=MESSAGE:New(text,10,"Check"):ToAllIf(self.debug)
 self:T(self.lid..text)
 end
-if targetdistance<=rad and zonecheck then
+local nofriendlies=true
+if self.checkforfriendlies==true then
+local closestfriend,distance=friendlyset:GetClosestGroup(samcoordinate)
+if closestfriend and distance and distance<rad then
+nofriendlies=false
+end
+end
+if targetdistance<=rad and zonecheck==true and nofriendlies==true then
 return true,targetdistance
 end
 end
@@ -54530,6 +54544,9 @@ local eta=UTILS.SecondsToClock(self:_GetETAatNextWP())
 local hdg=self:GetHeading()
 local pos=self:GetCoordinate()
 local speed=self.carrier:GetVelocityKNOTS()
+if require then
+self.magvar=pos:GetMagneticDeclination()
+end
 local collision=false
 local holdtime=0
 if self.holdtimestamp then
@@ -65300,7 +65317,7 @@ CTLD.UnitTypeCapabilities={
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 ["OH-6A"]={type="OH-6A",crates=false,troops=true,cratelimit=0,trooplimit=4,length=7,cargoweightlimit=550},
 }
-CTLD.version="1.0.52"
+CTLD.version="1.0.53"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -66915,7 +66932,7 @@ self:T(self.lid.." _MoveGroupToZone")
 local groupname=Group:GetName()or"none"
 local groupcoord=Group:GetCoordinate()
 local outcome,name,zone,distance=self:IsUnitInZone(Group,CTLD.CargoZoneType.MOVE)
-if(distance<=self.movetroopsdistance)and zone then
+if(distance<=self.movetroopsdistance)and outcome==true and zone~=nil then
 local groupname=Group:GetName()
 local zonecoord=zone:GetRandomCoordinate(20,125)
 local coordinate=zonecoord:GetVec2()
@@ -67546,10 +67563,9 @@ zoneradius=2000
 zonewidth=zoneradius
 end
 local distance=self:_GetDistance(zonecoord,unitcoord)
-if zone:IsVec2InZone(unitVec2)and active then
+self:T("Distance Zone: "..distance)
+if(zone:IsVec2InZone(unitVec2)or Zonetype==CTLD.CargoZoneType.MOVE)and active==true and maxdist>distance then
 outcome=true
-end
-if maxdist>distance then
 maxdist=distance
 zoneret=zone
 zonenameret=zonename
