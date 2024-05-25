@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-05-16T17:56:14+02:00-07a76ced889fd9ecd08ab8477db69e73254ec843 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-05-21T16:50:33+02:00-783e29f189a99026da06255a0d90fee1c55ed0a7 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -2232,6 +2232,8 @@ elseif theatre==DCSMAP.Falklands then
 return-3
 elseif theatre==DCSMAP.Sinai then
 return 2
+elseif theatre==DCSMAP.Kola then
+return 3
 else
 BASE:E(string.format("ERROR: Unknown Map %s in UTILS.GMTToLocal function. Returning 0",tostring(theatre)))
 return 0
@@ -10035,9 +10037,17 @@ for _,object in pairs(layer["objects"])do
 if object["name"]==DrawingName then
 if(object["primitiveType"]=="Line"and object["closed"]==true)or(object["polygonMode"]=="free")then
 for _,point in UTILS.spairs(object["points"])do
+local skip=false
 local p={x=object["mapX"]+point["x"],
 y=object["mapY"]+point["y"]}
+for _,pt in pairs(points)do
+if pt.x==p.x and pt.y==p.y then
+skip=true
+end
+end
+if not skip then
 table.add(points,p)
+end
 end
 elseif object["polygonMode"]=="rect"then
 local angle=object["angle"]
@@ -18024,9 +18034,9 @@ _MESSAGESRS.MSRS:SetProviderOptionsGoogle(PathToCredentials)
 _MESSAGESRS.MSRS:SetProvider(MSRS.Provider.GOOGLE)
 end
 _MESSAGESRS.label=Label or MSRS.Label or"MESSAGE"
-_MESSAGESRS.MSRS:SetLabel(Label or"MESSAGE")
+_MESSAGESRS.MSRS:SetLabel(_MESSAGESRS.label)
 _MESSAGESRS.port=Port or MSRS.port or 5002
-_MESSAGESRS.MSRS:SetPort(Port or 5002)
+_MESSAGESRS.MSRS:SetPort(_MESSAGESRS.port)
 _MESSAGESRS.volume=Volume or MSRS.volume or 1
 _MESSAGESRS.MSRS:SetVolume(_MESSAGESRS.volume)
 if Voice then _MESSAGESRS.MSRS:SetVoice(Voice)end
@@ -52225,7 +52235,7 @@ end
 if self.HQ_Template_CC then
 self.HQ_CC=GROUP:FindByName(self.HQ_Template_CC)
 end
-self.version="0.8.16"
+self.version="0.8.17"
 self:I(string.format("***** Starting MANTIS Version %s *****",self.version))
 self:SetStartState("Stopped")
 self:AddTransition("Stopped","Start","Running")
@@ -52564,7 +52574,7 @@ set=self:_PreFilterHeight(height)
 end
 local friendlyset
 if self.checkforfriendlies==true then
-friendlyset=SET_GROUP:New():FilterCoalitions(self.Coalition):FilterCategories({"plane","helicopter"}):FilterOnce()
+friendlyset=SET_GROUP:New():FilterCoalitions(self.Coalition):FilterCategories({"plane","helicopter"}):FilterFunction(function(grp)if grp and grp:InAir()then return true else return false end end):FilterOnce()
 end
 for _,_coord in pairs(set)do
 local coord=_coord
