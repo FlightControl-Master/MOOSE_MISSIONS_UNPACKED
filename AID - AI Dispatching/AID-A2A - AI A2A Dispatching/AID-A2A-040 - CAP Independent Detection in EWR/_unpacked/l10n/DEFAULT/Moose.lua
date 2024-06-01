@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-05-21T16:50:33+02:00-783e29f189a99026da06255a0d90fee1c55ed0a7 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-06-01T07:32:20+02:00-c87e91d8452c29aab7da4e37ba84241a0d3d6dc4 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -8441,6 +8441,7 @@ return self
 end
 end
 function MENU_GROUP_DELAYED:Set()
+if not self.GroupID then return end
 do
 if not self.MenuSet then
 missionCommands.addSubMenuForGroup(self.GroupID,self.MenuText,self.MenuParentPath)
@@ -12373,6 +12374,7 @@ self:HandleEvent(EVENTS.Birth,self._EventOnBirth)
 self:HandleEvent(EVENTS.Dead,self._EventOnDeadOrCrash)
 self:HandleEvent(EVENTS.Crash,self._EventOnDeadOrCrash)
 self:HandleEvent(EVENTS.RemoveUnit,self._EventOnDeadOrCrash)
+self:HandleEvent(EVENTS.PlayerLeaveUnit,self._EventOnDeadOrCrash)
 if self.Filter.Zones then
 self.ZoneTimer=TIMER:New(self._ContinousZoneFilter,self)
 local timing=self.ZoneTimerInterval or 30
@@ -28856,19 +28858,19 @@ AIRBASE.Sinai={
 ["Wadi_al_Jandali"]="Wadi al Jandali",
 }
 AIRBASE.Kola={
+["Banak"]="Banak",
 ["Bas_100"]="Bas 100",
 ["Bodo"]="Bodo",
 ["Jokkmokk"]="Jokkmokk",
 ["Kalixfors"]="Kalixfors",
 ["Kemi_Tornio"]="Kemi Tornio",
 ["Kiruna"]="Kiruna",
-["Lakselv"]="Lakselv",
 ["Monchegorsk"]="Monchegorsk",
 ["Murmansk_International"]="Murmansk International",
-["Olenegorsk"]="Olenegorsk",
+["Olenya"]="Olenya",
 ["Rovaniemi"]="Rovaniemi",
-["Severomorsk1"]="Severomorsk1",
-["Severomorsk3"]="Severomorsk3",
+["Severomorsk_1"]="Severomorsk-1",
+["Severomorsk_3"]="Severomorsk-3",
 }
 AIRBASE.TerminalType={
 Runway=16,
