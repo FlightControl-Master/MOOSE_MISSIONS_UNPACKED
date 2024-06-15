@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-06-07T16:03:45+02:00-333ed629bbe6121b868b36fcf4ab4244de125f27 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-06-15T08:12:54+02:00-2d1fcb9be8bc73ebe983c56f7c4d628ac90f97b9 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -7149,7 +7149,7 @@ Event.TgtCategory=Event.TgtDCSUnit:getDesc().category
 Event.TgtTypeName=Event.TgtDCSUnit:getTypeName()
 elseif Event.TgtObjectCategory==Object.Category.STATIC then
 Event.TgtDCSUnit=Event.target
-if Event.target:isExist()and Event.id~=33 then
+if Event.target.isExist and Event.target:isExist()and Event.id~=33 then
 Event.TgtDCSUnitName=Event.TgtDCSUnit:getName()
 if Event.TgtDCSUnitName and Event.TgtDCSUnitName~=""then
 Event.TgtUnitName=Event.TgtDCSUnitName
@@ -26275,6 +26275,7 @@ end
 end
 end
 local DCSGroup=Group.getByName(self.GroupName)
+if DCSGroup then
 local DCSUnits=DCSGroup:getUnits()or{}
 for _,_unit in pairs(DCSUnits)do
 if Object.isExist(_unit)then
@@ -26283,6 +26284,7 @@ local point=position.p~=nil and position.p or _unit:GetPoint()
 if point then
 local coord=COORDINATE:NewFromVec3(point)
 return coord
+end
 end
 end
 end
@@ -35881,7 +35883,7 @@ function DETECTION_BASE:onafterStart(From,Event,To)
 self:__Detect(1)
 end
 function DETECTION_BASE:onafterDetect(From,Event,To)
-local DetectDelay=0.1
+local DetectDelay=0.15
 self.DetectionCount=0
 self.DetectionRun=0
 self:UnIdentifyAllDetectedObjects()
@@ -35912,13 +35914,15 @@ self.DetectionSet:ForEachGroupAlive(IteratorFunction,arg)
 return self
 end
 function DETECTION_BASE:onafterDetection(From,Event,To,Detection,DetectionTimeStamp)
+self:I({DetectedObjects=self.DetectedObjects})
 self.DetectionRun=self.DetectionRun+1
 local HasDetectedObjects=false
 if Detection and Detection:IsAlive()then
+self:I({"DetectionGroup is Alive",Detection:GetName()})
 local DetectionGroupName=Detection:GetName()
 local DetectionUnit=Detection:GetUnit(1)
 local DetectedUnits={}
-local DetectedTargets=Detection:GetDetectedTargets(
+local DetectedTargets=DetectionUnit:GetDetectedTargets(
 self.DetectVisual,
 self.DetectOptical,
 self.DetectRadar,
@@ -35926,7 +35930,6 @@ self.DetectIRST,
 self.DetectRWR,
 self.DetectDLINK
 )
-self:F({DetectedTargets=DetectedTargets})
 for DetectionObjectID,Detection in pairs(DetectedTargets)do
 local DetectedObject=Detection.object
 if DetectedObject and DetectedObject:isExist()and DetectedObject.id_<50000000 then
@@ -37855,7 +37858,6 @@ local DetectedItem=self.Detection:GetDetectedItemByIndex(Index)
 local TargetSetUnit=self.Detection:GetDetectedItemSet(DetectedItem)
 local MarkingCount=0
 local MarkedTypes={}
-TargetSetUnit:Flush(self)
 for TargetUnit,RecceData in pairs(self.Recces)do
 local Recce=RecceData
 self:F({TargetUnit=TargetUnit,Recce=Recce:GetName()})
@@ -37880,6 +37882,7 @@ break
 end
 end
 end
+if TargetSetUnit==nil then return end
 if self.AutoLase or(not self.AutoLase and(self.LaseStart+Duration>=timer.getTime()))then
 TargetSetUnit:ForEachUnitPerThreatLevel(10,0,
 function(TargetUnit)
@@ -37906,14 +37909,15 @@ self.LaserCodesUsed[LaserCode]=LaserCodeIndex
 local Spot=RecceUnit:LaseUnit(TargetUnit,LaserCode,Duration)
 local AttackSet=self.AttackSet
 local DesignateName=self.DesignateName
+local typename=TargetUnit:GetTypeName()
 function Spot:OnAfterDestroyed(From,Event,To)
-self.Recce:MessageToSetGroup("Target "..TargetUnit:GetTypeName().." destroyed. "..TargetSetUnit:Count().." targets left.",
+self.Recce:MessageToSetGroup("Target "..typename.." destroyed. "..TargetSetUnit:CountAlive().." targets left.",
 5,AttackSet,self.DesignateName)
 end
 self.Recces[TargetUnit]=RecceUnit
 MarkingCount=MarkingCount+1
 local TargetUnitType=TargetUnit:GetTypeName()
-RecceUnit:MessageToSetGroup("Marking "..TargetUnit:GetTypeName().." with laser "..RecceUnit:GetSpot().LaserCode.." for "..Duration.."s.",
+RecceUnit:MessageToSetGroup("Marking "..TargetUnitType.." with laser "..RecceUnit:GetSpot().LaserCode.." for "..Duration.."s.",
 10,self.AttackSet,DesignateName)
 if not MarkedTypes[TargetUnitType]then
 MarkedTypes[TargetUnitType]=true
@@ -38024,8 +38028,10 @@ end
 end
 end
 function DESIGNATE:onafterDoneSmoking(From,Event,To,Index)
+if self.Designating[Index]~=nil then
 self.Designating[Index]=string.gsub(self.Designating[Index],"S","")
 self:SetDesignateMenu()
+end
 end
 function DESIGNATE:onafterDoneIlluminating(From,Event,To,Index)
 self.Designating[Index]=string.gsub(self.Designating[Index],"I","")
@@ -52141,6 +52147,7 @@ MANTIS.SamDataCH={
 do
 function MANTIS:New(name,samprefix,ewrprefix,hq,coalition,dynamic,awacs,EmOnOff,Padding,Zones)
 local self=BASE:Inherit(self,FSM:New())
+self.name=name or"mymantis"
 self.SAM_Templates_Prefix=samprefix or"Red SAM"
 self.EWR_Templates_Prefix=ewrprefix or"Red EWR"
 self.HQ_Template_CC=hq or nil
@@ -52241,7 +52248,7 @@ end
 if self.HQ_Template_CC then
 self.HQ_CC=GROUP:FindByName(self.HQ_Template_CC)
 end
-self.version="0.8.17"
+self.version="0.8.18"
 self:I(string.format("***** Starting MANTIS Version %s *****",self.version))
 self:SetStartState("Stopped")
 self:AddTransition("Stopped","Start","Running")
@@ -65332,7 +65339,7 @@ CTLD.UnitTypeCapabilities={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 ["OH-6A"]={type="OH-6A",crates=false,troops=true,cratelimit=0,trooplimit=4,length=7,cargoweightlimit=550},
-["OH-58D"]={type="OH-58D",crates=false,troops=false,cratelimit=0,trooplimit=0,length=14,cargoweightlimit=400},
+["OH58D"]={type="OH58D",crates=false,troops=false,cratelimit=0,trooplimit=0,length=14,cargoweightlimit=400},
 }
 CTLD.version="1.0.54"
 function CTLD:New(Coalition,Prefixes,Alias)
@@ -69065,7 +69072,7 @@ CSAR.AircraftType["AH-64D_BLK_II"]=2
 CSAR.AircraftType["Bronco-OV-10A"]=2
 CSAR.AircraftType["MH-60R"]=10
 CSAR.AircraftType["OH-6A"]=2
-CSAR.AircraftType["OH-58D"]=2
+CSAR.AircraftType["OH58D"]=2
 CSAR.version="1.0.24"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
