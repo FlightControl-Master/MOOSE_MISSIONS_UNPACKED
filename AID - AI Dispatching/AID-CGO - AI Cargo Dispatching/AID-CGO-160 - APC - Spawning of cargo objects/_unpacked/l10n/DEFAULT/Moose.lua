@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-06-15T08:12:54+02:00-2d1fcb9be8bc73ebe983c56f7c4d628ac90f97b9 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-06-20T18:08:24+02:00-8cdf8677c1ec746f3f5f312adb3098cc81e67197 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -1166,6 +1166,44 @@ Trash=10,
 Cargo=11,
 Ascot=12,
 },
+AH64={
+Army_Air=9,
+Apache=10,
+Crow=11,
+Sioux=12,
+Gatling=13,
+Gunslinger=14,
+Hammerhead=15,
+Bootleg=16,
+Palehorse=17,
+Carnivor=18,
+Saber=19,
+},
+Kiowa={
+Anvil=1,
+Azrael=2,
+BamBam=3,
+Blackjack=4,
+Bootleg=5,
+BurninStogie=6,
+Chaos=7,
+CrazyHorse=8,
+Crusader=9,
+Darkhorse=10,
+Eagle=11,
+Lighthorse=12,
+Mustang=13,
+Outcast=14,
+Palehorse=15,
+Pegasus=16,
+Pistol=17,
+Roughneck=18,
+Saber=19,
+Shamus=20,
+Spur=21,
+Stetson=22,
+Wrath=23,
+},
 }
 UTILS={
 _MarkID=1
@@ -2206,6 +2244,16 @@ return name
 end
 end
 for name,value in pairs(CALLSIGN.TransportAircraft)do
+if value==Callsign then
+return name
+end
+end
+for name,value in pairs(CALLSIGN.AH64)do
+if value==Callsign then
+return name
+end
+end
+for name,value in pairs(CALLSIGN.Kiowa)do
 if value==Callsign then
 return name
 end
@@ -11191,10 +11239,13 @@ end
 return nextoctal
 end
 function DATABASE:GetGroupTemplate(GroupName)
-local GroupTemplate=self.Templates.Groups[GroupName].Template
+local GroupTemplate=nil
+if self.Templates.Groups[GroupName]then
+GroupTemplate=self.Templates.Groups[GroupName].Template
 GroupTemplate.SpawnCoalitionID=self.Templates.Groups[GroupName].CoalitionID
 GroupTemplate.SpawnCategoryID=self.Templates.Groups[GroupName].CategoryID
 GroupTemplate.SpawnCountryID=self.Templates.Groups[GroupName].CountryID
+end
 return GroupTemplate
 end
 function DATABASE:_RegisterStaticTemplate(StaticTemplate,CoalitionID,CategoryID,CountryID)
@@ -17219,6 +17270,8 @@ local Latitude,Longitude=self:GetLLDDM()
 local Tdiff=UTILS.GMTToLocalTimeDifference()
 local sunrise=UTILS.GetSunRiseAndSet(DayOfYear,Latitude,Longitude,true,Tdiff)
 local sunset=UTILS.GetSunRiseAndSet(DayOfYear,Latitude,Longitude,false,Tdiff)
+if sunrise=="N/R"then return false end
+if sunrise=="N/S"then return true end
 local time=UTILS.ClockToSeconds(clock)
 if time>sunrise and time<=sunset then
 return true
@@ -26603,7 +26656,11 @@ return nil
 end
 function GROUP:GetTemplate()
 local GroupName=self:GetName()
-return UTILS.DeepCopy(_DATABASE:GetGroupTemplate(GroupName))
+local template=_DATABASE:GetGroupTemplate(GroupName)
+if template then
+return UTILS.DeepCopy(template)
+end
+return nil
 end
 function GROUP:GetTemplateRoutePoints()
 local GroupName=self:GetName()
@@ -59964,8 +60021,10 @@ end
 function AIRBOSS:_GetOnboardNumbers(group,playeronly)
 local groupname=group:GetName()
 local text=string.format("Onboard numbers of group %s:",groupname)
-local units=group:GetTemplate().units
+local template=group:GetTemplate()
 local numbers={}
+if template then
+local units=template.units
 for _,unit in pairs(units)do
 local n=tostring(unit.onboard_num)
 local name=unit.name
@@ -59977,6 +60036,17 @@ end
 numbers[name]=n
 end
 self:T2(self.lid..text)
+else
+if playeronly then
+return 101
+else
+local units=group:GetUnits()
+for i,_unit in pairs(units)do
+local name=_unit:GetName()
+numbers[name]=100+i
+end
+end
+end
 return numbers
 end
 function AIRBOSS:_GetTowerFrequency()
