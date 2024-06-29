@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-06-20T18:08:24+02:00-8cdf8677c1ec746f3f5f312adb3098cc81e67197 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-06-28T23:02:24+02:00-4b12b04840973dde03d71db3547fa4fcbc716beb ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -11314,13 +11314,25 @@ return nil
 end
 end
 function DATABASE:GetCoalitionFromClientTemplate(ClientName)
+if self.Templates.ClientsByName[ClientName]then
 return self.Templates.ClientsByName[ClientName].CoalitionID
 end
+self:E("ERROR: Template does not exist for client "..tostring(ClientName))
+return nil
+end
 function DATABASE:GetCategoryFromClientTemplate(ClientName)
+if self.Templates.ClientsByName[ClientName]then
 return self.Templates.ClientsByName[ClientName].CategoryID
 end
+self:E("ERROR: Template does not exist for client "..tostring(ClientName))
+return nil
+end
 function DATABASE:GetCountryFromClientTemplate(ClientName)
+if self.Templates.ClientsByName[ClientName]then
 return self.Templates.ClientsByName[ClientName].CountryID
+end
+self:E("ERROR: Template does not exist for client "..tostring(ClientName))
+return nil
 end
 function DATABASE:GetCoalitionFromAirbase(AirbaseName)
 return self.AIRBASES[AirbaseName]:GetCoalition()
@@ -14150,8 +14162,11 @@ if self.Filter.Coalitions and MClientInclude then
 local MClientCoalition=false
 for CoalitionID,CoalitionName in pairs(self.Filter.Coalitions)do
 local ClientCoalitionID=_DATABASE:GetCoalitionFromClientTemplate(MClientName)
+if ClientCoalitionID==nil and MClient:IsAlive()~=nil then
+ClientCoalitionID=MClient:GetCoalition()
+end
 self:T3({"Coalition:",ClientCoalitionID,self.FilterMeta.Coalitions[CoalitionName],CoalitionName})
-if self.FilterMeta.Coalitions[CoalitionName]and self.FilterMeta.Coalitions[CoalitionName]==ClientCoalitionID then
+if self.FilterMeta.Coalitions[CoalitionName]and ClientCoalitionID and self.FilterMeta.Coalitions[CoalitionName]==ClientCoalitionID then
 MClientCoalition=true
 end
 end
@@ -14162,8 +14177,11 @@ if self.Filter.Categories and MClientInclude then
 local MClientCategory=false
 for CategoryID,CategoryName in pairs(self.Filter.Categories)do
 local ClientCategoryID=_DATABASE:GetCategoryFromClientTemplate(MClientName)
+if ClientCategoryID==nil and MClient:IsAlive()~=nil then
+ClientCategoryID=MClient:GetCategory()
+end
 self:T3({"Category:",ClientCategoryID,self.FilterMeta.Categories[CategoryName],CategoryName})
-if self.FilterMeta.Categories[CategoryName]and self.FilterMeta.Categories[CategoryName]==ClientCategoryID then
+if self.FilterMeta.Categories[CategoryName]and ClientCategoryID and self.FilterMeta.Categories[CategoryName]==ClientCategoryID then
 MClientCategory=true
 end
 end
@@ -14185,8 +14203,11 @@ if self.Filter.Countries and MClientInclude then
 local MClientCountry=false
 for CountryID,CountryName in pairs(self.Filter.Countries)do
 local ClientCountryID=_DATABASE:GetCountryFromClientTemplate(MClientName)
+if ClientCountryID==nil and MClient:IsAlive()~=nil then
+ClientCountryID=MClient:GetCountry()
+end
 self:T3({"Country:",ClientCountryID,country.id[CountryName],CountryName})
-if country.id[CountryName]and country.id[CountryName]==ClientCountryID then
+if country.id[CountryName]and ClientCountryID and country.id[CountryName]==ClientCountryID then
 MClientCountry=true
 end
 end
@@ -27550,7 +27571,9 @@ end
 function UNIT:IsPlayer()
 local group=self:GetGroup()
 if not group then return false end
-local units=group:GetTemplate().units
+local template=group:GetTemplate()
+if(template==nil)or(template.units==nil)then return false end
+local units=template.units
 for _,unit in pairs(units)do
 if unit.name==self:GetName()and(unit.skill=="Client"or unit.skill=="Player")then
 return true
@@ -27728,6 +27751,8 @@ local nrockets=0
 local nmissiles=0
 local nbombs=0
 local narti=0
+local nAPshells=0
+local nHEshells=0
 local unit=self
 local ammotable=unit:GetAmmo()
 if ammotable then
@@ -27744,6 +27769,12 @@ if Category==Weapon.Category.SHELL then
 nshells=nshells+Nammo
 if ammotable[w].desc.warhead and ammotable[w].desc.warhead.explosiveMass and ammotable[w].desc.warhead.explosiveMass>0 then
 narti=narti+Nammo
+end
+if ammotable[w].desc.typeName and string.find(ammotable[w].desc.typeName,"_AP",1,true)then
+nAPshells=nAPshells+Nammo
+end
+if ammotable[w].desc.typeName and string.find(ammotable[w].desc.typeName,"_HE",1,true)then
+nHEshells=nHEshells+Nammo
 end
 elseif Category==Weapon.Category.ROCKET then
 nrockets=nrockets+Nammo
@@ -27767,7 +27798,31 @@ end
 end
 end
 nammo=nshells+nrockets+nmissiles+nbombs
-return nammo,nshells,nrockets,nbombs,nmissiles,narti
+return nammo,nshells,nrockets,nbombs,nmissiles,narti,nAPshells,nHEshells
+end
+function UNIT:HasAPShells()
+local _,_,_,_,_,_,shells=self:GetAmmunition()
+if shells>0 then return true else return false end
+end
+function UNIT:GetAPShells()
+local _,_,_,_,_,_,shells=self:GetAmmunition()
+return shells or 0
+end
+function UNIT:GetHEShells()
+local _,_,_,_,_,_,_,shells=self:GetAmmunition()
+return shells or 0
+end
+function UNIT:HasHEShells()
+local _,_,_,_,_,_,_,shells=self:GetAmmunition()
+if shells>0 then return true else return false end
+end
+function UNIT:HasArtiShells()
+local _,_,_,_,_,shells=self:GetAmmunition()
+if shells>0 then return true else return false end
+end
+function UNIT:GetArtiShells()
+local _,_,_,_,_,shells=self:GetAmmunition()
+return shells or 0
 end
 function UNIT:GetSensors()
 self:F2(self.UnitName)
@@ -27907,17 +27962,17 @@ if Descriptor then
 local Attributes=Descriptor.attributes
 if self:IsGround()then
 local ThreatLevels={
-"Unarmed",
-"Infantry",
-"Old Tanks & APCs",
-"Tanks & IFVs without ATGM",
-"Tanks & IFV with ATGM",
-"Modern Tanks",
-"AAA",
-"IR Guided SAMs",
-"SR SAMs",
-"MR SAMs",
-"LR SAMs"
+[1]="Unarmed",
+[2]="Infantry",
+[3]="Old Tanks & APCs",
+[4]="Tanks & IFVs without ATGM",
+[5]="Tanks & IFV with ATGM",
+[6]="Modern Tanks",
+[7]="AAA",
+[8]="IR Guided SAMs",
+[9]="SR SAMs",
+[10]="MR SAMs",
+[11]="LR SAMs"
 }
 if Attributes["LR SAM"]then ThreatLevel=10
 elseif Attributes["MR SAM"]then ThreatLevel=9
@@ -27938,17 +27993,17 @@ ThreatText=ThreatLevels[ThreatLevel+1]
 end
 if self:IsAir()then
 local ThreatLevels={
-"Unarmed",
-"Tanker",
-"AWACS",
-"Transport Helicopter",
-"UAV",
-"Bomber",
-"Strategic Bomber",
-"Attack Helicopter",
-"Battleplane",
-"Multirole Fighter",
-"Fighter"
+[1]="Unarmed",
+[2]="Tanker",
+[3]="AWACS",
+[4]="Transport Helicopter",
+[5]="UAV",
+[6]="Bomber",
+[7]="Strategic Bomber",
+[8]="Attack Helicopter",
+[9]="Battleplane",
+[10]="Multirole Fighter",
+[11]="Fighter"
 }
 if Attributes["Fighters"]then ThreatLevel=10
 elseif Attributes["Multirole fighters"]then ThreatLevel=9
@@ -27967,17 +28022,17 @@ ThreatText=ThreatLevels[ThreatLevel+1]
 end
 if self:IsShip()then
 local ThreatLevels={
-"Unarmed ship",
-"Light armed ships",
-"Corvettes",
-"",
-"Frigates",
-"",
-"Cruiser",
-"",
-"Destroyer",
-"",
-"Aircraft Carrier"
+[1]="Unarmed ship",
+[2]="Light armed ships",
+[3]="Corvettes",
+[4]="",
+[5]="Frigates",
+[6]="",
+[7]="Cruiser",
+[8]="",
+[9]="Destroyer",
+[10]="",
+[11]="Aircraft Carrier"
 }
 if Attributes["Aircraft Carriers"]then ThreatLevel=10
 elseif Attributes["Destroyers"]then ThreatLevel=8
@@ -43983,7 +44038,7 @@ maxrange=32000,
 reloadtime=540,
 },
 }
-ARTY.version="1.3.0"
+ARTY.version="1.3.1"
 function ARTY:New(group,alias)
 local self=BASE:Inherit(self,FSM_CONTROLLABLE:New())
 if type(group)=="string"then
@@ -44446,7 +44501,7 @@ self:_EventFromTo("onafterStart",Event,From,To)
 local text=string.format("Started ARTY version %s for group %s.",ARTY.version,Controllable:GetName())
 self:I(self.lid..text)
 MESSAGE:New(text,5):ToAllIf(self.Debug)
-self.Nammo0,self.Nshells0,self.Nrockets0,self.Nmissiles0=self:GetAmmo(self.Debug)
+self.Nammo0,self.Nshells0,self.Nrockets0,self.Nmissiles0,self.Narty0=self:GetAmmo(self.Debug)
 if self.nukerange==nil then
 self.nukerange=1500/75000*self.nukewarhead
 end
@@ -44607,7 +44662,7 @@ function ARTY:_StatusReport(display)
 if display==nil then
 display=false
 end
-local Nammo,Nshells,Nrockets,Nmissiles=self:GetAmmo()
+local Nammo,Nshells,Nrockets,Nmissiles,Narty=self:GetAmmo()
 local Nnukes=self.Nukes
 local Nillu=self.Nillu
 local Nsmoke=self.Nsmoke
@@ -44618,7 +44673,7 @@ text=text..string.format("ARTY group          = %s\n",self.groupname)
 text=text..string.format("Clock               = %s\n",Clock)
 text=text..string.format("FSM state           = %s\n",self:GetState())
 text=text..string.format("Total ammo count    = %d\n",Nammo)
-text=text..string.format("Number of shells    = %d\n",Nshells)
+text=text..string.format("Number of shells    = %d\n",Narty)
 text=text..string.format("Number of rockets   = %d\n",Nrockets)
 text=text..string.format("Number of missiles  = %d\n",Nmissiles)
 text=text..string.format("Number of nukes     = %d\n",Nnukes)
@@ -44711,7 +44766,7 @@ weapon:SetFuncTrack(ARTY._FuncTrack,self,target)
 weapon:SetFuncImpact(ARTY._FuncImpact,self,target)
 weapon:StartTrack(2)
 end
-local _nammo,_nshells,_nrockets,_nmissiles=self:GetAmmo()
+local _nammo,_nshells,_nrockets,_nmissiles,_narty=self:GetAmmo()
 if self.currentTarget.weapontype==ARTY.WeaponType.TacticalNukes then
 self.Nukes=self.Nukes-1
 end
@@ -44728,7 +44783,7 @@ _outofammo=true
 end
 local _partlyoutofammo=self:_CheckOutOfAmmo({self.currentTarget})
 local _weapontype=self:_WeaponTypeName(self.currentTarget.weapontype)
-self:T(self.lid..string.format("Group %s ammo: total=%d, shells=%d, rockets=%d, missiles=%d",self.groupname,_nammo,_nshells,_nrockets,_nmissiles))
+self:T(self.lid..string.format("Group %s ammo: total=%d, shells=%d, rockets=%d, missiles=%d",self.groupname,_nammo,_narty,_nrockets,_nmissiles))
 self:T(self.lid..string.format("Group %s uses weapontype %s for current target.",self.groupname,_weapontype))
 local _ceasefire=false
 local _relocate=false
@@ -44996,7 +45051,7 @@ end
 end
 function ARTY:onafterStatus(Controllable,From,Event,To)
 self:_EventFromTo("onafterStatus",Event,From,To)
-local nammo,nshells,nrockets,nmissiles=self:GetAmmo()
+local nammo,nshells,nrockets,nmissiles,narty=self:GetAmmo()
 if self.iscargo and self.cargogroup then
 if self.cargogroup:IsLoaded()and not self:is("InTransit")then
 self:T(self.lid..string.format("Group %s has been loaded into a carrier and is now transported.",self.alias))
@@ -45007,7 +45062,7 @@ self:UnLoaded()
 end
 end
 local fsmstate=self:GetState()
-self:T(self.lid..string.format("Status %s, Ammo total=%d: shells=%d [smoke=%d, illu=%d, nukes=%d*%.3f kT], rockets=%d, missiles=%d",fsmstate,nammo,nshells,self.Nsmoke,self.Nillu,self.Nukes,self.nukewarhead/1000000,nrockets,nmissiles))
+self:T(self.lid..string.format("Status %s, Ammo total=%d: shells=%d [smoke=%d, illu=%d, nukes=%d*%.3f kT], rockets=%d, missiles=%d",fsmstate,nammo,narty,self.Nsmoke,self.Nillu,self.Nukes,self.nukewarhead/1000000,nrockets,nmissiles))
 if self.Controllable and self.Controllable:IsAlive()then
 if self.Debug then
 self:_StatusReport()
@@ -45059,9 +45114,13 @@ elseif _timedTarget then
 if self.currentTarget then
 self:CeaseFire(self.currentTarget)
 end
+if self:is("CombatReady")then
 self:OpenFire(_timedTarget)
+end
 elseif _normalTarget then
+if self:is("CombatReady")then
 self:OpenFire(_normalTarget)
+end
 end
 local gotsome=false
 if#self.targets>0 then
@@ -45132,14 +45191,14 @@ self.currentTarget=target
 self.currentTarget.Tassigned=timer.getTime()
 end
 local range=Controllable:GetCoordinate():Get2DDistance(target.coord)
-local Nammo,Nshells,Nrockets,Nmissiles=self:GetAmmo()
-local nfire=Nammo
+local Nammo,Nshells,Nrockets,Nmissiles,Narty=self:GetAmmo()
+local nfire=Narty
 local _type="shots"
 if target.weapontype==ARTY.WeaponType.Auto then
-nfire=Nammo
+nfire=Narty
 _type="shots"
 elseif target.weapontype==ARTY.WeaponType.Cannon then
-nfire=Nshells
+nfire=Narty
 _type="shells"
 elseif target.weapontype==ARTY.WeaponType.TacticalNukes then
 nfire=self.Nukes
@@ -45280,7 +45339,7 @@ end
 end
 function ARTY:_CheckRearmed()
 self:F2()
-local nammo,nshells,nrockets,nmissiles=self:GetAmmo()
+local nammo,nshells,nrockets,nmissiles,narty=self:GetAmmo()
 local units=self.Controllable:GetUnits()
 local nunits=0
 if units then
@@ -45390,10 +45449,13 @@ local group=self.Controllable
 if weapontype==ARTY.WeaponType.TacticalNukes or weapontype==ARTY.WeaponType.IlluminationShells or weapontype==ARTY.WeaponType.SmokeShells then
 weapontype=ARTY.WeaponType.Cannon
 end
+if group:HasTask()then
+group:ClearTasks()
+end
 group:OptionROEOpenFire()
 local vec2=coord:GetVec2()
 local fire=group:TaskFireAtPoint(vec2,radius,nshells,weapontype)
-group:SetTask(fire)
+group:SetTask(fire,1)
 end
 function ARTY:_AttackGroup(target)
 local group=self.Controllable
@@ -45401,10 +45463,13 @@ local weapontype=target.weapontype
 if weapontype==ARTY.WeaponType.TacticalNukes or weapontype==ARTY.WeaponType.IlluminationShells or weapontype==ARTY.WeaponType.SmokeShells then
 weapontype=ARTY.WeaponType.Cannon
 end
+if group:HasTask()then
+group:ClearTasks()
+end
 group:OptionROEOpenFire()
 local targetgroup=GROUP:FindByName(target.name)
 local fire=group:TaskAttackGroup(targetgroup,weapontype,AI.Task.WeaponExpend.ONE,1)
-group:SetTask(fire)
+group:SetTask(fire,1)
 end
 function ARTY:_NuclearBlast(_coord)
 local S0=self.nukewarhead
@@ -45523,6 +45588,7 @@ local nammo=0
 local nshells=0
 local nrockets=0
 local nmissiles=0
+local nartyshells=0
 local units=self.Controllable:GetUnits()
 if units==nil then
 return nammo,nshells,nrockets,nmissiles
@@ -45590,6 +45656,8 @@ end
 end
 if _gotshell then
 nshells=nshells+Nammo
+local _,_,_,_,_,shells=unit:GetAmmunition()
+nartyshells=nartyshells+shells
 text=text..string.format("- %d shells of type %s\n",Nammo,_weaponName)
 elseif _gotrocket then
 nrockets=nrockets+Nammo
@@ -45613,7 +45681,7 @@ MESSAGE:New(text,10):ToAllIf(display)
 end
 end
 nammo=nshells+nrockets+nmissiles
-return nammo,nshells,nrockets,nmissiles
+return nammo,nshells,nrockets,nmissiles,nartyshells
 end
 function ARTY:_MissileCategoryName(categorynumber)
 local cat="unknown"
@@ -46062,7 +46130,8 @@ local dt=Tnow-self.currentTarget.Tassigned
 if self.Nshots==0 then
 self:T(self.lid..string.format("%s, waiting for %d seconds for first shot on target %s.",self.groupname,dt,name))
 end
-if dt>self.WaitForShotTime and(self.Nshots==0 or self.currentTarget.nshells>=self.Nshots)then
+self:T(string.format("dt = %d WaitTime = %d | shots = %d TargetShells = %d",dt,self.WaitForShotTime,self.Nshots,self.currentTarget.nshells))
+if(dt>self.WaitForShotTime and self.Nshots==0)or(self.currentTarget.nshells<=self.Nshots)then
 self:T(self.lid..string.format("%s, no shot event after %d seconds. Removing current target %s from list.",self.groupname,self.WaitForShotTime,name))
 self:CeaseFire(self.currentTarget)
 self:RemoveTarget(name)
@@ -46096,13 +46165,13 @@ self:T2(self.lid..string.format("WARNING: Move with name %s could not be found. 
 return nil
 end
 function ARTY:_CheckOutOfAmmo(targets)
-local _nammo,_nshells,_nrockets,_nmissiles=self:GetAmmo()
+local _nammo,_nshells,_nrockets,_nmissiles,_narty=self:GetAmmo()
 local _partlyoutofammo=false
 for _,Target in pairs(targets)do
 if Target.weapontype==ARTY.WeaponType.Auto and _nammo==0 then
 self:T(self.lid..string.format("Group %s, auto weapon requested for target %s but all ammo is empty.",self.groupname,Target.name))
 _partlyoutofammo=true
-elseif Target.weapontype==ARTY.WeaponType.Cannon and _nshells==0 then
+elseif Target.weapontype==ARTY.WeaponType.Cannon and _narty==0 then
 self:T(self.lid..string.format("Group %s, cannons requested for target %s but shells empty.",self.groupname,Target.name))
 _partlyoutofammo=true
 elseif Target.weapontype==ARTY.WeaponType.TacticalNukes and self.Nukes<=0 then
@@ -46125,12 +46194,12 @@ end
 return _partlyoutofammo
 end
 function ARTY:_CheckWeaponTypeAvailable(target)
-local Nammo,Nshells,Nrockets,Nmissiles=self:GetAmmo()
+local Nammo,Nshells,Nrockets,Nmissiles,Narty=self:GetAmmo()
 local nfire=Nammo
 if target.weapontype==ARTY.WeaponType.Auto then
 nfire=Nammo
 elseif target.weapontype==ARTY.WeaponType.Cannon then
-nfire=Nshells
+nfire=Narty
 elseif target.weapontype==ARTY.WeaponType.TacticalNukes then
 nfire=self.Nukes
 elseif target.weapontype==ARTY.WeaponType.IlluminationShells then
@@ -50506,10 +50575,12 @@ if not self.allowSpawnOnClientSpots then
 local clients=_DATABASE.CLIENTS
 for clientname,client in pairs(clients)do
 local template=_DATABASE:GetGroupTemplateFromUnitName(clientname)
+if template then
 local units=template.units
 for i,unit in pairs(units)do
 local coord=COORDINATE:New(unit.x,unit.alt,unit.y)
 coords[unit.name]=coord
+end
 end
 end
 end
