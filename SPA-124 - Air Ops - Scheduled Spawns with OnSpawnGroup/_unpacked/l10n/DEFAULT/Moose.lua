@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-07-05T21:35:55+02:00-29a4f7c160dd09ea9e9482103d0162e4517b52b1 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-07-12T19:32:55+02:00-8a21fe80def6165d2504307b5b8436768743e882 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -1045,7 +1045,8 @@ Syria="Syria",
 MarianaIslands="MarianaIslands",
 Falklands="Falklands",
 Sinai="SinaiMap",
-Kola="Kola"
+Kola="Kola",
+Afghanistan="Afghanistan",
 }
 CALLSIGN={
 Aircraft={
@@ -1354,6 +1355,11 @@ return s
 end
 end
 end
+function UTILS.TableLength(T)
+local count=0
+for _ in pairs(T or{})do count=count+1 end
+return count
+end
 function UTILS.PrintTableToLog(table,indent,noprint)
 local text="\n"
 if not table or type(table)~="table"then
@@ -1363,7 +1369,7 @@ end
 if not indent then indent=0 end
 for k,v in pairs(table)do
 if string.find(k," ")then k='"'..k..'"'end
-if type(v)=="table"then
+if type(v)=="table"and UTILS.TableLength(v)>0 then
 if not noprint then
 env.info(string.rep("  ",indent)..tostring(k).." = {")
 end
@@ -2111,6 +2117,8 @@ elseif map==DCSMAP.Sinai then
 declination=4.8
 elseif map==DCSMAP.Kola then
 declination=15
+elseif map==DCSMAP.Afghanistan then
+declination=3
 else
 declination=0
 end
@@ -2282,6 +2290,8 @@ elseif theatre==DCSMAP.Sinai then
 return 2
 elseif theatre==DCSMAP.Kola then
 return 3
+elseif theatre==DCSMAP.Afghanistan then
+return 4.5
 else
 BASE:E(string.format("ERROR: Unknown Map %s in UTILS.GMTToLocal function. Returning 0",tostring(theatre)))
 return 0
@@ -3631,6 +3641,21 @@ end
 table.insert(csvdata,row)
 end
 return csvdata
+end
+function UTILS.LCGRandomSeed(seed)
+UTILS.lcg={
+seed=seed or math.random(1,2^32-1),
+a=1664525,
+c=1013904223,
+m=2^32
+}
+end
+function UTILS.LCGRandom()
+if UTILS.lcg==nil then
+UTILS.LCGRandomSeed()
+end
+UTILS.lcg.seed=(UTILS.lcg.a*UTILS.lcg.seed+UTILS.lcg.c)%UTILS.lcg.m
+return UTILS.lcg.seed/UTILS.lcg.m
 end
 PROFILER={
 ClassName="PROFILER",
@@ -6549,8 +6574,13 @@ MacSubtaskScore=world.event.S_EVENT_MAC_SUBTASK_SCORE or-1,
 MacExtraScore=world.event.S_EVENT_MAC_EXTRA_SCORE or-1,
 MissionRestart=world.event.S_EVENT_MISSION_RESTART or-1,
 MissionWinner=world.event.S_EVENT_MISSION_WINNER or-1,
-PostponedTakeoff=world.event.S_EVENT_POSTPONED_TAKEOFF or-1,
-PostponedLand=world.event.S_EVENT_POSTPONED_LAND or-1,
+RunwayTakeoff=world.event.S_EVENT_RUNWAY_TAKEOFF or-1,
+RunwayTouch=world.event.S_EVENT_RUNWAY_TOUCH or-1,
+MacLMSRestart=world.event.S_EVENT_MAC_LMS_RESTART or-1,
+SimulationFreeze=world.event.S_EVENT_SIMULATION_FREEZE or-1,
+SimulationUnfreeze=world.event.S_EVENT_SIMULATION_UNFREEZE or-1,
+HumanAircraftRepairStart=world.event.S_EVENT_HUMAN_AIRCRAFT_REPAIR_START or-1,
+HumanAircraftRepairFinish=world.event.S_EVENT_HUMAN_AIRCRAFT_REPAIR_FINISH or-1,
 }
 local _EVENTMETA={
 [world.event.S_EVENT_SHOT]={
@@ -6900,17 +6930,47 @@ Side="I",
 Event="OnEventMissionWinner",
 Text="S_EVENT_MISSION_WINNER"
 },
-[EVENTS.PostponedTakeoff]={
+[EVENTS.RunwayTakeoff]={
 Order=1,
 Side="I",
-Event="OnEventPostponedTakeoff",
-Text="S_EVENT_POSTPONED_TAKEOFF"
+Event="OnEventRunwayTakeoff",
+Text="S_EVENT_RUNWAY_TAKEOFF"
 },
-[EVENTS.PostponedLand]={
+[EVENTS.RunwayTouch]={
 Order=1,
 Side="I",
-Event="OnEventPostponedLand",
-Text="S_EVENT_POSTPONED_LAND"
+Event="OnEventRunwayTouch",
+Text="S_EVENT_RUNWAY_TOUCH"
+},
+[EVENTS.MacLMSRestart]={
+Order=1,
+Side="I",
+Event="OnEventMacLMSRestart",
+Text="S_EVENT_MAC_LMS_RESTART"
+},
+[EVENTS.SimulationFreeze]={
+Order=1,
+Side="I",
+Event="OnEventSimulationFreeze",
+Text="S_EVENT_SIMULATION_FREEZE"
+},
+[EVENTS.SimulationUnfreeze]={
+Order=1,
+Side="I",
+Event="OnEventSimulationUnfreeze",
+Text="S_EVENT_SIMULATION_UNFREEZE"
+},
+[EVENTS.HumanAircraftRepairStart]={
+Order=1,
+Side="I",
+Event="OnEventHumanAircraftRepairStart",
+Text="S_EVENT_HUMAN_AIRCRAFT_REPAIR_START"
+},
+[EVENTS.HumanAircraftRepairFinish]={
+Order=1,
+Side="I",
+Event="OnEventHumanAircraftRepairFinish",
+Text="S_EVENT_HUMAN_AIRCRAFT_REPAIR_FINISH"
 },
 }
 function EVENT:New()
@@ -23396,20 +23456,25 @@ lastWptIndex=LastWptNumber
 }
 return DCSTask
 end
-function CONTROLLABLE:TaskLandAtVec2(Vec2,Duration)
+function CONTROLLABLE:TaskLandAtVec2(Vec2,Duration,CombatLanding,DirectionAfterLand)
 local DCSTask={
 id='Land',
 params={
 point=Vec2,
 durationFlag=Duration and true or false,
 duration=Duration,
+combatLandingFlag=CombatLanding==true and true or false,
 },
 }
+if DirectionAfterLand~=nil and type(DirectionAfterLand)=="number"then
+DCSTask.params.directionEnabled=true
+DCSTask.params.direction=math.rad(DirectionAfterLand)
+end
 return DCSTask
 end
-function CONTROLLABLE:TaskLandAtZone(Zone,Duration,RandomPoint)
+function CONTROLLABLE:TaskLandAtZone(Zone,Duration,RandomPoint,CombatLanding,DirectionAfterLand)
 local Point=RandomPoint and Zone:GetRandomVec2()or Zone:GetVec2()
-local DCSTask=CONTROLLABLE.TaskLandAtVec2(self,Point,Duration)
+local DCSTask=CONTROLLABLE.TaskLandAtVec2(self,Point,Duration,CombatLanding,DirectionAfterLand)
 return DCSTask
 end
 function CONTROLLABLE:TaskFollow(FollowControllable,Vec3,LastWaypointIndex)
@@ -28939,7 +29004,6 @@ AIRBASE.MarianaIslands={
 }
 AIRBASE.SouthAtlantic={
 ["Almirante_Schroeders"]="Almirante Schroeders",
-["Caleta_Tortel"]="Caleta Tortel",
 ["Comandante_Luis_Piedrabuena"]="Comandante Luis Piedrabuena",
 ["Cullen"]="Cullen",
 ["El_Calafate"]="El Calafate",
@@ -29013,6 +29077,23 @@ AIRBASE.Kola={
 ["Rovaniemi"]="Rovaniemi",
 ["Severomorsk_1"]="Severomorsk-1",
 ["Severomorsk_3"]="Severomorsk-3",
+}
+AIRBASE.Afghanistan={
+["Bost"]="Bost",
+["Camp_Bastion"]="Camp Bastion",
+["Camp_Bastion_Heliport"]="Camp Bastion Heliport",
+["Chaghcharan"]="Chaghcharan",
+["Dwyer"]="Dwyer",
+["Farah"]="Farah",
+["Herat"]="Herat",
+["Kandahar"]="Kandahar",
+["Kandahar_Heliport"]="Kandahar Heliport",
+["Maymana_Zahiraddin_Faryabi"]="Maymana Zahiraddin Faryabi",
+["Nimroz"]="Nimroz",
+["Qala_i_Naw"]="Qala i Naw",
+["Shindand"]="Shindand",
+["Shindand_Heliport"]="Shindand Heliport",
+["Tarinkot"]="Tarinkot",
 }
 AIRBASE.TerminalType={
 Runway=16,
@@ -29370,7 +29451,7 @@ function AIRBASE:GetFreeParkingSpotsTable(termtype,allowTOAC)
 local parkingfree=self:GetParkingData(true)
 local freespots={}
 for _,_spot in pairs(parkingfree)do
-if AIRBASE._CheckTerminalType(_spot.Term_Type,termtype)and _spot.Term_Index>0 then
+if AIRBASE._CheckTerminalType(_spot.Term_Type,termtype)then
 if(allowTOAC and allowTOAC==true)or _spot.TO_AC==false then
 local spot=self:_GetParkingSpotByID(_spot.Term_Index)
 spot.Free=true
@@ -39183,6 +39264,10 @@ elseif DCStype=="Mirage-F1CE"then
 self.aircraft.length=16
 self.aircraft.height=5
 self.aircraft.width=9
+elseif DCStype=="Saab340"then
+self.aircraft.length=19.73
+self.aircraft.height=6.97
+self.aircraft.width=21.44
 end
 self.aircraft.box=math.max(self.aircraft.length,self.aircraft.width)
 local text=string.format("\n******************************************************\n")
@@ -41690,7 +41775,7 @@ IRExitRange={filename="IR-ExitRange.ogg",duration=3.10},
 RANGE.Names={}
 RANGE.MenuF10={}
 RANGE.MenuF10Root=nil
-RANGE.version="2.7.3"
+RANGE.version="2.8.0"
 function RANGE:New(RangeName,Coalition)
 local self=BASE:Inherit(self,FSM:New())
 self.rangename=RangeName or"Practice Range"
@@ -41756,32 +41841,32 @@ end
 if self.rangecontrolfreq and not self.useSRS then
 self.rangecontrol=RADIOQUEUE:New(self.rangecontrolfreq,nil,self.rangename)
 self.rangecontrol.schedonce=true
-self.rangecontrol:SetDigit(0,RANGE.Sound.RC0.filename,RANGE.Sound.RC0.duration,self.soundpath)
-self.rangecontrol:SetDigit(1,RANGE.Sound.RC1.filename,RANGE.Sound.RC1.duration,self.soundpath)
-self.rangecontrol:SetDigit(2,RANGE.Sound.RC2.filename,RANGE.Sound.RC2.duration,self.soundpath)
-self.rangecontrol:SetDigit(3,RANGE.Sound.RC3.filename,RANGE.Sound.RC3.duration,self.soundpath)
-self.rangecontrol:SetDigit(4,RANGE.Sound.RC4.filename,RANGE.Sound.RC4.duration,self.soundpath)
-self.rangecontrol:SetDigit(5,RANGE.Sound.RC5.filename,RANGE.Sound.RC5.duration,self.soundpath)
-self.rangecontrol:SetDigit(6,RANGE.Sound.RC6.filename,RANGE.Sound.RC6.duration,self.soundpath)
-self.rangecontrol:SetDigit(7,RANGE.Sound.RC7.filename,RANGE.Sound.RC7.duration,self.soundpath)
-self.rangecontrol:SetDigit(8,RANGE.Sound.RC8.filename,RANGE.Sound.RC8.duration,self.soundpath)
-self.rangecontrol:SetDigit(9,RANGE.Sound.RC9.filename,RANGE.Sound.RC9.duration,self.soundpath)
+self.rangecontrol:SetDigit(0,self.Sound.RC0.filename,self.Sound.RC0.duration,self.soundpath)
+self.rangecontrol:SetDigit(1,self.Sound.RC1.filename,self.Sound.RC1.duration,self.soundpath)
+self.rangecontrol:SetDigit(2,self.Sound.RC2.filename,self.Sound.RC2.duration,self.soundpath)
+self.rangecontrol:SetDigit(3,self.Sound.RC3.filename,self.Sound.RC3.duration,self.soundpath)
+self.rangecontrol:SetDigit(4,self.Sound.RC4.filename,self.Sound.RC4.duration,self.soundpath)
+self.rangecontrol:SetDigit(5,self.Sound.RC5.filename,self.Sound.RC5.duration,self.soundpath)
+self.rangecontrol:SetDigit(6,self.Sound.RC6.filename,self.Sound.RC6.duration,self.soundpath)
+self.rangecontrol:SetDigit(7,self.Sound.RC7.filename,self.Sound.RC7.duration,self.soundpath)
+self.rangecontrol:SetDigit(8,self.Sound.RC8.filename,self.Sound.RC8.duration,self.soundpath)
+self.rangecontrol:SetDigit(9,self.Sound.RC9.filename,self.Sound.RC9.duration,self.soundpath)
 self.rangecontrol:SetSenderCoordinate(self.location)
 self.rangecontrol:SetSenderUnitName(self.rangecontrolrelayname)
 self.rangecontrol:Start(1,0.1)
 if self.instructorfreq and not self.useSRS then
 self.instructor=RADIOQUEUE:New(self.instructorfreq,nil,self.rangename)
 self.instructor.schedonce=true
-self.instructor:SetDigit(0,RANGE.Sound.IR0.filename,RANGE.Sound.IR0.duration,self.soundpath)
-self.instructor:SetDigit(1,RANGE.Sound.IR1.filename,RANGE.Sound.IR1.duration,self.soundpath)
-self.instructor:SetDigit(2,RANGE.Sound.IR2.filename,RANGE.Sound.IR2.duration,self.soundpath)
-self.instructor:SetDigit(3,RANGE.Sound.IR3.filename,RANGE.Sound.IR3.duration,self.soundpath)
-self.instructor:SetDigit(4,RANGE.Sound.IR4.filename,RANGE.Sound.IR4.duration,self.soundpath)
-self.instructor:SetDigit(5,RANGE.Sound.IR5.filename,RANGE.Sound.IR5.duration,self.soundpath)
-self.instructor:SetDigit(6,RANGE.Sound.IR6.filename,RANGE.Sound.IR6.duration,self.soundpath)
-self.instructor:SetDigit(7,RANGE.Sound.IR7.filename,RANGE.Sound.IR7.duration,self.soundpath)
-self.instructor:SetDigit(8,RANGE.Sound.IR8.filename,RANGE.Sound.IR8.duration,self.soundpath)
-self.instructor:SetDigit(9,RANGE.Sound.IR9.filename,RANGE.Sound.IR9.duration,self.soundpath)
+self.instructor:SetDigit(0,self.Sound.IR0.filename,self.Sound.IR0.duration,self.soundpath)
+self.instructor:SetDigit(1,self.Sound.IR1.filename,self.Sound.IR1.duration,self.soundpath)
+self.instructor:SetDigit(2,self.Sound.IR2.filename,self.Sound.IR2.duration,self.soundpath)
+self.instructor:SetDigit(3,self.Sound.IR3.filename,self.Sound.IR3.duration,self.soundpath)
+self.instructor:SetDigit(4,self.Sound.IR4.filename,self.Sound.IR4.duration,self.soundpath)
+self.instructor:SetDigit(5,self.Sound.IR5.filename,self.Sound.IR5.duration,self.soundpath)
+self.instructor:SetDigit(6,self.Sound.IR6.filename,self.Sound.IR6.duration,self.soundpath)
+self.instructor:SetDigit(7,self.Sound.IR7.filename,self.Sound.IR7.duration,self.soundpath)
+self.instructor:SetDigit(8,self.Sound.IR8.filename,self.Sound.IR8.duration,self.soundpath)
+self.instructor:SetDigit(9,self.Sound.IR9.filename,self.Sound.IR9.duration,self.soundpath)
 self.instructor:SetSenderCoordinate(self.location)
 self.instructor:SetSenderUnitName(self.instructorrelayname)
 self.instructor:Start(1,0.1)
@@ -41797,7 +41882,7 @@ self:_SmokeStrafeTargets()
 self:_SmokeStrafeTargetBoxes()
 self.rangezone:SmokeZone(SMOKECOLOR.White)
 end
-self:__Status(-60)
+self:__Status(-10)
 end
 function RANGE:SetMenuRoot(menu)
 self.menuF10root=menu
@@ -41867,6 +41952,9 @@ self.location=coordinate
 return self
 end
 function RANGE:SetRangeZone(zone)
+if zone and type(zone)=="string"then
+zone=ZONE:FindByName(zone)
+end
 self.rangezone=zone
 return self
 end
@@ -42006,6 +42094,31 @@ end
 function RANGE:SetSoundfilesPath(path)
 self.soundpath=tostring(path or"Range Soundfiles/")
 self:I(self.lid..string.format("Setting sound files path to %s",self.soundpath))
+return self
+end
+function RANGE:SetSoundfilesInfo(csvfile)
+local function getSound(filename)
+for key,_soundfile in pairs(self.Sound)do
+local soundfile=_soundfile
+if filename==soundfile.filename then
+return soundfile
+end
+end
+return nil
+end
+local data=UTILS.ReadCSV(csvfile)
+if data then
+for i,sound in pairs(data)do
+local soundfile=getSound(sound.filename..".ogg")
+if soundfile then
+soundfile.duration=tonumber(sound.duration)
+else
+self:E(string.format("ERROR: Could not get info for sound file %s",sound.filename))
+end
+end
+else
+self:E(string.format("ERROR: Could not read sound csv file!"))
+end
 return self
 end
 function RANGE:AddStrafePit(targetnames,boxlength,boxwidth,heading,inverseheading,goodpass,foulline)
@@ -42405,7 +42518,7 @@ if self.rangecontrol then
 if self.useSRS then
 self.controlsrsQ:NewTransmission(_message,nil,self.controlmsrs,nil,1)
 else
-self.rangecontrol:NewTransmission(RANGE.Sound.RCWeaponImpactedTooFar.filename,RANGE.Sound.RCWeaponImpactedTooFar.duration,self.soundpath,nil,nil,_message,self.subduration)
+self.rangecontrol:NewTransmission(self.Sound.RCWeaponImpactedTooFar.filename,self.Sound.RCWeaponImpactedTooFar.duration,self.soundpath,nil,nil,_message,self.subduration)
 end
 end
 else
@@ -42476,13 +42589,13 @@ local group=player.client:GetGroup()
 self.instructsrsQ:NewTransmission(ttstext,nil,self.instructmsrs,nil,1,{group},text,10)
 else
 local RF=UTILS.Split(string.format("%.3f",self.rangecontrolfreq),".")
-self.instructor:NewTransmission(RANGE.Sound.IREnterRange.filename,RANGE.Sound.IREnterRange.duration,self.soundpath)
+self.instructor:NewTransmission(self.Sound.IREnterRange.filename,self.Sound.IREnterRange.duration,self.soundpath)
 self.instructor:Number2Transmission(RF[1])
 if tonumber(RF[2])>0 then
-self.instructor:NewTransmission(RANGE.Sound.IRDecimal.filename,RANGE.Sound.IRDecimal.duration,self.soundpath)
+self.instructor:NewTransmission(self.Sound.IRDecimal.filename,self.Sound.IRDecimal.duration,self.soundpath)
 self.instructor:Number2Transmission(RF[2])
 end
-self.instructor:NewTransmission(RANGE.Sound.IRMegaHertz.filename,RANGE.Sound.IRMegaHertz.duration,self.soundpath)
+self.instructor:NewTransmission(self.Sound.IRMegaHertz.filename,self.Sound.IRMegaHertz.duration,self.soundpath)
 end
 end
 end
@@ -42504,7 +42617,7 @@ text=text.."!"
 end
 self.instructsrsQ:NewTransmission(text,nil,self.instructmsrs,nil,1,{player.client:GetGroup()},text,10)
 else
-self.instructor:NewTransmission(RANGE.Sound.IRExitRange.filename,RANGE.Sound.IRExitRange.duration,self.soundpath)
+self.instructor:NewTransmission(self.Sound.IRExitRange.filename,self.Sound.IRExitRange.duration,self.soundpath)
 end
 end
 end
@@ -42525,20 +42638,20 @@ if self.useSRS then
 local group=player.client:GetGroup()
 self.controlsrsQ:NewTransmission(text,nil,self.controlmsrs,nil,1,{group},text,10)
 else
-self.rangecontrol:NewTransmission(RANGE.Sound.RCImpact.filename,RANGE.Sound.RCImpact.duration,self.soundpath,nil,nil,text,self.subduration)
+self.rangecontrol:NewTransmission(self.Sound.RCImpact.filename,self.Sound.RCImpact.duration,self.soundpath,nil,nil,text,self.subduration)
 self.rangecontrol:Number2Transmission(string.format("%03d",result.radial),nil,0.1)
-self.rangecontrol:NewTransmission(RANGE.Sound.RCDegrees.filename,RANGE.Sound.RCDegrees.duration,self.soundpath)
-self.rangecontrol:NewTransmission(RANGE.Sound.RCFor.filename,RANGE.Sound.RCFor.duration,self.soundpath)
+self.rangecontrol:NewTransmission(self.Sound.RCDegrees.filename,self.Sound.RCDegrees.duration,self.soundpath)
+self.rangecontrol:NewTransmission(self.Sound.RCFor.filename,self.Sound.RCFor.duration,self.soundpath)
 self.rangecontrol:Number2Transmission(string.format("%d",UTILS.MetersToFeet(result.distance)))
-self.rangecontrol:NewTransmission(RANGE.Sound.RCFeet.filename,RANGE.Sound.RCFeet.duration,self.soundpath)
+self.rangecontrol:NewTransmission(self.Sound.RCFeet.filename,self.Sound.RCFeet.duration,self.soundpath)
 if result.quality=="POOR"then
-self.rangecontrol:NewTransmission(RANGE.Sound.RCPoorHit.filename,RANGE.Sound.RCPoorHit.duration,self.soundpath,nil,0.5)
+self.rangecontrol:NewTransmission(self.Sound.RCPoorHit.filename,self.Sound.RCPoorHit.duration,self.soundpath,nil,0.5)
 elseif result.quality=="INEFFECTIVE"then
-self.rangecontrol:NewTransmission(RANGE.Sound.RCIneffectiveHit.filename,RANGE.Sound.RCIneffectiveHit.duration,self.soundpath,nil,0.5)
+self.rangecontrol:NewTransmission(self.Sound.RCIneffectiveHit.filename,self.Sound.RCIneffectiveHit.duration,self.soundpath,nil,0.5)
 elseif result.quality=="GOOD"then
-self.rangecontrol:NewTransmission(RANGE.Sound.RCGoodHit.filename,RANGE.Sound.RCGoodHit.duration,self.soundpath,nil,0.5)
+self.rangecontrol:NewTransmission(self.Sound.RCGoodHit.filename,self.Sound.RCGoodHit.duration,self.soundpath,nil,0.5)
 elseif result.quality=="EXCELLENT"then
-self.rangecontrol:NewTransmission(RANGE.Sound.RCExcellentHit.filename,RANGE.Sound.RCExcellentHit.duration,self.soundpath,nil,0.5)
+self.rangecontrol:NewTransmission(self.Sound.RCExcellentHit.filename,self.Sound.RCExcellentHit.duration,self.soundpath,nil,0.5)
 end
 end
 end
@@ -43041,7 +43154,7 @@ local group=_unit:GetGroup()
 local text="You left the strafing zone too quickly! No score!"
 self.controlsrsQ:NewTransmission(text,nil,self.controlmsrs,nil,1)
 else
-self.rangecontrol:NewTransmission(RANGE.Sound.RCLeftStrafePitTooQuickly.filename,RANGE.Sound.RCLeftStrafePitTooQuickly.duration,self.soundpath)
+self.rangecontrol:NewTransmission(self.Sound.RCLeftStrafePitTooQuickly.filename,self.Sound.RCLeftStrafePitTooQuickly.duration,self.soundpath)
 end
 end
 else
@@ -43059,23 +43172,23 @@ end
 local resulttext=""
 if _result.pastfoulline==true then
 resulttext="* INVALID - PASSED FOUL LINE *"
-_sound=RANGE.Sound.RCPoorPass
+_sound=self.Sound.RCPoorPass
 else
 if accur>=90 then
 resulttext="DEADEYE PASS"
-_sound=RANGE.Sound.RCExcellentPass
+_sound=self.Sound.RCExcellentPass
 elseif accur>=75 then
 resulttext="EXCELLENT PASS"
-_sound=RANGE.Sound.RCExcellentPass
+_sound=self.Sound.RCExcellentPass
 elseif accur>=50 then
 resulttext="GOOD PASS"
-_sound=RANGE.Sound.RCGoodPass
+_sound=self.Sound.RCGoodPass
 elseif accur>=25 then
 resulttext="INEFFECTIVE PASS"
-_sound=RANGE.Sound.RCIneffectivePass
+_sound=self.Sound.RCIneffectivePass
 else
 resulttext="POOR PASS"
-_sound=RANGE.Sound.RCPoorPass
+_sound=self.Sound.RCPoorPass
 end
 end
 local _text=string.format("%s, hits on target %s: %d",self:_myname(_unitName),_result.zone.name,_result.hits)
@@ -43110,14 +43223,14 @@ if self.rangecontrol then
 if self.useSRS then
 self.controlsrsQ:NewTransmission(ttstext,nil,self.controlmsrs,nil,1)
 else
-self.rangecontrol:NewTransmission(RANGE.Sound.RCHitsOnTarget.filename,RANGE.Sound.RCHitsOnTarget.duration,self.soundpath)
+self.rangecontrol:NewTransmission(self.Sound.RCHitsOnTarget.filename,self.Sound.RCHitsOnTarget.duration,self.soundpath)
 self.rangecontrol:Number2Transmission(string.format("%d",_result.hits))
 if shots and accur then
-self.rangecontrol:NewTransmission(RANGE.Sound.RCTotalRoundsFired.filename,RANGE.Sound.RCTotalRoundsFired.duration,self.soundpath,nil,0.2)
+self.rangecontrol:NewTransmission(self.Sound.RCTotalRoundsFired.filename,self.Sound.RCTotalRoundsFired.duration,self.soundpath,nil,0.2)
 self.rangecontrol:Number2Transmission(string.format("%d",shots),nil,0.2)
-self.rangecontrol:NewTransmission(RANGE.Sound.RCAccuracy.filename,RANGE.Sound.RCAccuracy.duration,self.soundpath,nil,0.2)
+self.rangecontrol:NewTransmission(self.Sound.RCAccuracy.filename,self.Sound.RCAccuracy.duration,self.soundpath,nil,0.2)
 self.rangecontrol:Number2Transmission(string.format("%d",UTILS.Round(accur,0)))
-self.rangecontrol:NewTransmission(RANGE.Sound.RCPercent.filename,RANGE.Sound.RCPercent.duration,self.soundpath)
+self.rangecontrol:NewTransmission(self.Sound.RCPercent.filename,self.Sound.RCPercent.duration,self.soundpath)
 end
 self.rangecontrol:NewTransmission(_sound.filename,_sound.duration,self.soundpath,nil,0.5)
 end
@@ -43141,7 +43254,7 @@ if self.rangecontrol then
 if self.useSRS then
 self.controlsrsQ:NewTransmission(_msg,nil,self.controlmsrs,nil,1)
 else
-self.rangecontrol:NewTransmission(RANGE.Sound.RCRollingInOnStrafeTarget.filename,RANGE.Sound.RCRollingInOnStrafeTarget.duration,self.soundpath)
+self.rangecontrol:NewTransmission(self.Sound.RCRollingInOnStrafeTarget.filename,self.Sound.RCRollingInOnStrafeTarget.duration,self.soundpath)
 end
 end
 self:_DisplayMessageToGroup(_unit,_msg,10,true)
@@ -80900,7 +81013,7 @@ end
 return wait
 end
 function RADIOQUEUE:Broadcast(transmission)
-self:T("Broarcast")
+self:T("Broadcast")
 if((transmission.soundfile and transmission.soundfile.useSRS)or transmission.soundtext)and self.msrs then
 self:_BroadcastSRS(transmission)
 return
@@ -80956,7 +81069,7 @@ local text=string.format("file=%s, freq=%.2f MHz, duration=%.2f sec, subtitle=%s
 MESSAGE:New(string.format(text,filename,transmission.duration,transmission.subtitle or""),5,"RADIOQUEUE "..self.alias):ToAll()
 end
 else
-self:E("ERROR: Could not get vec3 to determin transmission origin! Did you specify a sender and is it still alive?")
+self:E("ERROR: Could not get vec3 to determine transmission origin! Did you specify a sender and is it still alive?")
 end
 end
 end
