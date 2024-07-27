@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-07-18T16:08:00+02:00-d2d06597769776f3f6e08989e4f6449c8771dad1 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-07-21T07:41:36+02:00-c2aa57c60392bd5cf817dc5699dd5b850d5b29a2 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -9194,7 +9194,7 @@ local FoundUnit=UNIT:FindByName(UnitObject:getName())
 if FoundUnit then
 SetUnit:AddUnit(FoundUnit)
 else
-local FoundStatic=STATIC:FindByName(UnitObject:getName())
+local FoundStatic=STATIC:FindByName(UnitObject:getName(),false)
 if FoundStatic then
 SetUnit:AddUnit(FoundStatic)
 end
@@ -20676,8 +20676,8 @@ end
 end
 end
 function SPAWN:_OnDeadOrCrash(EventData)
-self:T("Dead or crash event ID "..EventData.id)
-self:T("Dead or crash event for "..EventData.IniUnitName)
+self:T("Dead or crash event ID "..tostring(EventData.id or 0))
+self:T("Dead or crash event for "..tostring(EventData.IniUnitName or"none"))
 local unit=UNIT:FindByName(EventData.IniUnitName)
 if unit then
 local EventPrefix=self:_GetPrefixFromGroupName(unit.GroupName)
