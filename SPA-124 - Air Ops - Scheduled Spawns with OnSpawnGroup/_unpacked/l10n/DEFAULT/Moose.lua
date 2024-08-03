@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-07-21T07:41:36+02:00-c2aa57c60392bd5cf817dc5699dd5b850d5b29a2 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-07-30T07:46:53+02:00-a63a15db1c43bae61d65725431ec43e0f74d2093 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -7769,7 +7769,7 @@ end
 function SETTINGS:SetPlayerMenu(PlayerUnit)
 if _SETTINGS.ShowPlayerMenu==true then
 local PlayerGroup=PlayerUnit:GetGroup()
-local PlayerName=PlayerUnit:GetPlayerName()
+local PlayerName=PlayerUnit:GetPlayerName()or"None"
 local PlayerMenu=MENU_GROUP:New(PlayerGroup,'Settings "'..PlayerName..'"')
 self.PlayerMenu=PlayerMenu
 self:T(string.format("Setting menu for player %s",tostring(PlayerName)))
@@ -12859,11 +12859,14 @@ local gmin=nil
 for GroupID,GroupData in pairs(Set)do
 local group=GroupData
 if group and group:IsAlive()and(Coalitions==nil or UTILS.IsAnyInTable(Coalitions,group:GetCoalition()))then
-local coord=group:GetCoord()
-local d=UTILS.VecDist3D(Coordinate,coord)
+local coord=group:GetCoordinate()
+local d
+if coord~=nil then
+d=UTILS.VecDist3D(Coordinate,coord)
 if d<dmin then
 dmin=d
 gmin=group
+end
 end
 end
 end
@@ -36222,11 +36225,11 @@ self.DetectionSet:ForEachGroupAlive(IteratorFunction,arg)
 return self
 end
 function DETECTION_BASE:onafterDetection(From,Event,To,Detection,DetectionTimeStamp)
-self:I({DetectedObjects=self.DetectedObjects})
+self:T({DetectedObjects=self.DetectedObjects})
 self.DetectionRun=self.DetectionRun+1
 local HasDetectedObjects=false
 if Detection and Detection:IsAlive()then
-self:I({"DetectionGroup is Alive",Detection:GetName()})
+self:T({"DetectionGroup is Alive",Detection:GetName()})
 local DetectionGroupName=Detection:GetName()
 local DetectionUnit=Detection:GetUnit(1)
 local DetectedUnits={}
