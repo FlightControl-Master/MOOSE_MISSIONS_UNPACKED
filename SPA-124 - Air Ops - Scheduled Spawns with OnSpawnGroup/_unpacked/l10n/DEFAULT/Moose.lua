@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-08-16T23:10:25+02:00-b7702ab93335947bb5eba0fde2de5612f3ddf8ca ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-08-23T16:28:35+02:00-1e5c3a3c21bc2e45f77bc2cd33c26a2870776ee9 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -464,6 +464,11 @@ containers={},
 droptanks={},
 adapters={},
 torpedoes={},
+Gazelle={},
+CH47={},
+OH58={},
+UH1H={},
+AH64D={},
 }
 }
 ENUMS.Storage.weapons.nurs.SNEB_TYPE253_F1B="weapons.nurs.SNEB_TYPE253_F1B"
@@ -1023,6 +1028,57 @@ ENUMS.Storage.weapons.bombs.AGM_62="weapons.bombs.AGM_62"
 ENUMS.Storage.weapons.containers.US_M10_SMOKE_TANK_WHITE="weapons.containers.{US_M10_SMOKE_TANK_WHITE}"
 ENUMS.Storage.weapons.missiles.MICA_T="weapons.missiles.MICA_T"
 ENUMS.Storage.weapons.containers.HVAR_rocket="weapons.containers.HVAR_rocket"
+ENUMS.Storage.weapons.Gazelle.HMP400_100RDS={4,15,46,1771}
+ENUMS.Storage.weapons.Gazelle.HMP400_200RDS={4,15,46,1770}
+ENUMS.Storage.weapons.Gazelle.HMP400_400RDS={4,15,46,1769}
+ENUMS.Storage.weapons.Gazelle.GIAT_M261_AP={4,15,46,1768}
+ENUMS.Storage.weapons.Gazelle.GIAT_M261_SAPHEI={4,15,46,1767}
+ENUMS.Storage.weapons.Gazelle.GIAT_M261_HE={4,15,46,1766}
+ENUMS.Storage.weapons.Gazelle.GIAT_M261_HEAP={4,15,46,1765}
+ENUMS.Storage.weapons.Gazelle.GIAT_M261_APHE={4,15,46,1764}
+ENUMS.Storage.weapons.Gazelle.GAZELLE_IR_DEFLECTOR={4,15,47,680}
+ENUMS.Storage.weapons.Gazelle.GAZELLE_FAS_SANDFILTER={4,15,47,679}
+ENUMS.Storage.weapons.CH47.CH47_PORT_M60D={4,15,46,2476}
+ENUMS.Storage.weapons.CH47.CH47_STBD_M60D={4,15,46,2477}
+ENUMS.Storage.weapons.CH47.CH47_AFT_M60D={4,15,46,2478}
+ENUMS.Storage.weapons.CH47.CH47_PORT_M134D={4,15,46,2482}
+ENUMS.Storage.weapons.CH47.CH47_STBD_M134D={4,15,46,2483}
+ENUMS.Storage.weapons.CH47.CH47_AFT_M3M={4,15,46,2484}
+ENUMS.Storage.weapons.CH47.CH47_PORT_M240H={4,15,46,2479}
+ENUMS.Storage.weapons.CH47.CH47_STBD_M240H={4,15,46,2480}
+ENUMS.Storage.weapons.CH47.CH47_AFT_M240H={4,15,46,2481}
+ENUMS.Storage.weapons.UH1H.M134_MiniGun_Right={4,15,46,161}
+ENUMS.Storage.weapons.UH1H.M134_MiniGun_Left={4,15,46,160}
+ENUMS.Storage.weapons.UH1H.M134_MiniGun_Right_Door={4,15,46,175}
+ENUMS.Storage.weapons.UH1H.M60_MG_Right_Door={4,15,46,177}
+ENUMS.Storage.weapons.UH1H.M134_MiniGun_Left_Door={4,15,46,174}
+ENUMS.Storage.weapons.UH1H.M60_MG_Left_Door={4,15,46,176}
+ENUMS.Storage.weapons.OH58.FIM92={4,4,7,446}
+ENUMS.Storage.weapons.OH58.MG_M3P100={4,15,46,2578}
+ENUMS.Storage.weapons.OH58.MG_M3P200={4,15,46,2577}
+ENUMS.Storage.weapons.OH58.MG_M3P300={4,15,46,2576}
+ENUMS.Storage.weapons.OH58.MG_M3P400={4,15,46,2575}
+ENUMS.Storage.weapons.OH58.MG_M3P500={4,15,46,2574}
+ENUMS.Storage.weapons.OH58.Smk_Grenade_Blue={4,5,9,484}
+ENUMS.Storage.weapons.OH58.Smk_Grenade_Green={4,5,9,485}
+ENUMS.Storage.weapons.OH58.Smk_Grenade_Red={4,5,9,483}
+ENUMS.Storage.weapons.OH58.Smk_Grenade_Violet={4,5,9,486}
+ENUMS.Storage.weapons.OH58.Smk_Grenade_White={4,5,9,488}
+ENUMS.Storage.weapons.OH58.Smk_Grenade_Yellow={4,5,9,487}
+ENUMS.Storage.weapons.AH64D.AN_APG78={4,15,44,2138}
+ENUMS.Storage.weapons.AH64D.Internal_Aux_FuelTank={1,3,43,1700}
+ENUMS.FARPType={
+FARP="FARP",
+INVISIBLE="INVISIBLE",
+HELIPADSINGLE="HELIPADSINGLE",
+PADSINGLE="PADSINGLE",
+}
+ENUMS.FARPObjectTypeNamesAndShape={
+[ENUMS.FARPType.FARP]={TypeName="FARP",ShapeName="FARPS"},
+[ENUMS.FARPType.INVISIBLE]={TypeName="Invisible FARP",ShapeName="invisiblefarp"},
+[ENUMS.FARPType.HELIPADSINGLE]={TypeName="SINGLE_HELIPAD",ShapeName="FARP"},
+[ENUMS.FARPType.PADSINGLE]={TypeName="FARP_SINGLE_01",ShapeName="FARP_SINGLE_01"},
+}
 SMOKECOLOR=trigger.smokeColor
 FLARECOLOR=trigger.flareColor
 BIGSMOKEPRESET={
@@ -2502,14 +2558,16 @@ return FreeFMFrequencies
 end
 function UTILS.GenerateVHFrequencies()
 local _skipFrequencies={
-214,274,291.5,295,297.5,
-300.5,304,305,307,309.5,311,312,312.5,316,
-320,324,328,329,330,332,336,337,
-342,343,348,351,352,353,358,
-363,365,368,372.5,374,
-380,381,384,385,389,395,396,
-414,420,430,432,435,440,450,455,462,470,485,
-507,515,520,525,528,540,550,560,570,577,580,
+214,243,264,273,274,288,291.5,295,297.5,
+300.5,304,305,307,309.5,310,311,312,312.5,316,317,
+320,323,324,325,326,328,329,330,332,335,336,337,
+340,342,343,346,348,351,352,353,358,
+360,363,364,365,368,372.5,373,374,
+380,381,384,385,387,389,391,395,396,399,
+403,404,410,412,414,418,420,423,
+430,432,435,440,445,
+450,455,462,470,485,490,
+507,515,520,525,528,540,550,560,563,570,577,580,595,
 602,625,641,662,670,680,682,690,
 705,720,722,730,735,740,745,750,770,795,
 822,830,862,866,
@@ -3660,6 +3718,80 @@ UTILS.LCGRandomSeed()
 end
 UTILS.lcg.seed=(UTILS.lcg.a*UTILS.lcg.seed+UTILS.lcg.c)%UTILS.lcg.m
 return UTILS.lcg.seed/UTILS.lcg.m
+end
+function UTILS.SpawnFARPAndFunctionalStatics(Name,Coordinate,FARPType,Coalition,Country,CallSign,Frequency,Modulation,ADF,SpawnRadius,VehicleTemplate,Liquids,Equipment)
+local farplocation=Coordinate
+local farptype=FARPType or ENUMS.FARPType.FARP
+local Coalition=Coalition or coalition.side.BLUE
+local callsign=CallSign or CALLSIGN.FARP.Berlin
+local freq=Frequency or 127.5
+local mod=Modulation or radio.modulation.AM
+local radius=SpawnRadius or 100
+if radius<0 or radius>150 then radius=100 end
+local liquids=Liquids or 10
+liquids=liquids*1000
+local equip=Equipment or 10
+local statictypes=ENUMS.FARPObjectTypeNamesAndShape[farptype]or{TypeName="FARP",ShapeName="FARPS"}
+local STypeName=statictypes.TypeName
+local SShapeName=statictypes.ShapeName
+local Country=Country or(Coalition==coalition.side.BLUE and country.id.USA or country.id.RUSSIA)
+local ReturnObjects={}
+local newfarp=SPAWNSTATIC:NewFromType(STypeName,"Heliports",Country)
+newfarp:InitShape(SShapeName)
+newfarp:InitFARP(callsign,freq,freq)
+local spawnedfarp=newfarp:SpawnFromCoordinate(farplocation,0,Name)
+table.insert(ReturnObjects,spawnedfarp)
+local FARPStaticObjectsNato={
+["FUEL"]={TypeName="FARP Fuel Depot",ShapeName="GSM Rus",Category="Fortifications"},
+["AMMO"]={TypeName="FARP Ammo Dump Coating",ShapeName="SetkaKP",Category="Fortifications"},
+["TENT"]={TypeName="FARP Tent",ShapeName="PalatkaB",Category="Fortifications"},
+["WINDSOCK"]={TypeName="Windsock",ShapeName="H-Windsock_RW",Category="Fortifications"},
+}
+local farpobcount=0
+for _name,_object in pairs(FARPStaticObjectsNato)do
+local objloc=farplocation:Translate(100,farpobcount*30)
+local heading=objloc:HeadingTo(farplocation)
+local newobject=SPAWNSTATIC:NewFromType(_object.TypeName,_object.Category,Country)
+newobject:InitShape(_object.ShapeName)
+newobject:InitHeading(heading)
+newobject:SpawnFromCoordinate(objloc,farpobcount*30,_name.." - "..Name)
+table.insert(ReturnObjects,newobject)
+farpobcount=farpobcount+1
+end
+if VehicleTemplate and type(VehicleTemplate)=="string"then
+local vcoordinate=farplocation:Translate(100,farpobcount*30)
+local heading=vcoordinate:HeadingTo(farplocation)
+local vehicles=SPAWN:NewWithAlias(VehicleTemplate,"FARP Vehicles - "..Name)
+vehicles:InitGroupHeading(heading)
+vehicles:InitCountry(Country)
+vehicles:InitCoalition(Coalition)
+vehicles:InitDelayOff()
+local spawnedvehicle=vehicles:SpawnFromCoordinate(vcoordinate)
+table.insert(ReturnObjects,spawnedvehicle)
+end
+local newWH=STORAGE:New(Name)
+if liquids and liquids>0 then
+newWH:SetLiquid(STORAGE.Liquid.DIESEL,liquids)
+newWH:SetLiquid(STORAGE.Liquid.GASOLINE,liquids)
+newWH:SetLiquid(STORAGE.Liquid.JETFUEL,liquids)
+newWH:SetLiquid(STORAGE.Liquid.MW50,liquids)
+end
+if equip and equip>0 then
+for cat,nitem in pairs(ENUMS.Storage.weapons)do
+for name,item in pairs(nitem)do
+newWH:SetItem(item,equip)
+end
+end
+end
+local ADFName
+if ADF and type(ADF)=="number"then
+local ADFFreq=ADF*1000
+local Sound="l10n/DEFAULT/beacon.ogg"
+local vec3=farplocation:GetVec3()
+ADFName=Name.." ADF "..tostring(ADF).."KHz"
+trigger.action.radioTransmission(Sound,vec3,0,true,ADFFreq,250,ADFName)
+end
+return ReturnObjects,ADFName
 end
 PROFILER={
 ClassName="PROFILER",
@@ -5143,6 +5275,46 @@ local Event={
 id=EVENTS.PlayerEnterAircraft,
 time=timer.getTime(),
 initiator=PlayerUnit:GetDCSObject()
+}
+world.onEvent(Event)
+end
+function BASE:CreateEventNewDynamicCargo(DynamicCargo)
+self:F({DynamicCargo})
+local Event={
+id=EVENTS.NewDynamicCargo,
+time=timer.getTime(),
+dynamiccargo=DynamicCargo,
+initiator=DynamicCargo:GetDCSObject(),
+}
+world.onEvent(Event)
+end
+function BASE:CreateEventDynamicCargoLoaded(DynamicCargo)
+self:F({DynamicCargo})
+local Event={
+id=EVENTS.DynamicCargoLoaded,
+time=timer.getTime(),
+dynamiccargo=DynamicCargo,
+initiator=DynamicCargo:GetDCSObject(),
+}
+world.onEvent(Event)
+end
+function BASE:CreateEventDynamicCargoUnloaded(DynamicCargo)
+self:F({DynamicCargo})
+local Event={
+id=EVENTS.DynamicCargoUnloaded,
+time=timer.getTime(),
+dynamiccargo=DynamicCargo,
+initiator=DynamicCargo:GetDCSObject(),
+}
+world.onEvent(Event)
+end
+function BASE:CreateEventDynamicCargoRemoved(DynamicCargo)
+self:F({DynamicCargo})
+local Event={
+id=EVENTS.DynamicCargoRemoved,
+time=timer.getTime(),
+dynamiccargo=DynamicCargo,
+initiator=DynamicCargo:GetDCSObject(),
 }
 world.onEvent(Event)
 end
@@ -7432,7 +7604,9 @@ end
 if Event.dynamiccargo then
 Event.IniDynamicCargo=Event.dynamiccargo
 Event.IniDynamicCargoName=Event.IniDynamicCargo.StaticName
-Event.IniPlayerName=Event.IniDynamicCargo.Owner or string.match(Event.IniUnitName,"^(.+)|%d%d:%d%d|PKG%d+")
+if Event.IniDynamicCargo.Owner or Event.IniUnitName then
+Event.IniPlayerName=Event.IniDynamicCargo.Owner or string.match(Event.IniUnitName or"None|00:00|PKG00","^(.+)|%d%d:%d%d|PKG%d+")
+end
 end
 if Event.zone then
 Event.Zone=Event.zone
@@ -12919,7 +13093,7 @@ end
 if self.Filter.GroupPrefixes and MGroupInclude then
 local MGroupPrefix=false
 for GroupPrefixId,GroupPrefix in pairs(self.Filter.GroupPrefixes)do
-if string.find(MGroup:GetName(),GroupPrefix:gsub("-","%%-"),1)then
+if string.find(MGroup:GetName(),string.gsub(GroupPrefix,"-","%%-"),1)then
 MGroupPrefix=true
 end
 end
@@ -18357,6 +18531,7 @@ self.MessageCategory=""
 end
 if self.MessageDuration~=0 then
 self:T(self.MessageCategory..self.MessageText:gsub("\n$",""):gsub("\n$","").." / "..self.MessageDuration)
+local ID=Unit:GetID()
 trigger.action.outTextForUnit(Unit:GetID(),self.MessageCategory..self.MessageText:gsub("\n$",""):gsub("\n$",""),self.MessageDuration,self.ClearScreen)
 end
 end
@@ -18417,8 +18592,11 @@ self:ToCoalition(CoalitionSide)
 end
 return self
 end
-function MESSAGE:ToAll(Settings)
+function MESSAGE:ToAll(Settings,Delay)
 self:F()
+if Delay and Delay>0 then
+self:ScheduleOnce(Delay,MESSAGE.ToAll,self,Settings,0)
+else
 if self.MessageType then
 local Settings=Settings or _SETTINGS
 self.MessageDuration=Settings:GetMessageTime(self.MessageType)
@@ -18427,6 +18605,7 @@ end
 if self.MessageDuration~=0 then
 self:T(self.MessageCategory..self.MessageText:gsub("\n$",""):gsub("\n$","").." / "..self.MessageDuration)
 trigger.action.outText(self.MessageCategory..self.MessageText:gsub("\n$",""):gsub("\n$",""),self.MessageDuration,self.ClearScreen)
+end
 end
 return self
 end
@@ -22261,7 +22440,7 @@ local CX=X/2
 local CZ=Z/2
 return math.max(math.max(CX,CZ),boxmin)
 end
-BASE:E({"Cannot GetBoundingRadius",Positionable=self,Alive=self:IsAlive()})
+BASE:T({"Cannot GetBoundingRadius",Positionable=self,Alive=self:IsAlive()})
 return nil
 end
 function POSITIONABLE:GetAltitude()
@@ -22883,6 +23062,7 @@ POSITIONABLE.CargoBayCapacityValues={
 ["HL_KORD"]=6*POSITIONABLE.DefaultInfantryWeight,
 ["HL_DSHK"]=6*POSITIONABLE.DefaultInfantryWeight,
 ["CCKW_353"]=16*POSITIONABLE.DefaultInfantryWeight,
+["MaxxPro_MRAP"]=7*POSITIONABLE.DefaultInfantryWeight,
 }
 }
 function POSITIONABLE:SetCargoBayWeightLimit(WeightLimit)
@@ -23515,10 +23695,10 @@ local DCSTask={
 id='Strafing',
 params={
 point=Vec2,
-weaponType=WeaponType or 1073741822,
+weaponType=WeaponType or 805337088,
 expend=WeaponExpend or"Auto",
 attackQty=AttackQty or 1,
-attackQtyLimit=AttackQty>1 and true or false,
+attackQtyLimit=AttackQty~=nil and true or false,
 direction=Direction and math.rad(Direction)or 0,
 directionEnabled=Direction and true or false,
 groupAttack=GroupAttack or false,
@@ -63203,7 +63383,7 @@ if math.abs(self.holdingoffset)>0 then
 self:_GetZoneArcIn(case):FlareZone(FLARECOLOR.White,45)
 text=text.."\n* arc turn in with WHITE flares"
 self:_GetZoneArcOut(case):FlareZone(FLARECOLOR.White,45)
-text=text.."\n* arc trun out with WHITE flares"
+text=text.."\n* arc turn out with WHITE flares"
 end
 end
 if case==3 then
@@ -63236,7 +63416,7 @@ if math.abs(self.holdingoffset)>0 then
 self:_GetZoneArcIn(case):SmokeZone(SMOKECOLOR.Blue,45)
 text=text.."\n* arc turn in with BLUE smoke"
 self:_GetZoneArcOut(case):SmokeZone(SMOKECOLOR.Blue,45)
-text=text.."\n* arc trun out with BLUE smoke"
+text=text.."\n* arc turn out with BLUE smoke"
 end
 end
 if case==3 then
@@ -65608,6 +65788,34 @@ precepitation=1
 else
 precepitation=3
 end
+elseif cloudspreset:find("RainyPreset4")then
+clouddens=5
+if temperature>5 then
+precepitation=1
+else
+precepitation=3
+end
+elseif cloudspreset:find("RainyPreset5")then
+clouddens=5
+if temperature>5 then
+precepitation=1
+else
+precepitation=3
+end
+elseif cloudspreset:find("RainyPreset6")then
+clouddens=5
+if temperature>5 then
+precepitation=1
+else
+precepitation=3
+end
+elseif cloudspreset:find("NEWRAINPRESET4")then
+clouddens=5
+if temperature>5 then
+precepitation=1
+else
+precepitation=3
+end
 elseif cloudspreset:find("RainyPreset")then
 clouddens=9
 if temperature>5 then
@@ -66474,10 +66682,26 @@ self.Mark=nil
 self.Subcategory=Subcategory or"Other"
 self.DontShowInMenu=DontShowInMenu or false
 self.ResourceMap=nil
+self.StaticType=nil
+self.StaticShape=nil
+self.TypeNames=nil
 if type(Location)=="string"then
 Location=ZONE:New(Location)
 end
 self.Location=Location
+return self
+end
+function CTLD_CARGO:SetStaticTypeAndShape(TypeName,ShapeName)
+self.StaticType=TypeName or"container_cargo"
+self.StaticShape=ShapeName
+return self
+end
+function CTLD_CARGO:AddUnitTypeName(UnitTypes)
+if not self.TypeNames then self.TypeNames={}end
+if type(UnitTypes)~="table"then UnitTypes={UnitTypes}end
+for _,_singletype in pairs(UnitTypes or{})do
+self.TypeNames[_singletype]=_singletype
+end
 return self
 end
 function CTLD_CARGO:SetStaticResourceMap(ResourceMap)
@@ -66774,6 +66998,9 @@ wpZones={},
 dropOffZones={},
 pickupZones={},
 DynamicCargo={},
+ChinookTroopCircleRadius=5,
+TroopUnloadDistGround=5,
+TroopUnloadDistHover=1.5,
 }
 CTLD.RadioModulation={
 AM=0,
@@ -66806,9 +67033,9 @@ CTLD.UnitTypeCapabilities={
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 ["OH-6A"]={type="OH-6A",crates=false,troops=true,cratelimit=0,trooplimit=4,length=7,cargoweightlimit=550},
 ["OH-58D"]={type="OH58D",crates=false,troops=false,cratelimit=0,trooplimit=0,length=14,cargoweightlimit=400},
-["CH-47Fbl1"]={type="CH-47Fbl1",crates=true,troops=true,cratelimit=4,trooplimit=31,length=20,cargoweightlimit=8000},
+["CH-47Fbl1"]={type="CH-47Fbl1",crates=true,troops=true,cratelimit=4,trooplimit=31,length=20,cargoweightlimit=10800},
 }
-CTLD.version="1.1.12"
+CTLD.version="1.1.13"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -67650,6 +67877,8 @@ local cratetemplate="Container"
 local cratename=cargotype:GetName()
 local cgotype=cargotype:GetType()
 local cgomass=cargotype:GetMass()
+local cratenumber=cargotype:GetCratesNeeded()or 1
+for i=1,cratenumber do
 local cratealias=string.format("%s-%s-%d",cratename,cratetemplate,math.random(1,100000))
 local isstatic=false
 if cgotype==CTLD_CARGO.Enum.STATIC then
@@ -67674,6 +67903,7 @@ local templ=cargotype:GetTemplates()
 local sorte=cargotype:GetType()
 cargotype.Positionable=self.Spawned_Crates[self.CrateCounter]
 table.insert(self.Spawned_Cargo,cargotype)
+end
 return self
 end
 function CTLD:InjectStaticFromTemplate(Zone,Template,Mass)
@@ -68183,10 +68413,12 @@ local heading=Group:GetHeading()or 0
 if hoverunload or grounded then
 randomcoord=Group:GetCoordinate()
 local Angle=(heading+270)%360
-local offset=hoverunload and 1.5 or 5
+local offset=hoverunload and self.TroopUnloadDistHover or self.TroopUnloadDistGround
 randomcoord:Translate(offset,Angle,nil,true)
 end
 local tempcount=0
+local ishook=self:IsHook(Unit)
+if ishook then tempcount=self.ChinookTroopCircleRadius or 5 end
 for _,_template in pairs(temptable)do
 self.TroopCounter=self.TroopCounter+1
 tempcount=tempcount+1
@@ -68823,7 +69055,7 @@ local cargo=CTLD_CARGO:New(self.CargoCounter,Name,Templates,Type,false,true,NoTr
 table.insert(self.Cargo_Troops,cargo)
 return self
 end
-function CTLD:AddCratesCargo(Name,Templates,Type,NoCrates,PerCrateMass,Stock,SubCategory,DontShowInMenu,Location)
+function CTLD:AddCratesCargo(Name,Templates,Type,NoCrates,PerCrateMass,Stock,SubCategory,DontShowInMenu,Location,UnitTypes,TypeName,ShapeName)
 self:T(self.lid.." AddCratesCargo")
 if not self:_CheckTemplates(Templates)then
 self:E(self.lid.."Crates Cargo for "..Name.." has missing template(s)!")
@@ -68831,6 +69063,12 @@ return self
 end
 self.CargoCounter=self.CargoCounter+1
 local cargo=CTLD_CARGO:New(self.CargoCounter,Name,Templates,Type,false,false,NoCrates,nil,nil,PerCrateMass,Stock,SubCategory,DontShowInMenu,Location)
+if UnitTypes then
+cargo:AddUnitTypeName(UnitTypes)
+end
+if TypeName then
+cargo:SetStaticTypeAndShape(TypeName,ShapeName)
+end
 table.insert(self.Cargo_Crates,cargo)
 return self
 end
@@ -68863,7 +69101,7 @@ local cargo=CTLD_CARGO:New(self.CargoCounter,Name,template,type,false,false,1,ni
 cargo:SetStaticResourceMap(ResourceMap)
 return cargo
 end
-function CTLD:AddCratesRepair(Name,Template,Type,NoCrates,PerCrateMass,Stock,SubCategory,DontShowInMenu,Location)
+function CTLD:AddCratesRepair(Name,Template,Type,NoCrates,PerCrateMass,Stock,SubCategory,DontShowInMenu,Location,UnitTypes,TypeName,ShapeName)
 self:T(self.lid.." AddCratesRepair")
 if not self:_CheckTemplates(Template)then
 self:E(self.lid.."Repair Cargo for "..Name.." has a missing template!")
@@ -68871,6 +69109,12 @@ return self
 end
 self.CargoCounter=self.CargoCounter+1
 local cargo=CTLD_CARGO:New(self.CargoCounter,Name,Template,Type,false,false,NoCrates,nil,nil,PerCrateMass,Stock,SubCategory,DontShowInMenu,Location)
+if UnitTypes then
+cargo:AddUnitTypeName(UnitTypes)
+end
+if TypeName then
+cargo:SetStaticTypeAndShape(TypeName,ShapeName)
+end
 table.insert(self.Cargo_Crates,cargo)
 return self
 end
@@ -70687,6 +70931,7 @@ allheligroupset=nil,
 topmenuname="CSAR",
 ADFRadioPwr=1000,
 PilotWeight=80,
+CreateRadioBeacons=true,
 }
 CSAR.AircraftType={}
 CSAR.AircraftType["SA342Mistral"]=2
@@ -70706,7 +70951,7 @@ CSAR.AircraftType["MH-60R"]=10
 CSAR.AircraftType["OH-6A"]=2
 CSAR.AircraftType["OH-58D"]=2
 CSAR.AircraftType["CH-47Fbl1"]=31
-CSAR.version="1.0.26"
+CSAR.version="1.0.27"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Template,Alias})
@@ -71671,7 +71916,7 @@ distancetext=string.format("%.1fnm",UTILS.MetersToNM(_distance))
 else
 distancetext=string.format("%.1fkm",_distance/1000.0)
 end
-if _value.frequency==0 then
+if _value.frequency==0 or self.CreateRadioBeacons==false then
 table.insert(_csarList,{dist=_distance,msg=string.format("%s at %s - %s ",_value.desc,_coordinatesText,distancetext)})
 else
 table.insert(_csarList,{dist=_distance,msg=string.format("%s at %s - %.2f KHz ADF - %s ",_value.desc,_coordinatesText,_value.frequency/1000,distancetext)})
@@ -71958,6 +72203,7 @@ return clock
 end
 function CSAR:_AddBeaconToGroup(_group,_freq)
 self:T(self.lid.." _AddBeaconToGroup")
+if self.CreateRadioBeacons==false then return end
 local _group=_group
 if _group==nil then
 for _i,_current in ipairs(self.UsedVHFFrequencies)do
@@ -71983,6 +72229,7 @@ return self
 end
 function CSAR:_RefreshRadioBeacons()
 self:T(self.lid.." _RefreshRadioBeacons")
+if self.CreateRadioBeacons==false then return end
 if self:_CountActiveDownedPilots()>0 then
 local PilotTable=self.downedPilots
 for _,_pilot in pairs(PilotTable)do
@@ -83264,7 +83511,7 @@ end
 function MSRS:PlayTextExt(Text,Delay,Frequencies,Modulations,Gender,Culture,Voice,Volume,Label,Coordinate)
 self:T({Text,Delay,Frequencies,Modulations,Gender,Culture,Voice,Volume,Label,Coordinate})
 if Delay and Delay>0 then
-self:ScheduleOnce(Delay,MSRS.PlayTextExt,self,Text,0,Frequencies,Modulations,Gender,Culture,Voice,Volume,Label,Coordinate)
+self:ScheduleOnce(Delay,self.PlayTextExt,self,Text,0,Frequencies,Modulations,Gender,Culture,Voice,Volume,Label,Coordinate)
 else
 Frequencies=Frequencies or self:GetFrequencies()
 Modulations=Modulations or self:GetModulations()
@@ -83399,8 +83646,8 @@ end
 return res
 end
 function MSRS:_DCSgRPCtts(Text,Frequencies,Gender,Culture,Voice,Volume,Label,Coordinate)
-self:F("MSRS_BACKEND_DCSGRPC:_DCSgRPCtts()")
-self:F({Text,Frequencies,Gender,Culture,Voice,Volume,Label,Coordinate})
+self:T("MSRS_BACKEND_DCSGRPC:_DCSgRPCtts()")
+self:T({Text,Frequencies,Gender,Culture,Voice,Volume,Label,Coordinate})
 local options={}
 local ssml=Text or''
 Frequencies=UTILS.EnsureTable(Frequencies,true)or self:GetFrequencies()
@@ -83412,7 +83659,6 @@ options.position.lat,options.position.lon,options.position.alt=self:_GetLatLongA
 end
 options.coalition=UTILS.GetCoalitionName(self.coalition):lower()
 local provider=self.provider or MSRS.Provider.WINDOWS
-self:F({provider=provider})
 options.provider={}
 options.provider[provider]=self:GetProviderOptions(provider)
 Voice=Voice or self:GetVoice(self.provider)or self.voice
