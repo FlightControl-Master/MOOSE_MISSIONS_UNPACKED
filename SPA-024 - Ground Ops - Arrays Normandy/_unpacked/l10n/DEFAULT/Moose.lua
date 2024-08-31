@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-08-23T16:28:35+02:00-1e5c3a3c21bc2e45f77bc2cd33c26a2870776ee9 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-08-29T10:25:13+02:00-f531fdaa7055bd56bd3afb8a03857833d7c3122b ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -3738,7 +3738,7 @@ local Country=Country or(Coalition==coalition.side.BLUE and country.id.USA or co
 local ReturnObjects={}
 local newfarp=SPAWNSTATIC:NewFromType(STypeName,"Heliports",Country)
 newfarp:InitShape(SShapeName)
-newfarp:InitFARP(callsign,freq,freq)
+newfarp:InitFARP(callsign,freq,mod)
 local spawnedfarp=newfarp:SpawnFromCoordinate(farplocation,0,Name)
 table.insert(ReturnObjects,spawnedfarp)
 local FARPStaticObjectsNato={
@@ -3749,7 +3749,7 @@ local FARPStaticObjectsNato={
 }
 local farpobcount=0
 for _name,_object in pairs(FARPStaticObjectsNato)do
-local objloc=farplocation:Translate(100,farpobcount*30)
+local objloc=farplocation:Translate(radius,farpobcount*30)
 local heading=objloc:HeadingTo(farplocation)
 local newobject=SPAWNSTATIC:NewFromType(_object.TypeName,_object.Category,Country)
 newobject:InitShape(_object.ShapeName)
@@ -3759,7 +3759,7 @@ table.insert(ReturnObjects,newobject)
 farpobcount=farpobcount+1
 end
 if VehicleTemplate and type(VehicleTemplate)=="string"then
-local vcoordinate=farplocation:Translate(100,farpobcount*30)
+local vcoordinate=farplocation:Translate(radius,farpobcount*30)
 local heading=vcoordinate:HeadingTo(farplocation)
 local vehicles=SPAWN:NewWithAlias(VehicleTemplate,"FARP Vehicles - "..Name)
 vehicles:InitGroupHeading(heading)
@@ -42881,7 +42881,7 @@ return self
 end
 function RANGE:SetSoundfilesPath(path)
 self.soundpath=tostring(path or"Range Soundfiles/")
-self:I(self.lid..string.format("Setting sound files path to %s",self.soundpath))
+self:T2(self.lid..string.format("Setting sound files path to %s",self.soundpath))
 return self
 end
 function RANGE:SetSoundfilesInfo(csvfile)
@@ -43032,9 +43032,9 @@ if randommove==nil or _isstatic==true then
 randommove=false
 end
 if _isstatic==true then
-self:I(self.lid..string.format("Adding STATIC bombing target %s with good hit range %d. Random move = %s.",name,goodhitrange,tostring(randommove)))
+self:T(self.lid..string.format("Adding STATIC bombing target %s with good hit range %d. Random move = %s.",name,goodhitrange,tostring(randommove)))
 elseif _isstatic==false then
-self:I(self.lid..string.format("Adding UNIT bombing target %s with good hit range %d. Random move = %s.",name,goodhitrange,tostring(randommove)))
+self:T(self.lid..string.format("Adding UNIT bombing target %s with good hit range %d. Random move = %s.",name,goodhitrange,tostring(randommove)))
 else
 self:E(self.lid..string.format("ERROR! No bombing target with name %s could be found. Carefully check all UNIT and STATIC names defined in the mission editor!",name))
 end
@@ -43073,7 +43073,7 @@ function RANGE:AddBombingTargetScenery(scenery,goodhitrange)
 local name=scenery:GetName()
 goodhitrange=goodhitrange or RANGE.Defaults.goodhitrange
 if name then
-self:I(self.lid..string.format("Adding SCENERY bombing target %s with good hit range %d",name,goodhitrange))
+self:T(self.lid..string.format("Adding SCENERY bombing target %s with good hit range %d",name,goodhitrange))
 else
 self:E(self.lid..string.format("ERROR! No bombing target with name %s could be found!",name))
 end
@@ -43365,7 +43365,7 @@ end
 end
 text=text..string.format(", Control %.3f MHz (Relay=%s alive=%s)",self.rangecontrolfreq,tostring(self.rangecontrolrelayname),alive)
 end
-self:I(self.lid..text)
+self:T(self.lid..text)
 end
 self:_CheckPlayers()
 self:__Status(-10)
@@ -43476,7 +43476,7 @@ local f=io.open(filename,"wb")
 if f then
 f:write(data)
 f:close()
-self:I(self.lid..string.format("Saving player results to file %s",tostring(filename)))
+self:T(self.lid..string.format("Saving player results to file %s",tostring(filename)))
 else
 self:E(self.lid..string.format("ERROR: Could not save results to file %s",tostring(filename)))
 end
@@ -43523,7 +43523,7 @@ end
 local path=self.targetpath or lfs.writedir()..[[Logs\]]
 local filename=path..string.format("RANGE-%s_BombingResults.csv",self.rangename)
 local text=string.format("Loading player bomb results from file %s",filename)
-self:I(self.lid..text)
+self:T(self.lid..text)
 local data=_loadfile(filename)
 if data then
 local results=UTILS.Split(data,"\n")
@@ -43720,7 +43720,6 @@ function RANGE:_DisplayRangeInfo(_unitname)
 self:F(_unitname)
 local unit,playername,_multiplayer=self:_GetPlayerUnitAndName(_unitname)
 if unit and playername then
-self:I(playername)
 local text=""
 local coord=unit:GetCoordinate()
 if self.location then
@@ -44483,7 +44482,6 @@ end
 return speed
 end
 function RANGE:_GetPlayerUnitAndName(_unitName,PlayerName)
-self:I(_unitName)
 if _unitName~=nil then
 local multiplayer=false
 local DCSunit=Unit.getByName(_unitName)
@@ -62122,7 +62120,7 @@ else
 self:E(self.lid..string.format("ERROR: Unknown radio sender %s!",tostring(sender)))
 return
 end
-local numbers=_split(number)
+local numbers=_split(tostring(number))
 local wait=0
 for i=1,#numbers do
 local n=numbers[i]
@@ -62158,7 +62156,7 @@ if Sender==""then
 self:E(self.lid..string.format("ERROR: Sender unknown!"))
 return
 end
-local numbers=_split(number)
+local numbers=_split(tostring(number))
 local wait=0
 for i=1,#numbers do
 local n=numbers[i]
@@ -66682,19 +66680,24 @@ self.Mark=nil
 self.Subcategory=Subcategory or"Other"
 self.DontShowInMenu=DontShowInMenu or false
 self.ResourceMap=nil
-self.StaticType=nil
+self.StaticType="container_cargo"
 self.StaticShape=nil
 self.TypeNames=nil
+self.StaticCategory="Cargos"
 if type(Location)=="string"then
 Location=ZONE:New(Location)
 end
 self.Location=Location
 return self
 end
-function CTLD_CARGO:SetStaticTypeAndShape(TypeName,ShapeName)
+function CTLD_CARGO:SetStaticTypeAndShape(Category,TypeName,ShapeName)
+self.StaticCategory=Category or"Cargos"
 self.StaticType=TypeName or"container_cargo"
 self.StaticShape=ShapeName
 return self
+end
+function CTLD_CARGO:GetStaticTypeAndShape()
+return self.StaticCategory,self.StaticType,self.StaticShape
 end
 function CTLD_CARGO:AddUnitTypeName(UnitTypes)
 if not self.TypeNames then self.TypeNames={}end
@@ -66703,6 +66706,15 @@ for _,_singletype in pairs(UnitTypes or{})do
 self.TypeNames[_singletype]=_singletype
 end
 return self
+end
+function CTLD_CARGO:UnitCanCarry(Unit)
+if self.TypeNames==nil then return true end
+local typename=Unit:GetTypeName()or"none"
+if self.TypeNames[typename]then
+return true
+else
+return false
+end
 end
 function CTLD_CARGO:SetStaticResourceMap(ResourceMap)
 self.ResourceMap=ResourceMap
@@ -67035,7 +67047,7 @@ CTLD.UnitTypeCapabilities={
 ["OH-58D"]={type="OH58D",crates=false,troops=false,cratelimit=0,trooplimit=0,length=14,cargoweightlimit=400},
 ["CH-47Fbl1"]={type="CH-47Fbl1",crates=true,troops=true,cratelimit=4,trooplimit=31,length=20,cargoweightlimit=10800},
 }
-CTLD.version="1.1.13"
+CTLD.version="1.1.17"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -67742,7 +67754,7 @@ end
 local capabilities=self:_GetUnitCapabilities(Unit)
 local canloadcratesno=capabilities.cratelimit
 local loaddist=self.CrateDistance or 35
-local nearcrates,numbernearby=self:_FindCratesNearby(Group,Unit,loaddist,true)
+local nearcrates,numbernearby=self:_FindCratesNearby(Group,Unit,loaddist,true,true)
 if numbernearby>=canloadcratesno and not drop then
 self:_SendMessage("There are enough crates nearby already! Take care of those first!",10,false,Group)
 return self
@@ -67772,35 +67784,37 @@ local addon=0
 if IsHerc or IsHook then
 addon=180
 end
+heading=(heading+addon)%360
+local row=1
+local column=1
+local initialdist=IsHerc and 16 or(capabilities.length+2)
+local startpos=position:Translate(initialdist,heading)
+if self.placeCratesAhead==true then
+cratedistance=initialdist
+end
+local cratecoord=nil
 for i=1,number do
 local cratealias=string.format("%s-%s-%d",cratename,cratetemplate,math.random(1,100000))
-if not self.placeCratesAhead then
+if not self.placeCratesAhead or drop==true then
 cratedistance=(i-1)*2.5+capabilities.length
 if cratedistance>self.CrateDistance then cratedistance=self.CrateDistance end
 rheading=UTILS.RandomGaussian(0,30,-90,90,100)
-rheading=math.fmod((heading+rheading+addon),360)
+rheading=math.fmod((heading+rheading),360)
+cratecoord=position:Translate(cratedistance,rheading)
 else
-local initialSpacing=IsHerc and 16 or(capabilities.length+2)
-local crateSpacing=4
-local lateralSpacing=4
-local nrSideBySideCrates=3
-if cratesneeded==1 then
-cratedistance=initialSpacing
-rheading=heading
-else
-if(i-1)%nrSideBySideCrates==0 then
-cratedistance=i==1 and initialSpacing or cratedistance+crateSpacing
-angleOffNose=math.ceil(math.deg(math.atan(lateralSpacing/cratedistance)))
-rheading=heading-angleOffNose
-else
-rheading=rheading+angleOffNose
+cratedistance=(row-1)*6
+rheading=90
+row=row+1
+cratecoord=startpos:Translate(cratedistance,rheading)
+if row>4 then
+row=1
+startpos:Translate(6,heading,nil,true)
 end
 end
-end
-local cratecoord=position:Translate(cratedistance,rheading)
-local cratevec2=cratecoord:GetVec2()
 self.CrateCounter=self.CrateCounter+1
-local basetype=self.basetype or"container_cargo"
+local CCat,CType,CShape=Cargo:GetStaticTypeAndShape()
+local basetype=CType or self.basetype or"container_cargo"
+CCat=CCat or"Cargos"
 if isstatic then
 basetype=cratetemplate
 end
@@ -67813,20 +67827,26 @@ local dist=shipcoord:Get2DDistance(unitcoord)
 dist=dist-(20+math.random(1,10))
 local width=width/2
 local Offy=math.random(-width,width)
-local spawnstatic=SPAWNSTATIC:NewFromType(basetype,"Cargos",self.cratecountry)
+local spawnstatic=SPAWNSTATIC:NewFromType(basetype,CCat,self.cratecountry)
 :InitCargoMass(cgomass)
 :InitCargo(self.enableslingload)
 :InitLinkToUnit(Ship,dist,Offy,0)
+if CShape then
+spawnstatic:InitShape(CShape)
+end
 if isstatic then
 local map=cargotype:GetStaticResourceMap()
 spawnstatic.TemplateStaticUnit.resourcePayload=map
 end
 self.Spawned_Crates[self.CrateCounter]=spawnstatic:Spawn(270,cratealias)
 else
-local spawnstatic=SPAWNSTATIC:NewFromType(basetype,"Cargos",self.cratecountry)
+local spawnstatic=SPAWNSTATIC:NewFromType(basetype,CCat,self.cratecountry)
 :InitCoordinate(cratecoord)
 :InitCargoMass(cgomass)
 :InitCargo(self.enableslingload)
+if CShape then
+spawnstatic:InitShape(CShape)
+end
 if isstatic then
 local map=cargotype:GetStaticResourceMap()
 spawnstatic.TemplateStaticUnit.resourcePayload=map
@@ -67842,12 +67862,22 @@ if drop then
 realcargo=CTLD_CARGO:New(self.CargoCounter,cratename,templ,sorte,true,false,cratesneeded,self.Spawned_Crates[self.CrateCounter],true,cargotype.PerCrateMass,nil,subcat)
 local map=cargotype:GetStaticResourceMap()
 realcargo:SetStaticResourceMap(map)
+local CCat,CType,CShape=cargotype:GetStaticTypeAndShape()
+realcargo:SetStaticTypeAndShape(CCat,CType,CShape)
+if cargotype.TypeNames then
+realcargo.TypeNames=UTILS.DeepCopy(cargotype.TypeNames)
+end
 table.insert(droppedcargo,realcargo)
 else
 realcargo=CTLD_CARGO:New(self.CargoCounter,cratename,templ,sorte,false,false,cratesneeded,self.Spawned_Crates[self.CrateCounter],false,cargotype.PerCrateMass,nil,subcat)
 local map=cargotype:GetStaticResourceMap()
 realcargo:SetStaticResourceMap(map)
+if cargotype.TypeNames then
+realcargo.TypeNames=UTILS.DeepCopy(cargotype.TypeNames)
 end
+end
+local CCat,CType,CShape=cargotype:GetStaticTypeAndShape()
+realcargo:SetStaticTypeAndShape(CCat,CType,CShape)
 table.insert(self.Spawned_Cargo,realcargo)
 end
 if not(drop or pack)then
@@ -67861,7 +67891,7 @@ end
 self:_SendMessage(text,10,false,Group)
 return self
 end
-function CTLD:InjectStatics(Zone,Cargo,RandomCoord)
+function CTLD:InjectStatics(Zone,Cargo,RandomCoord,FromLoad)
 self:T(self.lid.." InjectStatics")
 local cratecoord=Zone:GetCoordinate()
 if RandomCoord then
@@ -67878,6 +67908,7 @@ local cratename=cargotype:GetName()
 local cgotype=cargotype:GetType()
 local cgomass=cargotype:GetMass()
 local cratenumber=cargotype:GetCratesNeeded()or 1
+if FromLoad==true then cratenumber=1 end
 for i=1,cratenumber do
 local cratealias=string.format("%s-%s-%d",cratename,cratetemplate,math.random(1,100000))
 local isstatic=false
@@ -67885,15 +67916,20 @@ if cgotype==CTLD_CARGO.Enum.STATIC then
 cratetemplate=cargotype:GetTemplates()
 isstatic=true
 end
-local basetype=self.basetype or"container_cargo"
+local CCat,CType,CShape=cargotype:GetStaticTypeAndShape()
+local basetype=CType or self.basetype or"container_cargo"
+CCat=CCat or"Cargos"
 if isstatic then
 basetype=cratetemplate
 end
 self.CrateCounter=self.CrateCounter+1
-local spawnstatic=SPAWNSTATIC:NewFromType(basetype,"Cargos",self.cratecountry)
+local spawnstatic=SPAWNSTATIC:NewFromType(basetype,CCat,self.cratecountry)
 :InitCargoMass(cgomass)
 :InitCargo(self.enableslingload)
 :InitCoordinate(cratecoord)
+if CShape then
+spawnstatic:InitShape(CShape)
+end
 if isstatic then
 local map=cargotype:GetStaticResourceMap()
 spawnstatic.TemplateStaticUnit.resourcePayload=map
@@ -67909,13 +67945,13 @@ end
 function CTLD:InjectStaticFromTemplate(Zone,Template,Mass)
 self:T(self.lid.." InjectStaticFromTemplate")
 local cargotype=self:GetStaticsCargoFromTemplate(Template,Mass)
-self:InjectStatics(Zone,cargotype,true)
+self:InjectStatics(Zone,cargotype,true,true)
 return self
 end
 function CTLD:_ListCratesNearby(_group,_unit)
 self:T(self.lid.." _ListCratesNearby")
 local finddist=self.CrateDistance or 35
-local crates,number,loadedbygc,indexgc=self:_FindCratesNearby(_group,_unit,finddist,true)
+local crates,number,loadedbygc,indexgc=self:_FindCratesNearby(_group,_unit,finddist,true,true)
 if number>0 or indexgc>0 then
 local text=REPORT:New("Crates Found Nearby:")
 text:Add("------------------------------------------------------------")
@@ -67955,7 +67991,7 @@ end
 function CTLD:_RemoveCratesNearby(_group,_unit)
 self:T(self.lid.." _RemoveCratesNearby")
 local finddist=self.CrateDistance or 35
-local crates,number=self:_FindCratesNearby(_group,_unit,finddist,true)
+local crates,number=self:_FindCratesNearby(_group,_unit,finddist,true,true)
 if number>0 then
 local text=REPORT:New("Removing Crates Found Nearby:")
 text:Add("------------------------------------------------------------")
@@ -68000,7 +68036,7 @@ self:E({_point1,_point2})
 return-1
 end
 end
-function CTLD:_FindCratesNearby(_group,_unit,_dist,_ignoreweight)
+function CTLD:_FindCratesNearby(_group,_unit,_dist,_ignoreweight,ignoretype)
 self:T(self.lid.." _FindCratesNearby")
 local finddist=_dist
 local location=_group:GetCoordinate()
@@ -68012,30 +68048,27 @@ local LoadedbyGC={}
 local loadedmass=0
 local unittype="none"
 local capabilities={}
-local maxmass=2000
 local maxloadable=2000
 local IsHook=self:IsHook(_unit)
 if not _ignoreweight then
 maxloadable=self:_GetMaxLoadableMass(_unit)
 end
-self:T(self.lid.." Max loadable mass: "..maxloadable)
+self:T2(self.lid.." Max loadable mass: "..maxloadable)
 for _,_cargoobject in pairs(existingcrates)do
 local cargo=_cargoobject
 local static=cargo:GetPositionable()
 local weight=cargo:GetMass()
 local staticid=cargo:GetID()
-self:T(self.lid.." Found cargo mass: "..weight)
+self:T2(self.lid.." Found cargo mass: "..weight)
 if static and static:IsAlive()then
 local restricthooktononstatics=self.enableChinookGCLoading and IsHook
-self:T(self.lid.." restricthooktononstatics: "..tostring(restricthooktononstatics))
 local cargoisstatic=cargo:GetType()==CTLD_CARGO.Enum.STATIC and true or false
-self:T(self.lid.." Cargo is static: "..tostring(cargoisstatic))
 local restricted=cargoisstatic and restricthooktononstatics
-self:T(self.lid.." Loading restricted: "..tostring(restricted))
 local staticpos=static:GetCoordinate()
+local cando=cargo:UnitCanCarry(_unit)
+if ignoretype==true then cando=true end
 local distance=self:_GetDistance(location,staticpos)
-self:T(self.lid..string.format("Dist %dm/%dm | weight %dkg | maxloadable %dkg",distance,finddist,weight,maxloadable))
-if distance<=finddist and(weight<=maxloadable or _ignoreweight)and restricted==false then
+if distance<=finddist and(weight<=maxloadable or _ignoreweight)and restricted==false and cando==true then
 index=index+1
 table.insert(found,staticid,cargo)
 maxloadable=maxloadable-weight
@@ -68080,7 +68113,7 @@ loaded.Cratesloaded=0
 loaded.Cargo={}
 end
 local finddist=self.CrateDistance or 35
-local nearcrates,number=self:_FindCratesNearby(Group,Unit,finddist,false)
+local nearcrates,number=self:_FindCratesNearby(Group,Unit,finddist,false,false)
 self:T(self.lid.." Crates found: "..number)
 if number==0 and self.hoverautoloading then
 return self
@@ -68565,7 +68598,7 @@ return self
 end
 end
 local finddist=self.CrateDistance or 35
-local crates,number=self:_FindCratesNearby(Group,Unit,finddist,true)
+local crates,number=self:_FindCratesNearby(Group,Unit,finddist,true,true)
 local buildables={}
 local foundbuilds=false
 local canbuild=false
@@ -68670,7 +68703,7 @@ end
 function CTLD:_RepairCrates(Group,Unit,Engineering)
 self:T(self.lid.." _RepairCrates")
 local finddist=self.CrateDistance or 35
-local crates,number=self:_FindCratesNearby(Group,Unit,finddist,true)
+local crates,number=self:_FindCratesNearby(Group,Unit,finddist,true,true)
 local buildables={}
 local foundbuilds=false
 local canbuild=false
@@ -69055,7 +69088,7 @@ local cargo=CTLD_CARGO:New(self.CargoCounter,Name,Templates,Type,false,true,NoTr
 table.insert(self.Cargo_Troops,cargo)
 return self
 end
-function CTLD:AddCratesCargo(Name,Templates,Type,NoCrates,PerCrateMass,Stock,SubCategory,DontShowInMenu,Location,UnitTypes,TypeName,ShapeName)
+function CTLD:AddCratesCargo(Name,Templates,Type,NoCrates,PerCrateMass,Stock,SubCategory,DontShowInMenu,Location,UnitTypes,Category,TypeName,ShapeName)
 self:T(self.lid.." AddCratesCargo")
 if not self:_CheckTemplates(Templates)then
 self:E(self.lid.."Crates Cargo for "..Name.." has missing template(s)!")
@@ -69066,8 +69099,9 @@ local cargo=CTLD_CARGO:New(self.CargoCounter,Name,Templates,Type,false,false,NoC
 if UnitTypes then
 cargo:AddUnitTypeName(UnitTypes)
 end
+cargo:SetStaticTypeAndShape("Cargos",self.basetype)
 if TypeName then
-cargo:SetStaticTypeAndShape(TypeName,ShapeName)
+cargo:SetStaticTypeAndShape(Category,TypeName,ShapeName)
 end
 table.insert(self.Cargo_Crates,cargo)
 return self
@@ -69101,7 +69135,7 @@ local cargo=CTLD_CARGO:New(self.CargoCounter,Name,template,type,false,false,1,ni
 cargo:SetStaticResourceMap(ResourceMap)
 return cargo
 end
-function CTLD:AddCratesRepair(Name,Template,Type,NoCrates,PerCrateMass,Stock,SubCategory,DontShowInMenu,Location,UnitTypes,TypeName,ShapeName)
+function CTLD:AddCratesRepair(Name,Template,Type,NoCrates,PerCrateMass,Stock,SubCategory,DontShowInMenu,Location,UnitTypes,Category,TypeName,ShapeName)
 self:T(self.lid.." AddCratesRepair")
 if not self:_CheckTemplates(Template)then
 self:E(self.lid.."Repair Cargo for "..Name.." has a missing template!")
@@ -69112,8 +69146,9 @@ local cargo=CTLD_CARGO:New(self.CargoCounter,Name,Template,Type,false,false,NoCr
 if UnitTypes then
 cargo:AddUnitTypeName(UnitTypes)
 end
+cargo:SetStaticTypeAndShape("cargos",self.basetype)
 if TypeName then
-cargo:SetStaticTypeAndShape(TypeName,ShapeName)
+cargo:SetStaticTypeAndShape(Category,TypeName,ShapeName)
 end
 table.insert(self.Cargo_Crates,cargo)
 return self
@@ -69856,7 +69891,7 @@ local wrenches=engineers.Group
 self:T(_engineers.lid.._engineers:GetStatus())
 if wrenches and wrenches:IsAlive()then
 if engineers:IsStatus("Running")or engineers:IsStatus("Searching")then
-local crates,number=self:_FindCratesNearby(wrenches,nil,self.EngineerSearch,true)
+local crates,number=self:_FindCratesNearby(wrenches,nil,self.EngineerSearch,true,true)
 engineers:Search(crates,number)
 elseif engineers:IsStatus("Moving")then
 engineers:Move()
@@ -70477,7 +70512,7 @@ local map=cargotype:GetStaticResourceMap()
 injectstatic:SetStaticResourceMap(map)
 end
 if injectstatic then
-self:InjectStatics(dropzone,injectstatic)
+self:InjectStatics(dropzone,injectstatic,false,true)
 end
 end
 end
@@ -70660,7 +70695,7 @@ local position=Cargo_Drop_Position:GetVec2()
 local Zone=ZONE_RADIUS:New("Cargo Static "..math.random(1,10000),position,100)
 if not dead then
 local injectstatic=CTLD_CARGO:New(nil,"Cargo Static Group "..math.random(1,10000),"iso_container",CTLD_CARGO.Enum.STATIC,true,false,1,nil,true,4500,1)
-self.CTLD:InjectStatics(Zone,injectstatic,true)
+self.CTLD:InjectStatics(Zone,injectstatic,true,true)
 end
 return self
 end
@@ -70668,13 +70703,17 @@ function CTLD_HERCULES:Cargo_SpawnDroppedAsCargo(_name,_pos)
 local theCargo=self.CTLD:_FindCratesCargoObject(_name)
 if theCargo then
 self.CTLD.CrateCounter=self.CTLD.CrateCounter+1
-self.CTLD.CargoCounter=self.CTLD.CargoCounter+1
-local basetype=self.CTLD.basetype or"container_cargo"
-local theStatic=SPAWNSTATIC:NewFromType(basetype,"Cargos",self.cratecountry)
+local CCat,CType,CShape=theCargo:GetStaticTypeAndShape()
+local basetype=CType or self.CTLD.basetype or"container_cargo"
+CCat=CCat or"Cargos"
+local theStatic=SPAWNSTATIC:NewFromType(basetype,CCat,self.cratecountry)
 :InitCargoMass(theCargo.PerCrateMass)
 :InitCargo(self.CTLD.enableslingload)
 :InitCoordinate(_pos)
-:Spawn(270,_name.."-Container-"..math.random(1,100000))
+if CShape then
+theStatic:InitShape(CShape)
+end
+theStatic:Spawn(270,_name.."-Container-"..math.random(1,100000))
 self.CTLD.Spawned_Crates[self.CTLD.CrateCounter]=theStatic
 local newCargo=CTLD_CARGO:New(self.CTLD.CargoCounter,theCargo.Name,theCargo.Templates,theCargo.CargoType,true,false,theCargo.CratesNeeded,self.CTLD.Spawned_Crates[self.CTLD.CrateCounter],true,theCargo.PerCrateMass,nil,theCargo.Subcategory)
 local map=theCargo:GetStaticResourceMap()
