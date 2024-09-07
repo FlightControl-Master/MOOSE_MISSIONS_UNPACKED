@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-08-29T10:25:13+02:00-f531fdaa7055bd56bd3afb8a03857833d7c3122b ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-09-07T09:01:58+02:00-07009630c6548f0c330f4d0914eac0f1773f3be9 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -14157,6 +14157,10 @@ end
 end
 MStaticInclude=MStaticInclude and MStaticZone
 end
+if self.Filter.Functions and MStaticInclude then
+local MClientFunc=self:_EvalFilterFunctions(MStatic)
+MStaticInclude=MStaticInclude and MClientFunc
+end
 return MStaticInclude
 end
 function SET_STATIC:GetTypeNames(Delimiter)
@@ -14383,6 +14387,7 @@ if _DATABASE then
 self:UnHandleEvent(EVENTS.Birth)
 self:UnHandleEvent(EVENTS.Dead)
 self:UnHandleEvent(EVENTS.Crash)
+self:UnHandleEvent(EVENTS.PlayerLeaveUnit)
 if self.Filter.Zones and self.ZoneTimer and self.ZoneTimer:IsRunning()then
 self.ZoneTimer:Stop()
 end
@@ -14394,6 +14399,7 @@ if _DATABASE then
 self:HandleEvent(EVENTS.Birth,self._EventOnBirth)
 self:HandleEvent(EVENTS.Dead,self._EventOnDeadOrCrash)
 self:HandleEvent(EVENTS.Crash,self._EventOnDeadOrCrash)
+self:HandleEvent(EVENTS.PlayerLeaveUnit,self._EventPlayerLeaveUnit)
 if self.Filter.Zones then
 self.ZoneTimer=TIMER:New(self._ContinousZoneFilter,self)
 local timing=self.ZoneTimerInterval or 30
@@ -14416,7 +14422,7 @@ return self
 end
 function SET_CLIENT:_EventPlayerLeaveUnit(Event)
 if Event.IniDCSUnit then
-if Event.IniObjectCategory==Object.Category.UNIT and Event.IniGroup and Event.IniGroup:IsGround()then
+if Event.IniObjectCategory==Object.Category.UNIT and Event.IniGroup then
 local ObjectName,Object=self:FindInDatabase(Event)
 if ObjectName then
 self:Remove(ObjectName)
@@ -14722,6 +14728,7 @@ self:_FilterStart()
 self:HandleEvent(EVENTS.Birth,self._EventOnBirth)
 self:HandleEvent(EVENTS.Dead,self._EventOnDeadOrCrash)
 self:HandleEvent(EVENTS.Crash,self._EventOnDeadOrCrash)
+self:HandleEvent(EVENTS.PlayerLeaveUnit,self._EventOnDeadOrCrash)
 end
 return self
 end
@@ -14830,6 +14837,10 @@ MClientZone=true
 end
 end
 MClientInclude=MClientInclude and MClientZone
+end
+if self.Filter.Functions and MClientInclude then
+local MClientFunc=self:_EvalFilterFunctions(MClient)
+MClientInclude=MClientInclude and MClientFunc
 end
 return MClientInclude
 end
@@ -14987,6 +14998,10 @@ end
 end
 MAirbaseInclude=MAirbaseInclude and MAirbaseCategory
 end
+end
+if self.Filter.Functions and MAirbaseInclude then
+local MClientFunc=self:_EvalFilterFunctions(MAirbase)
+MAirbaseInclude=MAirbaseInclude and MClientFunc
 end
 return MAirbaseInclude
 end
@@ -15179,6 +15194,10 @@ end
 MCargoInclude=MCargoInclude and MCargoPrefix
 end
 end
+if self.Filter.Functions and MCargoInclude then
+local MClientFunc=self:_EvalFilterFunctions(MCargo)
+MCargoInclude=MCargoInclude and MClientFunc
+end
 return MCargoInclude
 end
 function SET_CARGO:OnEventNewCargo(EventData)
@@ -15336,6 +15355,10 @@ end
 end
 MZoneInclude=MZoneInclude and MZonePrefix
 end
+end
+if self.Filter.Functions and MZoneInclude then
+local MClientFunc=self:_EvalFilterFunctions(MZone)
+MZoneInclude=MZoneInclude and MClientFunc
 end
 return MZoneInclude
 end
@@ -15549,6 +15572,10 @@ end
 MZoneInclude=MZoneInclude and MZonePrefix
 end
 end
+if self.Filter.Functions and MZoneInclude then
+local MClientFunc=self:_EvalFilterFunctions(MZone)
+MZoneInclude=MZoneInclude and MClientFunc
+end
 return MZoneInclude
 end
 function SET_ZONE_GOAL:OnEventNewZoneGoal(EventData)
@@ -15719,6 +15746,10 @@ end
 end
 MZoneInclude=MZoneInclude and MGroupCoalition
 end
+end
+if self.Filter.Functions and MZoneInclude then
+local MClientFunc=self:_EvalFilterFunctions(MZone)
+MZoneInclude=MZoneInclude and MClientFunc
 end
 return MZoneInclude
 end
@@ -16056,6 +16087,10 @@ end
 end
 MGroupInclude=MGroupInclude and MGroupPrefix
 end
+if self.Filter.Functions and MGroupInclude then
+local MClientFunc=self:_EvalFilterFunctions(MGroup)
+MGroupInclude=MGroupInclude and MClientFunc
+end
 return MGroupInclude
 end
 end
@@ -16241,6 +16276,10 @@ end
 MSceneryInclude=MSceneryInclude and MSceneryRole
 end
 end
+if self.Filter.Functions and MSceneryInclude then
+local MClientFunc=self:_EvalFilterFunctions(MScenery)
+MSceneryInclude=MSceneryInclude and MClientFunc
+end
 return MSceneryInclude
 end
 function SET_SCENERY:FilterOnce()
@@ -16356,6 +16395,10 @@ DCargoZone=true
 end
 end
 DCargoInclude=DCargoInclude and DCargoZone
+end
+if self.Filter.Functions and DCargoInclude then
+local MClientFunc=self:_EvalFilterFunctions(DCargo)
+DCargoInclude=DCargoInclude and MClientFunc
 end
 return DCargoInclude
 end
@@ -26309,6 +26352,85 @@ local TaskRouteToZone=PatrolGroup:TaskFunction("CONTROLLABLE.PatrolRaceTrack",Po
 PatrolGroup:SetTaskWaypoint(Route[#Route],TaskRouteToZone)
 PatrolGroup:Route(Route,Delay)
 end
+return self
+end
+function CONTROLLABLE:NewIRMarker(EnableImmediately,Runtime)
+if self.ClassName=="GROUP"then
+self.IRMarkerGroup=true
+self.IRMarkerUnit=false
+elseif self.ClassName=="UNIT"then
+self.IRMarkerGroup=false
+self.IRMarkerUnit=true
+end
+self.spot=nil
+self.timer=nil
+self.stoptimer=nil
+if EnableImmediately and EnableImmediately==true then
+self:EnableIRMarker(Runtime)
+end
+return self
+end
+function CONTROLLABLE:EnableIRMarker(Runtime)
+if self.IRMarkerGroup==nil then
+self:NewIRMarker(true,Runtime)
+return
+end
+if(self.IRMarkerGroup==true)then
+self:EnableIRMarkerForGroup()
+return
+end
+self.timer=TIMER:New(CONTROLLABLE._MarkerBlink,self)
+self.timer:Start(nil,1-math.random(1,5)/10/2,Runtime)
+return self
+end
+function CONTROLLABLE:DisableIRMarker()
+if(self.IRMarkerGroup==true)then
+self:DisableIRMarkerForGroup()
+return
+end
+if self.spot then
+self.spot:destroy()
+self.spot=nil
+if self.timer and self.timer:IsRunning()then
+self.timer:Stop()
+self.timer=nil
+end
+end
+return self
+end
+function CONTROLLABLE:EnableIRMarkerForGroup()
+if self.ClassName=="GROUP"then
+local units=self:GetUnits()or{}
+for _,_unit in pairs(units)do
+_unit:EnableIRMarker()
+end
+end
+return self
+end
+function CONTROLLABLE:DisableIRMarkerForGroup()
+if self.ClassName=="GROUP"then
+local units=self:GetUnits()or{}
+for _,_unit in pairs(units)do
+_unit:DisableIRMarker()
+end
+end
+return self
+end
+function CONTROLLABLE:_MarkerBlink()
+if self:IsAlive()~=true then
+self:DisableIRMarker()
+return
+end
+self.timer.dT=1-(math.random(1,2)/10/2)
+local _,_,unitBBHeight,_=self:GetObjectSize()
+local unitPos=self:GetPositionVec3()
+self.spot=Spot.createInfraRed(
+self.DCSUnit,
+{x=0,y=(unitBBHeight+1),z=0},
+{x=unitPos.x,y=(unitPos.y+unitBBHeight),z=unitPos.z}
+)
+local offTimer=TIMER:New(function()if self.spot then self.spot:destroy()end end)
+offTimer:Start(0.5)
 return self
 end
 GROUP={
@@ -36923,7 +37045,7 @@ local HasDetectedObjects=false
 if Detection and Detection:IsAlive()then
 self:T({"DetectionGroup is Alive",Detection:GetName()})
 local DetectionGroupName=Detection:GetName()
-local DetectionUnit=Detection:GetUnit(1)
+local DetectionUnit=Detection:GetFirstUnitAlive()
 local DetectedUnits={}
 local DetectedTargets=DetectionUnit:GetDetectedTargets(
 self.DetectVisual,
@@ -36933,7 +37055,7 @@ self.DetectIRST,
 self.DetectRWR,
 self.DetectDLINK
 )
-for DetectionObjectID,Detection in pairs(DetectedTargets)do
+for DetectionObjectID,Detection in pairs(DetectedTargets or{})do
 local DetectedObject=Detection.object
 if DetectedObject and DetectedObject:isExist()and DetectedObject.id_<50000000 then
 local DetectedObjectName=DetectedObject:getName()
@@ -36944,7 +37066,7 @@ self.DetectedObjects[DetectedObjectName].Object=DetectedObject
 end
 end
 end
-for DetectionObjectName,DetectedObjectData in pairs(self.DetectedObjects)do
+for DetectionObjectName,DetectedObjectData in pairs(self.DetectedObjects or{})do
 local DetectedObject=DetectedObjectData.Object
 if DetectedObject:isExist()then
 local TargetIsDetected,TargetIsVisible,TargetLastTime,TargetKnowType,TargetKnowDistance,TargetLastPos,TargetLastVelocity=DetectionUnit:IsTargetDetected(
@@ -50860,7 +50982,6 @@ end
 end
 end
 function WAREHOUSE:_UnitDead(deadunit,deadgroup,request)
-self:F(self.lid.."FF unit dead "..deadunit:GetName())
 local opsgroup=_DATABASE:FindOpsGroup(deadgroup)
 if opsgroup then
 return nil
@@ -61625,7 +61746,7 @@ if u and pn then
 return u,pn
 end
 local DCSunit=Unit.getByName(_unitName)
-if DCSunit then
+if DCSunit and DCSunit.getPlayerName then
 local playername=DCSunit:getPlayerName()
 local unit=UNIT:Find(DCSunit)
 self:T2({DCSunit=DCSunit,unit=unit,playername=playername})
@@ -67013,6 +67134,7 @@ DynamicCargo={},
 ChinookTroopCircleRadius=5,
 TroopUnloadDistGround=5,
 TroopUnloadDistHover=1.5,
+UserSetGroup=nil,
 }
 CTLD.RadioModulation={
 AM=0,
@@ -67047,7 +67169,7 @@ CTLD.UnitTypeCapabilities={
 ["OH-58D"]={type="OH58D",crates=false,troops=false,cratelimit=0,trooplimit=0,length=14,cargoweightlimit=400},
 ["CH-47Fbl1"]={type="CH-47Fbl1",crates=true,troops=true,cratelimit=4,trooplimit=31,length=20,cargoweightlimit=10800},
 }
-CTLD.version="1.1.17"
+CTLD.version="1.1.16"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -67171,6 +67293,8 @@ self.nobuildinloadzones=true
 self.movecratesbeforebuild=true
 self.surfacetypes={land.SurfaceType.LAND,land.SurfaceType.ROAD,land.SurfaceType.RUNWAY,land.SurfaceType.SHALLOW_WATER}
 self.enableChinookGCLoading=true
+self.ChinookTroopCircleRadius=5
+self.UserSetGroup=nil
 local AliaS=string.gsub(self.alias," ","_")
 self.filename=string.format("CTLD_%s_Persist.csv",AliaS)
 self.allowcratepickupagain=true
@@ -69595,6 +69719,10 @@ capabilities.cargoweightlimit=Maxcargoweight or maxcargo
 self.UnitTypeCapabilities[unittype]=capabilities
 return self
 end
+function CTLD:SetOwnSetPilotGroups(Set)
+self.UserSetGroup=Set
+return self
+end
 function CTLD:UnitCapabilities(Unittype,Cancrates,Cantroops,Cratelimit,Trooplimit,Length,Maxcargoweight)
 self:I(self.lid.."This function been replaced with `SetUnitCapabilities()` - pls use the new one going forward!")
 self:SetUnitCapabilities(Unittype,Cancrates,Cantroops,Cratelimit,Trooplimit,Length,Maxcargoweight)
@@ -70099,7 +70227,9 @@ end
 function CTLD:onafterStart(From,Event,To)
 self:T({From,Event,To})
 self:I(self.lid.."Started ("..self.version..")")
-if self.useprefix or self.enableHercules then
+if self.UserSetGroup then
+self.PilotGroups=self.UserSetGroup
+elseif self.useprefix or self.enableHercules then
 local prefix=self.prefixes
 if self.enableHercules then
 self.PilotGroups=SET_GROUP:New():FilterCoalitions(self.coalitiontxt):FilterPrefixes(prefix):FilterStart()
@@ -70971,6 +71101,7 @@ topmenuname="CSAR",
 ADFRadioPwr=1000,
 PilotWeight=80,
 CreateRadioBeacons=true,
+UserSetGroup=nil,
 }
 CSAR.AircraftType={}
 CSAR.AircraftType["SA342Mistral"]=2
@@ -70990,7 +71121,7 @@ CSAR.AircraftType["MH-60R"]=10
 CSAR.AircraftType["OH-6A"]=2
 CSAR.AircraftType["OH-58D"]=2
 CSAR.AircraftType["CH-47Fbl1"]=31
-CSAR.version="1.0.27"
+CSAR.version="1.0.28"
 function CSAR:New(Coalition,Template,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Template,Alias})
@@ -71096,6 +71227,7 @@ self.usewetfeet=false
 self.allowbronco=false
 self.ADFRadioPwr=1000
 self.PilotWeight=80
+self.UserSetGroup=nil
 self.useSRS=false
 self.SRSPath="E:\\Program Files\\DCS-SimpleRadio-Standalone"
 self.SRSchannel=300
@@ -71116,13 +71248,13 @@ self.filepath=nil
 self.saveinterval=600
 return self
 end
-function CSAR:_CreateDownedPilotTrack(Group,Groupname,Side,OriginalUnit,Description,Typename,Frequency,Playername,Wetfeet)
+function CSAR:_CreateDownedPilotTrack(Group,Groupname,Side,OriginalUnit,Description,Typename,Frequency,Playername,Wetfeet,BeaconName)
 self:T({"_CreateDownedPilotTrack",Groupname,Side,OriginalUnit,Description,Typename,Frequency,Playername})
 local DownedPilot={}
 DownedPilot.desc=Description or""
 DownedPilot.frequency=Frequency or 0
 DownedPilot.index=self.downedpilotcounter
-DownedPilot.name=Groupname or""
+DownedPilot.name=Groupname or Playername or""
 DownedPilot.originalUnit=OriginalUnit or""
 DownedPilot.player=Playername or""
 DownedPilot.side=Side or 0
@@ -71131,6 +71263,7 @@ DownedPilot.group=Group
 DownedPilot.timestamp=0
 DownedPilot.alive=true
 DownedPilot.wetfeet=Wetfeet or false
+DownedPilot.BeaconName=BeaconName
 local PilotTable=self.downedPilots
 local counter=self.downedpilotcounter
 PilotTable[counter]={}
@@ -71243,8 +71376,16 @@ else
 self:_DisplayToAllSAR("Troops In Contact. ".._typeName.." requests CASEVAC. ",self.coalition,self.messageTime)
 end
 end
+local BeaconName
+if _playerName then
+BeaconName=_unitName..math.random(1,10000)
+elseif _unitName then
+BeaconName=_playerName..math.random(1,10000)
+else
+BeaconName="Ghost-1-1"..math.random(1,10000)
+end
 if(_freq and _freq~=0)then
-self:_AddBeaconToGroup(_spawnedGroup,_freq)
+self:_AddBeaconToGroup(_spawnedGroup,_freq,BeaconName)
 end
 self:_AddSpecialOptions(_spawnedGroup)
 local _text=_description
@@ -71265,7 +71406,7 @@ end
 end
 self:T({_spawnedGroup,_alias})
 local _GroupName=_spawnedGroup:GetName()or _alias
-self:_CreateDownedPilotTrack(_spawnedGroup,_GroupName,_coalition,_unitName,_text,_typeName,_freq,_playerName,wetfeet)
+self:_CreateDownedPilotTrack(_spawnedGroup,_GroupName,_coalition,_unitName,_text,_typeName,_freq,_playerName,wetfeet,BeaconName)
 self:_InitSARForPilot(_spawnedGroup,_unitName,_freq,noMessage,_playerName)
 return self
 end
@@ -72240,7 +72381,7 @@ if clock>12 then clock=clock-12 end
 end
 return clock
 end
-function CSAR:_AddBeaconToGroup(_group,_freq)
+function CSAR:_AddBeaconToGroup(_group,_freq,_name)
 self:T(self.lid.." _AddBeaconToGroup")
 if self.CreateRadioBeacons==false then return end
 local _group=_group
@@ -72261,7 +72402,7 @@ local Frequency=_freq
 local name=_radioUnit:GetName()
 local Sound="l10n/DEFAULT/"..self.radioSound
 local vec3=_radioUnit:GetVec3()or _radioUnit:GetPositionVec3()or{x=0,y=0,z=0}
-trigger.action.radioTransmission(Sound,vec3,0,false,Frequency,self.ADFRadioPwr or 1000,name..math.random(1,10000))
+trigger.action.radioTransmission(Sound,vec3,0,false,Frequency,self.ADFRadioPwr or 1000,_name)
 end
 end
 return self
@@ -72276,8 +72417,10 @@ self:T({_pilot.name})
 local pilot=_pilot
 local group=pilot.group
 local frequency=pilot.frequency or 0
+local bname=pilot.BeaconName or pilot.name..math.random(1,100000)
+trigger.action.stopRadioTransmission(bname)
 if group and group:IsAlive()and frequency>0 then
-self:_AddBeaconToGroup(group,frequency)
+self:_AddBeaconToGroup(group,frequency,bname)
 end
 end
 end
@@ -72305,6 +72448,10 @@ else
 return false
 end
 end
+function CSAR:SetOwnSetPilotGroups(Set)
+self.UserSetGroup=Set
+return self
+end
 function CSAR:onafterStart(From,Event,To)
 self:T({From,Event,To})
 self:I(self.lid.."Started ("..self.version..")")
@@ -72315,7 +72462,9 @@ self:HandleEvent(EVENTS.LandingAfterEjection,self._EventHandler)
 self:HandleEvent(EVENTS.PlayerEnterAircraft,self._EventHandler)
 self:HandleEvent(EVENTS.PlayerEnterUnit,self._EventHandler)
 self:HandleEvent(EVENTS.PilotDead,self._EventHandler)
-if self.allowbronco then
+if self.UserSetGroup then
+self.allheligroupset=self.UserSetGroup
+elseif self.allowbronco then
 local prefixes=self.csarPrefix or{}
 self.allheligroupset=SET_GROUP:New():FilterCoalitions(self.coalitiontxt):FilterPrefixes(prefixes):FilterStart()
 elseif self.useprefix then
@@ -76123,9 +76272,13 @@ local Dispatcher=AI_A2G_Fsm:GetDispatcher()
 local Squadron=Dispatcher:GetSquadronFromDefender(DefenderGroup)
 if Squadron then
 local FirstUnit=AttackSetUnit:GetRandomSurely()
+if FirstUnit then
 local Coordinate=FirstUnit:GetCoordinate()
 if self.SetSendPlayerMessages then
 Dispatcher:MessageToPlayers(Squadron,DefenderName..", on route to ground target at "..Coordinate:ToStringA2G(DefenderGroup),DefenderGroup)
+end
+else
+return
 end
 end
 self:GetParent(self).onafterEngageRoute(self,DefenderGroup,From,Event,To,AttackSetUnit)
