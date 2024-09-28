@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-09-15T19:24:24+02:00-ae08c8782233470f92092cbdea36fdc3711ae9f6 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-09-27T11:57:40+02:00-68298fc585b5ba5430538ef3195a1171006a2073 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -2532,8 +2532,8 @@ if type_name=="MH-60R"and(unit:getDrawArgumentValue(403)>0 or unit:getDrawArgume
 BASE:T(unit_name.." cargo door is open")
 return true
 end
-if type_name=="OH-58D"and(unit:getDrawArgumentValue(35)>0 or unit:getDrawArgumentValue(421)==-1)then
-BASE:T(unit_name.." cargo door is open")
+if type_name=="OH58D"then
+BASE:T(unit_name.." front door(s) are open")
 return true
 end
 if type_name=="CH-47Fbl1"and(unit:getDrawArgumentValue(86)>0.5)then
@@ -7489,7 +7489,7 @@ Event.IniCategory=Event.IniDCSUnit:getDesc().category
 Event.IniTypeName=Event.IniDCSUnit:getTypeName()
 elseif Event.IniObjectCategory==Object.Category.SCENERY then
 Event.IniDCSUnit=Event.initiator
-Event.IniDCSUnitName=Event.IniDCSUnit:getName()
+Event.IniDCSUnitName=Event.IniDCSUnit.getName and Event.IniDCSUnit:getName()or"Scenery no name "..math.random(1,20000)
 Event.IniUnitName=Event.IniDCSUnitName
 Event.IniUnit=SCENERY:Register(Event.IniDCSUnitName,Event.initiator)
 Event.IniCategory=Event.IniDCSUnit:getDesc().category
@@ -16216,11 +16216,7 @@ self:ForEach(IteratorFunction,arg,self:GetSet())
 return self
 end
 function SET_SCENERY:GetCoordinate()
-local Coordinate=COORDINATE:New({0,0,0})
-local Item=self:GetRandomSurely()
-if Item then
-Coordinate:GetCoordinate()
-end
+local Coordinate=self:GetFirst():GetCoordinate()
 local x1=Coordinate.x
 local x2=Coordinate.x
 local y1=Coordinate.y
@@ -32040,7 +32036,7 @@ agl=UTILS.Round(agl,2)
 self:T(self.lid.." AGL: "..agl or-1)
 local isunloaded=true
 local client
-local playername
+local playername=self.Owner
 if count>0 and(agl>0 or self.testing)then
 self:T(self.lid.." Possible alive helos: "..count or-1)
 if agl~=0 or self.testing then
@@ -32052,6 +32048,11 @@ self.CargoState=DYNAMICCARGO.State.UNLOADED
 self.Owner=playername
 _DATABASE:CreateEventDynamicCargoUnloaded(self)
 end
+elseif count>0 and agl==0 then
+self:T(self.lid.." moved! LOADED -> UNLOADED by "..tostring(playername))
+self.CargoState=DYNAMICCARGO.State.UNLOADED
+self.Owner=playername
+_DATABASE:CreateEventDynamicCargoUnloaded(self)
 end
 end
 self.LastPosition=pos
@@ -66975,7 +66976,7 @@ CTLD.UnitTypeCapabilities={
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
 ["Bronco-OV-10A"]={type="Bronco-OV-10A",crates=false,troops=true,cratelimit=0,trooplimit=5,length=13,cargoweightlimit=1450},
 ["OH-6A"]={type="OH-6A",crates=false,troops=true,cratelimit=0,trooplimit=4,length=7,cargoweightlimit=550},
-["OH-58D"]={type="OH58D",crates=false,troops=false,cratelimit=0,trooplimit=0,length=14,cargoweightlimit=400},
+["OH58D"]={type="OH58D",crates=false,troops=false,cratelimit=0,trooplimit=0,length=14,cargoweightlimit=400},
 ["CH-47Fbl1"]={type="CH-47Fbl1",crates=true,troops=true,cratelimit=4,trooplimit=31,length=20,cargoweightlimit=10800},
 }
 CTLD.version="1.1.17"
@@ -71192,9 +71193,9 @@ end
 end
 local BeaconName
 if _playerName then
-BeaconName=_unitName..math.random(1,10000)
-elseif _unitName then
 BeaconName=_playerName..math.random(1,10000)
+elseif _unitName then
+BeaconName=_unitName..math.random(1,10000)
 else
 BeaconName="Ghost-1-1"..math.random(1,10000)
 end
