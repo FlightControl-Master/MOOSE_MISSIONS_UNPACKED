@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-12-18T22:04:38+01:00-43ab4d5f386b782242c67aee74e198381ee9f16c ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2024-12-27T14:40:32+01:00-45912911ee8b46e47f451e61de9619e3c44b3cb1 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -3795,6 +3795,93 @@ ADFName=Name.." ADF "..tostring(ADF).."KHz"
 trigger.action.radioTransmission(Sound,vec3,0,true,ADFFreq,250,ADFName)
 end
 return ReturnObjects,ADFName
+end
+function UTILS.Vec2toVec3(vec,y)
+if not vec.z then
+if vec.alt and not y then
+y=vec.alt
+elseif not y then
+y=0
+end
+return{x=vec.x,y=y,z=vec.y}
+else
+return{x=vec.x,y=vec.y,z=vec.z}
+end
+end
+function UTILS.GetNorthCorrection(gPoint)
+local point=UTILS.DeepCopy(gPoint)
+if not point.z then
+point.z=point.y
+point.y=0
+end
+local lat,lon=coord.LOtoLL(point)
+local north_posit=coord.LLtoLO(lat+1,lon)
+return math.atan2(north_posit.z-point.z,north_posit.x-point.x)
+end
+function UTILS.GetDHMS(timeInSec)
+if timeInSec and type(timeInSec)=='number'then
+local tbl={d=0,h=0,m=0,s=0}
+if timeInSec>86400 then
+while timeInSec>86400 do
+tbl.d=tbl.d+1
+timeInSec=timeInSec-86400
+end
+end
+if timeInSec>3600 then
+while timeInSec>3600 do
+tbl.h=tbl.h+1
+timeInSec=timeInSec-3600
+end
+end
+if timeInSec>60 then
+while timeInSec>60 do
+tbl.m=tbl.m+1
+timeInSec=timeInSec-60
+end
+end
+tbl.s=timeInSec
+return tbl
+else
+BASE:E("No number handed!")
+return
+end
+end
+function UTILS.GetDirectionRadians(vec,point)
+local dir=math.atan2(vec.z,vec.x)
+if point then
+dir=dir+UTILS.GetNorthCorrection(point)
+end
+if dir<0 then
+dir=dir+2*math.pi
+end
+return dir
+end
+function UTILS.IsPointInPolygon(point,poly,maxalt)
+point=UTILS.Vec2toVec3(point)
+local px=point.x
+local pz=point.z
+local cn=0
+local newpoly=UTILS.DeepCopy(poly)
+if not maxalt or(point.y<=maxalt)then
+local polysize=#newpoly
+newpoly[#newpoly+1]=newpoly[1]
+newpoly[1]=UTILS.Vec2toVec3(newpoly[1])
+for k=1,polysize do
+newpoly[k+1]=UTILS.Vec2toVec3(newpoly[k+1])
+if((newpoly[k].z<=pz)and(newpoly[k+1].z>pz))or((newpoly[k].z>pz)and(newpoly[k+1].z<=pz))then
+local vt=(pz-newpoly[k].z)/(newpoly[k+1].z-newpoly[k].z)
+if(px<newpoly[k].x+vt*(newpoly[k+1].x-newpoly[k].x))then
+cn=cn+1
+end
+end
+end
+return cn%2==1
+else
+return false
+end
+end
+function UTILS.ScalarMult(vec,mult)
+return{x=vec.x*mult,y=vec.y*mult,z=vec.z*mult}
 end
 PROFILER={
 ClassName="PROFILER",
@@ -17505,9 +17592,13 @@ trigger.action.illuminationBomb(self:GetVec3(),Power)
 end
 return self
 end
-function COORDINATE:Smoke(SmokeColor)
+function COORDINATE:Smoke(SmokeColor,name)
 self:F2({SmokeColor})
-trigger.action.smoke(self:GetVec3(),SmokeColor)
+self.firename=name or"Smoke-"..math.random(1,100000)
+trigger.action.smoke(self:GetVec3(),SmokeColor,self.firename)
+end
+function COORDINATE:StopSmoke(name)
+self:StopBigSmokeAndFire(name)
 end
 function COORDINATE:SmokeGreen()
 self:F2()
@@ -18193,25 +18284,9 @@ return self:ToStringMGRS(Settings)
 end
 return nil
 end
-function COORDINATE:ToString(Controllable,Settings,Task)
+function COORDINATE:ToString(Controllable,Settings)
 local Settings=Settings or(Controllable and _DATABASE:GetPlayerSettings(Controllable:GetPlayerName()))or _SETTINGS
 local ModeA2A=nil
-if Task then
-if Task:IsInstanceOf(TASK_A2A)then
-ModeA2A=true
-else
-if Task:IsInstanceOf(TASK_A2G)then
-ModeA2A=false
-else
-if Task:IsInstanceOf(TASK_CARGO)then
-ModeA2A=false
-end
-if Task:IsInstanceOf(TASK_CAPTURE_ZONE)then
-ModeA2A=false
-end
-end
-end
-end
 if ModeA2A==nil then
 local IsAir=Controllable and(Controllable:IsAirPlane()or Controllable:IsHelicopter())or false
 if IsAir then
@@ -27967,6 +28042,7 @@ if unit then
 local group=unit:getGroup()
 if group then
 self.GroupName=group:getName()
+self.groupId=group:getID()
 end
 self.DCSUnit=unit
 end
@@ -53365,7 +53441,7 @@ end
 if self.HQ_Template_CC then
 self.HQ_CC=GROUP:FindByName(self.HQ_Template_CC)
 end
-self.version="0.8.20"
+self.version="0.8.21"
 self:I(string.format("***** Starting MANTIS Version %s *****",self.version))
 self:SetStartState("Stopped")
 self:AddTransition("Stopped","Start","Running")
@@ -54046,9 +54122,18 @@ elseif _status=="RED"then
 instatusred=instatusred+1
 end
 end
+local activeshorads=0
+if self.Shorad then
+for _,_name in pairs(self.Shorad.ActiveGroups or{})do
+activeshorads=activeshorads+1
+end
+end
 statusreport:Add("+-----------------------------+")
 statusreport:Add(string.format("+ SAM in RED State: %2d",instatusred))
 statusreport:Add(string.format("+ SAM in GREEN State: %2d",instatusgreen))
+if self.Shorad then
+statusreport:Add(string.format("+ SHORAD active: %2d",activeshorads))
+end
 statusreport:Add("+-----------------------------+")
 MESSAGE:New(statusreport:Text(),10,nil,true):ToAll():ToLog()
 end
@@ -67120,7 +67205,7 @@ CTLD.UnitTypeCapabilities={
 ["OH58D"]={type="OH58D",crates=false,troops=false,cratelimit=0,trooplimit=0,length=14,cargoweightlimit=400},
 ["CH-47Fbl1"]={type="CH-47Fbl1",crates=true,troops=true,cratelimit=4,trooplimit=31,length=20,cargoweightlimit=10800},
 }
-CTLD.version="1.1.20"
+CTLD.version="1.1.21"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -68537,7 +68622,7 @@ local offset=hoverunload and self.TroopUnloadDistHover or self.TroopUnloadDistGr
 if IsHerc then offset=self.TroopUnloadDistGroundHerc or 25 end
 if IsHook then
 offset=self.TroopUnloadDistGroundHook or 15
-if self.TroopUnloadDistHoverHook then
+if hoverunload and self.TroopUnloadDistHoverHook then
 offset=self.TroopUnloadDistHoverHook or 5
 end
 end
@@ -83259,11 +83344,13 @@ Standard={
 ["en_IN_Standard_B"]='en-IN-Standard-B',
 ["en_IN_Standard_C"]='en-IN-Standard-C',
 ["en_IN_Standard_D"]='en-IN-Standard-D',
-["en_GB_Standard_A"]='en-GB-Standard-A',
-["en_GB_Standard_B"]='en-GB-Standard-B',
-["en_GB_Standard_C"]='en-GB-Standard-C',
-["en_GB_Standard_D"]='en-GB-Standard-D',
-["en_GB_Standard_F"]='en-GB-Standard-F',
+["en_GB_Standard_A"]='en-GB-Standard-N',
+["en_GB_Standard_B"]='en-GB-Standard-O',
+["en_GB_Standard_C"]='en-GB-Standard-N',
+["en_GB_Standard_D"]='en-GB-Standard-O',
+["en_GB_Standard_F"]='en-GB-Standard-N',
+["en_GB_Standard_O"]='en-GB-Standard-O',
+["en_GB_Standard_N"]='en-GB-Standard-N',
 ["en_US_Standard_A"]='en-US-Standard-A',
 ["en_US_Standard_B"]='en-US-Standard-B',
 ["en_US_Standard_C"]='en-US-Standard-C',
@@ -83274,25 +83361,33 @@ Standard={
 ["en_US_Standard_H"]='en-US-Standard-H',
 ["en_US_Standard_I"]='en-US-Standard-I',
 ["en_US_Standard_J"]='en-US-Standard-J',
-["fr_FR_Standard_A"]="fr-FR-Standard-A",
-["fr_FR_Standard_B"]="fr-FR-Standard-B",
-["fr_FR_Standard_C"]="fr-FR-Standard-C",
-["fr_FR_Standard_D"]="fr-FR-Standard-D",
-["fr_FR_Standard_E"]="fr-FR-Standard-E",
-["de_DE_Standard_A"]="de-DE-Standard-A",
-["de_DE_Standard_B"]="de-DE-Standard-B",
-["de_DE_Standard_C"]="de-DE-Standard-C",
-["de_DE_Standard_D"]="de-DE-Standard-D",
-["de_DE_Standard_E"]="de-DE-Standard-E",
-["de_DE_Standard_F"]="de-DE-Standard-F",
-["es_ES_Standard_A"]="es-ES-Standard-A",
-["es_ES_Standard_B"]="es-ES-Standard-B",
-["es_ES_Standard_C"]="es-ES-Standard-C",
-["es_ES_Standard_D"]="es-ES-Standard-D",
-["it_IT_Standard_A"]="it-IT-Standard-A",
-["it_IT_Standard_B"]="it-IT-Standard-B",
-["it_IT_Standard_C"]="it-IT-Standard-C",
-["it_IT_Standard_D"]="it-IT-Standard-D",
+["fr_FR_Standard_A"]="fr-FR-Standard-F",
+["fr_FR_Standard_B"]="fr-FR-Standard-G",
+["fr_FR_Standard_C"]="fr-FR-Standard-F",
+["fr_FR_Standard_D"]="fr-FR-Standard-G",
+["fr_FR_Standard_E"]="fr-FR-Standard-F",
+["fr_FR_Standard_G"]="fr-FR-Standard-G",
+["fr_FR_Standard_F"]="fr-FR-Standard-F",
+["de_DE_Standard_A"]="de-DE-Standard-G",
+["de_DE_Standard_B"]="de-DE-Standard-H",
+["de_DE_Standard_C"]="de-DE-Standard-G",
+["de_DE_Standard_D"]="de-DE-Standard-H",
+["de_DE_Standard_E"]="de-DE-Standard-H",
+["de_DE_Standard_F"]="de-DE-Standard-G",
+["de_DE_Standard_H"]="de-DE-Standard-H",
+["de_DE_Standard_G"]="de-DE-Standard-G",
+["es_ES_Standard_A"]="es-ES-Standard-E",
+["es_ES_Standard_B"]="es-ES-Standard-F",
+["es_ES_Standard_C"]="es-ES-Standard-E",
+["es_ES_Standard_D"]="es-ES-Standard-F",
+["es_ES_Standard_E"]="es-ES-Standard-E",
+["es_ES_Standard_F"]="es-ES-Standard-F",
+["it_IT_Standard_A"]="it-IT-Standard-E",
+["it_IT_Standard_B"]="it-IT-Standard-E",
+["it_IT_Standard_C"]="it-IT-Standard-F",
+["it_IT_Standard_D"]="it-IT-Standard-F",
+["it_IT_Standard_E"]="it-IT-Standard-E",
+["it_IT_Standard_F"]="it-IT-Standard-F",
 },
 Wavenet={
 ["en_AU_Wavenet_A"]='en-AU-Wavenet-A',
@@ -83303,12 +83398,14 @@ Wavenet={
 ["en_IN_Wavenet_B"]='en-IN-Wavenet-B',
 ["en_IN_Wavenet_C"]='en-IN-Wavenet-C',
 ["en_IN_Wavenet_D"]='en-IN-Wavenet-D',
-["en_GB_Wavenet_A"]='en-GB-Wavenet-A',
-["en_GB_Wavenet_B"]='en-GB-Wavenet-B',
-["en_GB_Wavenet_C"]='en-GB-Wavenet-C',
-["en_GB_Wavenet_D"]='en-GB-Wavenet-D',
-["en_GB_Wavenet_F"]='en-GB-Wavenet-F',
-["en_US_Wavenet_A"]='en-US-Wavenet-A',
+["en_GB_Wavenet_A"]='en-GB-Wavenet-N',
+["en_GB_Wavenet_B"]='en-GB-Wavenet-O',
+["en_GB_Wavenet_C"]='en-GB-Wavenet-N',
+["en_GB_Wavenet_D"]='en-GB-Wavenet-O',
+["en_GB_Wavenet_F"]='en-GB-Wavenet-N',
+["en_GB_Wavenet_O"]='en-GB-Wavenet-O',
+["en_GB_Wavenet_N"]='en-GB-Wavenet-N',
+["en_US_Wavenet_A"]='en-US-Wavenet-N',
 ["en_US_Wavenet_B"]='en-US-Wavenet-B',
 ["en_US_Wavenet_C"]='en-US-Wavenet-C',
 ["en_US_Wavenet_D"]='en-US-Wavenet-D',
@@ -83318,24 +83415,32 @@ Wavenet={
 ["en_US_Wavenet_H"]='en-US-Wavenet-H',
 ["en_US_Wavenet_I"]='en-US-Wavenet-I',
 ["en_US_Wavenet_J"]='en-US-Wavenet-J',
-["fr_FR_Wavenet_A"]="fr-FR-Wavenet-A",
-["fr_FR_Wavenet_B"]="fr-FR-Wavenet-B",
-["fr_FR_Wavenet_C"]="fr-FR-Wavenet-C",
-["fr_FR_Wavenet_D"]="fr-FR-Wavenet-D",
-["fr_FR_Wavenet_E"]="fr-FR-Wavenet-E",
-["de_DE_Wavenet_A"]="de-DE-Wavenet-A",
-["de_DE_Wavenet_B"]="de-DE-Wavenet-B",
-["de_DE_Wavenet_C"]="de-DE-Wavenet-C",
-["de_DE_Wavenet_D"]="de-DE-Wavenet-D",
-["de_DE_Wavenet_E"]="de-DE-Wavenet-E",
-["de_DE_Wavenet_F"]="de-DE-Wavenet-F",
-["es_ES_Wavenet_B"]="es-ES-Wavenet-B",
-["es_ES_Wavenet_C"]="es-ES-Wavenet-C",
-["es_ES_Wavenet_D"]="es-ES-Wavenet-D",
-["it_IT_Wavenet_A"]="it-IT-Wavenet-A",
-["it_IT_Wavenet_B"]="it-IT-Wavenet-B",
-["it_IT_Wavenet_C"]="it-IT-Wavenet-C",
-["it_IT_Wavenet_D"]="it-IT-Wavenet-D",
+["fr_FR_Wavenet_A"]="fr-FR-Wavenet-F",
+["fr_FR_Wavenet_B"]="fr-FR-Wavenet-G",
+["fr_FR_Wavenet_C"]="fr-FR-Wavenet-F",
+["fr_FR_Wavenet_D"]="fr-FR-Wavenet-G",
+["fr_FR_Wavenet_E"]="fr-FR-Wavenet-F",
+["fr_FR_Wavenet_G"]="fr-FR-Wavenet-G",
+["fr_FR_Wavenet_F"]="fr-FR-Wavenet-F",
+["de_DE_Wavenet_A"]="de-DE-Wavenet-G",
+["de_DE_Wavenet_B"]="de-DE-Wavenet-H",
+["de_DE_Wavenet_C"]="de-DE-Wavenet-G",
+["de_DE_Wavenet_D"]="de-DE-Wavenet-H",
+["de_DE_Wavenet_E"]="de-DE-Wavenet-H",
+["de_DE_Wavenet_F"]="de-DE-Wavenet-G",
+["de_DE_Wavenet_H"]="de-DE-Wavenet-H",
+["de_DE_Wavenet_G"]="de-DE-Wavenet-G",
+["es_ES_Wavenet_B"]="es-ES-Wavenet-E",
+["es_ES_Wavenet_C"]="es-ES-Wavenet-F",
+["es_ES_Wavenet_D"]="es-ES-Wavenet-E",
+["es_ES_Wavenet_E"]="es-ES-Wavenet-E",
+["es_ES_Wavenet_F"]="es-ES-Wavenet-F",
+["it_IT_Wavenet_A"]="it-IT-Wavenet-E",
+["it_IT_Wavenet_B"]="it-IT-Wavenet-E",
+["it_IT_Wavenet_C"]="it-IT-Wavenet-F",
+["it_IT_Wavenet_D"]="it-IT-Wavenet-F",
+["it_IT_Wavenet_E"]="it-IT-Wavenet-E",
+["it_IT_Wavenet_F"]="it-IT-Wavenet-F",
 },
 },
 }
@@ -83905,9 +84010,9 @@ ssml=string.format("<voice%s%s>%s</voice>",gender,language,Text)
 end
 end
 for _,freq in pairs(Frequencies)do
-self:F("Calling GRPC.tts with the following parameter:")
-self:F({ssml=ssml,freq=freq,options=options})
-self:F(options.provider[provider])
+self:T("Calling GRPC.tts with the following parameter:")
+self:T({ssml=ssml,freq=freq,options=options})
+self:T(options.provider[provider])
 GRPC.tts(ssml,freq*1e6,options)
 end
 end
