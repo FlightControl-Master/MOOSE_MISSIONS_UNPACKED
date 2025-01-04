@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2024-12-27T14:40:32+01:00-45912911ee8b46e47f451e61de9619e3c44b3cb1 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-01-02T17:06:53+01:00-f9030be843ea073e351a8ea47c27ec300fdc742b ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -1054,17 +1054,17 @@ ENUMS.Storage.weapons.UH1H.M60_MG_Right_Door={4,15,46,177}
 ENUMS.Storage.weapons.UH1H.M134_MiniGun_Left_Door={4,15,46,174}
 ENUMS.Storage.weapons.UH1H.M60_MG_Left_Door={4,15,46,176}
 ENUMS.Storage.weapons.OH58.FIM92={4,4,7,449}
-ENUMS.Storage.weapons.OH58.MG_M3P100={4,15,46,2608}
-ENUMS.Storage.weapons.OH58.MG_M3P200={4,15,46,2607}
-ENUMS.Storage.weapons.OH58.MG_M3P300={4,15,46,2606}
-ENUMS.Storage.weapons.OH58.MG_M3P400={4,15,46,2605}
-ENUMS.Storage.weapons.OH58.MG_M3P500={4,15,46,2604}
-ENUMS.Storage.weapons.OH58.Smk_Grenade_Blue={4,5,9,486}
-ENUMS.Storage.weapons.OH58.Smk_Grenade_Green={4,5,9,487}
-ENUMS.Storage.weapons.OH58.Smk_Grenade_Red={4,5,9,485}
-ENUMS.Storage.weapons.OH58.Smk_Grenade_Violet={4,5,9,488}
-ENUMS.Storage.weapons.OH58.Smk_Grenade_White={4,5,9,490}
-ENUMS.Storage.weapons.OH58.Smk_Grenade_Yellow={4,5,9,489}
+ENUMS.Storage.weapons.OH58.MG_M3P100={4,15,46,2611}
+ENUMS.Storage.weapons.OH58.MG_M3P200={4,15,46,2610}
+ENUMS.Storage.weapons.OH58.MG_M3P300={4,15,46,2609}
+ENUMS.Storage.weapons.OH58.MG_M3P400={4,15,46,2608}
+ENUMS.Storage.weapons.OH58.MG_M3P500={4,15,46,2607}
+ENUMS.Storage.weapons.OH58.Smk_Grenade_Blue={4,5,9,488}
+ENUMS.Storage.weapons.OH58.Smk_Grenade_Green={4,5,9,489}
+ENUMS.Storage.weapons.OH58.Smk_Grenade_Red={4,5,9,487}
+ENUMS.Storage.weapons.OH58.Smk_Grenade_Violet={4,5,9,490}
+ENUMS.Storage.weapons.OH58.Smk_Grenade_White={4,5,9,492}
+ENUMS.Storage.weapons.OH58.Smk_Grenade_Yellow={4,5,9,491}
 ENUMS.Storage.weapons.AH64D.AN_APG78={4,15,44,2138}
 ENUMS.Storage.weapons.AH64D.Internal_Aux_FuelTank={1,3,43,1700}
 ENUMS.FARPType={
@@ -17108,8 +17108,9 @@ return coord
 end
 function COORDINATE:Get2DDistance(TargetCoordinate)
 if not TargetCoordinate then return 1000000 end
-local a={x=TargetCoordinate.x-self.x,y=0,z=TargetCoordinate.z-self.z}
-local norm=UTILS.VecNorm(a)
+local a=self:GetVec2()
+local b=TargetCoordinate:GetVec2()
+local norm=UTILS.VecDist2D(a,b)
 return norm
 end
 function COORDINATE:GetTemperature(height)
@@ -17288,10 +17289,11 @@ else
 return" bearing unknown"
 end
 end
-function COORDINATE:GetBRText(AngleRadians,Distance,Settings,Language,MagVar)
+function COORDINATE:GetBRText(AngleRadians,Distance,Settings,Language,MagVar,Precision)
 local Settings=Settings or _SETTINGS
+Precision=Precision or 0
 local BearingText=self:GetBearingText(AngleRadians,0,Settings,MagVar)
-local DistanceText=self:GetDistanceText(Distance,Settings,Language,0)
+local DistanceText=self:GetDistanceText(Distance,Settings,Language,Precision)
 local BRText=BearingText..DistanceText
 return BRText
 end
@@ -18034,11 +18036,11 @@ delta=sunset+UTILS.SecondsToMidnight()
 end
 return delta/60
 end
-function COORDINATE:ToStringBR(FromCoordinate,Settings,MagVar)
+function COORDINATE:ToStringBR(FromCoordinate,Settings,MagVar,Precision)
 local DirectionVec3=FromCoordinate:GetDirectionVec3(self)
 local AngleRadians=self:GetAngleRadians(DirectionVec3)
 local Distance=self:Get2DDistance(FromCoordinate)
-return"BR, "..self:GetBRText(AngleRadians,Distance,Settings,nil,MagVar)
+return"BR, "..self:GetBRText(AngleRadians,Distance,Settings,nil,MagVar,Precision)
 end
 function COORDINATE:ToStringBRA(FromCoordinate,Settings,MagVar)
 local DirectionVec3=FromCoordinate:GetDirectionVec3(self)
@@ -29647,6 +29649,8 @@ AIRBASE.Kola={
 ["Vuojarvi"]="Vuojarvi",
 ["Andoya"]="Andoya",
 ["Alakourtti"]="Alakourtti",
+["Kittila"]="Kittila",
+["Bardufoss"]="Bardufoss",
 }
 AIRBASE.Afghanistan={
 ["Bost"]="Bost",
@@ -31812,7 +31816,7 @@ WEAPONS="weapons",
 LIQUIDS="liquids",
 AIRCRAFT="aircrafts",
 }
-STORAGE.version="0.0.3"
+STORAGE.version="0.1.4"
 function STORAGE:New(AirbaseName)
 local self=BASE:Inherit(self,BASE:New())
 self.airbase=Airbase.getByName(AirbaseName)
@@ -31833,7 +31837,7 @@ return self
 end
 function STORAGE:NewFromDynamicCargo(DynamicCargoName)
 local self=BASE:Inherit(self,BASE:New())
-self.airbase=Unit.getByName(DynamicCargoName)
+self.airbase=Unit.getByName(DynamicCargoName)or StaticObject.getByName(DynamicCargoName)
 if Airbase.getWarehouse then
 self.warehouse=Warehouse.getCargoAsWarehouse(self.airbase)
 end
@@ -31846,6 +31850,10 @@ return storage
 end
 function STORAGE:SetVerbosity(VerbosityLevel)
 self.verbose=VerbosityLevel or 0
+if self.verbose>1 then
+BASE:TraceOn()
+BASE:TraceClass("STORAGE")
+end
 return self
 end
 function STORAGE:AddItem(Name,Amount)
@@ -31944,7 +31952,7 @@ unlimited=unlimited or n>2^29 or n==N
 if not unlimited then
 self:AddAmount(Type,1)
 end
-self:I(self.lid..string.format("Type=%s: unlimited=%s (N=%d n=%d)",tostring(Type),tostring(unlimited),N,n))
+self:T(self.lid..string.format("Type=%s: unlimited=%s (N=%d n=%d)",tostring(Type),tostring(unlimited),N,n))
 end
 return unlimited
 end
@@ -31979,6 +31987,150 @@ end
 function STORAGE:GetInventory(Item)
 local inventory=self.warehouse:getInventory(Item)
 return inventory.aircraft,inventory.liquids,inventory.weapon
+end
+function STORAGE:SaveToFile(Path,Filename)
+if not io then
+BASE:E("ERROR: io not desanitized. Can't save the files.")
+return false
+end
+if Path==nil and not lfs then
+BASE:E("WARNING: lfs not desanitized. File will be saved in DCS installation root directory rather than your given path.")
+end
+local ac,lq,wp=self:GetInventory()
+local DataAircraft=""
+local DataLiquids=""
+local DataWeapons=""
+if#lq>0 then
+DataLiquids=DataLiquids.."Liquids in Storage:\n"
+for key,amount in pairs(lq)do
+DataLiquids=DataLiquids..tostring(key).."="..tostring(amount).."\n"
+end
+UTILS.SaveToFile(Path,Filename.."_Liquids.csv",DataLiquids)
+if self.verbose and self.verbose>0 then
+self:I(self.lid.."Saving Liquids to "..tostring(Path).."\\"..tostring(Filename).."_Liquids.csv")
+end
+end
+if UTILS.TableLength(ac)>0 then
+DataAircraft=DataAircraft.."Aircraft in Storage:\n"
+for key,amount in pairs(ac)do
+DataAircraft=DataAircraft..tostring(key).."="..tostring(amount).."\n"
+end
+UTILS.SaveToFile(Path,Filename.."_Aircraft.csv",DataAircraft)
+if self.verbose and self.verbose>0 then
+self:I(self.lid.."Saving Aircraft to "..tostring(Path).."\\"..tostring(Filename).."_Aircraft.csv")
+end
+end
+if UTILS.TableLength(wp)>0 then
+DataWeapons=DataWeapons.."Weapons and Materiel in Storage:\n"
+for key,amount in pairs(wp)do
+DataWeapons=DataWeapons..tostring(key).."="..tostring(amount).."\n"
+end
+for key,amount in pairs(ENUMS.Storage.weapons.Gazelle)do
+amount=self:GetItemAmount(ENUMS.Storage.weapons.Gazelle[key])
+DataWeapons=DataWeapons.."ENUMS.Storage.weapons.Gazelle."..tostring(key).."="..tostring(amount).."\n"
+end
+for key,amount in pairs(ENUMS.Storage.weapons.CH47)do
+amount=self:GetItemAmount(ENUMS.Storage.weapons.CH47[key])
+DataWeapons=DataWeapons.."ENUMS.Storage.weapons.CH47."..tostring(key).."="..tostring(amount).."\n"
+end
+for key,amount in pairs(ENUMS.Storage.weapons.UH1H)do
+amount=self:GetItemAmount(ENUMS.Storage.weapons.UH1H[key])
+DataWeapons=DataWeapons.."ENUMS.Storage.weapons.UH1H."..tostring(key).."="..tostring(amount).."\n"
+end
+for key,amount in pairs(ENUMS.Storage.weapons.OH58)do
+amount=self:GetItemAmount(ENUMS.Storage.weapons.OH58[key])
+DataWeapons=DataWeapons.."ENUMS.Storage.weapons.OH58."..tostring(key).."="..tostring(amount).."\n"
+end
+for key,amount in pairs(ENUMS.Storage.weapons.AH64D)do
+amount=self:GetItemAmount(ENUMS.Storage.weapons.AH64D[key])
+DataWeapons=DataWeapons.."ENUMS.Storage.weapons.AH64D."..tostring(key).."="..tostring(amount).."\n"
+end
+UTILS.SaveToFile(Path,Filename.."_Weapons.csv",DataWeapons)
+if self.verbose and self.verbose>0 then
+self:I(self.lid.."Saving Weapons to "..tostring(Path).."\\"..tostring(Filename).."_Weapons.csv")
+end
+end
+return self
+end
+function STORAGE:LoadFromFile(Path,Filename)
+if not io then
+BASE:E("ERROR: io not desanitized. Can't read the files.")
+return false
+end
+if Path==nil and not lfs then
+BASE:E("WARNING: lfs not desanitized. File will be read from DCS installation root directory rather than your give path.")
+end
+if self:IsLimitedLiquids()then
+local Ok,Liquids=UTILS.LoadFromFile(Path,Filename.."_Liquids.csv")
+if Ok then
+if self.verbose and self.verbose>0 then
+self:I(self.lid.."Loading Liquids from "..tostring(Path).."\\"..tostring(Filename).."_Liquids.csv")
+end
+for _id,_line in pairs(Liquids)do
+if string.find(_line,"Storage")==nil then
+local tbl=UTILS.Split(_line,"=")
+local lqno=tonumber(tbl[1])
+local lqam=tonumber(tbl[2])
+self:SetLiquid(lqno,lqam)
+end
+end
+else
+self:E("File for Liquids could not be found: "..tostring(Path).."\\"..tostring(Filename"_Liquids.csv"))
+end
+end
+if self:IsLimitedAircraft()then
+local Ok,Aircraft=UTILS.LoadFromFile(Path,Filename.."_Aircraft.csv")
+if Ok then
+if self.verbose and self.verbose>0 then
+self:I(self.lid.."Loading Aircraft from "..tostring(Path).."\\"..tostring(Filename).."_Aircraft.csv")
+end
+for _id,_line in pairs(Aircraft)do
+if string.find(_line,"Storage")==nil then
+local tbl=UTILS.Split(_line,"=")
+local acname=tbl[1]
+local acnumber=tonumber(tbl[2])
+self:SetAmount(acname,acnumber)
+end
+end
+else
+self:E("File for Aircraft could not be found: "..tostring(Path).."\\"..tostring(Filename"_Aircraft.csv"))
+end
+end
+if self:IsLimitedWeapons()then
+local Ok,Weapons=UTILS.LoadFromFile(Path,Filename.."_Weapons.csv")
+if Ok then
+if self.verbose and self.verbose>0 then
+self:I(self.lid.."Loading _eapons from "..tostring(Path).."\\"..tostring(Filename).."_Weapons.csv")
+end
+for _id,_line in pairs(Weapons)do
+if string.find(_line,"Storage")==nil then
+local tbl=UTILS.Split(_line,"=")
+local wpname=tbl[1]
+local wpnumber=tonumber(tbl[2])
+self:SetAmount(wpname,wpnumber)
+end
+end
+else
+self:E("File for Weapons could not be found: "..tostring(Path).."\\"..tostring(Filename"_Weapons.csv"))
+end
+end
+return self
+end
+function STORAGE:StartAutoSave(Path,Filename,Interval,LoadOnce)
+if LoadOnce~=false then
+self:LoadFromFile(Path,Filename)
+end
+local interval=Interval or 300
+self.SaverTimer=TIMER:New(STORAGE.SaveToFile,self,Path,Filename)
+self.SaverTimer:Start(interval,interval)
+return self
+end
+function STORAGE:StopAutoSave()
+if self.SaverTimer and self.SaverTimer:IsRunning()then
+self.SaverTimer:Stop()
+self.SaverTimer=nil
+end
+return self
 end
 DYNAMICCARGO={
 ClassName="DYNAMICCARGO",
@@ -34990,6 +35142,7 @@ SEAD.Harms={
 ["AGM_122"]="AGM_122",
 ["AGM_84"]="AGM_84",
 ["AGM_45"]="AGM_45",
+["AGM_65"]="AGM_65",
 ["ALARM"]="ALARM",
 ["LD-10"]="LD-10",
 ["X_58"]="X_58",
@@ -35005,6 +35158,7 @@ SEAD.Harms={
 SEAD.HarmData={
 ["AGM_88"]={150,3},
 ["AGM_45"]={12,2},
+["AGM_65"]={16,0.9},
 ["AGM_122"]={16.5,2.3},
 ["AGM_84"]={280,0.8},
 ["ALARM"]={45,2},
@@ -35040,7 +35194,7 @@ self:HandleEvent(EVENTS.Shot,self.HandleEventShot)
 self:SetStartState("Running")
 self:AddTransition("*","ManageEvasion","*")
 self:AddTransition("*","CalculateHitZone","*")
-self:I("*** SEAD - Started Version 0.4.8")
+self:I("*** SEAD - Started Version 0.4.9")
 return self
 end
 function SEAD:UpdateSet(SEADGroupPrefixes)
@@ -35278,7 +35432,7 @@ local _target=EventData.Weapon:getTarget()
 if not _target or self.debug then
 self:E("***** SEAD - No target data for "..(SEADWeaponName or"None"))
 if string.find(SEADWeaponName,"AGM_88",1,true)or string.find(SEADWeaponName,"AGM_154",1,true)then
-self:I("**** Tracking AGM-88/154 with no target data.")
+self:T("**** Tracking AGM-88/154 with no target data.")
 local pos0=SEADPlane:GetCoordinate()
 local fheight=SEADPlane:GetHeight()
 self:__CalculateHitZone(20,SEADWeapon,pos0,fheight,SEADGroup,SEADWeaponName)
@@ -50666,7 +50820,7 @@ else
 coord=parking[i].Coordinate
 terminal=parking[i].TerminalID
 end
-if self.Debug then
+if self.Debug and terminal then
 local text=string.format("Spawnplace unit %s terminal %d.",unit.name,terminal)
 coord:MarkToAll(text)
 env.info(text)
@@ -51706,9 +51860,11 @@ break
 else
 if self.Debug then
 local coord=problem.coord
+if coord then
 local text=string.format("Obstacle %s [type=%s] blocking spot=%d! Size=%.1f m and distance=%.1f m.",problem.name,problem.type,_termid,problem.size,problem.dist)
 self:I(self.lid..text)
-coord:MarkToAll(string.format(text))
+coord:MarkToAll(text)
+end
 else
 self:T(self.lid..string.format("Parking spot %d is occupied or not big enough!",_termid))
 end
@@ -53441,7 +53597,7 @@ end
 if self.HQ_Template_CC then
 self.HQ_CC=GROUP:FindByName(self.HQ_Template_CC)
 end
-self.version="0.8.21"
+self.version="0.8.22"
 self:I(string.format("***** Starting MANTIS Version %s *****",self.version))
 self:SetStartState("Stopped")
 self:AddTransition("Stopped","Start","Running")
@@ -53486,7 +53642,7 @@ self:T(self.lid.."AddZones")
 self.AcceptZones=AcceptZones or{}
 self.RejectZones=RejectZones or{}
 self.ConflictZones=ConflictZones or{}
-if#AcceptZones>0 or#RejectZones>0 or#ConflictZones>0 then
+if#self.AcceptZones>0 or#self.RejectZones>0 or#self.ConflictZones>0 then
 self.usezones=true
 end
 return self
@@ -53778,9 +53934,8 @@ local set=dectset
 if dlink then
 set=self:_PreFilterHeight(height)
 end
-local friendlyset
-if self.checkforfriendlies==true then
-friendlyset=SET_GROUP:New():FilterCoalitions(self.Coalition):FilterCategories({"plane","helicopter"}):FilterFunction(function(grp)if grp and grp:InAir()then return true else return false end end):FilterOnce()
+if self.checkforfriendlies==true and self.friendlyset==nil then
+self.friendlyset=SET_GROUP:New():FilterCoalitions(self.Coalition):FilterCategories({"plane","helicopter"}):FilterFunction(function(grp)if grp and grp:InAir()then return true else return false end end):FilterStart()
 end
 for _,_coord in pairs(set)do
 local coord=_coord
@@ -53793,19 +53948,19 @@ if self.usezones then
 zonecheck=self:_CheckCoordinateInZones(coord)
 end
 if self.verbose and self.debug then
-local dectstring=coord:ToStringLLDMS()
-local samstring=samcoordinate:ToStringLLDMS()
+local samstring=samcoordinate:ToStringMGRS({MGRS_Accuracy=0})
+samstring=string.gsub(samstring,"%s","")
 local inrange="false"
 if targetdistance<=rad then
 inrange="true"
 end
-local text=string.format("Checking SAM at %s | Targetdist %d | Rad %d | Inrange %s",samstring,targetdistance,rad,inrange)
+local text=string.format("Checking SAM at %s | Tgtdist %.1fkm | Rad %.1fkm | Inrange %s",samstring,targetdistance/1000,rad/1000,inrange)
 local m=MESSAGE:New(text,10,"Check"):ToAllIf(self.debug)
 self:T(self.lid..text)
 end
 local nofriendlies=true
 if self.checkforfriendlies==true then
-local closestfriend,distance=friendlyset:GetClosestGroup(samcoordinate)
+local closestfriend,distance=self.friendlyset:GetClosestGroup(samcoordinate)
 if closestfriend and distance and distance<rad then
 nofriendlies=false
 end
@@ -54054,9 +54209,9 @@ end
 function MANTIS:_CheckLoop(samset,detset,dlink,limit)
 self:T(self.lid.."CheckLoop "..#detset.." Coordinates")
 local switchedon=0
-local statusreport=REPORT:New("\nMANTIS Status")
 local instatusred=0
 local instatusgreen=0
+local activeshorads=0
 local SEADactive=0
 for _,_data in pairs(samset)do
 local samcoordinate=_data[2]
@@ -54067,7 +54222,10 @@ local blind=_data[5]*1.25+1
 local samgroup=GROUP:FindByName(name)
 local IsInZone,Distance=self:_CheckObjectInZone(detset,samcoordinate,radius,height,dlink)
 local suppressed=self.SuppressedGroups[name]or false
-local activeshorad=self.Shorad.ActiveGroups[name]or false
+local activeshorad=false
+if self.Shorad and self.Shorad.ActiveGroups and self.Shorad.ActiveGroups[name]then
+activeshorad=true
+end
 if IsInZone and not suppressed and not activeshorad then
 if samgroup:IsAlive()then
 local switch=false
@@ -54122,22 +54280,13 @@ elseif _status=="RED"then
 instatusred=instatusred+1
 end
 end
-local activeshorads=0
 if self.Shorad then
 for _,_name in pairs(self.Shorad.ActiveGroups or{})do
 activeshorads=activeshorads+1
 end
 end
-statusreport:Add("+-----------------------------+")
-statusreport:Add(string.format("+ SAM in RED State: %2d",instatusred))
-statusreport:Add(string.format("+ SAM in GREEN State: %2d",instatusgreen))
-if self.Shorad then
-statusreport:Add(string.format("+ SHORAD active: %2d",activeshorads))
 end
-statusreport:Add("+-----------------------------+")
-MESSAGE:New(statusreport:Text(),10,nil,true):ToAll():ToLog()
-end
-return self
+return instatusred,instatusgreen,activeshorads
 end
 function MANTIS:_Check(detection,dlink)
 self:T(self.lid.."Check")
@@ -54146,16 +54295,30 @@ local rand=math.random(1,100)
 if rand>65 then
 self:_RefreshSAMTable()
 end
+local instatusred=0
+local instatusgreen=0
+local activeshorads=0
 if self.automode then
 local samset=self.SAM_Table_Long
 self:_CheckLoop(samset,detset,dlink,self.maxlongrange)
 local samset=self.SAM_Table_Medium
 self:_CheckLoop(samset,detset,dlink,self.maxmidrange)
 local samset=self.SAM_Table_Short
-self:_CheckLoop(samset,detset,dlink,self.maxshortrange)
+instatusred,instatusgreen,activeshorads=self:_CheckLoop(samset,detset,dlink,self.maxshortrange)
 else
 local samset=self:_GetSAMTable()
-self:_CheckLoop(samset,detset,dlink,self.maxclassic)
+instatusred,instatusgreen,activeshorads=self:_CheckLoop(samset,detset,dlink,self.maxclassic)
+end
+if self.debug or self.verbose then
+local statusreport=REPORT:New("\nMANTIS Status "..self.name)
+statusreport:Add("+-----------------------------+")
+statusreport:Add(string.format("+ SAM in RED State: %2d",instatusred))
+statusreport:Add(string.format("+ SAM in GREEN State: %2d",instatusgreen))
+if self.Shorad then
+statusreport:Add(string.format("+ SHORAD active: %2d",activeshorads))
+end
+statusreport:Add("+-----------------------------+")
+MESSAGE:New(statusreport:Text(),10):ToAll():ToLog()
 end
 return self
 end
@@ -54595,7 +54758,20 @@ end
 end
 local TDiff=4
 for _,_group in pairs(shoradset)do
-if _group:IsAnyInZone(targetzone)then
+local groupname=_group:GetName()
+if groupname==TargetGroup then
+if self.UseEmOnOff then
+_group:EnableEmission(false)
+end
+_group:OptionAlarmStateGreen()
+self.ActiveGroups[groupname]=nil
+local text=string.format("Shot at SHORAD %s! Evading!",_group:GetName())
+self:T(text)
+local m=MESSAGE:New(text,10,"SHORAD"):ToAllIf(self.debug)
+if self.shootandscoot then
+self:__ShootAndScoot(1,_group)
+end
+elseif _group:IsAnyInZone(targetzone)then
 local text=string.format("Waking up SHORAD %s",_group:GetName())
 self:T(text)
 local m=MESSAGE:New(text,10,"SHORAD"):ToAllIf(self.debug)
@@ -54603,7 +54779,6 @@ if self.UseEmOnOff then
 _group:EnableEmission(true)
 end
 _group:OptionAlarmStateRed()
-local groupname=_group:GetName()
 if self.ActiveGroups[groupname]==nil then
 self.ActiveGroups[groupname]={Timing=ActiveTimer}
 local endtime=timer.getTime()+(ActiveTimer*math.random(75,100)/100)
@@ -64148,6 +64323,7 @@ self.orientation=self.carrier:GetOrientationX()
 self.orientlast=self.carrier:GetOrientationX()
 self.position=self.carrier:GetCoordinate()
 self:__Status(10)
+return self
 end
 function RECOVERYTANKER:onafterStatus(From,Event,To)
 local time=timer.getTime()
@@ -64786,6 +64962,7 @@ self.formation:SetFollowTimeInterval(self.dtFollow)
 self.formation:SetFlightModeFormation(self.helo)
 self.formation:__Start(delay)
 self:__Status(1)
+return self
 end
 function RESCUEHELO:onafterStatus(From,Event,To)
 local time=timer.getTime()
@@ -67205,7 +67382,7 @@ CTLD.UnitTypeCapabilities={
 ["OH58D"]={type="OH58D",crates=false,troops=false,cratelimit=0,trooplimit=0,length=14,cargoweightlimit=400},
 ["CH-47Fbl1"]={type="CH-47Fbl1",crates=true,troops=true,cratelimit=4,trooplimit=31,length=20,cargoweightlimit=10800},
 }
-CTLD.version="1.1.21"
+CTLD.version="1.1.22"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -69265,6 +69442,7 @@ end
 self.CargoCounter=self.CargoCounter+1
 local cargo=CTLD_CARGO:New(self.CargoCounter,Name,Templates,Type,false,true,NoTroops,nil,nil,PerTroopMass,Stock,SubCategory)
 table.insert(self.Cargo_Troops,cargo)
+if SubCategory and self.usesubcats~=true then self.usesubcats=true end
 return self
 end
 function CTLD:AddCratesCargo(Name,Templates,Type,NoCrates,PerCrateMass,Stock,SubCategory,DontShowInMenu,Location,UnitTypes,Category,TypeName,ShapeName)
@@ -69283,6 +69461,7 @@ if TypeName then
 cargo:SetStaticTypeAndShape(Category,TypeName,ShapeName)
 end
 table.insert(self.Cargo_Crates,cargo)
+if SubCategory and self.usesubcats~=true then self.usesubcats=true end
 return self
 end
 function CTLD:AddStaticsCargo(Name,Mass,Stock,SubCategory,DontShowInMenu,Location)
@@ -69298,6 +69477,7 @@ end
 local cargo=CTLD_CARGO:New(self.CargoCounter,Name,template,type,false,false,1,nil,nil,Mass,Stock,SubCategory,DontShowInMenu,Location)
 cargo:SetStaticResourceMap(ResourceMap)
 table.insert(self.Cargo_Statics,cargo)
+if SubCategory and self.usesubcats~=true then self.usesubcats=true end
 return cargo
 end
 function CTLD:GetStaticsCargoFromTemplate(Name,Mass)
@@ -70498,7 +70678,7 @@ local cgotable=self.Cargo_Troops
 local stcstable=self.Spawned_Cargo
 local statics=nil
 local statics={}
-self:T(self.lid.."Bulding Statics Table for Saving")
+self:T(self.lid.."Building Statics Table for Saving")
 for _,_cargo in pairs(stcstable)do
 local cargo=_cargo
 local object=cargo:GetPositionable()
@@ -70527,7 +70707,7 @@ if match then break end
 end
 return match,cargo
 end
-local data="Group,x,y,z,CargoName,CargoTemplates,CargoType,CratesNeeded,CrateMass,Structure\n"
+local data="Group,x,y,z,CargoName,CargoTemplates,CargoType,CratesNeeded,CrateMass,Structure,StaticCategory,StaticType,StaticShape\n"
 local n=0
 for _,_grp in pairs(grouptable)do
 local group=_grp
@@ -70550,6 +70730,7 @@ local cgotemp=cargo.Templates
 local cgotype=cargo.CargoType
 local cgoneed=cargo.CratesNeeded
 local cgomass=cargo.PerCrateMass
+local scat,stype,sshape=cargo:GetStaticTypeAndShape()
 local structure=UTILS.GetCountPerTypeName(group)
 local strucdata=""
 for typen,anzahl in pairs(structure)do
@@ -70564,8 +70745,8 @@ templates=templates.."}"
 cgotemp=templates
 end
 local location=group:GetVec3()
-local txt=string.format("%s,%d,%d,%d,%s,%s,%s,%d,%d,%s\n"
-,template,location.x,location.y,location.z,cgoname,cgotemp,cgotype,cgoneed,cgomass,strucdata)
+local txt=string.format("%s,%d,%d,%d,%s,%s,%s,%d,%d,%s,%s,%s,%s\n"
+,template,location.x,location.y,location.z,cgoname,cgotemp,cgotype,cgoneed,cgomass,strucdata,scat,stype,sshape or"none")
 data=data..txt
 end
 end
@@ -70587,8 +70768,9 @@ local cgoneed=object.CratesNeeded
 local cgomass=object.PerCrateMass
 local crateobj=object.Positionable
 local location=crateobj:GetVec3()
-local txt=string.format("%s,%d,%d,%d,%s,%s,%s,%d,%d\n"
-,"STATIC",location.x,location.y,location.z,cgoname,cgotemp,cgotype,cgoneed,cgomass)
+local scat,stype,sshape=object:GetStaticTypeAndShape()
+local txt=string.format("%s,%d,%d,%d,%s,%s,%s,%d,%d,'none',%s,%s,%s\n"
+,"STATIC",location.x,location.y,location.z,cgoname,cgotemp,cgotype,cgoneed,cgomass,scat,stype,sshape or"none")
 data=data..txt
 end
 _savefile(filename,data)
@@ -70673,31 +70855,32 @@ local vec2={}
 vec2.x=tonumber(dataset[2])
 vec2.y=tonumber(dataset[4])
 local cargoname=dataset[5]
-local cargotype=dataset[7]
-if type(groupname)=="string"and groupname~="STATIC"then
 local cargotemplates=dataset[6]
+local cargotype=dataset[7]
+local size=tonumber(dataset[8])
+local mass=tonumber(dataset[9])
+local StaticCategory=dataset[11]
+local StaticType=dataset[12]
+local StaticShape=dataset[13]
+if type(groupname)=="string"and groupname~="STATIC"then
 cargotemplates=string.gsub(cargotemplates,"{","")
 cargotemplates=string.gsub(cargotemplates,"}","")
 cargotemplates=UTILS.Split(cargotemplates,";")
-local size=tonumber(dataset[8])
-local mass=tonumber(dataset[9])
 local structure=nil
-if dataset[10]then
+if dataset[10]and dataset[10]~="none"then
 structure=dataset[10]
 structure=string.gsub(structure,",","")
 end
 local dropzone=ZONE_RADIUS:New("DropZone",vec2,20)
 if cargotype==CTLD_CARGO.Enum.VEHICLE or cargotype==CTLD_CARGO.Enum.FOB then
 local injectvehicle=CTLD_CARGO:New(nil,cargoname,cargotemplates,cargotype,true,true,size,nil,true,mass)
+injectvehicle:SetStaticTypeAndShape(StaticCategory,StaticType,StaticShape)
 self:InjectVehicles(dropzone,injectvehicle,self.surfacetypes,self.useprecisecoordloads,structure)
 elseif cargotype==CTLD_CARGO.Enum.TROOPS or cargotype==CTLD_CARGO.Enum.ENGINEERS then
 local injecttroops=CTLD_CARGO:New(nil,cargoname,cargotemplates,cargotype,true,true,size,nil,true,mass)
 self:InjectTroops(dropzone,injecttroops,self.surfacetypes,self.useprecisecoordloads,structure)
 end
 elseif(type(groupname)=="string"and groupname=="STATIC")or cargotype==CTLD_CARGO.Enum.REPAIR then
-local cargotemplates=dataset[6]
-local size=tonumber(dataset[8])
-local mass=tonumber(dataset[9])
 local dropzone=ZONE_RADIUS:New("DropZone",vec2,20)
 local injectstatic=nil
 if cargotype==CTLD_CARGO.Enum.VEHICLE or cargotype==CTLD_CARGO.Enum.FOB then
@@ -70705,8 +70888,10 @@ cargotemplates=string.gsub(cargotemplates,"{","")
 cargotemplates=string.gsub(cargotemplates,"}","")
 cargotemplates=UTILS.Split(cargotemplates,";")
 injectstatic=CTLD_CARGO:New(nil,cargoname,cargotemplates,cargotype,true,true,size,nil,true,mass)
+injectstatic:SetStaticTypeAndShape(StaticCategory,StaticType,StaticShape)
 elseif cargotype==CTLD_CARGO.Enum.STATIC or cargotype==CTLD_CARGO.Enum.REPAIR then
 injectstatic=CTLD_CARGO:New(nil,cargoname,cargotemplates,cargotype,true,true,size,nil,true,mass)
+injectstatic:SetStaticTypeAndShape(StaticCategory,StaticType,StaticShape)
 local map=cargotype:GetStaticResourceMap()
 injectstatic:SetStaticResourceMap(map)
 end
