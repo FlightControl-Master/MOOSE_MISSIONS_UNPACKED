@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2025-01-31T14:26:32+01:00-f0fe1b431df2a23a4d8bef6fa7dbf403658279da ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-02-06T12:22:18+01:00-1156971d94637cda83ca8c85e8038f7568e6e8bb ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -18925,7 +18925,7 @@ end
 return self
 end
 _MESSAGESRS={}
-function MESSAGE.SetMSRS(PathToSRS,Port,PathToCredentials,Frequency,Modulation,Gender,Culture,Voice,Coalition,Volume,Label,Coordinate)
+function MESSAGE.SetMSRS(PathToSRS,Port,PathToCredentials,Frequency,Modulation,Gender,Culture,Voice,Coalition,Volume,Label,Coordinate,Backend)
 _MESSAGESRS.PathToSRS=PathToSRS or MSRS.path or"C:\\Program Files\\DCS-SimpleRadio-Standalone"
 _MESSAGESRS.frequency=Frequency or MSRS.frequencies or 243
 _MESSAGESRS.modulation=Modulation or MSRS.modulations or radio.modulation.AM
@@ -18935,6 +18935,9 @@ _MESSAGESRS.MSRS:SetCoalition(_MESSAGESRS.coalition)
 _MESSAGESRS.coordinate=Coordinate
 if Coordinate then
 _MESSAGESRS.MSRS:SetCoordinate(Coordinate)
+end
+if Backend then
+_MESSAGESRS.MSRS:SetBackend(Backend)
 end
 _MESSAGESRS.Culture=Culture or MSRS.culture or"en-GB"
 _MESSAGESRS.MSRS:SetCulture(Culture)
@@ -28198,7 +28201,7 @@ local issam=false
 local units=self:GetUnits()
 for _,_unit in pairs(units or{})do
 local unit=_unit
-if unit:HasSEAD()and unit:IsGround()and(not unit:HasAttribute("Mobile AAA"))then
+if unit:IsSAM()then
 issam=true
 break
 end
@@ -28206,18 +28209,16 @@ end
 return issam
 end
 function GROUP:IsAAA()
-local issam=false
+local isAAA=false
 local units=self:GetUnits()
 for _,_unit in pairs(units or{})do
 local unit=_unit
-local desc=unit:GetDesc()or{}
-local attr=desc.attributes or{}
-if unit:HasSEAD()then return false end
-if attr["AAA"]or attr["SAM related"]then
-issam=true
+if unit:IsAAA()then
+isAAA=true
+break
 end
 end
-return issam
+return isAAA
 end
 UNIT={
 ClassName="UNIT",
@@ -28398,12 +28399,18 @@ return nil
 end
 function UNIT:IsPlayer()
 local group=self:GetGroup()
-if not group then return false end
+if not group then
+return false
+end
 local template=group:GetTemplate()
 if(template==nil)or(template.units==nil)then
 local DCSObject=self:GetDCSObject()
 if DCSObject then
-if DCSObject:getPlayerName()~=nil then return true else return false end
+if DCSObject:getPlayerName()~=nil then
+return true
+else
+return false
+end
 else
 return false
 end
@@ -28627,7 +28634,11 @@ return nammo,nshells,nrockets,nbombs,nmissiles,narti,nAPshells,nHEshells
 end
 function UNIT:HasAPShells()
 local _,_,_,_,_,_,shells=self:GetAmmunition()
-if shells>0 then return true else return false end
+if shells>0 then
+return true
+else
+return false
+end
 end
 function UNIT:GetAPShells()
 local _,_,_,_,_,_,shells=self:GetAmmunition()
@@ -28639,11 +28650,19 @@ return shells or 0
 end
 function UNIT:HasHEShells()
 local _,_,_,_,_,_,_,shells=self:GetAmmunition()
-if shells>0 then return true else return false end
+if shells>0 then
+return true
+else
+return false
+end
 end
 function UNIT:HasArtiShells()
 local _,_,_,_,_,shells=self:GetAmmunition()
-if shells>0 then return true else return false end
+if shells>0 then
+return true
+else
+return false
+end
 end
 function UNIT:GetArtiShells()
 local _,_,_,_,_,shells=self:GetAmmunition()
@@ -28786,20 +28805,30 @@ local ThreatLevels={
 [10]="MR SAMs",
 [11]="LR SAMs"
 }
-if Attributes["LR SAM"]then ThreatLevel=10
-elseif Attributes["MR SAM"]then ThreatLevel=9
+if Attributes["LR SAM"]then
+ThreatLevel=10
+elseif Attributes["MR SAM"]then
+ThreatLevel=9
 elseif Attributes["SR SAM"]and
-not Attributes["IR Guided SAM"]then ThreatLevel=8
+not Attributes["IR Guided SAM"]then
+ThreatLevel=8
 elseif(Attributes["SR SAM"]or Attributes["MANPADS"])and
-Attributes["IR Guided SAM"]then ThreatLevel=7
-elseif Attributes["AAA"]then ThreatLevel=6
-elseif Attributes["Modern Tanks"]then ThreatLevel=5
+Attributes["IR Guided SAM"]then
+ThreatLevel=7
+elseif Attributes["AAA"]then
+ThreatLevel=6
+elseif Attributes["Modern Tanks"]then
+ThreatLevel=5
 elseif(Attributes["Tanks"]or Attributes["IFV"])and
-Attributes["ATGM"]then ThreatLevel=4
+Attributes["ATGM"]then
+ThreatLevel=4
 elseif(Attributes["Tanks"]or Attributes["IFV"])and
-not Attributes["ATGM"]then ThreatLevel=3
-elseif Attributes["Old Tanks"]or Attributes["APC"]or Attributes["Artillery"]then ThreatLevel=2
-elseif Attributes["Infantry"]or Attributes["EWR"]then ThreatLevel=1
+not Attributes["ATGM"]then
+ThreatLevel=3
+elseif Attributes["Old Tanks"]or Attributes["APC"]or Attributes["Artillery"]then
+ThreatLevel=2
+elseif Attributes["Infantry"]or Attributes["EWR"]then
+ThreatLevel=1
 end
 ThreatText=ThreatLevels[ThreatLevel+1]
 end
@@ -28817,18 +28846,30 @@ local ThreatLevels={
 [10]="Multirole Fighter",
 [11]="Fighter"
 }
-if Attributes["Fighters"]then ThreatLevel=10
-elseif Attributes["Multirole fighters"]then ThreatLevel=9
-elseif Attributes["Interceptors"]then ThreatLevel=9
-elseif Attributes["Battleplanes"]then ThreatLevel=8
-elseif Attributes["Battle airplanes"]then ThreatLevel=8
-elseif Attributes["Attack helicopters"]then ThreatLevel=7
-elseif Attributes["Strategic bombers"]then ThreatLevel=6
-elseif Attributes["Bombers"]then ThreatLevel=5
-elseif Attributes["UAVs"]then ThreatLevel=4
-elseif Attributes["Transport helicopters"]then ThreatLevel=3
-elseif Attributes["AWACS"]then ThreatLevel=2
-elseif Attributes["Tankers"]then ThreatLevel=1
+if Attributes["Fighters"]then
+ThreatLevel=10
+elseif Attributes["Multirole fighters"]then
+ThreatLevel=9
+elseif Attributes["Interceptors"]then
+ThreatLevel=9
+elseif Attributes["Battleplanes"]then
+ThreatLevel=8
+elseif Attributes["Battle airplanes"]then
+ThreatLevel=8
+elseif Attributes["Attack helicopters"]then
+ThreatLevel=7
+elseif Attributes["Strategic bombers"]then
+ThreatLevel=6
+elseif Attributes["Bombers"]then
+ThreatLevel=5
+elseif Attributes["UAVs"]then
+ThreatLevel=4
+elseif Attributes["Transport helicopters"]then
+ThreatLevel=3
+elseif Attributes["AWACS"]then
+ThreatLevel=2
+elseif Attributes["Tankers"]then
+ThreatLevel=1
 end
 ThreatText=ThreatLevels[ThreatLevel+1]
 end
@@ -28846,12 +28887,18 @@ local ThreatLevels={
 [10]="",
 [11]="Aircraft Carrier"
 }
-if Attributes["Aircraft Carriers"]then ThreatLevel=10
-elseif Attributes["Destroyers"]then ThreatLevel=8
-elseif Attributes["Cruisers"]then ThreatLevel=6
-elseif Attributes["Frigates"]then ThreatLevel=4
-elseif Attributes["Corvettes"]then ThreatLevel=2
-elseif Attributes["Light armed ships"]then ThreatLevel=1
+if Attributes["Aircraft Carriers"]then
+ThreatLevel=10
+elseif Attributes["Destroyers"]then
+ThreatLevel=8
+elseif Attributes["Cruisers"]then
+ThreatLevel=6
+elseif Attributes["Frigates"]then
+ThreatLevel=4
+elseif Attributes["Corvettes"]then
+ThreatLevel=2
+elseif Attributes["Light armed ships"]then
+ThreatLevel=1
 end
 ThreatText=ThreatLevels[ThreatLevel+1]
 end
@@ -29040,6 +29087,53 @@ FGL=template.datalinks.SADL.settings.flightLead
 end
 end
 return STN,VCL,VCN,FGL
+end
+do
+function UNIT:SetAIOnOff(AIOnOff)
+local DCSUnit=self:GetDCSObject()
+if DCSUnit then
+local DCSController=DCSUnit:getController()
+if DCSController then
+DCSController:setOnOff(AIOnOff)
+return self
+end
+end
+return nil
+end
+function UNIT:SetAIOn()
+return self:SetAIOnOff(true)
+end
+function UNIT:SetAIOff()
+return self:SetAIOnOff(false)
+end
+end
+function UNIT:IsSAM()
+if self:HasSEAD()and self:IsGround()and(not self:HasAttribute("Mobile AAA"))then
+return true
+end
+return false
+end
+function UNIT:IsEWR()
+if self:IsGround()then
+local DCSUnit=self:GetDCSObject()
+if DCSUnit then
+local attrs=DCSUnit:getDesc().attributes
+return attrs["EWR"]==true
+end
+end
+return false
+end
+function UNIT:IsAAA()
+local unit=self
+local desc=unit:GetDesc()or{}
+local attr=desc.attributes or{}
+if unit:HasSEAD()then
+return false
+end
+if attr["AAA"]or attr["SAM related"]then
+return true
+end
+return false
 end
 CLIENT={
 ClassName="CLIENT",
@@ -35201,14 +35295,14 @@ self:T({"CleanUp: Add to CleanUpList: ",CleanUpGroup:GetName(),CleanUpUnitName})
 end
 function CLEANUP_AIRBASE.__:EventAddForCleanUp(Event)
 self:F({Event})
-if Event.IniDCSUnit and Event.IniCategory==Object.Category.UNIT then
+if Event.IniDCSUnit and Event.IniUnit and Event.IniCategory==Object.Category.UNIT then
 if self.CleanUpList[Event.IniDCSUnitName]==nil then
 if self:IsInAirbase(Event.IniUnit:GetVec2())then
 self:AddForCleanUp(Event.IniUnit,Event.IniDCSUnitName)
 end
 end
 end
-if Event.TgtDCSUnit and Event.TgtCategory==Object.Category.UNIT then
+if Event.TgtDCSUnit and Event.TgtUnit and Event.TgtCategory==Object.Category.UNIT then
 if self.CleanUpList[Event.TgtDCSUnitName]==nil then
 if self:IsInAirbase(Event.TgtUnit:GetVec2())then
 self:AddForCleanUp(Event.TgtUnit,Event.TgtDCSUnitName)
