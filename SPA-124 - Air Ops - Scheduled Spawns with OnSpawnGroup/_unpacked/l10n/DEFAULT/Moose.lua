@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2025-02-06T12:22:18+01:00-1156971d94637cda83ca8c85e8038f7568e6e8bb ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-02-14T06:11:49+01:00-fa4e0447ddbdba6837164639be64c784c4e46655 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -37107,7 +37107,7 @@ return true
 end
 ATC_GROUND_UNIVERSAL={
 ClassName="ATC_GROUND_UNIVERSAL",
-Version="0.0.1",
+Version="0.0.2",
 SetClient=nil,
 Airbases=nil,
 AirbaseList=nil,
@@ -37117,14 +37117,21 @@ function ATC_GROUND_UNIVERSAL:New(AirbaseList)
 local self=BASE:Inherit(self,BASE:New())
 self:T({self.ClassName})
 self.Airbases={}
-for _name,_ in pairs(_DATABASE.AIRBASES)do
-self.Airbases[_name]={}
-end
 self.AirbaseList=AirbaseList
 if not self.AirbaseList then
 self.AirbaseList={}
-for _name,_ in pairs(_DATABASE.AIRBASES)do
+for _name,_base in pairs(_DATABASE.AIRBASES)do
+if _base and _base.isAirdrome==true then
 self.AirbaseList[_name]=_name
+self.Airbases[_name]={}
+end
+end
+else
+for _,_name in pairs(AirbaseList)do
+local airbase=_DATABASE:FindAirbase(_name)
+if airbase and airbase.isAirdrome==true then
+self.Airbases[_name]={}
+end
 end
 end
 self.SetClient=SET_CLIENT:New():FilterCategories("plane"):FilterStart()
@@ -67846,7 +67853,7 @@ CTLD.UnitTypeCapabilities={
 ["OH58D"]={type="OH58D",crates=false,troops=false,cratelimit=0,trooplimit=0,length=14,cargoweightlimit=400},
 ["CH-47Fbl1"]={type="CH-47Fbl1",crates=true,troops=true,cratelimit=4,trooplimit=31,length=20,cargoweightlimit=10800},
 }
-CTLD.version="1.1.29"
+CTLD.version="1.1.30"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -68066,6 +68073,13 @@ self.Loaded_Cargo[unitname]=nil
 self:_RefreshF10Menus()
 end
 return
+elseif event.id==EVENTS.Land or event.id==EVENTS.Takeoff then
+local unitname=event.IniUnitName
+if self.CtldUnits[unitname]then
+local _group=event.IniGroup
+local _unit=event.IniUnit
+self:_RefreshLoadCratesMenu(_group,_unit)
+end
 elseif event.id==EVENTS.PlayerLeaveUnit or event.id==EVENTS.UnitLost then
 local unitname=event.IniUnitName or"none"
 if self.CtldUnits[unitname]then
@@ -68303,7 +68317,8 @@ self:T({cargotype=loadcargotype})
 loaded.Troopsloaded=loaded.Troopsloaded+troopsize
 table.insert(loaded.Cargo,loadcargotype)
 self.Loaded_Cargo[unitname]=loaded
-self:_SendMessage("Troops boarded!",10,false,Group)
+self:_SendMessage(string.format("%s boarded!",cgoname),10,false,Group)
+self:_RefreshDropTroopsMenu(Group,Unit)
 self:__TroopsPickedUp(1,Group,Unit,Cargotype)
 self:_UpdateUnitCargoMass(Unit)
 Cargotype:RemoveStock()
@@ -68488,8 +68503,9 @@ local running=math.floor(nearestDistance/4)+20
 loaded.Troopsloaded=loaded.Troopsloaded+troopsize
 table.insert(loaded.Cargo,loadcargotype)
 self.Loaded_Cargo[unitname]=loaded
-self:ScheduleOnce(running,self._SendMessage,self,"Troops boarded!",10,false,Group)
-self:_SendMessage("Troops boarding!",10,false,Group)
+self:ScheduleOnce(running,self._SendMessage,self,string.format("%s boarded!",Cargotype.Name),10,false,Group)
+self:_SendMessage(string.format("%s boarding!",Cargotype.Name),10,false,Group)
+self:_RefreshDropTroopsMenu(Group,Unit)
 self:_UpdateUnitCargoMass(Unit)
 local groupname=nearestGroup:GetName()
 self:__TroopsExtracted(running,Group,Unit,nearestGroup,groupname)
@@ -68712,6 +68728,7 @@ text=string.format("Crates for %s have been dropped!",cratename)
 self:__CratesDropped(1,Group,Unit,droppedcargo)
 end
 self:_SendMessage(text,10,false,Group)
+self:_RefreshLoadCratesMenu(Group,Unit)
 return self
 end
 function CTLD:InjectStatics(Zone,Cargo,RandomCoord,FromLoad)
@@ -68816,24 +68833,25 @@ self:T(self.lid.." _RemoveCratesNearby")
 local finddist=self.CrateDistance or 35
 local crates,number=self:_FindCratesNearby(_group,_unit,finddist,true,true)
 if number>0 then
+local removedIDs={}
 local text=REPORT:New("Removing Crates Found Nearby:")
 text:Add("------------------------------------------------------------")
 for _,_entry in pairs(crates)do
 local entry=_entry
-local name=entry:GetName()
-local dropped=entry:WasDropped()
-if dropped then
+local name=entry:GetName()or"none"
 text:Add(string.format("Crate for %s, %dkg removed",name,entry.PerCrateMass))
-else
-text:Add(string.format("Crate for %s, %dkg removed",name,entry.PerCrateMass))
-end
+if entry:GetPositionable()then
 entry:GetPositionable():Destroy(false)
+end
+table.insert(removedIDs,entry:GetID())
 end
 if text:GetCount()==1 then
 text:Add("        N O N E")
 end
 text:Add("------------------------------------------------------------")
 self:_SendMessage(text:Text(),30,true,_group)
+self:_CleanupTrackedCrates(removedIDs)
+self:_RefreshLoadCratesMenu(_group,_unit)
 else
 self:_SendMessage(string.format("No (loadable) crates within %d meters!",finddist),10,false,_group)
 end
@@ -68923,12 +68941,10 @@ elseif not grounded and not canhoverload then
 self:_SendMessage("Land or hover over the crates to pick them up!",10,false,Group)
 else
 local numberonboard=0
-local massonboard=0
 local loaded={}
 if self.Loaded_Cargo[unitname]then
 loaded=self.Loaded_Cargo[unitname]
 numberonboard=loaded.Cratesloaded or 0
-massonboard=self:_GetUnitCargoMass(Unit)
 else
 loaded={}
 loaded.Troopsloaded=0
@@ -68949,23 +68965,24 @@ return self
 else
 local capacity=cratelimit-numberonboard
 local crateidsloaded={}
-local loops=0
-while loaded.Cratesloaded<cratelimit and loops<number do
-loops=loops+1
-local crateind=0
-for _ind,_crate in pairs(nearcrates)do
-if self.allowcratepickupagain then
-if _crate:GetID()>crateind and _crate.Positionable~=nil then
-crateind=_crate:GetID()
-end
-else
-if not _crate:HasMoved()and not _crate:WasDropped()and _crate:GetID()>crateind then
-crateind=_crate:GetID()
+local crateMap={}
+for _,cObj in pairs(nearcrates)do
+if not cObj:HasMoved()or self.allowcratepickupagain then
+local cName=cObj:GetName()or"Unknown"
+crateMap[cName]=crateMap[cName]or{}
+table.insert(crateMap[cName],cObj)
 end
 end
-end
-if crateind>0 then
-local crate=nearcrates[crateind]
+for cName,crateList in pairs(crateMap)do
+if capacity<=0 then break end
+table.sort(crateList,function(a,b)return a:GetID()>b:GetID()end)
+local needed=crateList[1]:GetCratesNeeded()or 1
+local totalFound=#crateList
+local loadedHere=0
+while loaded.Cratesloaded<cratelimit and loadedHere<totalFound do
+loadedHere=loadedHere+1
+local crate=crateList[loadedHere]
+if crate and crate.Positionable then
 loaded.Cratesloaded=loaded.Cratesloaded+1
 crate:SetHasMoved(true)
 crate:SetWasDropped(false)
@@ -68973,13 +68990,32 @@ table.insert(loaded.Cargo,crate)
 table.insert(crateidsloaded,crate:GetID())
 crate:GetPositionable():Destroy(false)
 crate.Positionable=nil
-self:_SendMessage(string.format("Crate ID %d for %s loaded!",crate:GetID(),crate:GetName()),10,false,Group)
-table.remove(nearcrates,crate:GetID())
-self:__CratesPickedUp(1,Group,Unit,crate)
+else
+loadedHere=loadedHere-1
+break
+end
+end
+capacity=cratelimit-loaded.Cratesloaded
+if loadedHere>0 then
+local fullSets=math.floor(loadedHere/needed)
+local leftover=loadedHere%needed
+if needed>1 then
+if fullSets>0 and leftover==0 then
+self:_SendMessage(string.format("Loaded %d %s.",fullSets,cName),10,false,Group)
+elseif fullSets>0 and leftover>0 then
+self:_SendMessage(string.format("Loaded %d %s(s), with %d leftover crate(s).",fullSets,cName,leftover),10,false,Group)
+else
+self:_SendMessage(string.format("Loaded only %d/%d crate(s) of %s.",loadedHere,needed,cName),15,false,Group)
+end
+else
+self:_SendMessage(string.format("Loaded %d %s(s).",loadedHere,cName),10,false,Group)
+end
 end
 end
 self.Loaded_Cargo[unitname]=loaded
 self:_UpdateUnitCargoMass(Unit)
+self:_RefreshDropCratesMenu(Group,Unit)
+self:_RefreshLoadCratesMenu(Group,Unit)
 self:_CleanupTrackedCrates(crateidsloaded)
 end
 end
@@ -69339,6 +69375,7 @@ end
 end
 self.Loaded_Cargo[unitname]=nil
 self.Loaded_Cargo[unitname]=loaded
+self:_RefreshDropTroopsMenu(Group,Unit)
 self:_UpdateUnitCargoMass(Unit)
 else
 if IsHerc then
@@ -69404,6 +69441,7 @@ end
 self.Loaded_Cargo[unitname]=nil
 self.Loaded_Cargo[unitname]=loaded
 self:_UpdateUnitCargoMass(Unit)
+self:_RefreshDropCratesMenu(Group,Unit)
 else
 if IsHerc then
 self:_SendMessage("Nothing loaded or not within airdrop parameters!",10,false,Group)
@@ -69524,6 +69562,7 @@ for _,_entry in pairs(self.Cargo_Crates)do
 if(_entry.Templates[1]==_Template.GroupName)then
 _Group:Destroy()
 self:_GetCrates(Group,Unit,_entry,nil,false,true)
+self:_RefreshLoadCratesMenu(Group,Unit)
 return self
 end
 end
@@ -69700,16 +69739,13 @@ self:T(self.lid.." _RefreshF10Menus")
 local PlayerSet=self.PilotGroups
 local PlayerTable=PlayerSet:GetSetObjects()
 local _UnitList={}
-for _key,_group in pairs(PlayerTable)do
-local _unit=_group:GetFirstUnitAlive()
-if _unit then
-if _unit:IsAlive()and _unit:IsPlayer()then
-if _unit:IsHelicopter()or(self:IsHercules(_unit)and self.enableHercules)then
-local unitName=_unit:GetName()
-_UnitList[unitName]=unitName
-else
-local unitName=_unit:GetName()
-_UnitList[unitName]=nil
+for _,groupObj in pairs(PlayerTable)do
+local firstUnit=groupObj:GetFirstUnitAlive()
+if firstUnit then
+if firstUnit:IsPlayer()then
+if firstUnit:IsHelicopter()or(self.enableHercules and self:IsHercules(firstUnit))then
+local _unit=firstUnit:GetName()
+_UnitList[_unit]=_unit
 end
 end
 end
@@ -69740,185 +69776,168 @@ local menus={}
 for _,_unitName in pairs(self.CtldUnits)do
 if(not self.MenusDone[_unitName])or(self.showstockinmenuitems==true)then
 local _unit=UNIT:FindByName(_unitName)
-if _unit then
+if _unit and _unit:IsAlive()then
 local _group=_unit:GetGroup()
 if _group then
-local unittype=_unit:GetTypeName()
 local capabilities=self:_GetUnitCapabilities(_unit)
 local cantroops=capabilities.troops
 local cancrates=capabilities.crates
+local unittype=_unit:GetTypeName()
 local isHook=self:IsHook(_unit)
 local nohookswitch=true
 if _group.CTLDTopmenu then
 _group.CTLDTopmenu:Remove()
 _group.CTLDTopmenu=nil
 end
-local topmenu=MENU_GROUP:New(_group,"CTLD",nil)
-_group.CTLDTopmenu=topmenu
 local toptroops=nil
 local topcrates=nil
+local topmenu=MENU_GROUP:New(_group,"CTLD",nil)
+_group.CTLDTopmenu=topmenu
 if cantroops then
-toptroops=MENU_GROUP:New(_group,"Manage Troops",topmenu)
-end
-if cancrates then
-topcrates=MENU_GROUP:New(_group,"Manage Crates",topmenu)
-end
-local listmenu=MENU_GROUP_COMMAND:New(_group,"List boarded cargo",topmenu,self._ListCargo,self,_group,_unit)
-local invtry=MENU_GROUP_COMMAND:New(_group,"Inventory",topmenu,self._ListInventory,self,_group,_unit)
-local rbcns=MENU_GROUP_COMMAND:New(_group,"List active zone beacons",topmenu,self._ListRadioBeacons,self,_group,_unit)
-local smoketopmenu=MENU_GROUP:New(_group,"Smokes, Flares, Beacons",topmenu)
-local smokemenu=MENU_GROUP_COMMAND:New(_group,"Smoke zones nearby",smoketopmenu,self.SmokeZoneNearBy,self,_unit,false)
-local smokeself=MENU_GROUP:New(_group,"Drop smoke now",smoketopmenu)
-local smokeselfred=MENU_GROUP_COMMAND:New(_group,"Red smoke",smokeself,self.SmokePositionNow,self,_unit,false,SMOKECOLOR.Red)
-local smokeselfblue=MENU_GROUP_COMMAND:New(_group,"Blue smoke",smokeself,self.SmokePositionNow,self,_unit,false,SMOKECOLOR.Blue)
-local smokeselfgreen=MENU_GROUP_COMMAND:New(_group,"Green smoke",smokeself,self.SmokePositionNow,self,_unit,false,SMOKECOLOR.Green)
-local smokeselforange=MENU_GROUP_COMMAND:New(_group,"Orange smoke",smokeself,self.SmokePositionNow,self,_unit,false,SMOKECOLOR.Orange)
-local smokeselfwhite=MENU_GROUP_COMMAND:New(_group,"White smoke",smokeself,self.SmokePositionNow,self,_unit,false,SMOKECOLOR.White)
-local flaremenu=MENU_GROUP_COMMAND:New(_group,"Flare zones nearby",smoketopmenu,self.SmokeZoneNearBy,self,_unit,true)
-local flareself=MENU_GROUP_COMMAND:New(_group,"Fire flare now",smoketopmenu,self.SmokePositionNow,self,_unit,true)
-local beaconself=MENU_GROUP_COMMAND:New(_group,"Drop beacon now",smoketopmenu,self.DropBeaconNow,self,_unit):Refresh()
-if cantroops then
+local toptroops=MENU_GROUP:New(_group,"Manage Troops",topmenu)
 local troopsmenu=MENU_GROUP:New(_group,"Load troops",toptroops)
+_group.MyTopTroopsMenu=toptroops
 if self.usesubcats then
 local subcatmenus={}
-for _name,_entry in pairs(self.subcatsTroop)do
-subcatmenus[_name]=MENU_GROUP:New(_group,_name,troopsmenu)
+for catName,_ in pairs(self.subcatsTroop)do
+subcatmenus[catName]=MENU_GROUP:New(_group,catName,troopsmenu)
 end
-for _,_entry in pairs(self.Cargo_Troops)do
-local entry=_entry
-local subcat=entry.Subcategory
-local noshow=entry.DontShowInMenu
-local stock=_entry:GetStock()
-if not noshow then
-menucount=menucount+1
-local menutext=entry.Name
-if stock>=0 and self.showstockinmenuitems==true then
-menutext=menutext.." ["..stock.."]"
-end
-menus[menucount]=MENU_GROUP_COMMAND:New(_group,menutext,subcatmenus[subcat],self._LoadTroops,self,_group,_unit,entry)
+for _,cargoObj in pairs(self.Cargo_Troops)do
+if not cargoObj.DontShowInMenu then
+local stock=cargoObj:GetStock()
+local menutext=cargoObj.Name
+if(stock>=0)and(self.showstockinmenuitems==true)then menutext=menutext.." ["..stock.."]"end
+MENU_GROUP_COMMAND:New(_group,menutext,subcatmenus[cargoObj.Subcategory],self._LoadTroops,self,_group,_unit,cargoObj)
 end
 end
 else
-for _,_entry in pairs(self.Cargo_Troops)do
-local entry=_entry
-local noshow=entry.DontShowInMenu
-local stock=_entry:GetStock()
-if not noshow then
-menucount=menucount+1
-local menutext=entry.Name
-if stock>=0 and self.showstockinmenuitems==true then
-menutext=menutext.." ["..stock.."]"
-end
-menus[menucount]=MENU_GROUP_COMMAND:New(_group,menutext,troopsmenu,self._LoadTroops,self,_group,_unit,entry)
+for _,cargoObj in pairs(self.Cargo_Troops)do
+if not cargoObj.DontShowInMenu then
+local stock=cargoObj:GetStock()
+local menutext=cargoObj.Name
+if(stock>=0)and(self.showstockinmenuitems==true)then menutext=menutext.." ["..stock.."]"end
+MENU_GROUP_COMMAND:New(_group,menutext,troopsmenu,self._LoadTroops,self,_group,_unit,cargoObj)
 end
 end
 end
-local unloadmenu1=MENU_GROUP_COMMAND:New(_group,"Drop troops",toptroops,self._UnloadTroops,self,_group,_unit):Refresh()
-local extractMenu1=MENU_GROUP_COMMAND:New(_group,"Extract troops",toptroops,self._ExtractTroops,self,_group,_unit):Refresh()
+local dropTroopsMenu=MENU_GROUP:New(_group,"Drop Troops",toptroops):Refresh()
+MENU_GROUP_COMMAND:New(_group,"Drop ALL troops",dropTroopsMenu,self._UnloadTroops,self,_group,_unit):Refresh()
+MENU_GROUP_COMMAND:New(_group,"Extract troops",toptroops,self._ExtractTroops,self,_group,_unit):Refresh()
+local uName=_unit:GetName()
+local loadedData=self.Loaded_Cargo[uName]
+if loadedData and loadedData.Cargo then
+for i,cargoObj in ipairs(loadedData.Cargo)do
+if cargoObj and(cargoObj:GetType()==CTLD_CARGO.Enum.TROOPS or cargoObj:GetType()==CTLD_CARGO.Enum.ENGINEERS)and not cargoObj:WasDropped()then
+local name=cargoObj:GetName()or"Unknown"
+local needed=cargoObj:GetCratesNeeded()or 1
+local cID=cargoObj:GetID()
+local line=string.format("Drop: %s",name,needed,cID)
+MENU_GROUP_COMMAND:New(_group,line,dropTroopsMenu,self._UnloadSingleTroopByID,self,_group,_unit,cID):Refresh()
+end
+end
+end
 end
 if cancrates then
-if nohookswitch then
-local loadmenu=MENU_GROUP_COMMAND:New(_group,"Load crates",topcrates,self._LoadCratesNearby,self,_group,_unit)
-end
+local topcrates=MENU_GROUP:New(_group,"Manage Crates",topmenu)
+_group.MyTopCratesMenu=topcrates
 local cratesmenu=MENU_GROUP:New(_group,"Get Crates",topcrates)
-local packmenu=MENU_GROUP_COMMAND:New(_group,"Pack crates",topcrates,self._PackCratesNearby,self,_group,_unit)
-local removecratesmenu=MENU_GROUP:New(_group,"Remove crates",topcrates)
 if self.usesubcats then
 local subcatmenus={}
-for _name,_entry in pairs(self.subcats)do
-subcatmenus[_name]=MENU_GROUP:New(_group,_name,cratesmenu)
+for catName,_ in pairs(self.subcats)do
+subcatmenus[catName]=MENU_GROUP:New(_group,catName,cratesmenu)
 end
-for _,_entry in pairs(self.Cargo_Crates)do
-local entry=_entry
-local subcat=entry.Subcategory
-local noshow=entry.DontShowInMenu
-local zone=entry.Location
-local stock=_entry:GetStock()
-if not noshow then
-menucount=menucount+1
-local menutext=string.format("Crate %s (%dkg)",entry.Name,entry.PerCrateMass or 0)
-if zone then
-menutext=string.format("Crate %s (%dkg)[R]",entry.Name,entry.PerCrateMass or 0)
-end
-if stock>=0 and self.showstockinmenuitems==true then
-menutext=menutext.."["..stock.."]"
-end
-menus[menucount]=MENU_GROUP_COMMAND:New(_group,menutext,subcatmenus[subcat],self._GetCrates,self,_group,_unit,entry)
+for _,cargoObj in pairs(self.Cargo_Crates)do
+if not cargoObj.DontShowInMenu then
+local txt=string.format("Crate %s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+if cargoObj.Location then txt=txt.."[R]"end
+local stock=cargoObj:GetStock()
+if stock>=0 and self.showstockinmenuitems then txt=txt.."["..stock.."]"end
+MENU_GROUP_COMMAND:New(_group,txt,subcatmenus[cargoObj.Subcategory],self._GetCrates,self,_group,_unit,cargoObj)
 end
 end
-for _,_entry in pairs(self.Cargo_Statics)do
-local entry=_entry
-local subcat=entry.Subcategory
-local noshow=entry.DontShowInMenu
-local zone=entry.Location
-local stock=_entry:GetStock()
-if not noshow then
-menucount=menucount+1
-local menutext=string.format("Crate %s (%dkg)",entry.Name,entry.PerCrateMass or 0)
-if zone then
-menutext=string.format("Crate %s (%dkg)[R]",entry.Name,entry.PerCrateMass or 0)
-end
-if stock>=0 and self.showstockinmenuitems==true then
-menutext=menutext.."["..stock.."]"
-end
-menus[menucount]=MENU_GROUP_COMMAND:New(_group,menutext,subcatmenus[subcat],self._GetCrates,self,_group,_unit,entry)
+for _,cargoObj in pairs(self.Cargo_Statics)do
+if not cargoObj.DontShowInMenu then
+local txt=string.format("Crate %s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+if cargoObj.Location then txt=txt.."[R]"end
+local stock=cargoObj:GetStock()
+if stock>=0 and self.showstockinmenuitems then txt=txt.."["..stock.."]"end
+MENU_GROUP_COMMAND:New(_group,txt,subcatmenus[cargoObj.Subcategory],self._GetCrates,self,_group,_unit,cargoObj)
 end
 end
 else
-for _,_entry in pairs(self.Cargo_Crates)do
-local entry=_entry
-local noshow=entry.DontShowInMenu
-local zone=entry.Location
-local stock=_entry:GetStock()
-if not noshow then
-menucount=menucount+1
-local menutext=string.format("Crate %s (%dkg)",entry.Name,entry.PerCrateMass or 0)
-if zone then
-menutext=string.format("Crate %s (%dkg)[R]",entry.Name,entry.PerCrateMass or 0)
-end
-if stock>=0 and self.showstockinmenuitems==true then
-menutext=menutext.."["..stock.."]"
-end
-menus[menucount]=MENU_GROUP_COMMAND:New(_group,menutext,cratesmenu,self._GetCrates,self,_group,_unit,entry)
+for _,cargoObj in pairs(self.Cargo_Crates)do
+if not cargoObj.DontShowInMenu then
+local txt=string.format("Crate %s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+if cargoObj.Location then txt=txt.."[R]"end
+local stock=cargoObj:GetStock()
+if stock>=0 and self.showstockinmenuitems then txt=txt.."["..stock.."]"end
+MENU_GROUP_COMMAND:New(_group,txt,cratesmenu,self._GetCrates,self,_group,_unit,cargoObj)
 end
 end
-for _,_entry in pairs(self.Cargo_Statics)do
-local entry=_entry
-local noshow=entry.DontShowInMenu
-local zone=entry.Location
-local stock=_entry:GetStock()
-if not noshow then
-menucount=menucount+1
-local menutext=string.format("Crate %s (%dkg)",entry.Name,entry.PerCrateMass or 0)
-if zone then
-menutext=string.format("Crate %s (%dkg)[R]",entry.Name,entry.PerCrateMass or 0)
-end
-if stock>=0 and self.showstockinmenuitems==true then
-menutext=menutext.."["..stock.."]"
-end
-menus[menucount]=MENU_GROUP_COMMAND:New(_group,menutext,cratesmenu,self._GetCrates,self,_group,_unit,entry)
+for _,cargoObj in pairs(self.Cargo_Statics)do
+if not cargoObj.DontShowInMenu then
+local txt=string.format("Crate %s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+if cargoObj.Location then txt=txt.."[R]"end
+local stock=cargoObj:GetStock()
+if stock>=0 and self.showstockinmenuitems then txt=txt.."["..stock.."]"end
+MENU_GROUP_COMMAND:New(_group,txt,cratesmenu,self._GetCrates,self,_group,_unit,cargoObj)
 end
 end
 end
-listmenu=MENU_GROUP_COMMAND:New(_group,"List crates nearby",topcrates,self._ListCratesNearby,self,_group,_unit)
-local removecrates=MENU_GROUP_COMMAND:New(_group,"Remove crates nearby",removecratesmenu,self._RemoveCratesNearby,self,_group,_unit)
-local unloadmenu
-if nohookswitch then
-unloadmenu=MENU_GROUP_COMMAND:New(_group,"Drop crates",topcrates,self._UnloadCrates,self,_group,_unit)
-end
+local loadCratesMenu=MENU_GROUP:New(_group,"Load Crates",topcrates)
+_group.MyLoadCratesMenu=loadCratesMenu
+MENU_GROUP_COMMAND:New(_group,"Load ALL",loadCratesMenu,self._LoadCratesNearby,self,_group,_unit)
+MENU_GROUP_COMMAND:New(_group,"Show loadable crates",loadCratesMenu,self._RefreshLoadCratesMenu,self,_group,_unit)
+local dropCratesMenu=MENU_GROUP:New(_group,"Drop Crates",topcrates)
+topcrates.DropCratesMenu=dropCratesMenu
 if not self.nobuildmenu then
-local buildmenu=MENU_GROUP_COMMAND:New(_group,"Build crates",topcrates,self._BuildCrates,self,_group,_unit)
-local repairmenu=MENU_GROUP_COMMAND:New(_group,"Repair",topcrates,self._RepairCrates,self,_group,_unit):Refresh()
-elseif unloadmenu then
-unloadmenu:Refresh()
+MENU_GROUP_COMMAND:New(_group,"Build crates",topcrates,self._BuildCrates,self,_group,_unit)
+MENU_GROUP_COMMAND:New(_group,"Repair",topcrates,self._RepairCrates,self,_group,_unit):Refresh()
+end
+local removecratesmenu=MENU_GROUP:New(_group,"Remove crates",topcrates)
+MENU_GROUP_COMMAND:New(_group,"Remove crates nearby",removecratesmenu,self._RemoveCratesNearby,self,_group,_unit)
+MENU_GROUP_COMMAND:New(_group,"Pack crates",topcrates,self._PackCratesNearby,self,_group,_unit)
+MENU_GROUP_COMMAND:New(_group,"List crates nearby",topcrates,self._ListCratesNearby,self,_group,_unit)
+local uName=_unit:GetName()
+local loadedData=self.Loaded_Cargo[uName]
+if loadedData and loadedData.Cargo then
+local cargoByName={}
+for _,cgo in pairs(loadedData.Cargo)do
+if cgo and(not cgo:WasDropped())then
+local cname=cgo:GetName()
+local cneeded=cgo:GetCratesNeeded()
+cargoByName[cname]=cargoByName[cname]or{count=0,needed=cneeded}
+cargoByName[cname].count=cargoByName[cname].count+1
 end
 end
+for name,info in pairs(cargoByName)do
+local line=string.format("Drop %s (%d/%d)",name,info.count,info.needed)
+MENU_GROUP_COMMAND:New(_group,line,dropCratesMenu,self._UnloadSingleCrateSet,self,_group,_unit,name)
+end
+end
+end
+MENU_GROUP_COMMAND:New(_group,"List boarded cargo",topmenu,self._ListCargo,self,_group,_unit)
+MENU_GROUP_COMMAND:New(_group,"Inventory",topmenu,self._ListInventory,self,_group,_unit)
+MENU_GROUP_COMMAND:New(_group,"List active zone beacons",topmenu,self._ListRadioBeacons,self,_group,_unit)
+local smoketopmenu=MENU_GROUP:New(_group,"Smokes, Flares, Beacons",topmenu)
+MENU_GROUP_COMMAND:New(_group,"Smoke zones nearby",smoketopmenu,self.SmokeZoneNearBy,self,_unit,false)
+local smokeself=MENU_GROUP:New(_group,"Drop smoke now",smoketopmenu)
+MENU_GROUP_COMMAND:New(_group,"Red smoke",smokeself,self.SmokePositionNow,self,_unit,false,SMOKECOLOR.Red)
+MENU_GROUP_COMMAND:New(_group,"Blue smoke",smokeself,self.SmokePositionNow,self,_unit,false,SMOKECOLOR.Blue)
+MENU_GROUP_COMMAND:New(_group,"Green smoke",smokeself,self.SmokePositionNow,self,_unit,false,SMOKECOLOR.Green)
+MENU_GROUP_COMMAND:New(_group,"Orange smoke",smokeself,self.SmokePositionNow,self,_unit,false,SMOKECOLOR.Orange)
+MENU_GROUP_COMMAND:New(_group,"White smoke",smokeself,self.SmokePositionNow,self,_unit,false,SMOKECOLOR.White)
+MENU_GROUP_COMMAND:New(_group,"Flare zones nearby",smoketopmenu,self.SmokeZoneNearBy,self,_unit,true)
+MENU_GROUP_COMMAND:New(_group,"Fire flare now",smoketopmenu,self.SmokePositionNow,self,_unit,true)
+MENU_GROUP_COMMAND:New(_group,"Drop beacon now",smoketopmenu,self.DropBeaconNow,self,_unit):Refresh()
 if self:IsHercules(_unit)then
-local hoverpars=MENU_GROUP_COMMAND:New(_group,"Show flight parameters",topmenu,self._ShowFlightParams,self,_group,_unit):Refresh()
+MENU_GROUP_COMMAND:New(_group,"Show flight parameters",topmenu,self._ShowFlightParams,self,_group,_unit):Refresh()
 else
-local hoverpars=MENU_GROUP_COMMAND:New(_group,"Show hover parameters",topmenu,self._ShowHoverParams,self,_group,_unit):Refresh()
+MENU_GROUP_COMMAND:New(_group,"Show hover parameters",topmenu,self._ShowHoverParams,self,_group,_unit):Refresh()
 end
 self.MenusDone[_unitName]=true
+self:_RefreshLoadCratesMenu(_group,_unit)
+self:_RefreshDropCratesMenu(_group,_unit)
 end
 end
 else
@@ -69926,6 +69945,468 @@ self:T(self.lid.." Menus already done for this group!")
 end
 end
 return self
+end
+function CTLD:_RefreshLoadCratesMenu(Group,Unit)
+if not Group.MyLoadCratesMenu then return end
+Group.MyLoadCratesMenu:RemoveSubMenus()
+local d=self.CrateDistance or 35
+local nearby,n=self:_FindCratesNearby(Group,Unit,d,true,true)
+if n==0 then
+MENU_GROUP_COMMAND:New(Group,"No crates found! Rescan?",Group.MyLoadCratesMenu,function()self:_RefreshLoadCratesMenu(Group,Unit)end)
+return
+end
+MENU_GROUP_COMMAND:New(Group,"Rescan?",Group.MyLoadCratesMenu,function()self:_RefreshLoadCratesMenu(Group,Unit)end)
+MENU_GROUP_COMMAND:New(Group,"Load ALL",Group.MyLoadCratesMenu,self._LoadCratesNearby,self,Group,Unit)
+local cargoByName={}
+for _,crate in pairs(nearby)do
+local cName=crate:GetName()
+cargoByName[cName]=cargoByName[cName]or{}
+table.insert(cargoByName[cName],crate)
+end
+for cName,cList in pairs(cargoByName)do
+local needed=cList[1]:GetCratesNeeded()or 1
+local found=#cList
+local line
+if found>=needed then
+line=string.format("Load %s",cName)
+else
+line=string.format("Load %s (%d/%d)",cName,found,needed)
+end
+MENU_GROUP_COMMAND:New(Group,line,Group.MyLoadCratesMenu,self._LoadSingleCrateSet,self,Group,Unit,cName)
+end
+end
+function CTLD:_LoadSingleCrateSet(Group,Unit,cargoName)
+self:T(self.lid.." _LoadSingleCrateSet cargoName="..(cargoName or"nil"))
+local grounded=not self:IsUnitInAir(Unit)
+local hover=self:CanHoverLoad(Unit)
+if not grounded and not hover then
+self:_SendMessage("You must land or hover to load crates!",10,false,Group)
+return self
+end
+if self.pilotmustopendoors and not UTILS.IsLoadingDoorOpen(Unit:GetName())then
+self:_SendMessage("You need to open the door(s) to load cargo!",10,false,Group)
+return self
+end
+local finddist=self.CrateDistance or 35
+local cratesNearby,number=self:_FindCratesNearby(Group,Unit,finddist,false,false)
+if number==0 then
+self:_SendMessage("No crates found in range!",10,false,Group)
+return self
+end
+local matchingCrates={}
+local needed=nil
+for _,crateObj in pairs(cratesNearby)do
+if crateObj:GetName()==cargoName then
+needed=needed or crateObj:GetCratesNeeded()
+table.insert(matchingCrates,crateObj)
+end
+end
+if not needed then
+self:_SendMessage(string.format("No \"%s\" crates found in range!",cargoName),10,false,Group)
+return self
+end
+local found=#matchingCrates
+local unitName=Unit:GetName()
+local loadedData=self.Loaded_Cargo[unitName]or{Troopsloaded=0,Cratesloaded=0,Cargo={}}
+local capabilities=self:_GetUnitCapabilities(Unit)
+local capacity=capabilities.cratelimit or 0
+if loadedData.Cratesloaded>=capacity then
+self:_SendMessage("No more capacity to load crates!",10,false,Group)
+return self
+end
+local spaceLeft=capacity-loadedData.Cratesloaded
+local toLoad=math.min(found,needed,spaceLeft)
+if toLoad<1 then
+self:_SendMessage("Cannot load crates: either none found or no capacity left.",10,false,Group)
+return self
+end
+local crateIDsLoaded={}
+for i=1,toLoad do
+local crate=matchingCrates[i]
+crate:SetHasMoved(true)
+crate:SetWasDropped(false)
+table.insert(loadedData.Cargo,crate)
+loadedData.Cratesloaded=loadedData.Cratesloaded+1
+local stObj=crate:GetPositionable()
+if stObj and stObj:IsAlive()then
+stObj:Destroy(false)
+end
+table.insert(crateIDsLoaded,crate:GetID())
+end
+self.Loaded_Cargo[unitName]=loadedData
+self:_UpdateUnitCargoMass(Unit)
+local newSpawned={}
+for _,cObj in ipairs(self.Spawned_Cargo)do
+local keep=true
+for i=1,toLoad do
+if matchingCrates[i]and cObj:GetID()==matchingCrates[i]:GetID()then
+keep=false
+break
+end
+end
+if keep then
+table.insert(newSpawned,cObj)
+end
+end
+self.Spawned_Cargo=newSpawned
+local loadedHere=toLoad
+if loadedHere<needed and loadedData.Cratesloaded>=capacity then
+self:_SendMessage(string.format("Loaded only %d/%d crate(s) of %s. Cargo limit is now reached!",loadedHere,needed,cargoName),10,false,Group)
+else
+local fullSets=math.floor(loadedHere/needed)
+local leftover=loadedHere%needed
+if needed>1 then
+if fullSets>0 and leftover==0 then
+self:_SendMessage(string.format("Loaded %d %s.",fullSets,cargoName),10,false,Group)
+elseif fullSets>0 and leftover>0 then
+self:_SendMessage(string.format("Loaded %d %s(s), with %d leftover crate(s).",fullSets,cargoName,leftover),10,false,Group)
+else
+self:_SendMessage(string.format("Loaded only %d/%d crate(s) of %s.",loadedHere,needed,cargoName),15,false,Group)
+end
+else
+self:_SendMessage(string.format("Loaded %d %s(s).",loadedHere,cargoName),10,false,Group)
+end
+end
+self:_RefreshLoadCratesMenu(Group,Unit)
+self:_RefreshDropCratesMenu(Group,Unit)
+return self
+end
+function CTLD:_UnloadSingleCrateSet(Group,Unit,setIndex)
+self:T(self.lid.." _UnloadSingleCrateSet")
+if not self.dropcratesanywhere then
+local inzone,zoneName,zone,distance=self:IsUnitInZone(Unit,CTLD.CargoZoneType.DROP)
+if not inzone then
+self:_SendMessage("You are not close enough to a drop zone!",10,false,Group)
+if not self.debug then
+return self
+end
+end
+end
+if self.pilotmustopendoors and not UTILS.IsLoadingDoorOpen(Unit:GetName())then
+self:_SendMessage("You need to open the door(s) to drop cargo!",10,false,Group)
+if not self.debug then return self end
+end
+local unitName=Unit:GetName()
+if not self.CrateGroupList or not self.CrateGroupList[unitName]then
+self:_SendMessage("No crate groups found for this unit!",10,false,Group)
+if not self.debug then return self end
+return self
+end
+local chunk=self.CrateGroupList[unitName][setIndex]
+if not chunk then
+self:_SendMessage("No crate set found or index invalid!",10,false,Group)
+if not self.debug then return self end
+return self
+end
+if#chunk==0 then
+self:_SendMessage("No crate found in that set!",10,false,Group)
+if not self.debug then return self end
+return self
+end
+local grounded=not self:IsUnitInAir(Unit)
+local hoverunload=self:IsCorrectHover(Unit)
+local isHerc=self:IsHercules(Unit)
+local isHook=self:IsHook(Unit)
+if isHerc and not isHook then
+hoverunload=self:IsCorrectFlightParameters(Unit)
+end
+if not grounded and not hoverunload then
+if isHerc then
+self:_SendMessage("Nothing loaded or not within airdrop parameters!",10,false,Group)
+else
+self:_SendMessage("Nothing loaded or not hovering within parameters!",10,false,Group)
+end
+if not self.debug then return self end
+return self
+end
+local crateObj=chunk[1]
+if not crateObj then
+self:_SendMessage("No crate found in that set!",10,false,Group)
+if not self.debug then return self end
+return self
+end
+local needed=crateObj:GetCratesNeeded()or 1
+self:_GetCrates(Group,Unit,crateObj,#chunk,true)
+for _,cObj in ipairs(chunk)do
+cObj:SetWasDropped(true)
+cObj:SetHasMoved(true)
+end
+local loadedData=self.Loaded_Cargo[unitName]
+if loadedData and loadedData.Cargo then
+local newList={}
+local newCratesCount=0
+for _,cObj in ipairs(loadedData.Cargo)do
+if not cObj:WasDropped()then
+table.insert(newList,cObj)
+local ct=cObj:GetType()
+if ct~=CTLD_CARGO.Enum.TROOPS and ct~=CTLD_CARGO.Enum.ENGINEERS then
+newCratesCount=newCratesCount+1
+end
+end
+end
+loadedData.Cargo=newList
+loadedData.Cratesloaded=newCratesCount
+self.Loaded_Cargo[unitName]=loadedData
+end
+self:_UpdateUnitCargoMass(Unit)
+self:_RefreshDropCratesMenu(Group,Unit)
+self:_RefreshLoadCratesMenu(Group,Unit)
+return self
+end
+function CTLD:_RefreshDropCratesMenu(Group,Unit)
+if not Group.CTLDTopmenu then return end
+local topCrates=Group.MyTopCratesMenu
+if not topCrates then return end
+if topCrates.DropCratesMenu then
+topCrates.DropCratesMenu:RemoveSubMenus()
+else
+topCrates.DropCratesMenu=MENU_GROUP:New(Group,"Drop Crates",topCrates)
+end
+local dropCratesMenu=topCrates.DropCratesMenu
+local loadedData=self.Loaded_Cargo[Unit:GetName()]
+if not loadedData or not loadedData.Cargo then
+MENU_GROUP_COMMAND:New(Group,"No crates to drop!",dropCratesMenu,function()end)
+return
+end
+local cargoByName={}
+local dropableCrates=0
+for _,cObj in ipairs(loadedData.Cargo)do
+if cObj and not cObj:WasDropped()then
+local cType=cObj:GetType()
+if cType~=CTLD_CARGO.Enum.TROOPS and cType~=CTLD_CARGO.Enum.ENGINEERS and cType~=CTLD_CARGO.Enum.GCLOADABLE then
+local name=cObj:GetName()or"Unknown"
+cargoByName[name]=cargoByName[name]or{}
+table.insert(cargoByName[name],cObj)
+dropableCrates=dropableCrates+1
+end
+end
+end
+if dropableCrates==0 then
+MENU_GROUP_COMMAND:New(Group,"No crates to drop!",dropCratesMenu,function()end)
+return
+end
+MENU_GROUP_COMMAND:New(Group,"Drop ALL crates",dropCratesMenu,self._UnloadCrates,self,Group,Unit)
+self.CrateGroupList=self.CrateGroupList or{}
+self.CrateGroupList[Unit:GetName()]={}
+local lineIndex=1
+for cName,list in pairs(cargoByName)do
+local needed=list[1]:GetCratesNeeded()or 1
+table.sort(list,function(a,b)return a:GetID()<b:GetID()end)
+local i=1
+while i<=#list do
+local left=(#list-i+1)
+if left>=needed then
+local chunk={}
+for n=i,i+needed-1 do
+table.insert(chunk,list[n])
+end
+local label=string.format("%d. %s",lineIndex,cName)
+table.insert(self.CrateGroupList[Unit:GetName()],chunk)
+local setIndex=#self.CrateGroupList[Unit:GetName()]
+MENU_GROUP_COMMAND:New(Group,label,dropCratesMenu,self._UnloadSingleCrateSet,self,Group,Unit,setIndex)
+i=i+needed
+else
+local chunk={}
+for n=i,#list do
+table.insert(chunk,list[n])
+end
+local label=string.format("%d. %s %d/%d",lineIndex,cName,left,needed)
+table.insert(self.CrateGroupList[Unit:GetName()],chunk)
+local setIndex=#self.CrateGroupList[Unit:GetName()]
+MENU_GROUP_COMMAND:New(Group,label,dropCratesMenu,self._UnloadSingleCrateSet,self,Group,Unit,setIndex)
+i=#list+1
+end
+lineIndex=lineIndex+1
+end
+end
+end
+function CTLD:_UnloadSingleTroopByID(Group,Unit,chunkID)
+self:T(self.lid.." _UnloadSingleTroopByID chunkID="..tostring(chunkID))
+local droppingatbase=false
+local inzone,zonename,zone,distance=self:IsUnitInZone(Unit,CTLD.CargoZoneType.LOAD)
+if not inzone then
+inzone,zonename,zone,distance=self:IsUnitInZone(Unit,CTLD.CargoZoneType.SHIP)
+end
+if inzone then
+droppingatbase=true
+end
+if self.pilotmustopendoors and not UTILS.IsLoadingDoorOpen(Unit:GetName())then
+self:_SendMessage("You need to open the door(s) to unload troops!",10,false,Group)
+if not self.debug then return self end
+end
+local hoverunload=self:IsCorrectHover(Unit)
+local isHerc=self:IsHercules(Unit)
+local isHook=self:IsHook(Unit)
+if isHerc and not isHook then
+hoverunload=self:IsCorrectFlightParameters(Unit)
+end
+local grounded=not self:IsUnitInAir(Unit)
+local unitName=Unit:GetName()
+if self.Loaded_Cargo[unitName]and(grounded or hoverunload)then
+if not droppingatbase or self.debug then
+if not self.TroopsIDToChunk or not self.TroopsIDToChunk[chunkID]then
+self:_SendMessage(string.format("No troop cargo chunk found for ID %d!",chunkID),10,false,Group)
+if not self.debug then return self end
+return self
+end
+local chunk=self.TroopsIDToChunk[chunkID]
+if not chunk or#chunk==0 then
+self:_SendMessage(string.format("Troop chunk is empty for ID %d!",chunkID),10,false,Group)
+if not self.debug then return self end
+return self
+end
+local foundCargo=chunk[1]
+if not foundCargo then
+self:_SendMessage(string.format("No troop cargo at chunk %d!",chunkID),10,false,Group)
+if not self.debug then return self end
+return self
+end
+local cType=foundCargo:GetType()
+local name=foundCargo:GetName()or"none"
+local tmpl=foundCargo:GetTemplates()or{}
+local zoneradius=self.troopdropzoneradius or 100
+local factor=1
+if isHerc then
+factor=foundCargo:GetCratesNeeded()or 1
+zoneradius=Unit:GetVelocityMPS()or 100
+end
+local zone=ZONE_GROUP:New(string.format("Unload zone-%s",unitName),Group,zoneradius*factor)
+local randomcoord=zone:GetRandomCoordinate(10,30*factor)
+local heading=Group:GetHeading()or 0
+if grounded or hoverunload then
+randomcoord=Group:GetCoordinate()
+local Angle=(heading+270)%360
+if isHerc or isHook then
+Angle=(heading+180)%360
+end
+local offset=hoverunload and self.TroopUnloadDistHover or self.TroopUnloadDistGround
+if isHerc then
+offset=self.TroopUnloadDistGroundHerc or 25
+end
+if isHook then
+offset=self.TroopUnloadDistGroundHook or 15
+if hoverunload and self.TroopUnloadDistHoverHook then
+offset=self.TroopUnloadDistHoverHook or 5
+end
+end
+randomcoord:Translate(offset,Angle,nil,true)
+end
+local tempcount=0
+if isHook then
+tempcount=self.ChinookTroopCircleRadius or 5
+end
+for _,_template in pairs(tmpl)do
+self.TroopCounter=self.TroopCounter+1
+tempcount=tempcount+1
+local alias=string.format("%s-%d",_template,math.random(1,100000))
+local rad=2.5+(tempcount*2)
+local Positions=self:_GetUnitPositions(randomcoord,rad,heading,_template)
+self.DroppedTroops[self.TroopCounter]=SPAWN:NewWithAlias(_template,alias)
+:InitDelayOff()
+:InitSetUnitAbsolutePositions(Positions)
+:OnSpawnGroup(function(grp)grp.spawntime=timer.getTime()end)
+:SpawnFromVec2(randomcoord:GetVec2())
+self:__TroopsDeployed(1,Group,Unit,self.DroppedTroops[self.TroopCounter],cType)
+end
+foundCargo:SetWasDropped(true)
+if cType==CTLD_CARGO.Enum.ENGINEERS then
+self.Engineers=self.Engineers+1
+self:_SendMessage(string.format("Dropped Engineers %s into action!",name),10,false,Group)
+else
+self:_SendMessage(string.format("Dropped Troops %s into action!",name),10,false,Group)
+end
+table.remove(chunk,1)
+if#chunk==0 then
+self.TroopsIDToChunk[chunkID]=nil
+end
+else
+self:_SendMessage("Troops have returned to base!",10,false,Group)
+self:__TroopsRTB(1,Group,Unit,zonename,zone)
+if self.TroopsIDToChunk and self.TroopsIDToChunk[chunkID]then
+local chunk=self.TroopsIDToChunk[chunkID]
+if#chunk>0 then
+local firstObj=chunk[1]
+local cName=firstObj:GetName()
+local gentroops=self.Cargo_Troops
+for _id,_troop in pairs(gentroops)do
+if _troop.Name==cName then
+local st=_troop:GetStock()
+if st and tonumber(st)>=0 then
+_troop:AddStock()
+end
+end
+end
+firstObj:SetWasDropped(true)
+table.remove(chunk,1)
+if#chunk==0 then
+self.TroopsIDToChunk[chunkID]=nil
+end
+end
+end
+end
+local cargoList=self.Loaded_Cargo[unitName].Cargo
+for i=#cargoList,1,-1 do
+if cargoList[i]:WasDropped()then
+table.remove(cargoList,i)
+end
+end
+local troopsLoaded=0
+local cratesLoaded=0
+for _,cargo in ipairs(cargoList)do
+local cT=cargo:GetType()
+if cT==CTLD_CARGO.Enum.TROOPS or cT==CTLD_CARGO.Enum.ENGINEERS then
+troopsLoaded=troopsLoaded+1
+else
+cratesLoaded=cratesLoaded+1
+end
+end
+self.Loaded_Cargo[unitName].Troopsloaded=troopsLoaded
+self.Loaded_Cargo[unitName].Cratesloaded=cratesLoaded
+self:_RefreshDropTroopsMenu(Group,Unit)
+else
+local isHerc=self:IsHercules(Unit)
+if isHerc then
+self:_SendMessage("Nothing loaded or not within airdrop parameters!",10,false,Group)
+else
+self:_SendMessage("Nothing loaded or not hovering within parameters!",10,false,Group)
+end
+end
+return self
+end
+function CTLD:_RefreshDropTroopsMenu(Group,Unit)
+local theGroup=Group
+local theUnit=Unit
+if not theGroup.CTLDTopmenu then return end
+local topTroops=theGroup.MyTopTroopsMenu
+if not topTroops then return end
+if topTroops.DropTroopsMenu then
+topTroops.DropTroopsMenu:Remove()
+end
+local dropTroopsMenu=MENU_GROUP:New(theGroup,"Drop Troops",topTroops)
+topTroops.DropTroopsMenu=dropTroopsMenu
+MENU_GROUP_COMMAND:New(theGroup,"Drop ALL troops",dropTroopsMenu,self._UnloadTroops,self,theGroup,theUnit)
+local loadedData=self.Loaded_Cargo[theUnit:GetName()]
+if not loadedData or not loadedData.Cargo then return end
+local troopsByName={}
+for _,cargoObj in ipairs(loadedData.Cargo)do
+if cargoObj
+and(cargoObj:GetType()==CTLD_CARGO.Enum.TROOPS or cargoObj:GetType()==CTLD_CARGO.Enum.ENGINEERS)
+and not cargoObj:WasDropped()
+then
+local name=cargoObj:GetName()or"Unknown"
+troopsByName[name]=troopsByName[name]or{}
+table.insert(troopsByName[name],cargoObj)
+end
+end
+self.TroopsIDToChunk=self.TroopsIDToChunk or{}
+for tName,objList in pairs(troopsByName)do
+table.sort(objList,function(a,b)return a:GetID()<b:GetID()end)
+local count=#objList
+local chunkID=objList[1]:GetID()
+self.TroopsIDToChunk[chunkID]=objList
+local label=string.format("Drop %s (%d)",tName,count)
+MENU_GROUP_COMMAND:New(theGroup,label,dropTroopsMenu,self._UnloadSingleTroopByID,self,theGroup,theUnit,chunkID)
+end
 end
 function CTLD:_CheckTemplates(temptable)
 self:T(self.lid.." _CheckTemplates")
@@ -70643,6 +71124,7 @@ Stock=generic:GetStock(),
 StockR=generic:GetRelativeStock(),
 Infield=0,
 Inhelo=0,
+CratesInfield=0,
 Sum=generic:GetStock(),
 }
 if Restock==true then
@@ -70660,6 +71142,7 @@ Stock=generic:GetStock(),
 StockR=generic:GetRelativeStock(),
 Infield=0,
 Inhelo=0,
+CratesInfield=0,
 Sum=generic:GetStock(),
 }
 if Restock==true then
@@ -70708,7 +71191,45 @@ added=added/counting
 end
 Troopstable[gname].Inhelo=Troopstable[gname].Inhelo+added
 end
-Troopstable[gname].Sum=Troopstable[gname].Infield+Troopstable[gname].Stock+Troopstable[gname].Inhelo
+Troopstable[gname].Sum=Troopstable[gname].Infield+Troopstable[gname].Stock+Troopstable[gname].Inhelo+Troopstable[gname].CratesInfield
+end
+end
+end
+end
+end
+if self.Spawned_Cargo then
+for i=#self.Spawned_Cargo,1,-1 do
+local cargo=self.Spawned_Cargo[i]
+if cargo and cargo:GetPositionable()and cargo:GetPositionable():IsAlive()then
+local genname=cargo:GetName()
+local gcargo=self:_FindCratesCargoObject(genname)
+if Troopstable[genname]and gcargo and gcargo:GetStock0()>0 then
+local needed=gcargo.CratesNeeded or 1
+local added=1
+if needed>1 then
+added=added/needed
+end
+Troopstable[genname].CratesInfield=Troopstable[genname].CratesInfield+added
+Troopstable[genname].Sum=Troopstable[genname].Infield+Troopstable[genname].Stock
++Troopstable[genname].Inhelo+Troopstable[genname].CratesInfield
+end
+end
+end
+for i=#self.Spawned_Cargo,1,-1 do
+local cargo=self.Spawned_Cargo[i]
+if cargo and cargo:GetPositionable()and cargo:GetPositionable():IsAlive()then
+local genname=cargo:GetName()
+if Troopstable[genname]then
+if Troopstable[genname].Inhelo==0 and Troopstable[genname].CratesInfield<1 then
+Troopstable[genname].CratesInfield=0
+Troopstable[genname].Sum=Troopstable[genname].Stock
+cargo:GetPositionable():Destroy(false)
+table.remove(self.Spawned_Cargo,i)
+local leftover=Troopstable[genname].Stock0-(Troopstable[genname].Infield+Troopstable[genname].Inhelo+Troopstable[genname].CratesInfield)
+if leftover<Troopstable[genname].Stock then
+Troopstable[genname].Stock=leftover
+end
+Troopstable[genname].Sum=Troopstable[genname].Stock+Troopstable[genname].Infield+Troopstable[genname].Inhelo+Troopstable[genname].CratesInfield
 end
 end
 end
@@ -71173,6 +71694,8 @@ self:HandleEvent(EVENTS.NewDynamicCargo,self._EventHandler)
 self:HandleEvent(EVENTS.DynamicCargoLoaded,self._EventHandler)
 self:HandleEvent(EVENTS.DynamicCargoUnloaded,self._EventHandler)
 self:HandleEvent(EVENTS.DynamicCargoRemoved,self._EventHandler)
+self:HandleEvent(EVENTS.Land,self._EventHandler)
+self:HandleEvent(EVENTS.Takeoff,self._EventHandler)
 self:__Status(-5)
 if self.enableLoadSave then
 local interval=self.saveinterval
