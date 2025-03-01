@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2025-02-21T10:39:21+01:00-8ef781a9ac6fd1f6ef2bdfe9a716924d3a295ca6 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-02-23T16:10:32+01:00-1c0a8d9380e65344a45005e1f887cabe100f46ee ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -14708,6 +14708,12 @@ end
 end
 return self
 end
+function SET_CLIENT:HandleCASlots()
+self:HandleEvent(EVENTS.PlayerEnterUnit,SET_CLIENT._EventPlayerEnterUnit)
+self:HandleEvent(EVENTS.PlayerLeaveUnit,SET_CLIENT._EventPlayerLeaveUnit)
+self:FilterFunction(function(client)if client and client:IsAlive()and client:IsGround()then return true else return false end end)
+return self
+end
 function SET_CLIENT:AddInDatabase(Event)
 return Event.IniDCSUnitName,self.Database[Event.IniDCSUnitName]
 end
@@ -25632,6 +25638,9 @@ end
 function CONTROLLABLE:RelocateGroundRandomInRadius(speed,radius,onroad,shortcut,formation,onland)
 self:F2({self.ControllableName})
 local _coord=self:GetCoordinate()
+if not _coord then
+return self
+end
 local _radius=radius or 500
 local _speed=speed or 20
 local _tocoord=_coord:GetRandomCoordinateInRadius(_radius,100)
@@ -54057,7 +54066,7 @@ if self.HQ_Template_CC then
 self.HQ_CC=GROUP:FindByName(self.HQ_Template_CC)
 end
 self.checkcounter=1
-self.version="0.9.24"
+self.version="0.9.25"
 self:I(string.format("***** Starting MANTIS Version %s *****",self.version))
 self:SetStartState("Stopped")
 self:AddTransition("Stopped","Start","Running")
@@ -54278,6 +54287,20 @@ return false
 end
 end
 return self
+end
+function MANTIS:_CheckAnyEWRAlive()
+self:T(self.lid.."_CheckAnyEWRAlive")
+local alive=false
+if self.EWR_Group:CountAlive()>0 then
+alive=true
+end
+if not alive and self.AWACS_Prefix then
+local awacs=GROUP:FindByName(self.AWACS_Prefix)
+if awacs and awacs:IsAlive()then
+alive=true
+end
+end
+return alive
 end
 function MANTIS:_CalcAdvState()
 self:T(self.lid.."CalcAdvState")
@@ -54723,9 +54746,9 @@ local name=_data[1]
 local radius=_data[3]
 local height=_data[4]
 local blind=_data[5]*1.25+1
-local shortsam=_data[6]==MANTIS.SamType.SHORT and true or false
+local shortsam=(_data[6]==MANTIS.SamType.SHORT)and true or false
 if not shortsam then
-shortsam=_data[6]==MANTIS.SamType.POINT and true or false
+shortsam=(_data[6]==MANTIS.SamType.POINT)and true or false
 end
 local samgroup=GROUP:FindByName(name)
 local IsInZone,Distance=self:_CheckObjectInZone(detset,samcoordinate,radius,height,dlink)
@@ -54910,6 +54933,30 @@ function MANTIS:onbeforeStatus(From,Event,To)
 self:T({From,Event,To})
 if not self.state2flag then
 self:_Check(self.Detection,self.DLink)
+end
+local EWRAlive=self:_CheckAnyEWRAlive()
+local function FindSAMSRTR()
+for i=1,1000 do
+local randomsam=self.SAM_Group:GetRandom()
+if randomsam and randomsam:IsAlive()then
+if randomsam:IsSAM()then return randomsam end
+end
+end
+end
+if not EWRAlive then
+local randomsam=FindSAMSRTR()
+if randomsam and randomsam:IsAlive()then
+if self.UseEmOnOff then
+randomsam:EnableEmission(true)
+else
+randomsam:OptionAlarmStateRed()
+end
+local name=randomsam:GetName()
+if self.SamStateTracker[name]~="RED"then
+self:__RedState(1,randomsam)
+self.SamStateTracker[name]="RED"
+end
+end
 end
 if self.autorelocate then
 local relointerval=self.relointerval
