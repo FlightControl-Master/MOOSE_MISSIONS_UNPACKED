@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2025-03-14T10:40:52+01:00-6028c91f81052ad4cc256f0edbcf1268b337ce74 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-03-21T09:22:08+01:00-a915452e6e98ab23efa8664c03b4d0fe0ccde970 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -7244,7 +7244,7 @@ Event.IniDCSUnit=Event.initiator
 Event.IniDCSUnitName=Event.IniDCSUnit.getName and Event.IniDCSUnit:getName()or"Scenery no name "..math.random(1,20000)
 Event.IniUnitName=Event.IniDCSUnitName
 Event.IniUnit=SCENERY:Register(Event.IniDCSUnitName,Event.initiator)
-Event.IniCategory=Event.IniDCSUnit:getDesc().category
+Event.IniCategory=Event.IniDCSUnit.getDesc and Event.IniDCSUnit:getDesc().category
 Event.IniTypeName=Event.initiator:isExist()and Event.IniDCSUnit:getTypeName()or"SCENERY"
 elseif Event.IniObjectCategory==Object.Category.BASE then
 Event.IniDCSUnit=Event.initiator
@@ -16902,7 +16902,7 @@ local Settings=Settings or _SETTINGS
 local AngleDegrees=UTILS.Round(UTILS.ToDegree(AngleRadians),Precision)
 local s=string.format('%03d°',AngleDegrees)
 if MagVar then
-local variation=UTILS.GetMagneticDeclination()or 0
+local variation=self:GetMagneticDeclination()or 0
 local AngleMagnetic=AngleDegrees-variation
 if AngleMagnetic<0 then AngleMagnetic=360-AngleMagnetic end
 s=string.format('%03d°M|%03d°',AngleMagnetic,AngleDegrees)
@@ -17740,6 +17740,8 @@ local currentCoord=FromCoordinate
 local DirectionVec3=FromCoordinate:GetDirectionVec3(self)
 local AngleRadians=self:GetAngleRadians(DirectionVec3)
 local bearing=UTILS.Round(UTILS.ToDegree(AngleRadians),0)
+local magnetic=self:GetMagneticDeclination()or 0
+bearing=bearing-magnetic
 local rangeMetres=self:Get2DDistance(currentCoord)
 local rangeNM=UTILS.Round(UTILS.MetersToNM(rangeMetres),0)
 local aspect=self:ToStringAspect(currentCoord)
@@ -19770,16 +19772,14 @@ end
 if self:_GetSpawnIndex(self.SpawnIndex+1)then
 local SpawnTemplate=self.SpawnGroups[self.SpawnIndex].SpawnTemplate
 if SpawnTemplate then
-local GroupAlive=self:GetGroupFromIndex(self.SpawnIndex)
-local TemplateGroup=GROUP:FindByName(self.SpawnTemplatePrefix)
-local TemplateUnit=TemplateGroup:GetUnit(1)
-local group=TemplateGroup
+local group=GROUP:FindByName(self.SpawnTemplatePrefix)
+local unit=group:GetUnit(1)
 local istransport=group:HasAttribute("Transports")and group:HasAttribute("Planes")
 local isawacs=group:HasAttribute("AWACS")
 local isfighter=group:HasAttribute("Fighters")or group:HasAttribute("Interceptors")or group:HasAttribute("Multirole fighters")or(group:HasAttribute("Bombers")and not group:HasAttribute("Strategic bombers"))
 local isbomber=group:HasAttribute("Strategic bombers")
 local istanker=group:HasAttribute("Tankers")
-local ishelo=TemplateUnit:HasAttribute("Helicopters")
+local ishelo=unit:HasAttribute("Helicopters")
 local nunits=#SpawnTemplate.units
 local SpawnPoint=SpawnTemplate.route.points[1]
 SpawnPoint.linkUnit=nil
@@ -19787,32 +19787,23 @@ SpawnPoint.helipadId=nil
 SpawnPoint.airdromeId=nil
 local AirbaseID=SpawnAirbase:GetID()
 local AirbaseCategory=SpawnAirbase:GetAirbaseCategory()
+SpawnPoint.airdromeId=AirbaseID
 if AirbaseCategory==Airbase.Category.SHIP then
 SpawnPoint.linkUnit=AirbaseID
 SpawnPoint.helipadId=AirbaseID
 elseif AirbaseCategory==Airbase.Category.HELIPAD then
 SpawnPoint.linkUnit=AirbaseID
 SpawnPoint.helipadId=AirbaseID
-elseif AirbaseCategory==Airbase.Category.AIRDROME then
-SpawnPoint.airdromeId=AirbaseID
 end
 SpawnPoint.alt=0
 SpawnPoint.type=GROUPTEMPLATE.Takeoff[Takeoff][1]
 SpawnPoint.action=GROUPTEMPLATE.Takeoff[Takeoff][2]
 local spawnonground=not(Takeoff==SPAWN.Takeoff.Air)
-local spawnonship=false
-local spawnonfarp=false
-local spawnonrunway=false
-local spawnonairport=false
-if spawnonground then
-if AirbaseCategory==Airbase.Category.SHIP then
-spawnonship=true
-elseif AirbaseCategory==Airbase.Category.HELIPAD then
-spawnonfarp=true
-elseif AirbaseCategory==Airbase.Category.AIRDROME then
-spawnonairport=true
-end
-spawnonrunway=Takeoff==SPAWN.Takeoff.Runway
+local autoparking=false
+if SpawnAirbase.isAirdrome then
+autoparking=false
+else
+autoparking=true
 end
 local parkingspots={}
 local parkingindex={}
@@ -19820,8 +19811,8 @@ local spots
 if spawnonground and not SpawnTemplate.parked then
 local nfree=0
 local termtype=TerminalType
-if spawnonrunway then
-if spawnonship then
+if Takeoff==SPAWN.Takeoff.Runway then
+if SpawnAirbase.isShip then
 if ishelo then
 termtype=AIRBASE.TerminalType.HelicopterUsable
 else
@@ -19836,7 +19827,7 @@ local scanunits=true
 local scanstatics=true
 local scanscenery=false
 local verysafe=false
-if spawnonship or spawnonfarp or spawnonrunway then
+if autoparking then
 nfree=SpawnAirbase:GetFreeParkingSpotsNumber(termtype,true)
 spots=SpawnAirbase:GetFreeParkingSpotsTable(termtype,true)
 elseif Parkingdata~=nil then
@@ -19845,37 +19836,37 @@ spots=Parkingdata
 else
 if ishelo then
 if termtype==nil then
-spots=SpawnAirbase:FindFreeParkingSpotForAircraft(TemplateGroup,AIRBASE.TerminalType.HelicopterOnly,scanradius,scanunits,scanstatics,scanscenery,verysafe,nunits,Parkingdata)
+spots=SpawnAirbase:FindFreeParkingSpotForAircraft(group,AIRBASE.TerminalType.HelicopterOnly,scanradius,scanunits,scanstatics,scanscenery,verysafe,nunits,Parkingdata)
 nfree=#spots
 if nfree<nunits then
-spots=SpawnAirbase:FindFreeParkingSpotForAircraft(TemplateGroup,AIRBASE.TerminalType.HelicopterUsable,scanradius,scanunits,scanstatics,scanscenery,verysafe,nunits,Parkingdata)
+spots=SpawnAirbase:FindFreeParkingSpotForAircraft(group,AIRBASE.TerminalType.HelicopterUsable,scanradius,scanunits,scanstatics,scanscenery,verysafe,nunits,Parkingdata)
 nfree=#spots
 end
 else
-spots=SpawnAirbase:FindFreeParkingSpotForAircraft(TemplateGroup,termtype,scanradius,scanunits,scanstatics,scanscenery,verysafe,nunits,Parkingdata)
+spots=SpawnAirbase:FindFreeParkingSpotForAircraft(group,termtype,scanradius,scanunits,scanstatics,scanscenery,verysafe,nunits,Parkingdata)
 nfree=#spots
 end
 else
 if termtype==nil then
 if isbomber or istransport or istanker or isawacs then
-spots=SpawnAirbase:FindFreeParkingSpotForAircraft(TemplateGroup,AIRBASE.TerminalType.OpenBig,scanradius,scanunits,scanstatics,scanscenery,verysafe,nunits,Parkingdata)
+spots=SpawnAirbase:FindFreeParkingSpotForAircraft(group,AIRBASE.TerminalType.OpenBig,scanradius,scanunits,scanstatics,scanscenery,verysafe,nunits,Parkingdata)
 nfree=#spots
 if nfree<nunits then
-spots=SpawnAirbase:FindFreeParkingSpotForAircraft(TemplateGroup,AIRBASE.TerminalType.OpenMedOrBig,scanradius,scanunits,scanstatics,scanscenery,verysafe,nunits,Parkingdata)
+spots=SpawnAirbase:FindFreeParkingSpotForAircraft(group,AIRBASE.TerminalType.OpenMedOrBig,scanradius,scanunits,scanstatics,scanscenery,verysafe,nunits,Parkingdata)
 nfree=#spots
 end
 else
-spots=SpawnAirbase:FindFreeParkingSpotForAircraft(TemplateGroup,AIRBASE.TerminalType.FighterAircraft,scanradius,scanunits,scanstatics,scanscenery,verysafe,nunits,Parkingdata)
+spots=SpawnAirbase:FindFreeParkingSpotForAircraft(group,AIRBASE.TerminalType.FighterAircraft,scanradius,scanunits,scanstatics,scanscenery,verysafe,nunits,Parkingdata)
 nfree=#spots
 end
 else
-spots=SpawnAirbase:FindFreeParkingSpotForAircraft(TemplateGroup,termtype,scanradius,scanunits,scanstatics,scanscenery,verysafe,nunits,Parkingdata)
+spots=SpawnAirbase:FindFreeParkingSpotForAircraft(group,termtype,scanradius,scanunits,scanstatics,scanscenery,verysafe,nunits,Parkingdata)
 nfree=#spots
 end
 end
 end
 local _notenough=false
-if spawnonship or spawnonfarp or spawnonrunway then
+if autoparking then
 if nfree>=1 then
 for i=1,nunits do
 table.insert(parkingspots,spots[1].Coordinate)
@@ -19885,7 +19876,7 @@ PointVec3=spots[1].Coordinate
 else
 _notenough=true
 end
-elseif spawnonairport then
+else
 if nfree>=nunits then
 for i=1,nunits do
 table.insert(parkingspots,spots[i].Coordinate)
@@ -19898,10 +19889,7 @@ end
 if _notenough then
 if EmergencyAirSpawn and not self.SpawnUnControlled then
 self:E(string.format("WARNING: Group %s has no parking spots at %s ==> air start!",self.SpawnTemplatePrefix,SpawnAirbase:GetName()))
-spawnonground=false
-spawnonship=false
-spawnonfarp=false
-spawnonrunway=false
+autoparking=false
 SpawnPoint.type=GROUPTEMPLATE.Takeoff[GROUP.Takeoff.Air][1]
 SpawnPoint.action=GROUPTEMPLATE.Takeoff[GROUP.Takeoff.Air][2]
 PointVec3.x=PointVec3.x+math.random(-500,500)
@@ -19939,7 +19927,7 @@ local BY=SpawnTemplate.route.points[1].y
 local TX=PointVec3.x+(SX-BX)
 local TY=PointVec3.z+(SY-BY)
 if spawnonground then
-if spawnonship or spawnonfarp or spawnonrunway then
+if autoparking then
 SpawnTemplate.units[UnitID].x=PointVec3.x
 SpawnTemplate.units[UnitID].y=PointVec3.z
 SpawnTemplate.units[UnitID].alt=PointVec3.y
@@ -19969,11 +19957,8 @@ SpawnTemplate.uncontrolled=self.SpawnUnControlled
 local GroupSpawned=self:SpawnWithIndex(self.SpawnIndex)
 if Takeoff==GROUP.Takeoff.Air then
 for UnitID,UnitSpawned in pairs(GroupSpawned:GetUnits())do
-SCHEDULER:New(nil,BASE.CreateEventTakeoff,{GroupSpawned,timer.getTime(),UnitSpawned:GetDCSObject()},5)
+self:ScheduleOnce(5,BASE.CreateEventTakeoff,{GroupSpawned,timer.getTime(),UnitSpawned:GetDCSObject()})
 end
-end
-if Takeoff~=SPAWN.Takeoff.Runway and Takeoff~=SPAWN.Takeoff.Air and spawnonairport then
-SCHEDULER:New(nil,AIRBASE.CheckOnRunWay,{SpawnAirbase,GroupSpawned,75,true},1.0)
 end
 return GroupSpawned
 end
@@ -29579,9 +29564,8 @@ self:SetActiveRunway()
 end
 self:_InitParkingSpots()
 if self.category==Airbase.Category.AIRDROME and(Nrunways==0 or self.NparkingTotal==self.NparkingTerminal[AIRBASE.TerminalType.HelicopterOnly])then
-self:E(string.format("WARNING: %s identifies as airdrome (category=0) but has no runways or just helo parking ==> will change to helipad (category=1)",self.AirbaseName))
 self.category=Airbase.Category.HELIPAD
-self.isAirdrome=false
+self.isAirdrome=true
 self.isHelipad=true
 end
 local vec2=self:GetVec2()
@@ -53439,6 +53423,11 @@ MEDIUM="Medium",
 LONG="Long",
 POINT="Point",
 }
+MANTIS.radiusscale={}
+MANTIS.radiusscale[MANTIS.SamType.LONG]=1.1
+MANTIS.radiusscale[MANTIS.SamType.MEDIUM]=1.2
+MANTIS.radiusscale[MANTIS.SamType.SHORT]=1.75
+MANTIS.radiusscale[MANTIS.SamType.POINT]=3
 MANTIS.SamData={
 ["Hawk"]={Range=35,Blindspot=0,Height=12,Type="Medium",Radar="Hawk"},
 ["NASAMS"]={Range=14,Blindspot=0,Height=7,Type="Short",Radar="NSAMS"},
@@ -53466,7 +53455,6 @@ MANTIS.SamData={
 ["SA-20A"]={Range=150,Blindspot=5,Height=27,Type="Long",Radar="S-300PMU1"},
 ["SA-20B"]={Range=200,Blindspot=4,Height=27,Type="Long",Radar="S-300PMU2"},
 ["HQ-2"]={Range=50,Blindspot=6,Height=35,Type="Medium",Radar="HQ_2_Guideline_LN"},
-["SHORAD"]={Range=3,Blindspot=0,Height=3,Type="Point",Radar="Igla",Point="true"},
 ["TAMIR IDFA"]={Range=20,Blindspot=0.6,Height=12.3,Type="Short",Radar="IRON_DOME_LN"},
 ["STUNNER IDFA"]={Range=250,Blindspot=1,Height=45,Type="Long",Radar="DAVID_SLING_LN"},
 }
@@ -53576,11 +53564,6 @@ self.DLink=false
 self.Padding=Padding or 10
 self.SuppressedGroups={}
 self.automode=true
-self.radiusscale={}
-self.radiusscale[MANTIS.SamType.LONG]=1.1
-self.radiusscale[MANTIS.SamType.MEDIUM]=1.2
-self.radiusscale[MANTIS.SamType.SHORT]=1.3
-self.radiusscale[MANTIS.SamType.POINT]=1.4
 self.usezones=false
 self.AcceptZones={}
 self.RejectZones={}
@@ -53646,7 +53629,7 @@ if self.HQ_Template_CC then
 self.HQ_CC=GROUP:FindByName(self.HQ_Template_CC)
 end
 self.checkcounter=1
-self.version="0.9.25"
+self.version="0.9.27"
 self:I(string.format("***** Starting MANTIS Version %s *****",self.version))
 self:SetStartState("Stopped")
 self:AddTransition("Stopped","Start","Running")
@@ -54600,7 +54583,7 @@ if self.ShoradLink then
 local Shorad=self.Shorad
 local radius=self.checkradius
 local ontime=self.ShoradTime
-Shorad:WakeUpShorad(Name,radius,ontime)
+Shorad:WakeUpShorad(Name,radius,ontime,nil,true)
 self:__ShoradActivated(1,Name,radius,ontime)
 end
 return self
@@ -54870,7 +54853,7 @@ IsDetected=true
 end
 return IsDetected
 end
-function SHORAD:onafterWakeUpShorad(From,Event,To,TargetGroup,Radius,ActiveTimer,TargetCat)
+function SHORAD:onafterWakeUpShorad(From,Event,To,TargetGroup,Radius,ActiveTimer,TargetCat,ShotAt)
 self:T(self.lid.." WakeUpShorad")
 self:T({TargetGroup,Radius,ActiveTimer,TargetCat})
 local targetcat=TargetCat or Object.Category.UNIT
@@ -54908,7 +54891,7 @@ end
 local TDiff=4
 for _,_group in pairs(shoradset)do
 local groupname=_group:GetName()
-if groupname==TargetGroup then
+if groupname==TargetGroup and ShotAt==true then
 if self.UseEmOnOff then
 _group:EnableEmission(false)
 end
@@ -54920,7 +54903,7 @@ local m=MESSAGE:New(text,10,"SHORAD"):ToAllIf(self.debug)
 if self.shootandscoot then
 self:__ShootAndScoot(1,_group)
 end
-elseif _group:IsAnyInZone(targetzone)then
+elseif _group:IsAnyInZone(targetzone)or groupname==TargetGroup then
 local text=string.format("Waking up SHORAD %s",_group:GetName())
 self:T(text)
 local m=MESSAGE:New(text,10,"SHORAD"):ToAllIf(self.debug)
@@ -54985,7 +54968,7 @@ _targetgroup=tgtgrp
 _targetgroupname=tgtgrp:GetName()
 _targetskill=tgtgrp:GetUnit(1):GetSkill()
 self:T("*** Found Target = ".._targetgroupname)
-self:WakeUpShorad(_targetgroupname,self.Radius,self.ActiveTimer,Object.Category.UNIT)
+self:WakeUpShorad(_targetgroupname,self.Radius,self.ActiveTimer,Object.Category.UNIT,true)
 end
 end
 end
@@ -55091,7 +55074,7 @@ local shotatus=self:_CheckShotAtShorad(targetgroupname)
 local shotatsams=self:_CheckShotAtSams(targetgroupname)
 if shotatsams or shotatus then
 self:T({shotatsams=shotatsams,shotatus=shotatus})
-self:WakeUpShorad(targetgroupname,self.Radius,self.ActiveTimer,targetcat)
+self:WakeUpShorad(targetgroupname,self.Radius,self.ActiveTimer,targetcat,true)
 end
 end
 end
@@ -84446,6 +84429,135 @@ UsePowerShell=false,
 }
 MSRS.version="0.3.3"
 MSRS.Voices={
+Amazon={
+Generative={
+en_AU={
+Olivia="Olivia",
+},
+en_GB={
+Amy="Amy",
+},
+en_US={
+Danielle="Danielle",
+Joanna="Joanna",
+Ruth="Ruth",
+Stephen="Stephen",
+},
+fr_FR={
+["Léa"]="Léa",
+["Rémi"]="Rémi",
+},
+de_DE={
+Vicki="Vicki",
+Daniel="Daniel",
+},
+it_IT={
+Bianca="Bianca",
+Adriano="Adriano",
+},
+es_ES={
+Lucia="Lucia",
+Sergio="Sergio",
+},
+},
+LongForm={
+en_US={
+Danielle="Danielle",
+Gregory="Gregory",
+Ivy="Ivy",
+Ruth="Ruth",
+Patrick="Patrick",
+},
+es_ES={
+Alba="Alba",
+["Raúl"]="Raúl",
+},
+},
+Neural={
+en_AU={
+Olivia="Olivia",
+},
+en_GB={
+Amy="Amy",
+Emma="Emma",
+Brian="Brian",
+Arthur="Arthur",
+},
+en_US={
+Danielle="Danielle",
+Gregory="Gregory",
+Ivy="Ivy",
+Joanna="Joanna",
+Kendra="Kendra",
+Kimberly="Kimberly",
+Salli="Salli",
+Joey="Joey",
+Kevin="Kevin",
+Ruth="Ruth",
+Stephen="Stephen",
+},
+fr_FR={
+["Léa"]="Léa",
+["Rémi"]="Rémi",
+},
+de_DE={
+Vicki="Vicki",
+Daniel="Daniel",
+},
+it_IT={
+Bianca="Bianca",
+Adriano="Adriano",
+},
+es_ES={
+Lucia="Lucia",
+Sergio="Sergio",
+},
+},
+Standard={
+en_AU={
+Nicole="Nicole",
+Russel="Russel",
+},
+en_GB={
+Amy="Amy",
+Emma="Emma",
+Brian="Brian",
+},
+en_IN={
+Aditi="Aditi",
+Raveena="Raveena",
+},
+en_US={
+Ivy="Ivy",
+Joanna="Joanna",
+Kendra="Kendra",
+Kimberly="Kimberly",
+Salli="Salli",
+Joey="Joey",
+Kevin="Kevin",
+},
+fr_FR={
+Celine="Celine",
+["Léa"]="Léa",
+Mathieu="Mathieu",
+},
+de_DE={
+Marlene="Marlene",
+Vicki="Vicki",
+Hans="Hans",
+},
+it_IT={
+Carla="Carla",
+Bianca="Bianca",
+Giorgio="Giorgio",
+},
+es_ES={
+Conchita="Conchita",
+Lucia="Lucia",
+Enrique="Enrique",
+},
+},
+},
 Microsoft={
 ["Hedda"]="Microsoft Hedda Desktop",
 ["Hazel"]="Microsoft Hazel Desktop",
@@ -84946,6 +85058,7 @@ self:ScheduleOnce(Delay,MSRS.PlaySoundFile,self,Soundfile,0)
 else
 local command=self:_GetCommand()
 command=command..' --file="'..tostring(soundfile)..'"'
+command=string.gsub(command,"--ssml","-h")
 self:_ExecCommand(command)
 end
 return self
@@ -85069,7 +85182,7 @@ command=command..string.format(' --ssml -G "%s"',pops.credentials)
 pwsh=pwsh..string.format(' --ssml -G "%s"',pops.credentials)
 elseif self.provider==MSRS.Provider.WINDOWS then
 else
-self:E("ERROR: SRS only supports WINWOWS and GOOGLE as TTS providers! Use DCS-gRPC backend for other providers such as ")
+self:E("ERROR: SRS only supports WINDOWS and GOOGLE as TTS providers! Use DCS-gRPC backend for other providers such as AWS and Azure.")
 end
 if not UTILS.FileExists(fullPath)then
 self:E("ERROR: MSRS SRS executable does not exist! FullPath="..fullPath)
@@ -85090,7 +85203,7 @@ local filename=os.getenv('TMP').."\\MSRS-"..MSRS.uuid()..".bat"
 if self.UsePowerShell==true then
 filename=os.getenv('TMP').."\\MSRS-"..MSRS.uuid()..".ps1"
 batContent=command.."\'"
-self:I({batContent=batContent})
+self:T({batContent=batContent})
 end
 local script=io.open(filename,"w+")
 script:write(batContent)
@@ -85277,6 +85390,7 @@ end
 return self
 end
 function MSRSQUEUE:NewTransmission(text,duration,msrs,tstart,interval,subgroups,subtitle,subduration,frequency,modulation,gender,culture,voice,volume,label,coordinate)
+self:T({Text=text,Dur=duration,start=tstart,int=interval,sub=subgroups,subt=subtitle,sudb=subduration,F=frequency,M=modulation,G=gender,C=culture,V=voice,Vol=volume,L=label})
 if self.TransmitOnlyWithPlayers then
 if self.PlayerSet and self.PlayerSet:CountAlive()==0 then
 return self
