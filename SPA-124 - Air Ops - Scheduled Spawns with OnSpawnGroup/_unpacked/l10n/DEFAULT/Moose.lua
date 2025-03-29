@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2025-03-21T09:22:08+01:00-a915452e6e98ab23efa8664c03b4d0fe0ccde970 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-03-28T15:05:30+01:00-0a38700edbe50c10fce8c234c33cf13c2e19870b ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -19787,13 +19787,14 @@ SpawnPoint.helipadId=nil
 SpawnPoint.airdromeId=nil
 local AirbaseID=SpawnAirbase:GetID()
 local AirbaseCategory=SpawnAirbase:GetAirbaseCategory()
-SpawnPoint.airdromeId=AirbaseID
 if AirbaseCategory==Airbase.Category.SHIP then
 SpawnPoint.linkUnit=AirbaseID
 SpawnPoint.helipadId=AirbaseID
 elseif AirbaseCategory==Airbase.Category.HELIPAD then
 SpawnPoint.linkUnit=AirbaseID
 SpawnPoint.helipadId=AirbaseID
+else
+SpawnPoint.airdromeId=AirbaseID
 end
 SpawnPoint.alt=0
 SpawnPoint.type=GROUPTEMPLATE.Takeoff[Takeoff][1]
@@ -29487,21 +29488,31 @@ AIRBASE.Kola={
 ["Bardufoss"]="Bardufoss",
 }
 AIRBASE.Afghanistan={
+["Bagram"]="Bagram",
+["Bamyan"]="Bamyan",
 ["Bost"]="Bost",
 ["Camp_Bastion"]="Camp Bastion",
 ["Camp_Bastion_Heliport"]="Camp Bastion Heliport",
 ["Chaghcharan"]="Chaghcharan",
 ["Dwyer"]="Dwyer",
 ["Farah"]="Farah",
+["Gardez"]="Gardez",
+["Ghazni_Heliport"]="Ghazni Heliport",
 ["Herat"]="Herat",
+["Jalalabad"]="Jalalabad",
+["Kabul"]="Kabul",
 ["Kandahar"]="Kandahar",
 ["Kandahar_Heliport"]="Kandahar Heliport",
+["Khost"]="Khost",
+["Khost_Heliport"]="Khost Heliport",
 ["Maymana_Zahiraddin_Faryabi"]="Maymana Zahiraddin Faryabi",
 ["Nimroz"]="Nimroz",
 ["Qala_i_Naw"]="Qala i Naw",
+["Sharana"]="Sharana",
 ["Shindand"]="Shindand",
 ["Shindand_Heliport"]="Shindand Heliport",
 ["Tarinkot"]="Tarinkot",
+["Urgoon_Heliport"]="Urgoon Heliport",
 }
 AIRBASE.Iraq={
 ["Baghdad_International_Airport"]="Baghdad International Airport",
@@ -78341,12 +78352,20 @@ local OrbitTask=OldAIControllable:TaskOrbitCircle(math.random(self.PatrolFloorAl
 local TimedOrbitTask=OldAIControllable:TaskControlled(OrbitTask,OldAIControllable:TaskCondition(nil,nil,nil,nil,self.PatrolOutOfFuelOrbitTime,nil))
 OldAIControllable:SetTask(TimedOrbitTask,10)
 RTB=true
-else
 end
 local Damage=self.Controllable:GetLife()
 if Damage<=self.PatrolDamageThreshold then
 self:T(self.Controllable:GetName().." is damaged:"..Damage..", RTB!")
 RTB=true
+end
+if self:IsInstanceOf("AI_CAS")or self:IsInstanceOf("AI_BAI")then
+local atotal,shells,rockets,bombs,missiles=self.Controllable:GetAmmunition()
+local arelevant=rockets+bombs
+if arelevant==0 or missiles==0 then
+RTB=true
+self:T({total=atotal,shells=shells,rockets=rockets,bombs=bombs,missiles=missiles})
+self:T(self.Controllable:GetName().." is out of ammo, RTB!")
+end
 end
 if RTB==true then
 self:RTB()
