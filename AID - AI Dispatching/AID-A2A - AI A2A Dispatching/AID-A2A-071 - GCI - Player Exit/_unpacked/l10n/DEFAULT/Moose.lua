@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2025-04-18T17:50:01+02:00-2c10943cb18c2c48d231f476adb25bb0201274a0 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-04-26T07:52:01+02:00-ccada18a6aed15a7cbd16dca9ccb01a2a27d9ce5 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -18346,7 +18346,7 @@ return self
 end
 function MESSAGE:ToGroup(Group,Settings)
 self:F(Group.GroupName)
-if Group then
+if Group and Group:IsAlive()then
 if self.MessageType then
 local Settings=Settings or(Group and _DATABASE:GetPlayerSettings(Group:GetPlayerName()))or _SETTINGS
 self.MessageDuration=Settings:GetMessageTime(self.MessageType)
@@ -18361,7 +18361,7 @@ return self
 end
 function MESSAGE:ToUnit(Unit,Settings)
 self:F(Unit.IdentifiableName)
-if Unit then
+if Unit and Unit:IsAlive()then
 if self.MessageType then
 local Settings=Settings or(Unit and _DATABASE:GetPlayerSettings(Unit:GetPlayerName()))or _SETTINGS
 self.MessageDuration=Settings:GetMessageTime(self.MessageType)
@@ -29554,6 +29554,11 @@ AIRBASE.Kola={
 ["Alakourtti"]="Alakourtti",
 ["Kittila"]="Kittila",
 ["Bardufoss"]="Bardufoss",
+["Alta"]="Alta",
+["Sodankyla"]="Sodankyla",
+["Enontekio"]="Enontekio",
+["Evenes"]="Evenes",
+["Hosio"]="Hosio",
 }
 AIRBASE.Afghanistan={
 ["Bagram"]="Bagram",
@@ -43796,7 +43801,12 @@ result.rangename=self.rangename
 result.attackHdg=attackHdg
 result.attackVel=attackVel
 result.attackAlt=attackAlt
-result.date=os and os.date()or"n/a"
+if os and os.date then
+result.date=os.date()
+else
+self:E(self.lid.."os or os.date() not available")
+result.date="n/a"
+end
 table.insert(_results,result)
 self:Impact(result,playerData)
 elseif insidezone then
@@ -53751,6 +53761,7 @@ MANTIS.SamData={
 ["Chaparral"]={Range=8,Blindspot=0,Height=3,Type="Short",Radar="Chaparral"},
 ["Linebacker"]={Range=4,Blindspot=0,Height=3,Type="Point",Radar="Linebacker",Point="true"},
 ["Silkworm"]={Range=90,Blindspot=1,Height=0.2,Type="Long",Radar="Silkworm"},
+["HEMTT_C-RAM_Phalanx"]={Range=2,Blindspot=0,Height=2,Type="Point",Radar="HEMTT_C-RAM_Phalanx",Point="true"},
 ["SA-10B"]={Range=75,Blindspot=0,Height=18,Type="Medium",Radar="SA-10B"},
 ["SA-17"]={Range=50,Blindspot=3,Height=30,Type="Medium",Radar="SA-17"},
 ["SA-20A"]={Range=150,Blindspot=5,Height=27,Type="Long",Radar="S-300PMU1"},
@@ -53932,7 +53943,7 @@ if self.HQ_Template_CC then
 self.HQ_CC=GROUP:FindByName(self.HQ_Template_CC)
 end
 self.checkcounter=1
-self.version="0.9.27"
+self.version="0.9.28"
 self:I(string.format("***** Starting MANTIS Version %s *****",self.version))
 self:SetStartState("Stopped")
 self:AddTransition("Stopped","Start","Running")
@@ -56065,6 +56076,7 @@ self:SetBeaconRefresh()
 self:SetMaxLandingPattern()
 self:SetMaxMarshalStacks()
 self:SetMaxSectionSize()
+self:SetMaxSectionDistance()
 self:SetMaxFlightsPerStack()
 self:SetHandleAION()
 self:SetExtraVoiceOvers(false)
@@ -56692,6 +56704,17 @@ nmax=nmax or 2
 nmax=math.max(nmax,1)
 nmax=math.min(nmax,4)
 self.NmaxSection=nmax-1
+return self
+end
+function AIRBOSS:SetMaxSectionDistance(dmax)
+if dmax then
+if dmax<10 then
+dmax=10
+elseif dmax>5000 then
+dmax=5000
+end
+end
+self.maxsectiondistance=dmax or 100
 return self
 end
 function AIRBOSS:SetMaxFlightsPerStack(nmax)
@@ -63553,7 +63576,7 @@ if _unit and _playername then
 local playerData=self.players[_playername]
 if playerData then
 local mycoord=_unit:GetCoordinate()
-local dmax=100
+local dmax=self.maxsectiondistance
 local text
 if self.NmaxSection==0 then
 text=string.format("negative, setting sections is disabled in this mission. You stay alone.")
@@ -69261,7 +69284,7 @@ end
 function CTLD:IsFixedWing(Unit)
 local typename=Unit:GetTypeName()or"none"
 for _,_name in pairs(self.FixedWingTypes or{})do
-if typename==_name or string.find(typename,_name,1,true)then
+if _name and(typename==_name or string.find(typename,_name,1,true))then
 return true
 end
 end
