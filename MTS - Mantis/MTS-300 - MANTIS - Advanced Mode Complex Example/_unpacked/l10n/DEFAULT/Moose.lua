@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2025-05-04T10:47:28+02:00-7eba1349aea9a3ff70cd5c99fd2826dd8b13b695 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-05-16T13:43:03+02:00-b126cc00d05ec3e139864467443dbcd6177a1a21 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -11133,6 +11133,7 @@ end
 return self.CLIENTS[DCSUnitName]
 end
 function DATABASE:FindGroup(GroupName)
+if type(GroupName)~="string"or GroupName==""then return end
 local GroupFound=self.GROUPS[GroupName]
 if GroupFound==nil and GroupName~=nil and self.Templates.Groups[GroupName]==nil then
 self:_RegisterDynamicGroup(GroupName)
@@ -29453,6 +29454,7 @@ AIRBASE.Syria={
 ["Hatzor"]="Hatzor",
 ["Palmashim"]="Palmashim",
 ["Tel_Nof"]="Tel Nof",
+["Marka"]="Marka",
 }
 AIRBASE.MarianaIslands={
 ["Andersen_AFB"]="Andersen AFB",
@@ -29560,7 +29562,7 @@ AIRBASE.Kola={
 ["Vidsel"]="Vidsel",
 ["Vuojarvi"]="Vuojarvi",
 ["Andoya"]="Andoya",
-["Alakourtti"]="Alakourtti",
+["Alakurtti"]="Alakurtti",
 ["Kittila"]="Kittila",
 ["Bardufoss"]="Bardufoss",
 ["Alta"]="Alta",
@@ -53730,6 +53732,8 @@ checkforfriendlies=false,
 SmokeDecoy=false,
 SmokeDecoyColor=SMOKECOLOR.White,
 checkcounter=1,
+DLinkCacheTime=120,
+logsamstatus=false,
 }
 MANTIS.AdvancedState={
 GREEN=0,
@@ -53913,6 +53917,7 @@ self.advAwacs=true
 else
 self.advAwacs=false
 end
+self:SetDLinkCacheTime()
 self.lid=string.format("MANTIS %s | ",self.name)
 if self.debug then
 BASE:TraceOnOff(true)
@@ -53935,6 +53940,7 @@ end
 if self.advAwacs then
 table.insert(self.ewr_templates,awacs)
 end
+self.logsamstatus=false
 self:T({self.ewr_templates})
 self.SAM_Group=SET_GROUP:New():FilterPrefixes(self.SAM_Templates_Prefix):FilterCoalitions(self.Coalition)
 self.EWR_Group=SET_GROUP:New():FilterPrefixes(self.ewr_templates):FilterCoalitions(self.Coalition)
@@ -53952,7 +53958,7 @@ if self.HQ_Template_CC then
 self.HQ_CC=GROUP:FindByName(self.HQ_Template_CC)
 end
 self.checkcounter=1
-self.version="0.9.28"
+self.version="0.9.30"
 self:I(string.format("***** Starting MANTIS Version %s *****",self.version))
 self:SetStartState("Stopped")
 self:AddTransition("Stopped","Start","Running")
@@ -54095,6 +54101,11 @@ self.HQ_CC=group
 self.HQ_Template_CC=group:GetName()
 end
 end
+return self
+end
+function MANTIS:SetDLinkCacheTime(seconds)
+self.DLinkCacheTime=math.abs(seconds or 120)
+if self.DLinkCacheTime<5 then self.DLinkCacheTime=5 end
 return self
 end
 function MANTIS:SetDetectInterval(interval)
@@ -54366,7 +54377,8 @@ local IntelOne=INTEL:New(groupset,self.Coalition,self.name.." IntelOne")
 IntelOne:Start()
 local IntelTwo=INTEL:New(samset,self.Coalition,self.name.." IntelTwo")
 IntelTwo:Start()
-local IntelDlink=INTEL_DLINK:New({IntelOne,IntelTwo},self.name.." DLINK",22,300)
+local CacheTime=self.DLinkCacheTime or 120
+local IntelDlink=INTEL_DLINK:New({IntelOne,IntelTwo},self.name.." DLINK",22,CacheTime)
 IntelDlink:__Start(1)
 self:SetUsingDLink(IntelDlink)
 table.insert(self.intelset,IntelOne)
@@ -54569,7 +54581,7 @@ if group:IsGround()and group:IsAlive()then
 local grpname=group:GetName()
 local grpcoord=group:GetCoordinate()
 local grprange,grpheight,type,blind=self:_GetSAMRange(grpname)
-local radaralive=group:IsSAM()
+local radaralive=true
 table.insert(SAM_Tbl,{grpname,grpcoord,grprange,grpheight,blind,type})
 table.insert(SEAD_Grps,grpname)
 if type==MANTIS.SamType.LONG and radaralive then
@@ -54699,7 +54711,7 @@ end
 end
 end
 end
-if self.debug or self.verbose then
+if self.debug or self.verbose or self.logsamstatus then
 for _,_status in pairs(self.SamStateTracker)do
 if _status=="GREEN"then
 instatusgreen=instatusgreen+1
@@ -54715,7 +54727,7 @@ end
 end
 return instatusred,instatusgreen,activeshorads
 end
-function MANTIS:_Check(detection,dlink)
+function MANTIS:_Check(detection,dlink,reporttolog)
 self:T(self.lid.."Check")
 local detset=detection:GetDetectedItemCoordinates()
 if self.checkcounter%3==0 then
@@ -54738,7 +54750,7 @@ else
 local samset=self:_GetSAMTable()
 instatusred,instatusgreen,activeshorads=self:_CheckLoop(samset,detset,dlink,self.maxclassic)
 end
-if self.debug or self.verbose then
+local function GetReport()
 local statusreport=REPORT:New("\nMANTIS Status "..self.name)
 statusreport:Add("+-----------------------------+")
 statusreport:Add(string.format("+ SAM in RED State: %2d",instatusred))
@@ -54747,7 +54759,14 @@ if self.Shorad then
 statusreport:Add(string.format("+ SHORAD active: %2d",activeshorads))
 end
 statusreport:Add("+-----------------------------+")
+return statusreport
+end
+if self.debug or self.verbose then
+local statusreport=GetReport()
 MESSAGE:New(statusreport:Text(),10):ToAll():ToLog()
+elseif reporttolog==true then
+local statusreport=GetReport()
+MESSAGE:New(statusreport:Text(),10):ToLog()
 end
 return self
 end
@@ -54818,7 +54837,7 @@ end
 function MANTIS:onbeforeStatus(From,Event,To)
 self:T({From,Event,To})
 if not self.state2flag then
-self:_Check(self.Detection,self.DLink)
+self:_Check(self.Detection,self.DLink,self.logsamstatus)
 end
 local EWRAlive=self:_CheckAnyEWRAlive()
 local function FindSAMSRTR()
@@ -71174,6 +71193,7 @@ zone=AIRBASE:FindByName(zonename):GetZone()
 end
 end
 local zonecoord=zone:GetCoordinate()
+if zonecoord then
 local active=CZone.active
 local color=CZone.color
 local distance=self:_GetDistance(zonecoord,unitcoord)
@@ -71188,6 +71208,7 @@ local txt="smoking"
 if Flare then txt="flaring"end
 self:_SendMessage(string.format("Roger, %s zone %s!",txt,zonename),10,false,Group)
 smoked=true
+end
 end
 end
 end
@@ -72062,11 +72083,16 @@ local task=Task
 local subtype=task:GetSubType()
 if Event==subtype and not task:IsDone()then
 local targetzone=task.Target:GetObject()
+self:T2({Name=Groupname,Property=task:GetProperty("ExtractName")})
+if task:GetProperty("ExtractName")then
 local okaygroup=string.find(Groupname,task:GetProperty("ExtractName"),1,true)
 if targetzone and targetzone.ClassName and string.match(targetzone.ClassName,"ZONE")and okaygroup then
 if task.Clients:HasUniqueID(playername)then
 task:__Success(-1)
 end
+end
+else
+self:T({Text="'ExtractName' Property not set",Name=Groupname,Property=task.Type})
 end
 end
 end
