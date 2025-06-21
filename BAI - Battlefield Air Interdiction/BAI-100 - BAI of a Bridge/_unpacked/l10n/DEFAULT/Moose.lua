@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2025-06-10T18:05:02+02:00-0aeb1fc6afc2c3e2fcab252f43925d44b11dd0e7 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-06-20T14:01:24+02:00-3cabc07d58413bf7253dc751c75224a88eeedebb ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -6417,7 +6417,7 @@ function SCHEDULEDISPATCHER:Stop(Scheduler,CallID)
 self:F2({Stop=CallID,Scheduler=Scheduler})
 if CallID then
 local Schedule=self.Schedule[Scheduler][CallID]
-if Schedule.ScheduleID then
+if Schedule and Schedule.ScheduleID then
 self:T(string.format("SCHEDULEDISPATCHER stopping scheduler CallID=%s, ScheduleID=%s",tostring(CallID),tostring(Schedule.ScheduleID)))
 timer.removeFunction(Schedule.ScheduleID)
 Schedule.ScheduleID=nil
@@ -21139,7 +21139,7 @@ end
 return self:_SpawnStatic(self.TemplateStaticUnit,self.CountryID)
 end
 function SPAWNSTATIC:SpawnFromZone(Zone,Heading,NewName)
-local Static=self:SpawnFromPointVec2(Zone:GetPointVec2(),Heading,NewName)
+local Static=self:SpawnFromCoordinate(Zone:GetCoordinate(),Heading,NewName)
 return Static
 end
 function SPAWNSTATIC:_SpawnStatic(Template,CountryID)
@@ -29454,7 +29454,6 @@ AIRBASE.Syria={
 ["Al_Dumayr"]="Al-Dumayr",
 ["Al_Qusayr"]="Al Qusayr",
 ["Aleppo"]="Aleppo",
-["Amman"]="Amman",
 ["An_Nasiriyah"]="An Nasiriyah",
 ["At_Tanf"]="At Tanf",
 ["Bassel_Al_Assad"]="Bassel Al-Assad",
@@ -29486,6 +29485,7 @@ AIRBASE.Syria={
 ["Kuweires"]="Kuweires",
 ["Lakatamia"]="Lakatamia",
 ["Larnaca"]="Larnaca",
+["Marka"]="Marka",
 ["Marj_Ruhayyil"]="Marj Ruhayyil",
 ["Marj_as_Sultan_North"]="Marj as Sultan North",
 ["Marj_as_Sultan_South"]="Marj as Sultan South",
@@ -29516,9 +29516,8 @@ AIRBASE.Syria={
 ["Wujah_Al_Hajar"]="Wujah Al Hajar",
 ["Ben_Gurion"]="Ben Gurion",
 ["Hatzor"]="Hatzor",
-["Palmashim"]="Palmashim",
+["Palmachim"]="Palmachim",
 ["Tel_Nof"]="Tel Nof",
-["Marka"]="Marka",
 }
 AIRBASE.MarianaIslands={
 ["Andersen_AFB"]="Andersen AFB",
@@ -29575,7 +29574,7 @@ AIRBASE.Sinai={
 ["Bilbeis_Air_Base"]="Bilbeis Air Base",
 ["Bir_Hasanah"]="Bir Hasanah",
 ["Birma_Air_Base"]="Birma Air Base",
-["Borj_El_Arab_International_Airport"]="Borj El Arab International Airport",
+["Borg_El_Arab_International_Airport"]="Borg El Arab International Airport",
 ["Cairo_International_Airport"]="Cairo International Airport",
 ["Cairo_West"]="Cairo West",
 ["Difarsuwar_Airfield"]="Difarsuwar Airfield",
@@ -29634,6 +29633,12 @@ AIRBASE.Kola={
 ["Enontekio"]="Enontekio",
 ["Evenes"]="Evenes",
 ["Hosio"]="Hosio",
+["Kilpyavr"]="Kilpyavr",
+["Afrikanda"]="Afrikanda",
+["Kalevala"]="Kalevala",
+["Koshka_Yavr"]="Koshka Yavr",
+["Poduzhemye"]="Poduzhemye",
+["Luostari_Pechenga"]="Luostari Pechenga",
 }
 AIRBASE.Afghanistan={
 ["Bagram"]="Bagram",
@@ -67962,7 +67967,7 @@ CTLD.FixedWingTypes={
 ["Bronco"]="Bronco",
 ["Mosquito"]="Mosquito",
 }
-CTLD.version="1.3.34"
+CTLD.version="1.3.35"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -71247,15 +71252,20 @@ for index,cargozone in pairs(zones[i])do
 local CZone=cargozone
 local zonename=CZone.name
 local zone=nil
+local airbasezone=false
 if i==4 then
 zone=UNIT:FindByName(zonename)
 else
 zone=ZONE:FindByName(zonename)
 if not zone then
 zone=AIRBASE:FindByName(zonename):GetZone()
+airbasezone=true
 end
 end
 local zonecoord=zone:GetCoordinate()
+if(i==1 or 1==3)and airbasezone==true and zone:IsInstanceOf("ZONE_BASE")then
+zonecoord=zone:GetRandomCoordinate(inner,outer,{land.SurfaceType.LAND})
+end
 if zonecoord then
 local active=CZone.active
 local color=CZone.color
@@ -74416,8 +74426,8 @@ else
 self.allheligroupset=SET_GROUP:New():FilterCoalitions(self.coalitiontxt):FilterCategoryHelicopter():FilterStart()
 end
 self.mash=SET_GROUP:New():FilterCoalitions(self.coalitiontxt):FilterPrefixes(self.mashprefix):FilterStart()
-self.staticmashes=SET_STATIC:New():FilterCoalitions(self.coalitiontxt):FilterPrefixes(self.mashprefix):FilterOnce()
-self.zonemashes=SET_ZONE:New():FilterPrefixes(self.mashprefix):FilterOnce()
+self.staticmashes=SET_STATIC:New():FilterCoalitions(self.coalitiontxt):FilterPrefixes(self.mashprefix):FilterStart()
+self.zonemashes=SET_ZONE:New():FilterPrefixes(self.mashprefix):FilterStart()
 if not self.coordinate then
 local csarhq=self.mash:GetRandom()
 if csarhq then
@@ -85376,7 +85386,7 @@ Wavenet={
 ["en_GB_Wavenet_F"]='en-GB-Wavenet-N',
 ["en_GB_Wavenet_O"]='en-GB-Wavenet-O',
 ["en_GB_Wavenet_N"]='en-GB-Wavenet-N',
-["en_US_Wavenet_A"]='en-US-Wavenet-N',
+["en_US_Wavenet_A"]='en-US-Wavenet-A',
 ["en_US_Wavenet_B"]='en-US-Wavenet-B',
 ["en_US_Wavenet_C"]='en-US-Wavenet-C',
 ["en_US_Wavenet_D"]='en-US-Wavenet-D',
