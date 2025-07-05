@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2025-06-24T19:26:36+02:00-a467fabdc8869215f7404c343245a274bd5808d6 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-07-03T16:39:24+02:00-727cb3276cb69412b50ae7f277b0d6228b410359 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -4048,6 +4048,34 @@ return world.weather.setFogAnimation(AnimationKeys)
 end
 function UTILS.Weather.StopFogAnimation()
 return world.weather.setFogAnimation({})
+end
+function UTILS.GetEnvZone(name)
+for _,v in ipairs(env.mission.triggers.zones)do
+if v.name==name then
+return v
+end
+end
+end
+function UTILS.ShowHelperGate(pos,heading)
+net.dostring_in("mission",string.format("a_show_helper_gate(%s, %s, %s, %f)",pos.x,pos.y,pos.z,math.rad(heading)))
+end
+function UTILS.ShellZone(name,power,count)
+local z=UTILS.GetEnvZone(name)
+if z then
+net.dostring_in("mission",string.format("a_shelling_zone(%d, %d, %d)",z.zoneId,power,count))
+end
+end
+function UTILS.RemoveObjects(name,type)
+local z=UTILS.GetEnvZone(name)
+if z then
+net.dostring_in("mission",string.format("a_remove_scene_objects(%d, %d)",z.zoneId,type))
+end
+end
+function UTILS.DestroyScenery(name,level)
+local z=UTILS.GetEnvZone(name)
+if z then
+net.dostring_in("mission",string.format("a_scenery_destruction_zone(%d, %d)",z.zoneId,level))
+end
 end
 PROFILER={
 ClassName="PROFILER",
@@ -10194,11 +10222,7 @@ self.ScanData.Scenery={}
 self.ScanData.SceneryTable={}
 self.ScanData.Units={}
 local vectors=self:GetBoundingSquare()
-local minVec3={x=vectors.x1,y=0,z=vectors.y1}
-local maxVec3={x=vectors.x2,y=0,z=vectors.y2}
-local minmarkcoord=COORDINATE:NewFromVec3(minVec3)
-local maxmarkcoord=COORDINATE:NewFromVec3(maxVec3)
-local ZoneRadius=minmarkcoord:Get2DDistance(maxmarkcoord)/2
+local ZoneRadius=UTILS.VecDist2D({x=vectors.x1,y=vectors.y1},{x=vectors.x2,y=vectors.y2})/2
 local CenterVec3=self:GetCoordinate():GetVec3()
 local SphereSearch={
 id=world.VolumeType.SPHERE,
@@ -12366,6 +12390,17 @@ ObjectNames=ObjectNames..ObjectName..", "
 end
 return ObjectNames
 end
+function SET_BASE:GetAliveSet()
+local AliveSet={}
+for ObjectName,Object in pairs(self.Set)do
+if Object then
+if Object:IsAlive()then
+AliveSet[#AliveSet+1]=Object
+end
+end
+end
+return AliveSet or{}
+end
 end
 do
 SET_GROUP={
@@ -12400,16 +12435,16 @@ self:FilterActive(false)
 return self
 end
 function SET_GROUP:GetAliveSet()
-local AliveSet=SET_GROUP:New()
+local AliveSet={}
 for GroupName,GroupObject in pairs(self.Set)do
 local GroupObject=GroupObject
 if GroupObject then
 if GroupObject:IsAlive()then
-AliveSet:Add(GroupName,GroupObject)
+AliveSet[GroupName]=GroupObject
 end
 end
 end
-return AliveSet.Set or{}
+return AliveSet or{}
 end
 function SET_GROUP:GetUnitTypeNames()
 local MT={}
@@ -13108,9 +13143,8 @@ end
 function SET_UNIT:GetAliveSet()
 local AliveSet=SET_UNIT:New()
 for GroupName,GroupObject in pairs(self.Set)do
-local GroupObject=GroupObject
 if GroupObject and GroupObject:IsAlive()then
-AliveSet:Add(GroupName,GroupObject)
+AliveSet[GroupName]=GroupObject
 end
 end
 return AliveSet.Set or{},AliveSet
@@ -14289,14 +14323,13 @@ end
 return CountU
 end
 function SET_CLIENT:GetAliveSet()
-local AliveSet=SET_CLIENT:New()
+local AliveSet={}
 for GroupName,GroupObject in pairs(self.Set)do
-local GroupObject=GroupObject
 if GroupObject and GroupObject:IsAlive()then
-AliveSet:Add(GroupName,GroupObject)
+AliveSet[GroupName]=GroupObject
 end
 end
-return AliveSet.Set or{}
+return AliveSet or{}
 end
 function SET_CLIENT:IsIncludeObject(MClient)
 local MClientInclude=true
@@ -21471,7 +21504,7 @@ MARKEROPS_BASE={
 ClassName="MARKEROPS",
 Tag="mytag",
 Keywords={},
-version="0.1.3",
+version="0.1.4",
 debug=false,
 Casesensitive=true,
 }
@@ -21504,19 +21537,18 @@ if Event==nil or Event.idx==nil then
 self:E("Skipping onEvent. Event or Event.idx unknown.")
 return true
 end
-local vec3={y=Event.pos.y,x=Event.pos.x,z=Event.pos.z}
-local coord=COORDINATE:NewFromVec3(vec3)
-if self.debug then
-local coordtext=coord:ToStringLLDDM()
-local text=tostring(Event.text)
-local m=MESSAGE:New(string.format("Mark added at %s with text: %s",coordtext,text),10,"Info",false):ToAll()
-end
 local coalition=Event.MarkCoalition
 if Event.id==world.event.S_EVENT_MARK_ADDED then
 self:T({event="S_EVENT_MARK_ADDED",carrier=Event.IniGroupName,vec3=Event.pos})
 local Eventtext=tostring(Event.text)
 if Eventtext~=nil then
 if self:_MatchTag(Eventtext)then
+local coord=COORDINATE:NewFromVec3({y=Event.pos.y,x=Event.pos.x,z=Event.pos.z})
+if self.debug then
+local coordtext=coord:ToStringLLDDM()
+local text=tostring(Event.text)
+local m=MESSAGE:New(string.format("Mark added at %s with text: %s",coordtext,text),10,"Info",false):ToAll()
+end
 local matchtable=self:_MatchKeywords(Eventtext)
 self:MarkAdded(Eventtext,matchtable,coord,Event.idx,coalition,Event.PlayerName,Event)
 end
@@ -21526,6 +21558,12 @@ self:T({event="S_EVENT_MARK_CHANGE",carrier=Event.IniGroupName,vec3=Event.pos})
 local Eventtext=tostring(Event.text)
 if Eventtext~=nil then
 if self:_MatchTag(Eventtext)then
+local coord=COORDINATE:NewFromVec3({y=Event.pos.y,x=Event.pos.x,z=Event.pos.z})
+if self.debug then
+local coordtext=coord:ToStringLLDDM()
+local text=tostring(Event.text)
+local m=MESSAGE:New(string.format("Mark changed at %s with text: %s",coordtext,text),10,"Info",false):ToAll()
+end
 local matchtable=self:_MatchKeywords(Eventtext)
 self:MarkChanged(Eventtext,matchtable,coord,Event.idx,coalition,Event.PlayerName,Event)
 end
@@ -22075,6 +22113,14 @@ function POSITIONABLE:GetVec3()
 local DCSPositionable=self:GetDCSObject()
 if DCSPositionable then
 local vec3=DCSPositionable:getPoint()
+if not vec3 then
+local pos=DCSPositionable:getPosition()
+if pos and pos.p then
+vec3=pos.p
+else
+self:E({"Cannot get the position from DCS Object for GetVec3",Positionable=self,Alive=self:IsAlive()})
+end
+end
 return vec3
 end
 self:E({"Cannot get the Positionable DCS Object for GetVec3",Positionable=self,Alive=self:IsAlive()})
@@ -22134,10 +22180,12 @@ function POSITIONABLE:GetCoordinate()
 local DCSPositionable=self:GetDCSObject()
 if DCSPositionable then
 local PositionableVec3=self:GetVec3()
+if PositionableVec3 then
 local coord=COORDINATE:NewFromVec3(PositionableVec3)
 local heading=self:GetHeading()
 coord.Heading=heading
 return coord
+end
 end
 self:E({"Cannot GetCoordinate",Positionable=self,Alive=self:IsAlive()})
 return nil
@@ -28826,6 +28874,9 @@ if attr["AAA"]or attr["SAM related"]then
 return true
 end
 return false
+end
+function UNIT:SetLife(Percent)
+net.dostring_in("mission",string.format("a_unit_set_life_percentage(%d, %f)",self:GetID(),Percent))
 end
 CLIENT={
 ClassName="CLIENT",
@@ -49780,7 +49831,7 @@ return _nstock
 end
 end
 function WAREHOUSE:GetCoordinate()
-return self.warehouse:GetCoordinate()
+return self.warehouse:GetCoord()
 end
 function WAREHOUSE:GetVec3()
 local vec3=self.warehouse:GetVec3()
@@ -51623,7 +51674,7 @@ local CountryNeutral=nil
 if gotunits then
 for _,_unit in pairs(units)do
 local unit=_unit
-local distance=coord:Get2DDistance(unit:GetCoordinate())
+local distance=coord:Get2DDistance(unit:GetCoord())
 if unit:IsGround()and unit:IsAlive()and distance<=radius then
 local _coalition=unit:GetCoalition()
 local _country=unit:GetCountry()
