@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2025-08-01T14:02:57+02:00-13fa8f373e37f6445952c6da4661b58873ff06b1 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-08-07T11:30:44+02:00-674c6eec81a5492c6d21a38be32964efc83af116 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -9196,6 +9196,10 @@ self:_TriggerCheck(true)
 self:__TriggerRunCheck(self.Checktime)
 return self
 end
+function ZONE_BASE:SetPartlyInside(state)
+self.PartlyInside=state or not(state==false)
+return self
+end
 function ZONE_BASE:_TriggerCheck(fromstart)
 local objectset=self.objectset or{}
 if fromstart then
@@ -9223,7 +9227,12 @@ end
 if not obj.TriggerInZone[self.ZoneName]then
 obj.TriggerInZone[self.ZoneName]=false
 end
-local inzone=self:IsCoordinateInZone(obj:GetCoordinate())
+local inzone
+if self.PartlyInside and obj.ClassName=="GROUP"then
+inzone=obj:IsAnyInZone(self)
+else
+inzone=self:IsCoordinateInZone(obj:GetCoordinate())
+end
 if inzone and obj.TriggerInZone[self.ZoneName]then
 objcount=objcount+1
 self.ObjectsInZone=true
@@ -9602,6 +9611,9 @@ function ZONE_RADIUS:GetRandomVec2(inner,outer,surfacetypes)
 local Vec2=self:GetVec2()
 local _inner=inner or 0
 local _outer=outer or self:GetRadius()
+math.random()
+math.random()
+math.random()
 if surfacetypes and type(surfacetypes)~="table"then
 surfacetypes={surfacetypes}
 end
@@ -10300,6 +10312,9 @@ local InZone=self:IsVec2InZone({x=Vec3.x,y=Vec3.z})
 return InZone
 end
 function ZONE_POLYGON_BASE:GetRandomVec2()
+math.random()
+math.random()
+math.random()
 local weights={}
 for _,triangle in pairs(self._Triangles)do
 weights[triangle]=triangle.SurfaceArea/self.SurfaceArea
@@ -15532,6 +15547,14 @@ self:_TriggerCheck(true)
 self:__TriggerRunCheck(self.Checktime)
 return self
 end
+function SET_ZONE:SetPartlyInside(state)
+for _,Zone in pairs(self.Set)do
+if Zone.SetPartlyInside then
+Zone:SetPartlyInside(state)
+end
+end
+return self
+end
 function SET_ZONE:_TriggerCheck(fromstart)
 if fromstart then
 for _,_object in pairs(self.objectset)do
@@ -15558,7 +15581,12 @@ end
 if not obj.TriggerInZone[_zone.ZoneName]then
 obj.TriggerInZone[_zone.ZoneName]=false
 end
-local inzone=_zone:IsCoordinateInZone(obj:GetCoordinate())
+local inzone
+if _zone.PartlyInside and obj.ClassName=="GROUP"then
+inzone=obj:IsAnyInZone(_zone)
+else
+inzone=_zone:IsCoordinateInZone(obj:GetCoordinate())
+end
 if inzone and not obj.TriggerInZone[_zone.ZoneName]then
 self:__EnteredZone(0.5,obj,_zone)
 obj.TriggerInZone[_zone.ZoneName]=true
@@ -17027,6 +17055,9 @@ return coord
 end
 function COORDINATE:GetRandomVec2InRadius(OuterRadius,InnerRadius)
 self:F2({OuterRadius,InnerRadius})
+math.random()
+math.random()
+math.random()
 local Theta=2*math.pi*math.random()
 local Radials=math.random()+math.random()
 if Radials>1 then
@@ -29975,15 +30006,19 @@ AIRBASE.Sinai={
 ["Kibrit_Air_Base"]="Kibrit Air Base",
 ["Kom_Awshim"]="Kom Awshim",
 ["Melez"]="Melez",
+["Mezzeh_Air_Base"]="Mezzeh Air Base",
 ["Nevatim"]="Nevatim",
 ["Ovda"]="Ovda",
 ["Palmachim"]="Palmachim",
 ["Quwaysina"]="Quwaysina",
+["Rafic_Hariri_Intl"]="Rafic Hariri Intl",
+["Ramat_David"]="Ramat David",
 ["Ramon_Airbase"]="Ramon Airbase",
 ["Ramon_International_Airport"]="Ramon International Airport",
 ["Sde_Dov"]="Sde Dov",
 ["Sharm_El_Sheikh_International_Airport"]="Sharm El Sheikh International Airport",
 ["St_Catherine"]="St Catherine",
+["Tabuk"]="Tabuk",
 ["Tel_Nof"]="Tel Nof",
 ["Wadi_Abu_Rish"]="Wadi Abu Rish",
 ["Wadi_al_Jandali"]="Wadi al Jandali",
@@ -34824,6 +34859,7 @@ local TargetType=nil
 local TargetUnitCoalition=nil
 local TargetUnitCategory=nil
 local TargetUnitType=nil
+local TargetIsScenery=false
 if Event.IniDCSUnit then
 InitUnit=Event.IniDCSUnit
 InitUNIT=Event.IniUnit
@@ -34849,6 +34885,10 @@ TargetPlayerName=Event.TgtPlayerName
 TargetCoalition=Event.TgtCoalition
 TargetCategory=Event.TgtCategory
 TargetType=Event.TgtTypeName
+if(not TargetCategory)and TargetUNIT~=nil and TargetUnit:IsInstanceOf("SCENERY")then
+TargetCategory=Unit.Category.STRUCTURE
+TargetIsScenery=true
+end
 TargetUnitCoalition=_SCORINGCoalition[TargetCoalition]
 TargetUnitCategory=_SCORINGCategory[TargetCategory]
 TargetUnitType=TargetType
@@ -34918,9 +34958,14 @@ MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..InitPlayerName.."' hit en
 MESSAGE.Type.Update)
 :ToAllIf(self:IfMessagesHit()and self:IfMessagesToAll())
 :ToCoalitionIf(InitCoalition,self:IfMessagesHit()and self:IfMessagesToCoalition())
-else
+elseif TargetIsScenery~=true then
 MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..InitPlayerName.."' hit enemy target "..TargetUnitCategory.." ( "..TargetType.." ) "..PlayerHit.ScoreHit.." times. "..
 "Score: "..PlayerHit.Score..".  Score Total:"..Player.Score-Player.Penalty,
+MESSAGE.Type.Update)
+:ToAllIf(self:IfMessagesHit()and self:IfMessagesToAll())
+:ToCoalitionIf(InitCoalition,self:IfMessagesHit()and self:IfMessagesToCoalition())
+elseif TargetIsScenery==true then
+MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..InitPlayerName.."' hit scenery object.".." Score: "..PlayerHit.Score..".  Score Total:"..Player.Score-Player.Penalty,
 MESSAGE.Type.Update)
 :ToAllIf(self:IfMessagesHit()and self:IfMessagesToAll())
 :ToCoalitionIf(InitCoalition,self:IfMessagesHit()and self:IfMessagesToCoalition())
@@ -34928,7 +34973,7 @@ end
 self:ScoreCSV(InitPlayerName,TargetPlayerName,"HIT_SCORE",1,1,InitUnitName,InitUnitCoalition,InitUnitCategory,InitUnitType,TargetUnitName,TargetUnitCoalition,TargetUnitCategory,TargetUnitType)
 end
 else
-MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..InitPlayerName.."' hit scenery object.",
+MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..InitPlayerName.."' hit nothing special.",
 MESSAGE.Type.Update)
 :ToAllIf(self:IfMessagesHit()and self:IfMessagesToAll())
 :ToCoalitionIf(InitCoalition,self:IfMessagesHit()and self:IfMessagesToCoalition())
@@ -84407,12 +84452,18 @@ end
 return true
 end
 function CIRCLE:GetRandomVec2()
+math.random()
+math.random()
+math.random()
 local angle=math.random()*2*math.pi
 local rx=math.random(0,self.Radius)*math.cos(angle)+self.CenterVec2.x
 local ry=math.random(0,self.Radius)*math.sin(angle)+self.CenterVec2.y
 return{x=rx,y=ry}
 end
 function CIRCLE:GetRandomVec2OnBorder()
+math.random()
+math.random()
+math.random()
 local angle=math.random()*2*math.pi
 local rx=self.Radius*math.cos(angle)+self.CenterVec2.x
 local ry=self.Radius*math.sin(angle)+self.CenterVec2.y
@@ -85095,6 +85146,9 @@ local has_pos=(d1>0)or(d2>0)or(d3>0)
 return not(has_neg and has_pos)
 end
 function TRIANGLE:GetRandomVec2(points)
+math.random()
+math.random()
+math.random()
 points=points or self.Points
 local pt={math.random(),math.random()}
 table.sort(pt)
