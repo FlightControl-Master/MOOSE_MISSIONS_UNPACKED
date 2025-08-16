@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2025-08-07T11:30:44+02:00-674c6eec81a5492c6d21a38be32964efc83af116 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-08-14T17:17:34+02:00-b9cf1e46afcee679aa09b480d3451864da72a5e3 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -54214,7 +54214,7 @@ end
 MANTIS={
 ClassName="MANTIS",
 name="mymantis",
-version="0.9.33",
+version="0.9.34",
 SAM_Templates_Prefix="",
 SAM_Group=nil,
 EWR_Templates_Prefix="",
@@ -54305,7 +54305,7 @@ MANTIS.SamData={
 ["Chaparral"]={Range=8,Blindspot=0,Height=3,Type="Short",Radar="Chaparral"},
 ["Linebacker"]={Range=4,Blindspot=0,Height=3,Type="Point",Radar="Linebacker",Point="true"},
 ["Silkworm"]={Range=90,Blindspot=1,Height=0.2,Type="Long",Radar="Silkworm"},
-["HEMTT_C-RAM_Phalanx"]={Range=2,Blindspot=0,Height=2,Type="Point",Radar="HEMTT_C-RAM_Phalanx",Point="true"},
+["C-RAM"]={Range=2,Blindspot=0,Height=2,Type="Point",Radar="HEMTT_C-RAM_Phalanx",Point="true"},
 ["SA-10B"]={Range=75,Blindspot=0,Height=18,Type="Medium",Radar="SA-10B"},
 ["SA-17"]={Range=50,Blindspot=3,Height=50,Type="Medium",Radar="SA-17"},
 ["SA-20A"]={Range=150,Blindspot=5,Height=27,Type="Long",Radar="S-300PMU1"},
@@ -54315,6 +54315,9 @@ MANTIS.SamData={
 ["STUNNER IDFA"]={Range=250,Blindspot=1,Height=45,Type="Long",Radar="DAVID_SLING_LN"},
 ["NIKE"]={Range=155,Blindspot=6,Height=30,Type="Long",Radar="HIPAR"},
 ["Dog Ear"]={Range=11,Blindspot=0,Height=9,Type="Point",Radar="Dog Ear",Point="true"},
+["Pantsir S1"]={Range=20,Blindspot=1.2,Height=15,Type="Point",Radar="PantsirS1",Point="true"},
+["Tor M2"]={Range=12,Blindspot=1,Height=10,Type="Point",Radar="TorM2",Point="true"},
+["IRIS-T SLM"]={Range=40,Blindspot=0.5,Height=20,Type="Medium",Radar="CH_IRIST_SLM"},
 }
 MANTIS.SamDataHDS={
 ["SA-2 HDS"]={Range=56,Blindspot=7,Height=30,Type="Medium",Radar="V759"},
@@ -54345,15 +54348,15 @@ MANTIS.SamDataSMA={
 }
 MANTIS.SamDataCH={
 ["2S38 CHM"]={Range=6,Blindspot=0.1,Height=4.5,Type="Short",Radar="2S38"},
-["PantsirS1 CHM"]={Range=20,Blindspot=1.2,Height=15,Type="Short",Radar="PantsirS1"},
+["PantsirS1 CHM"]={Range=20,Blindspot=1.2,Height=15,Type="Point",Radar="PantsirS1",Point="true"},
 ["PantsirS2 CHM"]={Range=30,Blindspot=1.2,Height=18,Type="Medium",Radar="PantsirS2"},
 ["PGL-625 CHM"]={Range=10,Blindspot=1,Height=5,Type="Short",Radar="PGL_625"},
 ["HQ-17A CHM"]={Range=15,Blindspot=1.5,Height=10,Type="Short",Radar="HQ17A"},
 ["M903PAC2 CHM"]={Range=120,Blindspot=3,Height=24.5,Type="Long",Radar="MIM104_M903_PAC2"},
 ["M903PAC3 CHM"]={Range=160,Blindspot=1,Height=40,Type="Long",Radar="MIM104_M903_PAC3"},
-["TorM2 CHM"]={Range=12,Blindspot=1,Height=10,Type="Short",Radar="TorM2"},
-["TorM2K CHM"]={Range=12,Blindspot=1,Height=10,Type="Short",Radar="TorM2K"},
-["TorM2M CHM"]={Range=16,Blindspot=1,Height=10,Type="Short",Radar="TorM2M"},
+["TorM2 CHM"]={Range=12,Blindspot=1,Height=10,Type="Point",Radar="TorM2",Point="true"},
+["TorM2K CHM"]={Range=12,Blindspot=1,Height=10,Type="Point",Radar="TorM2K",Point="true"},
+["TorM2M CHM"]={Range=16,Blindspot=1,Height=10,Type="Point",Radar="TorM2M",Point="true"},
 ["NASAMS3-AMRAAMER CHM"]={Range=50,Blindspot=2,Height=35.7,Type="Medium",Radar="CH_NASAMS3_LN_AMRAAM_ER"},
 ["NASAMS3-AIM9X2 CHM"]={Range=20,Blindspot=0.2,Height=18,Type="Short",Radar="CH_NASAMS3_LN_AIM9X2"},
 ["C-RAM CHM"]={Range=2,Blindspot=0,Height=2,Type="Point",Radar="CH_Centurion_C_RAM",Point="true"},
@@ -54539,7 +54542,11 @@ self:T(self.lid.."AddZones")
 self.AcceptZones=AcceptZones or{}
 self.RejectZones=RejectZones or{}
 self.ConflictZones=ConflictZones or{}
-if#self.AcceptZones>0 or#self.RejectZones>0 or#self.ConflictZones>0 then
+self.AcceptZonesNo=UTILS.TableLength(self.AcceptZones)
+self.RejectZonesNo=UTILS.TableLength(self.RejectZones)
+self.ConflictZonesNo=UTILS.TableLength(self.ConflictZones)
+self:T(string.format("AcceptZonesNo = %d | RejectZonesNo = %d | ConflictZonesNo = %d",self.AcceptZonesNo,self.RejectZonesNo,self.ConflictZonesNo))
+if self.AcceptZonesNo>0 or self.RejectZonesNo>0 or self.ConflictZonesNo>0 then
 self.usezones=true
 end
 return self
@@ -54800,7 +54807,8 @@ end
 function MANTIS:_CheckCoordinateInZones(coord)
 self:T(self.lid.."_CheckCoordinateInZones")
 local inzone=false
-if#self.AcceptZones>0 then
+self:T(string.format("AcceptZonesNo = %d | RejectZonesNo = %d | ConflictZonesNo = %d",self.AcceptZonesNo,self.RejectZonesNo,self.ConflictZonesNo))
+if self.AcceptZonesNo>0 then
 for _,_zone in pairs(self.AcceptZones)do
 local zone=_zone
 if zone:IsCoordinateInZone(coord)then
@@ -54810,7 +54818,7 @@ break
 end
 end
 end
-if#self.RejectZones>0 and inzone then
+if self.RejectZonesNo>0 then
 for _,_zone in pairs(self.RejectZones)do
 local zone=_zone
 if zone:IsCoordinateInZone(coord)then
@@ -54820,7 +54828,7 @@ break
 end
 end
 end
-if#self.ConflictZones>0 and not inzone then
+if self.ConflictZonesNo>0 then
 for _,_zone in pairs(self.ConflictZones)do
 local zone=_zone
 if zone:IsCoordinateInZone(coord)then
@@ -54866,6 +54874,7 @@ if not targetdistance then
 targetdistance=samcoordinate:Get2DDistance(coord)
 end
 local zonecheck=true
+self:T("self.usezones = "..tostring(self.usezones))
 if self.usezones then
 zonecheck=self:_CheckCoordinateInZones(coord)
 end
@@ -86299,13 +86308,15 @@ Standard={
 ["en_IN_Standard_B"]='en-IN-Standard-B',
 ["en_IN_Standard_C"]='en-IN-Standard-C',
 ["en_IN_Standard_D"]='en-IN-Standard-D',
-["en_GB_Standard_A"]='en-GB-Standard-N',
-["en_GB_Standard_B"]='en-GB-Standard-O',
-["en_GB_Standard_C"]='en-GB-Standard-N',
-["en_GB_Standard_D"]='en-GB-Standard-O',
-["en_GB_Standard_F"]='en-GB-Standard-N',
-["en_GB_Standard_O"]='en-GB-Standard-O',
+["en_IN_Standard_E"]='en-IN-Standard-E',
+["en_IN_Standard_F"]='en-IN-Standard-F',
+["en_GB_Standard_A"]='en-GB-Standard-A',
+["en_GB_Standard_B"]='en-GB-Standard-B',
+["en_GB_Standard_C"]='en-GB-Standard-C',
+["en_GB_Standard_D"]='en-GB-Standard-D',
+["en_GB_Standard_F"]='en-GB-Standard-F',
 ["en_GB_Standard_N"]='en-GB-Standard-N',
+["en_GB_Standard_O"]='en-GB-Standard-O',
 ["en_US_Standard_A"]='en-US-Standard-A',
 ["en_US_Standard_B"]='en-US-Standard-B',
 ["en_US_Standard_C"]='en-US-Standard-C',
@@ -86323,14 +86334,14 @@ Standard={
 ["fr_FR_Standard_E"]="fr-FR-Standard-F",
 ["fr_FR_Standard_G"]="fr-FR-Standard-G",
 ["fr_FR_Standard_F"]="fr-FR-Standard-F",
-["de_DE_Standard_A"]="de-DE-Standard-G",
-["de_DE_Standard_B"]="de-DE-Standard-H",
-["de_DE_Standard_C"]="de-DE-Standard-G",
-["de_DE_Standard_D"]="de-DE-Standard-H",
-["de_DE_Standard_E"]="de-DE-Standard-H",
-["de_DE_Standard_F"]="de-DE-Standard-G",
-["de_DE_Standard_H"]="de-DE-Standard-H",
-["de_DE_Standard_G"]="de-DE-Standard-G",
+["de_DE_Standard_A"]='de-DE-Standard-A',
+["de_DE_Standard_B"]='de-DE-Standard-B',
+["de_DE_Standard_C"]='de-DE-Standard-C',
+["de_DE_Standard_D"]='de-DE-Standard-D',
+["de_DE_Standard_E"]='de-DE-Standard-E',
+["de_DE_Standard_F"]='de-DE-Standard-F',
+["de_DE_Standard_G"]='de-DE-Standard-G',
+["de_DE_Standard_H"]='de-DE-Standard-H',
 ["es_ES_Standard_A"]="es-ES-Standard-E",
 ["es_ES_Standard_B"]="es-ES-Standard-F",
 ["es_ES_Standard_C"]="es-ES-Standard-E",
@@ -86353,11 +86364,13 @@ Wavenet={
 ["en_IN_Wavenet_B"]='en-IN-Wavenet-B',
 ["en_IN_Wavenet_C"]='en-IN-Wavenet-C',
 ["en_IN_Wavenet_D"]='en-IN-Wavenet-D',
-["en_GB_Wavenet_A"]='en-GB-Wavenet-N',
-["en_GB_Wavenet_B"]='en-GB-Wavenet-O',
-["en_GB_Wavenet_C"]='en-GB-Wavenet-N',
-["en_GB_Wavenet_D"]='en-GB-Wavenet-O',
-["en_GB_Wavenet_F"]='en-GB-Wavenet-N',
+["en_IN_Wavenet_E"]='en-IN-Wavenet-E',
+["en_IN_Wavenet_F"]='en-IN-Wavenet-F',
+["en_GB_Wavenet_A"]='en-GB-Wavenet-A',
+["en_GB_Wavenet_B"]='en-GB-Wavenet-B',
+["en_GB_Wavenet_C"]='en-GB-Wavenet-C',
+["en_GB_Wavenet_D"]='en-GB-Wavenet-D',
+["en_GB_Wavenet_F"]='en-GB-Wavenet-F',
 ["en_GB_Wavenet_O"]='en-GB-Wavenet-O',
 ["en_GB_Wavenet_N"]='en-GB-Wavenet-N',
 ["en_US_Wavenet_A"]='en-US-Wavenet-A',
@@ -86377,14 +86390,14 @@ Wavenet={
 ["fr_FR_Wavenet_E"]="fr-FR-Wavenet-F",
 ["fr_FR_Wavenet_G"]="fr-FR-Wavenet-G",
 ["fr_FR_Wavenet_F"]="fr-FR-Wavenet-F",
-["de_DE_Wavenet_A"]="de-DE-Wavenet-G",
-["de_DE_Wavenet_B"]="de-DE-Wavenet-H",
-["de_DE_Wavenet_C"]="de-DE-Wavenet-G",
-["de_DE_Wavenet_D"]="de-DE-Wavenet-H",
-["de_DE_Wavenet_E"]="de-DE-Wavenet-H",
-["de_DE_Wavenet_F"]="de-DE-Wavenet-G",
-["de_DE_Wavenet_H"]="de-DE-Wavenet-H",
-["de_DE_Wavenet_G"]="de-DE-Wavenet-G",
+["de_DE_Wavenet_A"]='de-DE-Wavenet-A',
+["de_DE_Wavenet_B"]='de-DE-Wavenet-B',
+["de_DE_Wavenet_C"]='de-DE-Wavenet-C',
+["de_DE_Wavenet_D"]='de-DE-Wavenet-D',
+["de_DE_Wavenet_E"]='de-DE-Wavenet-E',
+["de_DE_Wavenet_F"]='de-DE-Wavenet-F',
+["de_DE_Wavenet_G"]='de-DE-Wavenet-G',
+["de_DE_Wavenet_H"]='de-DE-Wavenet-H',
 ["es_ES_Wavenet_B"]="es-ES-Wavenet-E",
 ["es_ES_Wavenet_C"]="es-ES-Wavenet-F",
 ["es_ES_Wavenet_D"]="es-ES-Wavenet-E",
@@ -86397,6 +86410,117 @@ Wavenet={
 ["it_IT_Wavenet_E"]="it-IT-Wavenet-E",
 ["it_IT_Wavenet_F"]="it-IT-Wavenet-F",
 },
+Chirp3HD={
+["en_GB_Chirp3_HD_Aoede"]='en-GB-Chirp3-HD-Aoede',
+["en_GB_Chirp3_HD_Charon"]='en-GB-Chirp3-HD-Charon',
+["en_GB_Chirp3_HD_Fenrir"]='en-GB-Chirp3-HD-Fenrir',
+["en_GB_Chirp3_HD_Kore"]='en-GB-Chirp3-HD-Kore',
+["en_GB_Chirp3_HD_Leda"]='en-GB-Chirp3-HD-Leda',
+["en_GB_Chirp3_HD_Orus"]='en-GB-Chirp3-HD-Orus',
+["en_GB_Chirp3_HD_Puck"]='en-GB-Chirp3-HD-Puck',
+["en_GB_Chirp3_HD_Zephyr"]='en-GB-Chirp3-HD-Zephyr',
+["en_US_Chirp3_HD_Charon"]='en-US-Chirp3-HD-Charon',
+["en_US_Chirp3_HD_Fenrir"]='en-US-Chirp3-HD-Fenrir',
+["en_US_Chirp3_HD_Kore"]='en-US-Chirp3-HD-Kore',
+["en_US_Chirp3_HD_Leda"]='en-US-Chirp3-HD-Leda',
+["en_US_Chirp3_HD_Orus"]='en-US-Chirp3-HD-Orus',
+["en_US_Chirp3_HD_Puck"]='en-US-Chirp3-HD-Puck',
+["de_DE_Chirp3_HD_Aoede"]='de-DE-Chirp3-HD-Aoede',
+["de_DE_Chirp3_HD_Charon"]='de-DE-Chirp3-HD-Charon',
+["de_DE_Chirp3_HD_Fenrir"]='de-DE-Chirp3-HD-Fenrir',
+["de_DE_Chirp3_HD_Kore"]='de-DE-Chirp3-HD-Kore',
+["de_DE_Chirp3_HD_Leda"]='de-DE-Chirp3-HD-Leda',
+["de_DE_Chirp3_HD_Orus"]='de-DE-Chirp3-HD-Orus',
+["de_DE_Chirp3_HD_Puck"]='de-DE-Chirp3-HD-Puck',
+["de_DE_Chirp3_HD_Zephyr"]='de-DE-Chirp3-HD-Zephyr',
+["en_AU_Chirp3_HD_Aoede"]='en-AU-Chirp3-HD-Aoede',
+["en_AU_Chirp3_HD_Charon"]='en-AU-Chirp3-HD-Charon',
+["en_AU_Chirp3_HD_Fenrir"]='en-AU-Chirp3-HD-Fenrir',
+["en_AU_Chirp3_HD_Kore"]='en-AU-Chirp3-HD-Kore',
+["en_AU_Chirp3_HD_Leda"]='en-AU-Chirp3-HD-Leda',
+["en_AU_Chirp3_HD_Orus"]='en-AU-Chirp3-HD-Orus',
+["en_AU_Chirp3_HD_Puck"]='en-AU-Chirp3-HD-Puck',
+["en_AU_Chirp3_HD_Zephyr"]='en-AU-Chirp3-HD-Zephyr',
+["en_IN_Chirp3_HD_Aoede"]='en-IN-Chirp3-HD-Aoede',
+["en_IN_Chirp3_HD_Charon"]='en-IN-Chirp3-HD-Charon',
+["en_IN_Chirp3_HD_Fenrir"]='en-IN-Chirp3-HD-Fenrir',
+["en_IN_Chirp3_HD_Kore"]='en-IN-Chirp3-HD-Kore',
+["en_IN_Chirp3_HD_Leda"]='en-IN-Chirp3-HD-Leda',
+["en_IN_Chirp3_HD_Orus"]='en-IN-Chirp3-HD-Orus',
+},
+ChirpHD={
+["en_US_Chirp_HD_D"]='en-US-Chirp-HD-D',
+["en_US_Chirp_HD_F"]='en-US-Chirp-HD-F',
+["en_US_Chirp_HD_O"]='en-US-Chirp-HD-O',
+["de_DE_Chirp_HD_D"]='de-DE-Chirp-HD-D',
+["de_DE_Chirp_HD_F"]='de-DE-Chirp-HD-F',
+["de_DE_Chirp_HD_O"]='de-DE-Chirp-HD-O',
+["en_AU_Chirp_HD_D"]='en-AU-Chirp-HD-D',
+["en_AU_Chirp_HD_F"]='en-AU-Chirp-HD-F',
+["en_AU_Chirp_HD_O"]='en-AU-Chirp-HD-O',
+["en_IN_Chirp_HD_D"]='en-IN-Chirp-HD-D',
+["en_IN_Chirp_HD_F"]='en-IN-Chirp-HD-F',
+["en_IN_Chirp_HD_O"]='en-IN-Chirp-HD-O',
+},
+},
+Neural2={
+["en_GB_Neural2_A"]='en-GB-Neural2-A',
+["en_GB_Neural2_B"]='en-GB-Neural2-B',
+["en_GB_Neural2_C"]='en-GB-Neural2-C',
+["en_GB_Neural2_D"]='en-GB-Neural2-D',
+["en_GB_Neural2_F"]='en-GB-Neural2-F',
+["en_GB_Neural2_N"]='en-GB-Neural2-N',
+["en_GB_Neural2_O"]='en-GB-Neural2-O',
+["en_US_Neural2_A"]='en-US-Neural2-A',
+["en_US_Neural2_C"]='en-US-Neural2-C',
+["en_US_Neural2_D"]='en-US-Neural2-D',
+["en_US_Neural2_E"]='en-US-Neural2-E',
+["en_US_Neural2_F"]='en-US-Neural2-F',
+["en_US_Neural2_G"]='en-US-Neural2-G',
+["en_US_Neural2_H"]='en-US-Neural2-H',
+["en_US_Neural2_I"]='en-US-Neural2-I',
+["en_US_Neural2_J"]='en-US-Neural2-J',
+["de_DE_Neural2_G"]='de-DE-Neural2-G',
+["de_DE_Neural2_H"]='de-DE-Neural2-H',
+["en_AU_Neural2_A"]='en-AU-Neural2-A',
+["en_AU_Neural2_B"]='en-AU-Neural2-B',
+["en_AU_Neural2_C"]='en-AU-Neural2-C',
+["en_AU_Neural2_D"]='en-AU-Neural2-D',
+["en_IN_Neural2_A"]='en-IN-Neural2-A',
+["en_IN_Neural2_B"]='en-IN-Neural2-B',
+["en_IN_Neural2_C"]='en-IN-Neural2-C',
+["en_IN_Neural2_D"]='en-IN-Neural2-D',
+},
+News={
+["en_GB_News_G"]='en-GB-News-G',
+["en_GB_News_H"]='en-GB-News-H',
+["en_GB_News_I"]='en-GB-News-I',
+["en_GB_News_J"]='en-GB-News-J',
+["en_GB_News_K"]='en-GB-News-K',
+["en_GB_News_L"]='en-GB-News-L',
+["en_GB_News_M"]='en-GB-News-M',
+["en_US_News_K"]='en-US-News-K',
+["en_US_News_L"]='en-US-News-L',
+["en_US_News_N"]='en-US-News-N',
+["en_AU_News_E"]='en-AU-News-E',
+["en_AU_News_F"]='en-AU-News-F',
+["en_AU_News_G"]='en-AU-News-G',
+},
+Casual={
+["en_US_Casual_K"]='en-US-Casual-K',
+},
+Polyglot={
+["en_US_Polyglot_1"]='en-US-Polyglot-1',
+["de_DE_Polyglot_1"]='de-DE-Polyglot-1',
+["en_AU_Polyglot_1"]='en-AU-Polyglot-1',
+},
+Studio={
+["en_GB_Studio_B"]='en-GB-Studio-B',
+["en_GB_Studio_C"]='en-GB-Studio-C',
+["en_US_Studio_O"]='en-US-Studio-O',
+["en_US_Studio_Q"]='en-US-Studio-Q',
+["de_DE_Studio_B"]='de-DE-Studio-B',
+["de_DE_Studio_C"]='de-DE-Studio-C',
 },
 }
 MSRS.Backend={
