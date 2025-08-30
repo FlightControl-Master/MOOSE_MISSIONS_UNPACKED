@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2025-08-14T17:17:34+02:00-b9cf1e46afcee679aa09b480d3451864da72a5e3 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-08-28T19:58:19+02:00-297164a0ee2cd4f93e0a3a76563f2f637348f68a ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -4287,6 +4287,135 @@ local shift_factor=1
 qx=qx+shift_factor*norm_dx
 qy=qy+shift_factor*norm_dy
 return{x=qx,y=qy}
+end
+function UTILS.ValidateAndRepositionGroundUnits(Positions,Anchor,MaxRadius,Spacing)
+local units=Positions
+Anchor=Anchor or UTILS.GetCenterPoint(units)
+local gPos={x=Anchor.x,y=Anchor.z or Anchor.y}
+local maxRadius=0
+local unitCount=0
+for _,unit in pairs(units)do
+local pos={x=unit.x,y=unit.z or unit.y}
+local dist=UTILS.VecDist2D(pos,gPos)
+if dist>maxRadius then
+maxRadius=dist
+end
+unitCount=unitCount+1
+end
+maxRadius=MaxRadius or math.max(maxRadius*2,10)
+local spacing=Spacing or math.max(maxRadius*0.05,5)
+if unitCount>0 and maxRadius>5 then
+local spots=UTILS.GetSimpleZones(UTILS.Vec2toVec3(gPos),maxRadius,spacing,1000)
+if spots and#spots>0 then
+local validSpots={}
+for _,spot in pairs(spots)do
+if land.getSurfaceType(spot)==land.SurfaceType.LAND then
+table.insert(validSpots,spot)
+end
+end
+spots=validSpots
+end
+local step=spacing
+for _,unit in pairs(units)do
+local pos={x=unit.x,y=unit.z or unit.y}
+local isOnLand=land.getSurfaceType(pos)==land.SurfaceType.LAND
+local isValid=false
+if spots and#spots>0 then
+local si=1
+local sid=0
+local closestDist=100000000
+local closestSpot
+for _,spot in pairs(spots)do
+local dist=UTILS.VecDist2D(pos,spot)
+if dist<closestDist then
+closestDist=dist
+closestSpot=spot
+sid=si
+end
+si=si+1
+end
+if closestSpot then
+if closestDist>=spacing then
+pos=closestSpot
+end
+isValid=true
+table.remove(spots,sid)
+end
+end
+if not isValid and not isOnLand then
+local h=UTILS.HdgTo(pos,gPos)
+local retries=0
+while not isValid and retries<500 do
+local dist=UTILS.VecDist2D(pos,gPos)
+pos=UTILS.Vec2Translate(pos,step,h)
+local skip=false
+for _,unit2 in pairs(units)do
+if unit~=unit2 then
+local pos2={x=unit2.x,y=unit2.z or unit2.y}
+local dist2=UTILS.VecDist2D(pos,pos2)
+if dist2<12 then
+isValid=false
+skip=true
+break
+end
+end
+end
+if not skip and dist>step and land.getSurfaceType(pos)==land.SurfaceType.LAND then
+isValid=true
+break
+elseif dist<=step then
+break
+end
+retries=retries+1
+end
+end
+if isValid then
+unit.x=pos.x
+if unit.z then
+unit.z=pos.y
+else
+unit.y=pos.y
+end
+end
+end
+end
+end
+function UTILS.ValidateAndRepositionStatic(Country,Category,Type,Position,ShapeName,MaxRadius)
+local coord=COORDINATE:NewFromVec2(Position)
+local st=SPAWNSTATIC:NewFromType(Type,Category,Country)
+if ShapeName then
+st:InitShape(ShapeName)
+end
+local sName="s-"..timer.getTime().."-"..math.random(1,10000)
+local tempStatic=st:SpawnFromCoordinate(coord,0,sName)
+if tempStatic then
+local sRadius=tempStatic:GetBoundingRadius(2)or 3
+tempStatic:Destroy()
+sRadius=sRadius*0.5
+MaxRadius=MaxRadius or math.max(sRadius*10,100)
+local positions=UTILS.GetSimpleZones(coord:GetVec3(),MaxRadius,sRadius,20)
+if positions and#positions>0 then
+local closestSpot
+local closestDist=math.huge
+for _,spot in pairs(positions)do
+if land.getSurfaceType(spot)==land.SurfaceType.LAND then
+local dist=UTILS.VecDist2D(Position,spot)
+if dist<closestDist then
+closestDist=dist
+closestSpot=spot
+end
+end
+end
+if closestSpot then
+if closestDist>=sRadius then
+return closestSpot
+else
+return Position
+end
+end
+end
+end
+return nil
 end
 PROFILER={
 ClassName="PROFILER",
@@ -19737,6 +19866,12 @@ self.SpawnUnitsWithAbsolutePositions=true
 self.UnitsAbsolutePositions=Positions
 return self
 end
+function SPAWN:InitValidateAndRepositionGroundUnits(OnOff,MaxRadius,Spacing)
+self.SpawnValidateAndRepositionGroundUnits=OnOff
+self.SpawnValidateAndRepositionGroundUnitsRadius=MaxRadius
+self.SpawnValidateAndRepositionGroundUnitsSpacing=Spacing
+return self
+end
 function SPAWN:InitRandomizeTemplate(SpawnTemplatePrefixTable)
 local temptable={}
 for _,_temp in pairs(SpawnTemplatePrefixTable)do
@@ -20105,6 +20240,11 @@ SpawnTemplate.hiddenOnMFD=true
 end
 if self.SpawnHiddenOnMap then
 SpawnTemplate.hidden=self.SpawnHiddenOnMap
+end
+if self.SpawnValidateAndRepositionGroundUnits then
+local units=SpawnTemplate.units
+local gPos={x=SpawnTemplate.x,y=SpawnTemplate.y}
+UTILS.ValidateAndRepositionGroundUnits(units,gPos,self.SpawnValidateAndRepositionGroundUnitsRadius,self.SpawnValidateAndRepositionGroundUnitsSpacing)
 end
 SpawnTemplate.CategoryID=self.SpawnInitCategory or SpawnTemplate.CategoryID
 SpawnTemplate.CountryID=self.SpawnInitCountry or SpawnTemplate.CountryID
@@ -21426,6 +21566,11 @@ self.InitOffsetY=OffsetY or 0
 self.InitOffsetAngle=OffsetAngle or 0
 return self
 end
+function SPAWNSTATIC:InitValidateAndRepositionStatic(OnOff,MaxRadius)
+self.ValidateAndRepositionStatic=OnOff
+self.ValidateAndRepositionStaticMaxRadius=MaxRadius
+return self
+end
 function SPAWNSTATIC:OnSpawnStatic(SpawnCallBackFunction,...)
 self:F("OnSpawnStatic")
 self.SpawnFunctionHook=SpawnCallBackFunction
@@ -21512,6 +21657,13 @@ end
 self.SpawnIndex=self.SpawnIndex+1
 Template.name=self.InitStaticName or string.format("%s#%05d",self.SpawnTemplatePrefix,self.SpawnIndex)
 local Static=nil
+if self.ValidateAndRepositionStatic then
+local validPos=UTILS.ValidateAndRepositionStatic(CountryID,Template.category,Template.type,Template,Template.shape_name,self.ValidateAndRepositionStaticMaxRadius)
+if validPos then
+Template.x=validPos.x
+Template.y=validPos.y
+end
+end
 if self.InitFarp then
 local TemplateGroup={}
 TemplateGroup.units={}
@@ -27794,6 +27946,9 @@ if self.InitRespawnModu then
 Template.modulation=self.InitRespawnModu
 end
 self:Destroy(false)
+if self.ValidateAndRepositionGroundUnits then
+UTILS.ValidateAndRepositionGroundUnits(Template.units)
+end
 self:ScheduleOnce(0.1,_DATABASE.Spawn,_DATABASE,Template)
 self:ResetEvents()
 return self
@@ -28307,6 +28462,9 @@ end
 end
 return isAAA
 end
+function GROUP:SetValidateAndRepositionGroundUnits(Enabled)
+self.ValidateAndRepositionGroundUnits=Enabled
+end
 UNIT={
 ClassName="UNIT",
 UnitName=nil,
@@ -28444,6 +28602,9 @@ i=i+1
 end
 end
 SpawnGroupTemplate.groupId=nil
+if self.ValidateAndRepositionGroundUnits then
+UTILS.ValidateAndRepositionGroundUnits(SpawnGroupTemplate.units)
+end
 _DATABASE:Spawn(SpawnGroupTemplate)
 end
 function UNIT:IsActive()
@@ -29226,6 +29387,9 @@ net.dostring_in("mission",string.format("a_unit_set_life_percentage(%d, %f)",sel
 end
 function UNIT:SetCarrierIlluminationMode(Mode)
 UTILS.SetCarrierIlluminationMode(self:GetID(),Mode)
+end
+function UNIT:SetValidateAndRepositionGroundUnits(Enabled)
+self.ValidateAndRepositionGroundUnits=Enabled
 end
 CLIENT={
 ClassName="CLIENT",
@@ -50813,6 +50977,9 @@ self:I(self.lid..text)
 self:T({DCSdesc=asset.DCSdesc})
 self:T3({Template=asset.template})
 end
+function WAREHOUSE:SetValidateAndRepositionGroundUnits(Enabled)
+self.ValidateAndRepositionGroundUnits=Enabled
+end
 function WAREHOUSE:onafterNewAsset(From,Event,To,asset,assignment)
 self:T(self.lid..string.format("New asset %s id=%d with assignment %s.",tostring(asset.templatename),asset.uid,tostring(assignment)))
 end
@@ -51628,6 +51795,9 @@ template.route.points[1].y=coord.z
 template.x=coord.x
 template.y=coord.z
 template.alt=coord.y
+if self.ValidateAndRepositionGroundUnits then
+UTILS.ValidateAndRepositionGroundUnits(template.units)
+end
 local group=_DATABASE:Spawn(template)
 return group
 end
@@ -56559,8 +56729,12 @@ WASHINGTON="CVN_73",
 TRUMAN="CVN_75",
 STENNIS="Stennis",
 FORRESTAL="Forrestal",
+ENTERPRISE66="USS Enterprise 1966",
+ENTERPRISEMODERN="cvn-65",
 VINSON="VINSON",
 ESSEX="Essex",
+BONHOMMERICHARD="USS Bon Homme Richard",
+ESSEXSCB125="essex_scb125",
 HERMES="HERMES81",
 INVINCIBLE="hms_invincible",
 TARAWA="LHA_Tarawa",
@@ -56697,10 +56871,18 @@ elseif self.carriertype==AIRBOSS.CarrierType.TRUMAN then
 self:_InitNimitz()
 elseif self.carriertype==AIRBOSS.CarrierType.FORRESTAL then
 self:_InitForrestal()
+elseif self.carriertype==AIRBOSS.CarrierType.ENTERPRISE66 then
+self:_InitEnterprise()
+elseif self.carriertype==AIRBOSS.CarrierType.ENTERPRISEMODERN then
+self:_InitEnterprise()
 elseif self.carriertype==AIRBOSS.CarrierType.VINSON then
 self:_InitStennis()
 elseif self.carriertype==AIRBOSS.CarrierType.ESSEX then
 self:_InitEssex()
+elseif self.carriertype==AIRBOSS.CarrierType.BONHOMMERICHARD then
+self:_InitBonHommeRichard()
+elseif self.carriertype==AIRBOSS.CarrierType.ESSEXSCB125 then
+self:_InitEssexSCB125()
 elseif self.carriertype==AIRBOSS.CarrierType.HERMES then
 self:_InitHermes()
 elseif self.carriertype==AIRBOSS.CarrierType.INVINCIBLE then
@@ -57933,6 +58115,17 @@ self.carrierparam.wire3=64
 self.carrierparam.wire4=74
 self.carrierparam.landingdist=self.carrierparam.sterndist+self.carrierparam.wire3
 end
+function AIRBOSS:_InitEnterprise()
+self:_InitForrestal()
+self.carrierparam.sterndist=-164.30
+self.carrierparam.deckheight=19.52
+self.carrierparam.totlength=335
+self.carrierparam.rwylength=223
+self.carrierparam.wire1=57.7
+self.carrierparam.wire2=69.6
+self.carrierparam.wire3=79.5
+self.carrierparam.wire4=90.0
+end
 function AIRBOSS:_InitEssex()
 self:_InitNimitz()
 self.carrierparam.sterndist=-126
@@ -57959,6 +58152,20 @@ self.carrierparam.wire13=113.3
 self.carrierparam.wire14=121.0
 self.carrierparam.wire15=128.5
 self.carrierparam.landingdist=self.carrierparam.sterndist+self.carrierparam.wire3
+end
+function AIRBOSS:_InitBonHommeRichard()
+self:_InitEssex()
+self.carrierparam.deckheight=16.95
+self.carrierparam.rwyangle=-11.4
+self.carrierparam.rwylength=97
+self.carrierparam.rwywidth=20
+self.carrierparam.wire1=40.4
+self.carrierparam.wire2=45
+self.carrierparam.wire3=51
+self.carrierparam.wire4=58.1
+end
+function AIRBOSS:_InitEssexSCB125()
+self:_InitBonHommeRichard()
 end
 function AIRBOSS:_InitHermes()
 self:_InitStennis()
@@ -69008,6 +69215,7 @@ self.enableFixedWing=false
 self.FixedMinAngels=165
 self.FixedMaxAngels=2000
 self.FixedMaxSpeed=77
+self.validateAndRepositionUnits=false
 self.suppressmessages=false
 self.repairtime=300
 self.buildtime=300
@@ -70427,6 +70635,7 @@ local Positions=self:_GetUnitPositions(randomcoord,rad,heading,_template)
 self.DroppedTroops[self.TroopCounter]=SPAWN:NewWithAlias(_template,alias)
 :InitDelayOff()
 :InitSetUnitAbsolutePositions(Positions)
+:InitValidateAndRepositionGroundUnits(self.validateAndRepositionUnits)
 :OnSpawnGroup(function(grp)grp.spawntime=timer.getTime()end)
 :SpawnFromVec2(randomcoord:GetVec2())
 self:__TroopsDeployed(1,Group,Unit,self.DroppedTroops[self.TroopCounter],type)
@@ -70800,11 +71009,13 @@ local alias=string.format("%s-%d",_template,math.random(1,100000))
 if canmove then
 self.DroppedTroops[self.TroopCounter]=SPAWN:NewWithAlias(_template,alias)
 :InitDelayOff()
+:InitValidateAndRepositionGroundUnits(self.validateAndRepositionUnits)
 :OnSpawnGroup(function(grp)grp.spawntime=timer.getTime()end)
 :SpawnFromVec2(randomcoord)
 else
 self.DroppedTroops[self.TroopCounter]=SPAWN:NewWithAlias(_template,alias)
 :InitDelayOff()
+:InitValidateAndRepositionGroundUnits(self.validateAndRepositionUnits)
 :OnSpawnGroup(function(grp)grp.spawntime=timer.getTime()end)
 :SpawnFromVec2(randomcoord)
 end
@@ -71634,6 +71845,7 @@ local Positions=self:_GetUnitPositions(randomcoord,rad,heading,_template)
 self.DroppedTroops[self.TroopCounter]=SPAWN:NewWithAlias(_template,alias)
 :InitDelayOff()
 :InitSetUnitAbsolutePositions(Positions)
+:InitValidateAndRepositionGroundUnits(self.validateAndRepositionUnits)
 :OnSpawnGroup(function(grp)grp.spawntime=timer.getTime()end)
 :SpawnFromVec2(randomcoord:GetVec2())
 self:__TroopsDeployed(1,Group,Unit,self.DroppedTroops[self.TroopCounter],cType)
