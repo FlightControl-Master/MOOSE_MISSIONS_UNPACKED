@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2025-09-18T06:47:01+02:00-5e8676cf8a13aeb3f0f9ecf3b100a79ec9bed494 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-09-26T15:52:30+02:00-5be1832c09a22067372327c26e9315b41564b974 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -9555,10 +9555,9 @@ radius=ZoneRadius,
 }
 }
 local function EvaluateZone(ZoneObject)
-if ZoneObject then
+if ZoneObject and self:IsVec3InZone(ZoneObject:getPoint())then
 local ObjectCategory=Object.getCategory(ZoneObject)
 if(ObjectCategory==Object.Category.UNIT and ZoneObject:isExist()and ZoneObject:isActive())or(ObjectCategory==Object.Category.STATIC and ZoneObject:isExist())then
-local CoalitionDCSUnit=ZoneObject:getCoalition()
 local Include=false
 if not UnitCategories then
 Include=true
@@ -10609,10 +10608,9 @@ radius=ZoneRadius,
 }
 }
 local function EvaluateZone(ZoneObject)
-if ZoneObject then
+if ZoneObject and self:IsVec3InZone(ZoneObject:getPoint())then
 local ObjectCategory=Object.getCategory(ZoneObject)
 if(ObjectCategory==Object.Category.UNIT and ZoneObject:isExist()and ZoneObject:isActive())or(ObjectCategory==Object.Category.STATIC and ZoneObject:isExist())then
-local CoalitionDCSUnit=ZoneObject:getCoalition()
 local Include=false
 if not UnitCategories then
 Include=true
@@ -10631,7 +10629,7 @@ self.ScanData.Coalitions[CoalitionDCSUnit]=true
 self.ScanData.Units[ZoneObject]=ZoneObject
 end
 end
-if ObjectCategory==Object.Category.SCENERY and self:IsVec3InZone(ZoneObject:getPoint())then
+if ObjectCategory==Object.Category.SCENERY then
 local SceneryType=ZoneObject:getTypeName()
 local SceneryName=ZoneObject:getName()
 self.ScanData.Scenery[SceneryType]=self.ScanData.Scenery[SceneryType]or{}
@@ -30293,19 +30291,25 @@ AIRBASE.Afghanistan={
 ["Urgoon_Heliport"]="Urgoon Heliport",
 }
 AIRBASE.Iraq={
-["Baghdad_International_Airport"]="Baghdad International Airport",
-["Sulaimaniyah_International_Airport"]="Sulaimaniyah International Airport",
-["Al_Sahra_Airport"]="Al-Sahra Airport",
-["Erbil_International_Airport"]="Erbil International Airport",
-["Al_Taji_Airport"]="Al-Taji Airport",
 ["Al_Asad_Airbase"]="Al-Asad Airbase",
+["Al_Kut_Airport"]="Al-Kut Airport",
+["Al_Sahra_Airport"]="Al-Sahra Airport",
 ["Al_Salam_Airbase"]="Al-Salam Airbase",
-["Balad_Airbase"]="Balad Airbase",
-["Kirkuk_International_Airport"]="Kirkuk International Airport",
-["Bashur_Airport"]="Bashur Airport",
+["Al_Taji_Airport"]="Al-Taji Airport",
 ["Al_Taquddum_Airport"]="Al-Taquddum Airport",
-["Qayyarah_Airfield_West"]="Qayyarah Airfield West",
+["Baghdad_International_Airport"]="Baghdad International Airport",
+["Balad_Airbase"]="Balad Airbase",
+["Bashur_Airport"]="Bashur Airport",
+["Erbil_International_Airport"]="Erbil International Airport",
+["H2_Airbase"]="H-2 Airbase",
+["H3_Main_Airbase"]="H-3 Main Airbase",
+["H3_Northwest_Airbase"]="H-3 Northwest Airbase",
+["H3_Southwest_Airbase"]="H-3 Southwest Airbase",
 ["K1_Base"]="K1 Base",
+["Kirkuk_International_Airport"]="Kirkuk International Airport",
+["Mosul_International_Airport"]="Mosul International Airport",
+["Qayyarah_Airfield_West"]="Qayyarah Airfield West",
+["Sulaimaniyah_International_Airport"]="Sulaimaniyah International Airport",
 }
 AIRBASE.GermanyCW={
 ["Airracing_Frankfurt"]="Airracing Frankfurt",
@@ -32987,7 +32991,7 @@ self:SetLiquid(lqno,lqam)
 end
 end
 else
-self:E("File for Liquids could not be found: "..tostring(Path).."\\"..tostring(Filename"_Liquids.csv"))
+self:E("File for Liquids could not be found: "..tostring(Path).."\\"..tostring(Filename).."_Liquids.csv")
 end
 end
 if self:IsLimitedAircraft()then
@@ -33005,7 +33009,7 @@ self:SetAmount(acname,acnumber)
 end
 end
 else
-self:E("File for Aircraft could not be found: "..tostring(Path).."\\"..tostring(Filename"_Aircraft.csv"))
+self:E("File for Aircraft could not be found: "..tostring(Path).."\\"..tostring(Filename).."_Aircraft.csv")
 end
 end
 if self:IsLimitedWeapons()then
@@ -33034,7 +33038,7 @@ end
 end
 end
 else
-self:E("File for Weapons could not be found: "..tostring(Path).."\\"..tostring(Filename"_Weapons.csv"))
+self:E("File for Weapons could not be found: "..tostring(Path).."\\"..tostring(Filename).."_Weapons.csv")
 end
 end
 return self
@@ -69135,6 +69139,7 @@ CTLD.UnitTypeCapabilities={
 ["Mi-24V"]={type="Mi-24V",crates=true,troops=true,cratelimit=2,trooplimit=8,length=18,cargoweightlimit=700},
 ["Hercules"]={type="Hercules",crates=true,troops=true,cratelimit=7,trooplimit=64,length=25,cargoweightlimit=19000},
 ["UH-60L"]={type="UH-60L",crates=true,troops=true,cratelimit=2,trooplimit=20,length=16,cargoweightlimit=3500},
+["UH-60L_DAP"]={type="UH-60L_DAP",crates=false,troops=true,cratelimit=0,trooplimit=2,length=16,cargoweightlimit=500},
 ["MH-60R"]={type="MH-60R",crates=true,troops=true,cratelimit=2,trooplimit=20,length=16,cargoweightlimit=3500},
 ["SH-60B"]={type="SH-60B",crates=true,troops=true,cratelimit=2,trooplimit=20,length=16,cargoweightlimit=3500},
 ["AH-64D_BLK_II"]={type="AH-64D_BLK_II",crates=false,troops=true,cratelimit=0,trooplimit=2,length=17,cargoweightlimit=200},
@@ -69150,7 +69155,7 @@ CTLD.FixedWingTypes={
 ["Bronco"]="Bronco",
 ["Mosquito"]="Mosquito",
 }
-CTLD.version="1.3.37"
+CTLD.version="1.3.38"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -70356,6 +70361,7 @@ self:_UpdateUnitCargoMass(Unit)
 self:_RefreshDropCratesMenu(Group,Unit)
 self:_RefreshLoadCratesMenu(Group,Unit)
 self:_CleanupTrackedCrates(crateidsloaded)
+self:__CratesPickedUp(1,Group,Unit,loaded.Cargo)
 end
 end
 return self
@@ -74213,6 +74219,7 @@ CSAR.AircraftType["Mi-24P"]=8
 CSAR.AircraftType["Mi-24V"]=8
 CSAR.AircraftType["Bell-47"]=2
 CSAR.AircraftType["UH-60L"]=10
+CSAR.AircraftType["UH-60L_DAP"]=2
 CSAR.AircraftType["AH-64D_BLK_II"]=2
 CSAR.AircraftType["Bronco-OV-10A"]=2
 CSAR.AircraftType["MH-60R"]=10
