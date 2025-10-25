@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2025-10-13T18:51:22+02:00-f7d58a0b76b0e1e1b3f183eb3ecd9eb38f5d1495 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-10-24T16:27:17+02:00-86798ae9ea7dc803059feb3f367cfedaf0fe1131 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -3887,7 +3887,55 @@ end
 UTILS.lcg.seed=(UTILS.lcg.a*UTILS.lcg.seed+UTILS.lcg.c)%UTILS.lcg.m
 return UTILS.lcg.seed/UTILS.lcg.m
 end
-function UTILS.SpawnFARPAndFunctionalStatics(Name,Coordinate,FARPType,Coalition,Country,CallSign,Frequency,Modulation,ADF,SpawnRadius,VehicleTemplate,Liquids,Equipment,Airframes,F10Text,DynamicSpawns,HotStart)
+function UTILS.GenerateGridPoints(startVec2,n,spacingX,spacingY)
+local points={}
+local gridSize=math.ceil(math.sqrt(n))
+local count=0
+local n=n or 1
+local spacingX=spacingX or 100
+local spacingY=spacingY or 100
+local startX=startVec2.x or 100
+local startY=startVec2.y or 100
+for row=0,gridSize-1 do
+for col=0,gridSize-1 do
+if count>=n then
+break
+end
+local point={
+x=startX+(col*spacingX),
+y=startY+(row*spacingY)
+}
+table.insert(points,point)
+count=count+1
+end
+if count>=n then
+break
+end
+end
+return points
+end
+function UTILS.SpawnFARPAndFunctionalStatics(Name,Coordinate,FARPType,Coalition,Country,CallSign,Frequency,Modulation,ADF,SpawnRadius,VehicleTemplate,Liquids,Equipment,Airframes,F10Text,DynamicSpawns,HotStart,NumberPads,SpacingX,SpacingY)
+local function PopulateStorage(Name,liquids,equip,airframes)
+local newWH=STORAGE:New(Name)
+if liquids and liquids>0 then
+newWH:SetLiquid(STORAGE.Liquid.DIESEL,liquids)
+newWH:SetLiquid(STORAGE.Liquid.GASOLINE,liquids)
+newWH:SetLiquid(STORAGE.Liquid.JETFUEL,liquids)
+newWH:SetLiquid(STORAGE.Liquid.MW50,liquids)
+end
+if equip and equip>0 then
+for cat,nitem in pairs(ENUMS.Storage.weapons)do
+for name,item in pairs(nitem)do
+newWH:SetItem(item,equip)
+end
+end
+end
+if airframes and airframes>0 then
+for typename in pairs(CSAR.AircraftType)do
+newWH:SetItem(typename,airframes)
+end
+end
+end
 local farplocation=Coordinate
 local farptype=FARPType or ENUMS.FARPType.FARP
 local Coalition=Coalition or coalition.side.BLUE
@@ -3905,11 +3953,29 @@ local STypeName=statictypes.TypeName
 local SShapeName=statictypes.ShapeName
 local Country=Country or(Coalition==coalition.side.BLUE and country.id.USA or country.id.RUSSIA)
 local ReturnObjects={}
+local NumberPads=NumberPads or 1
+local SpacingX=SpacingX or 100
+local SpacingY=SpacingY or 100
+local FarpVec2=Coordinate:GetVec2()
+if NumberPads>1 then
+local Grid=UTILS.GenerateGridPoints(FarpVec2,NumberPads,SpacingX,SpacingY)
+for id,gridpoint in ipairs(Grid)do
+local location=COORDINATE:NewFromVec2(gridpoint)
+local newfarp=SPAWNSTATIC:NewFromType(STypeName,"Heliports",Country)
+newfarp:InitShape(SShapeName)
+newfarp:InitFARP(callsign,freq,mod,DynamicSpawns,HotStart)
+local spawnedfarp=newfarp:SpawnFromCoordinate(location,0,Name.."-"..id)
+table.insert(ReturnObjects,spawnedfarp)
+PopulateStorage(Name.."-"..id,liquids,equip,airframes)
+end
+else
 local newfarp=SPAWNSTATIC:NewFromType(STypeName,"Heliports",Country)
 newfarp:InitShape(SShapeName)
 newfarp:InitFARP(callsign,freq,mod,DynamicSpawns,HotStart)
 local spawnedfarp=newfarp:SpawnFromCoordinate(farplocation,0,Name)
 table.insert(ReturnObjects,spawnedfarp)
+PopulateStorage(Name,liquids,equip,airframes)
+end
 local FARPStaticObjectsNato={
 ["FUEL"]={TypeName="FARP Fuel Depot",ShapeName="GSM Rus",Category="Fortifications"},
 ["AMMO"]={TypeName="FARP Ammo Dump Coating",ShapeName="SetkaKP",Category="Fortifications"},
@@ -3937,25 +4003,6 @@ vehicles:InitCoalition(Coalition)
 vehicles:InitDelayOff()
 local spawnedvehicle=vehicles:SpawnFromCoordinate(vcoordinate)
 table.insert(ReturnObjects,spawnedvehicle)
-end
-local newWH=STORAGE:New(Name)
-if liquids and liquids>0 then
-newWH:SetLiquid(STORAGE.Liquid.DIESEL,liquids)
-newWH:SetLiquid(STORAGE.Liquid.GASOLINE,liquids)
-newWH:SetLiquid(STORAGE.Liquid.JETFUEL,liquids)
-newWH:SetLiquid(STORAGE.Liquid.MW50,liquids)
-end
-if equip and equip>0 then
-for cat,nitem in pairs(ENUMS.Storage.weapons)do
-for name,item in pairs(nitem)do
-newWH:SetItem(item,equip)
-end
-end
-end
-if airframes and airframes>0 then
-for typename in pairs(CSAR.AircraftType)do
-newWH:SetItem(typename,airframes)
-end
 end
 local ADFName
 if ADF and type(ADF)=="number"then
@@ -62129,7 +62176,7 @@ theta=math.asin(vdeck*math.sin(alpha)/vwind)
 v=vdeck*math.cos(alpha)-vwind*math.cos(theta)
 end
 local magvar=magnetic and self.magvar or 0
-local intowind=self:GetHeadingIntoWind_old(vdeck)
+local intowind=self:GetHeadingIntoWind_old(vdeck,magnetic)
 return intowind,v
 end
 function AIRBOSS:GetBRCintoWind(vdeck)
@@ -68806,6 +68853,7 @@ if type(Location)=="string"then
 Location=ZONE:New(Location)
 end
 self.Location=Location
+self.NoMoveToZone=false
 return self
 end
 function CTLD_CARGO:SetStaticTypeAndShape(Category,TypeName,ShapeName)
@@ -71356,7 +71404,8 @@ subcatmenus[catName]=MENU_GROUP:New(_group,catName,cratesmenu)
 end
 for _,cargoObj in pairs(self.Cargo_Crates)do
 if not cargoObj.DontShowInMenu then
-local txt=string.format("Crate %s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+local needed=cargoObj:GetCratesNeeded()or 1
+local txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
 if cargoObj.Location then txt=txt.."[R]"end
 local stock=cargoObj:GetStock()
 if stock>=0 and self.showstockinmenuitems then txt=txt.."["..stock.."]"end
@@ -71367,7 +71416,8 @@ end
 end
 for _,cargoObj in pairs(self.Cargo_Statics)do
 if not cargoObj.DontShowInMenu then
-local txt=string.format("Crate %s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+local needed=cargoObj:GetCratesNeeded()or 1
+local txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
 if cargoObj.Location then txt=txt.."[R]"end
 local stock=cargoObj:GetStock()
 if stock>=0 and self.showstockinmenuitems then txt=txt.."["..stock.."]"end
@@ -71379,7 +71429,8 @@ end
 else
 for _,cargoObj in pairs(self.Cargo_Crates)do
 if not cargoObj.DontShowInMenu then
-local txt=string.format("Crate %s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+local needed=cargoObj:GetCratesNeeded()or 1
+local txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
 if cargoObj.Location then txt=txt.."[R]"end
 local stock=cargoObj:GetStock()
 if stock>=0 and self.showstockinmenuitems then txt=txt.."["..stock.."]"end
@@ -71390,7 +71441,8 @@ end
 end
 for _,cargoObj in pairs(self.Cargo_Statics)do
 if not cargoObj.DontShowInMenu then
-local txt=string.format("Crate %s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+local needed=cargoObj:GetCratesNeeded()or 1
+local txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
 if cargoObj.Location then txt=txt.."[R]"end
 local stock=cargoObj:GetStock()
 if stock>=0 and self.showstockinmenuitems then txt=txt.."["..stock.."]"end
@@ -71408,7 +71460,8 @@ subcatmenus[catName]=MENU_GROUP:New(_group,catName,cratesmenu)
 end
 for _,cargoObj in pairs(self.Cargo_Crates)do
 if not cargoObj.DontShowInMenu then
-local txt=string.format("Crate %s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+local needed=cargoObj:GetCratesNeeded()or 1
+local txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
 if cargoObj.Location then txt=txt.."[R]"end
 local stock=cargoObj:GetStock()
 if stock>=0 and self.showstockinmenuitems then txt=txt.."["..stock.."]"end
@@ -71417,7 +71470,8 @@ end
 end
 for _,cargoObj in pairs(self.Cargo_Statics)do
 if not cargoObj.DontShowInMenu then
-local txt=string.format("Crate %s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+local needed=cargoObj:GetCratesNeeded()or 1
+local txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
 if cargoObj.Location then txt=txt.."[R]"end
 local stock=cargoObj:GetStock()
 if stock>=0 and self.showstockinmenuitems then txt=txt.."["..stock.."]"end
@@ -71427,7 +71481,8 @@ end
 else
 for _,cargoObj in pairs(self.Cargo_Crates)do
 if not cargoObj.DontShowInMenu then
-local txt=string.format("Crate %s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+local needed=cargoObj:GetCratesNeeded()or 1
+local txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
 if cargoObj.Location then txt=txt.."[R]"end
 local stock=cargoObj:GetStock()
 if stock>=0 and self.showstockinmenuitems then txt=txt.."["..stock.."]"end
@@ -71436,7 +71491,8 @@ end
 end
 for _,cargoObj in pairs(self.Cargo_Statics)do
 if not cargoObj.DontShowInMenu then
-local txt=string.format("Crate %s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+local needed=cargoObj:GetCratesNeeded()or 1
+local txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
 if cargoObj.Location then txt=txt.."[R]"end
 local stock=cargoObj:GetStock()
 if stock>=0 and self.showstockinmenuitems then txt=txt.."["..stock.."]"end
@@ -72086,6 +72142,34 @@ if TypeName then
 cargo:SetStaticTypeAndShape(Category,TypeName,ShapeName)
 end
 table.insert(self.Cargo_Crates,cargo)
+if SubCategory and self.usesubcats~=true then self.usesubcats=true end
+return self
+end
+function CTLD:AddCratesCargoNoMove(Name,Templates,Type,NoCrates,PerCrateMass,Stock,SubCategory,DontShowInMenu,Location,UnitTypes,Category,TypeName,ShapeName)
+self:T(self.lid.." AddCratesCargoNoMove")
+if not self:_CheckTemplates(Templates)then
+self:E(self.lid.."Crates Cargo for "..Name.." has missing template(s)!")
+return self
+end
+self.CargoCounter=self.CargoCounter+1
+local cargo=CTLD_CARGO:New(self.CargoCounter,Name,Templates,Type,false,false,NoCrates,nil,nil,PerCrateMass,Stock,SubCategory,DontShowInMenu,Location)
+cargo.NoMoveToZone=true
+if UnitTypes then
+cargo:AddUnitTypeName(UnitTypes)
+end
+cargo:SetStaticTypeAndShape("Cargos",self.basetype)
+if TypeName then
+cargo:SetStaticTypeAndShape(Category,TypeName,ShapeName)
+end
+table.insert(self.Cargo_Crates,cargo)
+self.templateToCargoName=self.templateToCargoName or{}
+if type(Templates)=="table"then
+for _,t in pairs(Templates)do self.templateToCargoName[t]=Name end
+else
+self.templateToCargoName[Templates]=Name
+end
+self.nomovetozone_names=self.nomovetozone_names or{}
+self.nomovetozone_names[Name]=true
 if SubCategory and self.usesubcats~=true then self.usesubcats=true end
 return self
 end
@@ -73553,8 +73637,11 @@ return self
 end
 function CTLD:onafterCratesBuild(From,Event,To,Group,Unit,Vehicle)
 self:T({From,Event,To})
-if self.movetroopstowpzone then
+if self.movetroopstowpzone and Vehicle then
+local cg=self:GetGenericCargoObjectFromGroupName(Vehicle:GetName())
+if not(cg and(cg.NoMoveToZone or(self.nomovetozone_names and self.nomovetozone_names[cg:GetName()])))then
 self:_MoveGroupToZone(Vehicle)
+end
 end
 return self
 end
