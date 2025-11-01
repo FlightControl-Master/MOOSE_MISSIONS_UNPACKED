@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2025-10-24T16:27:17+02:00-86798ae9ea7dc803059feb3f367cfedaf0fe1131 ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-10-31T06:28:04+01:00-2047e818efb46a9d47b5ab5b960efd58ac18044e ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -3959,15 +3959,48 @@ local SpacingY=SpacingY or 100
 local FarpVec2=Coordinate:GetVec2()
 if NumberPads>1 then
 local Grid=UTILS.GenerateGridPoints(FarpVec2,NumberPads,SpacingX,SpacingY)
+local groupData={
+["visible"]=true,
+["hidden"]=false,
+["units"]={},
+["y"]=0,
+["x"]=0,
+["name"]=Name,
+}
+local unitData={
+["category"]="Heliports",
+["type"]=STypeName,
+["y"]=0,
+["x"]=0,
+["name"]=Name,
+["heading"]=0,
+["heliport_modulation"]=mod,
+["heliport_frequency"]=freq,
+["heliport_callsign_id"]=callsign,
+["dead"]=false,
+["shape_name"]=SShapeName,
+["dynamicSpawn"]=DynamicSpawns,
+["allowHotStart"]=HotStart,
+}
 for id,gridpoint in ipairs(Grid)do
-local location=COORDINATE:NewFromVec2(gridpoint)
-local newfarp=SPAWNSTATIC:NewFromType(STypeName,"Heliports",Country)
-newfarp:InitShape(SShapeName)
-newfarp:InitFARP(callsign,freq,mod,DynamicSpawns,HotStart)
-local spawnedfarp=newfarp:SpawnFromCoordinate(location,0,Name.."-"..id)
-table.insert(ReturnObjects,spawnedfarp)
-PopulateStorage(Name.."-"..id,liquids,equip,airframes)
+local UnitTemplate=UTILS.DeepCopy(unitData)
+UnitTemplate.x=gridpoint.x
+UnitTemplate.y=gridpoint.y
+if id>1 then UnitTemplate.name=Name.."-"..id end
+table.insert(groupData.units,UnitTemplate)
+if id==1 then
+groupData.x=gridpoint.x
+groupData.y=gridpoint.y
 end
+end
+local Static=coalition.addGroup(Country,-1,groupData)
+local Event={
+id=EVENTS.Birth,
+time=timer.getTime(),
+initiator=Static
+}
+world.onEvent(Event)
+PopulateStorage(Name.."-1",liquids,equip,airframes)
 else
 local newfarp=SPAWNSTATIC:NewFromType(STypeName,"Heliports",Country)
 newfarp:InitShape(SShapeName)
@@ -14751,8 +14784,7 @@ end
 return self
 end
 function SET_CLIENT:HandleCASlots()
-self:HandleEvent(EVENTS.PlayerEnterUnit,SET_CLIENT._EventPlayerEnterUnit)
-self:HandleEvent(EVENTS.PlayerLeaveUnit,SET_CLIENT._EventPlayerLeaveUnit)
+self:HandleEvent(EVENTS.PlayerEnterUnit,self._EventPlayerEnterUnit)
 self:FilterFunction(function(client)if client and client:IsAlive()and client:IsGround()then return true else return false end end)
 return self
 end
@@ -17719,6 +17751,7 @@ local AirbaseCategory=airbase:GetAirbaseCategory()
 if AirbaseCategory==Airbase.Category.SHIP or AirbaseCategory==Airbase.Category.HELIPAD then
 RoutePoint.linkUnit=AirbaseID
 RoutePoint.helipadId=AirbaseID
+RoutePoint.airdromeId=airbase:IsAirdrome()and AirbaseID or nil
 elseif AirbaseCategory==Airbase.Category.AIRDROME then
 RoutePoint.airdromeId=AirbaseID
 else
@@ -23524,6 +23557,7 @@ POSITIONABLE.CargoBayCapacityValues={
 ["HL_DSHK"]=6*POSITIONABLE.DefaultInfantryWeight,
 ["CCKW_353"]=16*POSITIONABLE.DefaultInfantryWeight,
 ["MaxxPro_MRAP"]=7*POSITIONABLE.DefaultInfantryWeight,
+["Sd_Kfz_251"]=10*POSITIONABLE.DefaultInfantryWeight,
 }
 }
 function POSITIONABLE:SetCargoBayWeightLimit(WeightLimit)
@@ -34904,8 +34938,8 @@ self:SetScoringMenu(PlayerUnit:GetGroup())
 end
 end)
 self.AutoSavePath=SavePath
-self.AutoSave=AutoSave or true
-if self.AutoSave==true then
+self.AutoSave=(AutoSave==nil or AutoSave==true)and true or false
+if self.AutoSavePath and self.AutoSave==true then
 self:OpenCSV(GameName)
 end
 return self
@@ -62176,7 +62210,7 @@ theta=math.asin(vdeck*math.sin(alpha)/vwind)
 v=vdeck*math.cos(alpha)-vwind*math.cos(theta)
 end
 local magvar=magnetic and self.magvar or 0
-local intowind=self:GetHeadingIntoWind_old(vdeck,magnetic)
+local intowind=(540+(windto-magvar+math.deg(theta)))%360
 return intowind,v
 end
 function AIRBOSS:GetBRCintoWind(vdeck)
@@ -62382,6 +62416,7 @@ local N=nXX+nIM+nIC+nAR+nIW
 local nL=count(G,'_')/2
 local nS=count(G,'%(')
 local nN=N-nS-nL
+if TIG=="_OK_"then nL=nL-1 end
 local Tgroove=playerData.Tgroove
 local TgrooveUnicorn=Tgroove and(Tgroove>=16.49 and Tgroove<=16.59)or false
 local TgrooveVstolUnicorn=Tgroove and(Tgroove>=60.0 and Tgroove<=65.0)and playerData.actype==AIRBOSS.AircraftCarrier.AV8B or false
