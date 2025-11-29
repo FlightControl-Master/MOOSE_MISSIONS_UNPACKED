@@ -1,4 +1,4 @@
-env.info('*** MOOSE GITHUB Commit Hash ID: 2025-11-15T16:48:05+01:00-26fbae8672e3e7959f55e44e01f014873b7f964d ***')
+env.info('*** MOOSE GITHUB Commit Hash ID: 2025-11-28T12:48:26+01:00-30c693791020eb78336529acc14580f968efe395 ***')
 if not MOOSE_DEVELOPMENT_FOLDER then
 MOOSE_DEVELOPMENT_FOLDER='Scripts'
 end
@@ -403,7 +403,8 @@ Tornado="Tornado",
 Atlas="A400",
 Lancer="B1-B",
 Stratofortress="B-52H",
-Hercules="C-130",
+Herc="C-130",
+Hercules="C-130J-30",
 Super_Hercules="Hercules",
 Globemaster="C-17",
 Greyhound="C-2A",
@@ -3092,6 +3093,18 @@ if string.find(type_name,"SA342")and(unit:getDrawArgumentValue(34)==1)then
 BASE:T(unit_name.." front door(s) are open or doors removed")
 return true
 end
+if type_name=="C-130J-30"and(unit:getDrawArgumentValue(86)==1)then
+BASE:T(unit_name.." rear doors are open")
+return true
+end
+if type_name=="C-130J-30"and(unit:getDrawArgumentValue(87)==1)then
+BASE:T(unit_name.." Side door(s) are open")
+return true
+end
+if type_name=="C-130J-30"and(unit:getDrawArgumentValue(88)==1)then
+BASE:T(unit_name.." Paratroop door(s) are open")
+return true
+end
 if string.find(type_name,"Hercules")and(unit:getDrawArgumentValue(1215)==1 and unit:getDrawArgumentValue(1216)==1)then
 BASE:T(unit_name.." rear doors are open")
 return true
@@ -3768,6 +3781,16 @@ elseif Heading>=292 and Heading<=338 then return"North-West"
 elseif Heading>=339 then return"North"
 end
 end
+function UTILS.AdjustHeading360(Heading)
+while Heading>=360 or Heading<0 do
+if Heading>=360 then
+Heading=Heading-360
+elseif Heading<0 then
+Heading=Heading+360
+end
+end
+return Heading
+end
 function UTILS.ToStringBRAANATO(FromGrp,ToGrp)
 local BRAANATO="Merged."
 local GroupNumber=ToGrp:GetSize()
@@ -4355,6 +4378,7 @@ end
 function UTILS.SpawnFARPAndFunctionalStatics(Name,Coordinate,FARPType,Coalition,Country,CallSign,Frequency,Modulation,ADF,SpawnRadius,VehicleTemplate,Liquids,Equipment,Airframes,F10Text,DynamicSpawns,HotStart,NumberPads,SpacingX,SpacingY)
 local function PopulateStorage(Name,liquids,equip,airframes)
 local newWH=STORAGE:New(Name)
+if newWH then
 if liquids and liquids>0 then
 newWH:SetLiquid(STORAGE.Liquid.DIESEL,liquids)
 newWH:SetLiquid(STORAGE.Liquid.GASOLINE,liquids)
@@ -4371,6 +4395,7 @@ end
 if airframes and airframes>0 then
 for typename in pairs(CSAR.AircraftType)do
 newWH:SetItem(typename,airframes)
+end
 end
 end
 end
@@ -4438,15 +4463,14 @@ time=timer.getTime(),
 initiator=Static
 }
 world.onEvent(Event)
-PopulateStorage(Name.."-1",liquids,equip,airframes)
 else
 local newfarp=SPAWNSTATIC:NewFromType(STypeName,"Heliports",Country)
 newfarp:InitShape(SShapeName)
 newfarp:InitFARP(callsign,freq,mod,DynamicSpawns,HotStart)
 local spawnedfarp=newfarp:SpawnFromCoordinate(farplocation,0,Name)
 table.insert(ReturnObjects,spawnedfarp)
-PopulateStorage(Name,liquids,equip,airframes)
 end
+PopulateStorage(Name,liquids,equip,airframes)
 local FARPStaticObjectsNato={
 ["FUEL"]={TypeName="FARP Fuel Depot",ShapeName="GSM Rus",Category="Fortifications"},
 ["AMMO"]={TypeName="FARP Ammo Dump Coating",ShapeName="SetkaKP",Category="Fortifications"},
@@ -4961,6 +4985,89 @@ end
 end
 end
 return nil
+end
+function UTILS.CreateAirbaseEnum()
+local function _savefile(filename,data)
+local file=lfs.writedir()..filename
+local f=io.open(file,"wb")
+if f then
+f:write(data)
+f:close()
+env.info(string.format("Saving to file %s",tostring(file)))
+else
+env.info(string.format("ERROR: Could not save results to file %s",tostring(file)))
+end
+end
+local airbases=world.getAirbases()
+local mapname=env.mission.theatre
+local myab={}
+for i,_airbase in pairs(airbases)do
+local airbase=_airbase
+local cat=airbase:getDesc().category
+if cat==Airbase.Category.AIRDROME then
+local name=airbase:getName()
+local key=name
+if name=="Airracing Lubeck"then
+key="Airracing_Luebeck"
+elseif name=="Bad Durkheim"then
+key="Bad_Duerkheim"
+elseif name=="Buchel"then
+key="Buechel"
+elseif name=="Buckeburg"then
+key="Bueckeburg"
+elseif name=="Dusseldorf"then
+key="Duesseldorf"
+elseif name=="Gutersloh"then
+key="Guetersloh"
+elseif name=="Kothen"then
+key="Koethen"
+elseif name=="Larz"then
+key="Laerz"
+elseif name=="Lubeck"then
+key="Luebeck"
+elseif name=="Luneburg"then
+key="Lueneburg"
+elseif name=="Norvenich"then
+key="Noervenich"
+elseif name=="Ober-Morlen"then
+key="Ober_Moerlen"
+elseif name=="Peenemunde"then
+key="Peenemuende"
+elseif name=="Pottschutthohe"then
+key="Pottschutthoehe"
+elseif name=="Schonefeld"then
+key="Schoenefeld"
+elseif name=="Weser Wumme"then
+key="Weser_Wuemme"
+elseif name=="Zollschen"then
+key="Zoellschen"
+elseif name=="Zweibrucken"then
+key="Zweibruecken"
+end
+key=key:gsub(" ","_")
+key=key:gsub("-","_")
+key=key:gsub("'","_")
+key=UTILS.ReplaceIllegalCharacters(key,"_")
+local entry={}
+entry.key=key
+entry.name=name
+table.insert(myab,entry)
+end
+end
+table.sort(myab,function(a,b)return a.name<b.name end)
+local text=string.format("\n--- Airbases of the %s map",mapname)
+text=text.."\n--"
+for _,ab in pairs(myab)do
+text=text..string.format("\n-- * `AIRBASE.%s.%s` %s",mapname,ab.key,ab.name)
+end
+text=text.."\n--"
+text=text..string.format("\n-- @field %s",mapname)
+text=text..string.format("\nAIRBASE.%s = {",mapname)
+for _,ab in pairs(myab)do
+text=text..string.format('\n\t["%s"] = "%s",',ab.key,ab.name)
+end
+text=text.."\n}"
+_savefile(string.format("%s-enums.txt",env.mission.theatre),text)
 end
 PROFILER={
 ClassName="PROFILER",
@@ -8248,7 +8355,7 @@ end
 end
 elseif Event.TgtObjectCategory==Object.Category.SCENERY then
 Event.TgtDCSUnit=Event.target
-Event.TgtDCSUnitName=Event.TgtDCSUnit.getName and Event.TgtDCSUnit.getName()or nil
+Event.TgtDCSUnitName=Event.TgtDCSUnit.getName and Event.TgtDCSUnit:getName()or nil
 if Event.TgtDCSUnitName~=nil then
 Event.TgtUnitName=Event.TgtDCSUnitName
 Event.TgtUnit=SCENERY:Register(Event.TgtDCSUnitName,Event.target)
@@ -10090,7 +10197,7 @@ self.ScanData.Coalitions={}
 self.ScanData.Scenery={}
 self.ScanData.SceneryTable={}
 self.ScanData.Units={}
-local ZoneCoord=self:GetCoordinate()
+local ZoneCoord=self:GetCoordinate():SetAlt()
 local ZoneRadius=self:GetRadius()
 local SphereSearch={
 id=world.VolumeType.SPHERE,
@@ -13337,7 +13444,8 @@ return true
 end
 function SET_BASE:IsInSet(Object)
 local outcome=false
-local name=Object:GetName()
+if Object==nil then return false end
+local name=(Object~=nil and Object.GetName)and Object:GetName()or"none"
 self:ForEach(
 function(object)
 if object:GetName()==name then
@@ -20604,6 +20712,9 @@ SpawnTemplate.units[UnitID].y=SpawnTemplate.units[UnitID].y+(RandomVec2.y-Curren
 end
 end
 if self.SpawnRandomizeUnits then
+if self.SpawnRandomizePosition then
+PointVec3=COORDINATE:New(SpawnTemplate.x,SpawnTemplate.route.points[1].alt,SpawnTemplate.y)
+end
 for UnitID=1,#SpawnTemplate.units do
 local RandomVec2=PointVec3:GetRandomVec2InRadius(self.SpawnOuterRadius,self.SpawnInnerRadius)
 if(SpawnZone)then
@@ -30500,6 +30611,7 @@ AIRBASE.Nevada={
 }
 AIRBASE.Normandy={
 ["Abbeville_Drucat"]="Abbeville Drucat",
+["Alderney"]="Alderney",
 ["Amiens_Glisy"]="Amiens-Glisy",
 ["Argentan"]="Argentan",
 ["Avranches_Le_Val_Saint_Pere"]="Avranches Le Val-Saint-Pere",
@@ -30508,6 +30620,7 @@ AIRBASE.Normandy={
 ["Bazenville"]="Bazenville",
 ["Beaumont_le_Roger"]="Beaumont-le-Roger",
 ["Beauvais_Tille"]="Beauvais-Tille",
+["Bembridg"]="Bembridg",
 ["Beny_sur_Mer"]="Beny-sur-Mer",
 ["Bernay_Saint_Martin"]="Bernay Saint Martin",
 ["Beuzeville"]="Beuzeville",
@@ -30530,6 +30643,7 @@ AIRBASE.Normandy={
 ["Deux_Jumeaux"]="Deux Jumeaux",
 ["Dinan_Trelivan"]="Dinan-Trelivan",
 ["Dunkirk_Mardyck"]="Dunkirk-Mardyck",
+["Eastchurch"]="Eastchurch",
 ["Essay"]="Essay",
 ["Evreux"]="Evreux",
 ["Farnborough"]="Farnborough",
@@ -30540,12 +30654,18 @@ AIRBASE.Normandy={
 ["Funtington"]="Funtington",
 ["Goulet"]="Goulet",
 ["Gravesend"]="Gravesend",
+["Guernsey"]="Guernsey",
 ["Guyancourt"]="Guyancourt",
 ["Hauterive"]="Hauterive",
+["Hawkinge"]="Hawkinge",
+["Headcorn"]="Headcorn",
 ["Heathrow"]="Heathrow",
 ["High_Halden"]="High Halden",
+["Holmsley_South"]="Holmsley South",
+["Jersey"]="Jersey",
 ["Kenley"]="Kenley",
 ["Lantheuil"]="Lantheuil",
+["Lashenden"]="Lashenden",
 ["Le_Molay"]="Le Molay",
 ["Lessay"]="Lessay",
 ["Lignerolles"]="Lignerolles",
@@ -30558,6 +30678,7 @@ AIRBASE.Normandy={
 ["Meautis"]="Meautis",
 ["Merville_Calonne"]="Merville Calonne",
 ["Needs_Oar_Point"]="Needs Oar Point",
+["Northolt"]="Northolt",
 ["Odiham"]="Odiham",
 ["Orly"]="Orly",
 ["Picauville"]="Picauville",
@@ -30565,10 +30686,11 @@ AIRBASE.Normandy={
 ["Ronai"]="Ronai",
 ["Rouen_Boos"]="Rouen-Boos",
 ["Rucqueville"]="Rucqueville",
+["Saint_Pierre_du_Mont"]="Saint Pierre du Mont",
 ["Saint_Andre_de_lEure"]="Saint-Andre-de-lEure",
 ["Saint_Aubin"]="Saint-Aubin",
 ["Saint_Omer_Wizernes"]="Saint-Omer Wizernes",
-["Saint_Pierre_du_Mont"]="Saint Pierre du Mont",
+["Saint_Pol_Bryas"]="Saint-Pol-Bryas",
 ["Sainte_Croix_sur_Mer"]="Sainte-Croix-sur-Mer",
 ["Sainte_Laurent_sur_Mer"]="Sainte-Laurent-sur-Mer",
 ["Sommervieu"]="Sommervieu",
@@ -30578,18 +30700,15 @@ AIRBASE.Normandy={
 ["Villacoublay"]="Villacoublay",
 ["Vrigny"]="Vrigny",
 ["West_Malling"]="West Malling",
-["Eastchurch"]="Eastchurch",
-["Headcorn"]="Headcorn",
-["Hawkinge"]="Hawkinge",
 }
 AIRBASE.PersianGulf={
 ["Abu_Dhabi_Intl"]="Abu Dhabi Intl",
 ["Abu_Musa_Island"]="Abu Musa Island",
 ["Al_Ain_Intl"]="Al Ain Intl",
-["Al_Bateen"]="Al-Bateen",
 ["Al_Dhafra_AFB"]="Al Dhafra AFB",
 ["Al_Maktoum_Intl"]="Al Maktoum Intl",
 ["Al_Minhad_AFB"]="Al Minhad AFB",
+["Al_Bateen"]="Al-Bateen",
 ["Bandar_Abbas_Intl"]="Bandar Abbas Intl",
 ["Bandar_Lengeh"]="Bandar Lengeh",
 ["Bandar_e_Jask"]="Bandar-e-Jask",
@@ -30632,13 +30751,14 @@ AIRBASE.Syria={
 ["Abu_al_Duhur"]="Abu al-Duhur",
 ["Adana_Sakirpasa"]="Adana Sakirpasa",
 ["Akrotiri"]="Akrotiri",
-["Al_Dumayr"]="Al-Dumayr",
 ["Al_Qusayr"]="Al Qusayr",
+["Al_Dumayr"]="Al-Dumayr",
 ["Aleppo"]="Aleppo",
 ["An_Nasiriyah"]="An Nasiriyah",
 ["At_Tanf"]="At Tanf",
 ["Bassel_Al_Assad"]="Bassel Al-Assad",
 ["Beirut_Rafic_Hariri"]="Beirut-Rafic Hariri",
+["Ben_Gurion"]="Ben Gurion",
 ["Damascus"]="Damascus",
 ["Deir_ez_Zor"]="Deir ez-Zor",
 ["Ercan"]="Ercan",
@@ -30654,6 +30774,7 @@ AIRBASE.Syria={
 ["Haifa"]="Haifa",
 ["Hama"]="Hama",
 ["Hatay"]="Hatay",
+["Hatzor"]="Hatzor",
 ["Herzliya"]="Herzliya",
 ["Incirlik"]="Incirlik",
 ["Jirah"]="Jirah",
@@ -30666,16 +30787,17 @@ AIRBASE.Syria={
 ["Kuweires"]="Kuweires",
 ["Lakatamia"]="Lakatamia",
 ["Larnaca"]="Larnaca",
-["Marka"]="Marka",
 ["Marj_Ruhayyil"]="Marj Ruhayyil",
 ["Marj_as_Sultan_North"]="Marj as Sultan North",
 ["Marj_as_Sultan_South"]="Marj as Sultan South",
+["Marka"]="Marka",
 ["Megiddo"]="Megiddo",
 ["Mezzeh"]="Mezzeh",
 ["Minakh"]="Minakh",
 ["Muwaffaq_Salti"]="Muwaffaq Salti",
 ["Naqoura"]="Naqoura",
 ["Nicosia"]="Nicosia",
+["Palmachim"]="Palmachim",
 ["Palmyra"]="Palmyra",
 ["Paphos"]="Paphos",
 ["Pinarbashi"]="Pinarbashi",
@@ -30692,17 +30814,14 @@ AIRBASE.Syria={
 ["Tabqa"]="Tabqa",
 ["Taftanaz"]="Taftanaz",
 ["Tal_Siman"]="Tal Siman",
+["Tel_Nof"]="Tel Nof",
 ["Tha_lah"]="Tha'lah",
 ["Tiyas"]="Tiyas",
 ["Wujah_Al_Hajar"]="Wujah Al Hajar",
-["Ben_Gurion"]="Ben Gurion",
-["Hatzor"]="Hatzor",
-["Palmachim"]="Palmachim",
-["Tel_Nof"]="Tel Nof",
 }
 AIRBASE.MarianaIslands={
 ["Andersen_AFB"]="Andersen AFB",
-["Antonio_B_Won_Pat_Intl"]="Antonio B. Won Pat Intl",
+["Antonio_B._Won_Pat_Intl"]="Antonio B. Won Pat Intl",
 ["North_West_Field"]="North West Field",
 ["Olf_Orote"]="Olf Orote",
 ["Pagan_Airstrip"]="Pagan Airstrip",
@@ -30710,8 +30829,7 @@ AIRBASE.MarianaIslands={
 ["Saipan_Intl"]="Saipan Intl",
 ["Tinian_Intl"]="Tinian Intl",
 }
-AIRBASE.MarianaIslandsWWII=
-{
+AIRBASE.MarianaIslandsWWII={
 ["Agana"]="Agana",
 ["Airfield_3"]="Airfield 3",
 ["Charon_Kanoa"]="Charon Kanoa",
@@ -30774,6 +30892,7 @@ AIRBASE.Sinai={
 ["Cairo_West"]="Cairo West",
 ["Damascus_Intl"]="Damascus Intl",
 ["Difarsuwar_Airfield"]="Difarsuwar Airfield",
+["Ein_Shamer"]="Ein Shamer",
 ["El_Arish"]="El Arish",
 ["El_Gora"]="El Gora",
 ["El_Minya"]="El Minya",
@@ -30785,8 +30904,11 @@ AIRBASE.Sinai={
 ["Inshas_Airbase"]="Inshas Airbase",
 ["Jiyanklis_Air_Base"]="Jiyanklis Air Base",
 ["Kedem"]="Kedem",
+["Khalkhalah_Air_Base"]="Khalkhalah Air Base",
 ["Kibrit_Air_Base"]="Kibrit Air Base",
+["King_Feisal_Air_Base"]="King Feisal Air Base",
 ["Kom_Awshim"]="Kom Awshim",
+["Megiddo"]="Megiddo",
 ["Melez"]="Melez",
 ["Mezzeh_Air_Base"]="Mezzeh Air Base",
 ["Nevatim"]="Nevatim",
@@ -30800,45 +30922,50 @@ AIRBASE.Sinai={
 ["Sde_Dov"]="Sde Dov",
 ["Sharm_El_Sheikh_International_Airport"]="Sharm El Sheikh International Airport",
 ["St_Catherine"]="St Catherine",
+["Taba_International_Airport"]="Taba International Airport",
 ["Tabuk"]="Tabuk",
+["TabukHeliBase"]="TabukHeliBase",
 ["Tel_Nof"]="Tel Nof",
 ["Wadi_Abu_Rish"]="Wadi Abu Rish",
 ["Wadi_al_Jandali"]="Wadi al Jandali",
 }
 AIRBASE.Kola={
+["Afrikanda"]="Afrikanda",
+["Alakurtti"]="Alakurtti",
+["Alta"]="Alta",
+["Andoya"]="Andoya",
+["Arvidsjaur"]="Arvidsjaur",
 ["Banak"]="Banak",
+["Bardufoss"]="Bardufoss",
+["Boden_Heli_Base"]="Boden Heli Base",
 ["Bodo"]="Bodo",
+["Enontekio"]="Enontekio",
+["Evenes"]="Evenes",
+["Hemavan"]="Hemavan",
+["Hosio"]="Hosio",
 ["Ivalo"]="Ivalo",
 ["Jokkmokk"]="Jokkmokk",
+["Kalevala"]="Kalevala",
 ["Kalixfors"]="Kalixfors",
 ["Kallax"]="Kallax",
 ["Kemi_Tornio"]="Kemi Tornio",
+["Kilpyavr"]="Kilpyavr",
 ["Kirkenes"]="Kirkenes",
 ["Kiruna"]="Kiruna",
+["Kittila"]="Kittila",
+["Koshka_Yavr"]="Koshka Yavr",
 ["Kuusamo"]="Kuusamo",
+["Luostari_Pechenga"]="Luostari Pechenga",
 ["Monchegorsk"]="Monchegorsk",
 ["Murmansk_International"]="Murmansk International",
 ["Olenya"]="Olenya",
+["Poduzhemye"]="Poduzhemye",
 ["Rovaniemi"]="Rovaniemi",
 ["Severomorsk_1"]="Severomorsk-1",
 ["Severomorsk_3"]="Severomorsk-3",
+["Sodankyla"]="Sodankyla",
 ["Vidsel"]="Vidsel",
 ["Vuojarvi"]="Vuojarvi",
-["Andoya"]="Andoya",
-["Alakurtti"]="Alakurtti",
-["Kittila"]="Kittila",
-["Bardufoss"]="Bardufoss",
-["Alta"]="Alta",
-["Sodankyla"]="Sodankyla",
-["Enontekio"]="Enontekio",
-["Evenes"]="Evenes",
-["Hosio"]="Hosio",
-["Kilpyavr"]="Kilpyavr",
-["Afrikanda"]="Afrikanda",
-["Kalevala"]="Kalevala",
-["Koshka_Yavr"]="Koshka Yavr",
-["Poduzhemye"]="Poduzhemye",
-["Luostari_Pechenga"]="Luostari Pechenga",
 }
 AIRBASE.Afghanistan={
 ["Bagram"]="Bagram",
@@ -30848,6 +30975,10 @@ AIRBASE.Afghanistan={
 ["Camp_Bastion_Heliport"]="Camp Bastion Heliport",
 ["Chaghcharan"]="Chaghcharan",
 ["Dwyer"]="Dwyer",
+["FOB_Camp_Dubs"]="FOB Camp Dubs",
+["FOB_Clark"]="FOB Clark",
+["FOB_Salerno"]="FOB Salerno",
+["FOB_Thunder"]="FOB Thunder",
 ["Farah"]="Farah",
 ["Gardez"]="Gardez",
 ["Ghazni_Heliport"]="Ghazni Heliport",
@@ -30857,7 +30988,6 @@ AIRBASE.Afghanistan={
 ["Kandahar"]="Kandahar",
 ["Kandahar_Heliport"]="Kandahar Heliport",
 ["Khost"]="Khost",
-["Khost_Heliport"]="Khost Heliport",
 ["Maymana_Zahiraddin_Faryabi"]="Maymana Zahiraddin Faryabi",
 ["Nimroz"]="Nimroz",
 ["Qala_i_Naw"]="Qala i Naw",
@@ -30878,10 +31008,10 @@ AIRBASE.Iraq={
 ["Balad_Airbase"]="Balad Airbase",
 ["Bashur_Airport"]="Bashur Airport",
 ["Erbil_International_Airport"]="Erbil International Airport",
-["H2_Airbase"]="H-2 Airbase",
-["H3_Main_Airbase"]="H-3 Main Airbase",
-["H3_Northwest_Airbase"]="H-3 Northwest Airbase",
-["H3_Southwest_Airbase"]="H-3 Southwest Airbase",
+["H_2_Airbase"]="H-2 Airbase",
+["H_3_Main_Airbase"]="H-3 Main Airbase",
+["H_3_Northwest_Airbase"]="H-3 Northwest Airbase",
+["H_3_Southwest_Airbase"]="H-3 Southwest Airbase",
 ["K1_Base"]="K1 Base",
 ["Kirkuk_International_Airport"]="Kirkuk International Airport",
 ["Mosul_International_Airport"]="Mosul International Airport",
@@ -30889,6 +31019,7 @@ AIRBASE.Iraq={
 ["Sulaimaniyah_International_Airport"]="Sulaimaniyah International Airport",
 }
 AIRBASE.GermanyCW={
+["Adelsheim"]="Adelsheim",
 ["Airracing_Frankfurt"]="Airracing Frankfurt",
 ["Airracing_Koblenz"]="Airracing Koblenz",
 ["Airracing_Luebeck"]="Airracing Lubeck",
@@ -30899,16 +31030,23 @@ AIRBASE.GermanyCW={
 ["Bienenfarm"]="Bienenfarm",
 ["Bindersleben"]="Bindersleben",
 ["Bitburg"]="Bitburg",
+["Bornholm"]="Bornholm",
+["Brand"]="Brand",
+["Brandis"]="Brandis",
 ["Braunschweig"]="Braunschweig",
 ["Bremen"]="Bremen",
 ["Briest"]="Briest",
 ["Buechel"]="Buchel",
 ["Bueckeburg"]="Buckeburg",
 ["Celle"]="Celle",
+["Chojna"]="Chojna",
 ["Cochstedt"]="Cochstedt",
+["Cologne"]="Cologne",
 ["Damgarten"]="Damgarten",
 ["Dedelow"]="Dedelow",
 ["Dessau"]="Dessau",
+["Duesseldorf"]="Dusseldorf",
+["Falkenberg"]="Falkenberg",
 ["Fassberg"]="Fassberg",
 ["Finow"]="Finow",
 ["Frankfurt"]="Frankfurt",
@@ -30919,7 +31057,7 @@ AIRBASE.GermanyCW={
 ["Gatow"]="Gatow",
 ["Gelnhausen"]="Gelnhausen",
 ["Giebelstadt"]="Giebelstadt",
-["Glindbruchkippe"]="Glindbruchkippe ",
+["Glindbruchkippe"]="Glindbruchkippe",
 ["Gross_Mohrdorf"]="Gross Mohrdorf",
 ["Grosse_Wiese"]="Grosse Wiese",
 ["Guetersloh"]="Gutersloh",
@@ -31037,43 +31175,60 @@ AIRBASE.GermanyCW={
 ["Hamburg_Finkenwerder"]="Hamburg Finkenwerder",
 ["Hannover"]="Hannover",
 ["Hasselfelde"]="Hasselfelde",
+["Heidelberg"]="Heidelberg",
 ["Herrenteich"]="Herrenteich",
 ["Hildesheim"]="Hildesheim",
 ["Hockenheim"]="Hockenheim",
 ["Holzdorf"]="Holzdorf",
 ["Kammermark"]="Kammermark",
+["Kastrup"]="Kastrup",
+["Kiel"]="Kiel",
 ["Koethen"]="Kothen",
 ["Laage"]="Laage",
+["Landstuhl"]="Landstuhl",
 ["Langenselbold"]="Langenselbold",
 ["Laerz"]="Larz",
-["Leipzig_Halle"]="Leipzig Halle",
 ["Leipzig_Mockau"]="Leipzig Mockau",
 ["Luebeck"]="Lubeck",
 ["Lueneburg"]="Luneburg",
 ["Mahlwinkel"]="Mahlwinkel",
+["Mainz_Finthen"]="Mainz Finthen",
+["Marxwalde"]="Marxwalde",
 ["Mendig"]="Mendig",
 ["Merseburg"]="Merseburg",
 ["Neubrandenburg"]="Neubrandenburg",
 ["Neuruppin"]="Neuruppin",
+["Nordholz"]="Nordholz",
 ["Northeim"]="Northeim",
+["Noervenich"]="Norvenich",
 ["Ober_Moerlen"]="Ober-Morlen",
 ["Obermehler_Schlotheim"]="Obermehler Schlotheim",
+["Oranienburg"]="Oranienburg",
 ["Parchim"]="Parchim",
 ["Peenemuende"]="Peenemunde",
+["Perwenitz"]="Perwenitz",
 ["Pferdsfeld"]="Pferdsfeld",
 ["Pinnow"]="Pinnow",
 ["Pottschutthoehe"]="Pottschutthohe",
 ["Ramstein"]="Ramstein",
+["Revinge"]="Revinge",
 ["Rinteln"]="Rinteln",
+["Schkeuditz"]="Schkeuditz",
 ["Schoenefeld"]="Schonefeld",
 ["Schweinfurt"]="Schweinfurt",
 ["Sembach"]="Sembach",
+["Sittensen"]="Sittensen",
 ["Spangdahlem"]="Spangdahlem",
 ["Sperenberg"]="Sperenberg",
+["Sprendlingen"]="Sprendlingen",
 ["Stendal"]="Stendal",
+["Sturup"]="Sturup",
+["Szczecin_Goleniow"]="Szczecin-Goleniow",
+["Tagra"]="Tagra",
 ["Tegel"]="Tegel",
 ["Tempelhof"]="Tempelhof",
 ["Templin"]="Templin",
+["Thurland"]="Thurland",
 ["Tutow"]="Tutow",
 ["Uelzen"]="Uelzen",
 ["Uetersen"]="Uetersen",
@@ -31089,6 +31244,7 @@ AIRBASE.GermanyCW={
 ["Worms"]="Worms",
 ["Wunstorf"]="Wunstorf",
 ["Zerbst"]="Zerbst",
+["Zoellschen"]="Zollschen",
 ["Zweibruecken"]="Zweibrucken",
 }
 AIRBASE.TerminalType={
@@ -32103,16 +32259,55 @@ end
 SCENERY={
 ClassName="SCENERY",
 }
-function SCENERY:Register(SceneryName,SceneryObject)
+_SCENERY={}
+function SCENERY:Register(SceneryName,SceneryObject,SceneryZone)
+local ID=(SceneryObject and SceneryObject.getID)and SceneryObject:getID()or SceneryName
+if _SCENERY[ID]and _SCENERY[ID].SceneryObject==nil then
+_SCENERY[ID].SceneryObject=SceneryObject
+SCENERY._UpdateFromDCSObject(_SCENERY[ID])
+end
+if _SCENERY[ID]then return _SCENERY[ID]end
 local self=BASE:Inherit(self,POSITIONABLE:New(SceneryName))
 self.SceneryName=tostring(SceneryName)
+self.ID=ID
 self.SceneryObject=SceneryObject
+self.SceneryZone=SceneryZone
+if SceneryZone then
+self.Vec3=SceneryZone:GetVec3()
+self.Vec2=SceneryZone:GetVec2()
+self.Vector=(self.Vec3 and VECTOR)and VECTOR:NewFromVec(self.Vec3)or nil
+end
+if SceneryObject then
+local vec3=SceneryObject:getPoint()
+self.Vec3={x=vec3.x,y=vec3.y,z=vec3.z}
+self.Vec2={x=vec3.x,y=vec3.z}
+self.Vector=(self.Vec3 and VECTOR)and VECTOR:NewFromVec(self.Vec3)or nil
+end
 if self.SceneryObject and self.SceneryObject.getLife then
-self.Life0=self.SceneryObject:getLife()or 0
+self.Life0=self.SceneryObject:getLife()or 1
 else
-self.Life0=0
+self.Life0=1
 end
 self.Properties={}
+_SCENERY[self.ID]=self
+return self
+end
+function SCENERY._UpdateFromDCSObject(Scenery)
+env.info("APPLE _UpdateFromDCSObject "..tostring(Scenery.SceneryName))
+local self=Scenery
+if self.Vec2==nil and self.SceneryObject~=nil then
+self.Vec3=self.SceneryObject:getPoint()
+if self.Vec3 then
+self.Vec2={x=self.Vec3.x,y=self.Vec3.z}
+self.Vector=VECTOR:NewFromVec(self.Vec3)
+end
+end
+if not self.Life0 or self.Life0==1 then
+if self.SceneryObject and self.SceneryObject.getLife()then
+self.Life=self.SceneryObject:getLife()or 1
+self.Life0=self.Life
+end
+end
 return self
 end
 function SCENERY:GetProperty(PropertyName)
@@ -32131,16 +32326,38 @@ end
 function SCENERY:GetName()
 return self.SceneryName
 end
+function SCENERY:GetCoordinate()
+if self.Coordinate then
+return self.Coordinate
+elseif self.Vec3 then
+self.Coordinate=COORDINATE:NewFromVec3(self.Vec3):SetAlt()
+end
+return self.Coordinate
+end
+function SCENERY:GetVec3()
+return self.Vec3
+end
+function SCENERY:GetVec2()
+return self.Vec2
+end
+function SCENERY:GetVector()
+return self.Vector
+end
 function SCENERY:GetDCSObject()
 return self.SceneryObject
 end
+function SCENERY:GetID()
+return self.ID
+end
 function SCENERY:GetLife()
-local life=0
+local life=1
 if self.SceneryObject and self.SceneryObject.getLife then
 life=self.SceneryObject:getLife()
 if life>self.Life0 then
 self.Life0=math.floor(life*1.2)
 end
+elseif self.Life then
+life=self.Life
 end
 return life
 end
@@ -32171,14 +32388,16 @@ end
 function SCENERY:GetThreatLevel()
 return 0,"Scenery"
 end
-function SCENERY:FindByName(Name,Coordinate,Radius,Role)
+function SCENERY:FindByName(Name,Coordinate,Radius,Role,Zone)
+local findme=self:_FindByName(Name)
+if findme then return findme end
 local radius=Radius or 100
 local name=Name or"unknown"
 local scenery=nil
 local function SceneryScan(scoordinate,sradius,sname)
 if scoordinate~=nil then
 local Vec2=scoordinate:GetVec2()
-local scanzone=ZONE_RADIUS:New("Zone-"..sname,Vec2,sradius,true)
+local scanzone=ZONE_RADIUS:New("Zone-"..sname,Vec2,sradius)
 scanzone:Scan({Object.Category.SCENERY})
 local scanned=scanzone:GetScannedSceneryObjects()
 local rscenery=nil
@@ -32197,7 +32416,20 @@ end
 if Coordinate then
 scenery=SceneryScan(Coordinate,radius,name)
 end
+if not scenery then scenery=SCENERY:Register(Name,nil,Zone)end
 return scenery
+end
+function SCENERY:FindByID(ID)
+return _SCENERY[ID]
+end
+function SCENERY:_FindByName(Name)
+for _id,_object in pairs(_SCENERY)do
+if _object and _object.GetName and _object:GetName()then
+local name=_object:GetName()
+if Name==name then return _object end
+end
+end
+return nil
 end
 function SCENERY:FindByNameInZone(Name,Zone,Radius)
 local radius=Radius or 100
@@ -32205,8 +32437,8 @@ local name=Name or"unknown"
 if type(Zone)=="string"then
 Zone=ZONE:FindByName(Zone)
 end
-local coordinate=Zone:GetCoordinate()
-return self:FindByName(Name,coordinate,Radius,Zone:GetProperty("ROLE"))
+local coordinate=Zone:GetCoordinate():SetAlt()
+return self:FindByName(Name,coordinate,Radius,Zone:GetProperty("ROLE"),Zone)
 end
 function SCENERY:FindByZoneName(ZoneName)
 local zone=ZoneName
@@ -32221,18 +32453,20 @@ zone:Scan({Object.Category.SCENERY})
 local scanned=zone:GetScannedSceneryObjects()
 for _,_scenery in(scanned)do
 local scenery=_scenery
-if scenery:IsAlive()then
 local role=zone:GetProperty("ROLE")
 if role then scenery:SetProperty("ROLE",role)end
 return scenery
 end
-end
 return nil
 else
-return self:FindByName(_id,zone:GetCoordinate(),nil,zone:GetProperty("ROLE"))
+local coordinate=zone:GetCoordinate()
+coordinate:SetAlt()
+return self:FindByName(_id,coordinate,nil,zone:GetProperty("ROLE"),zone)
 end
 else
-return self:FindByName(_id,zone:GetCoordinate(),nil,zone:GetProperty("ROLE"))
+local coordinate=zone:GetCoordinate()
+coordinate:SetAlt()
+return self:FindByName(_id,coordinate,nil,zone:GetProperty("ROLE"),zone)
 end
 end
 function SCENERY:FindAllByZoneName(ZoneName)
@@ -32250,7 +32484,7 @@ else
 return nil
 end
 else
-local obj=self:FindByName(_id,zone:GetCoordinate(),nil,zone:GetProperty("ROLE"))
+local obj=self:FindByName(_id,zone:GetCoordinate():SetAlt(),nil,zone:GetProperty("ROLE"),zone)
 if obj then
 return{obj}
 else
@@ -33103,7 +33337,7 @@ function NET:GetPlayerIDByName(Name)
 if not Name then return nil end
 local playerList=net.get_player_list()
 for i=1,#playerList do
-local playerName=net.get_name(i)
+local playerName=net.get_name(playerList[i])
 if playerName==Name then
 return playerList[i]
 end
@@ -35304,7 +35538,8 @@ ClassName="SCORING",
 ClassID=0,
 Players={},
 AutoSave=true,
-version="1.18.4"
+version="1.18.4",
+ScoringScenery=nil,
 }
 local _SCORINGCoalition={
 [1]="Red",
@@ -35355,6 +35590,7 @@ self.AutoSave=(AutoSave==nil or AutoSave==true)and true or false
 if self.AutoSavePath and self.AutoSave==true then
 self:OpenCSV(GameName)
 end
+self:I("SCORING "..tostring(GameName).." started! v"..self.version)
 return self
 end
 function SCORING:SetDisplayMessagePrefix(DisplayMessagePrefix)
@@ -35380,8 +35616,42 @@ self.ScoringObjects[UnitName]=nil
 return self
 end
 function SCORING:AddStaticScore(ScoreStatic,Score)
+return self:AddScoreStatic(ScoreStatic,Score)
+end
+function SCORING:AddScoreStatic(ScoreStatic,Score)
+if ScoreStatic==nil then
+BASE:E("SCORING.AddStaticScore: Parameter ScoreStatic is nil!")
+return self
+end
 local StaticName=ScoreStatic:GetName()
 self.ScoringObjects[StaticName]=Score
+return self
+end
+function SCORING:AddScoreScenery(ScoreScenery,Score)
+if ScoreScenery==nil then
+self:E("SCORING.ScoreScenery: Parameter ScoreScenery is nil!")
+return self
+end
+if not self.ScoringScenery then
+self.ScoringScenery=SET_SCENERY:New()
+end
+local StaticName=ScoreScenery:GetName()
+self:T("Scenery name = "..StaticName)
+self.ScoringScenery:AddScenery(ScoreScenery)
+return self
+end
+function SCORING:RemoveSceneryScore(ScoreScenery)
+local StaticName=ScoreScenery:GetName()
+self.ScoringObjects[StaticName]=nil
+return self
+end
+function SCORING:AddScoreSetScenery(Set,Score)
+local set=Set.Set
+for _,_static in pairs(set)do
+if _static~=nil then
+self:AddScoreScenery(_static,Score)
+end
+end
 return self
 end
 function SCORING:RemoveStaticScore(ScoreStatic)
@@ -35412,11 +35682,32 @@ AddScore(Object)
 end
 return self
 end
+function SCORING:AddScoreSetStatic(Set,Score)
+local set=Set:GetSetObjects()
+for _,_static in pairs(set)do
+if _static and _static:IsAlive()then
+self:AddStaticScore(_static,Score)
+end
+end
+local function AddScore(static)
+self:AddStaticScore(static,Score)
+end
+function Set:OnAfterAdded(From,Event,To,ObjectName,Object)
+AddScore(Object)
+end
+return self
+end
 function SCORING:AddZoneScore(ScoreZone,Score)
 local ZoneName=ScoreZone:GetName()
 self.ScoringZones[ZoneName]={}
 self.ScoringZones[ZoneName].ScoreZone=ScoreZone
 self.ScoringZones[ZoneName].Score=Score
+return self
+end
+function SCORING:AddZoneScoreSet(ScoreZoneSet,Score)
+for _,_zone in pairs(ScoreZoneSet.Set or{})do
+self:AddZoneScore(_zone,Score)
+end
 return self
 end
 function SCORING:RemoveZoneScore(ScoreZone)
@@ -35668,7 +35959,6 @@ end
 end
 end
 function SCORING:_EventOnHit(Event)
-self:F({Event})
 local InitUnit=nil
 local InitUNIT=nil
 local InitUnitName=""
@@ -35694,6 +35984,7 @@ local TargetUnitCoalition=nil
 local TargetUnitCategory=nil
 local TargetUnitType=nil
 local TargetIsScenery=false
+local TargetSceneryObject=nil
 if Event.IniDCSUnit then
 InitUnit=Event.IniDCSUnit
 InitUNIT=Event.IniUnit
@@ -35707,7 +35998,6 @@ InitType=Event.IniTypeName
 InitUnitCoalition=_SCORINGCoalition[InitCoalition]
 InitUnitCategory=_SCORINGCategory[InitCategory]
 InitUnitType=InitType
-self:T({InitUnitName,InitGroupName,InitPlayerName,InitCoalition,InitCategory,InitType,InitUnitCoalition,InitUnitCategory,InitUnitType})
 end
 if Event.TgtDCSUnit then
 TargetUnit=Event.TgtDCSUnit
@@ -35719,14 +36009,16 @@ TargetPlayerName=Event.TgtPlayerName
 TargetCoalition=Event.TgtCoalition
 TargetCategory=Event.TgtCategory
 TargetType=Event.TgtTypeName
-if(not TargetCategory)and TargetUNIT~=nil and TargetUnit:IsInstanceOf("SCENERY")then
+if TargetUNIT~=nil and TargetUNIT:IsInstanceOf("SCENERY")then
 TargetCategory=Unit.Category.STRUCTURE
 TargetIsScenery=true
+TargetType="Scenery"
+TargetSceneryObject=TargetUNIT
+self:T("***** Target is Scenery and TargetUNIT is SCENERY object!")
 end
 TargetUnitCoalition=_SCORINGCoalition[TargetCoalition]
 TargetUnitCategory=_SCORINGCategory[TargetCategory]
 TargetUnitType=TargetType
-self:T({TargetUnitName,TargetGroupName,TargetPlayerName,TargetCoalition,TargetCategory,TargetType,TargetUnitCoalition,TargetUnitCategory,TargetUnitType})
 end
 if InitPlayerName~=nil then
 self:_AddPlayerFromUnit(InitUNIT)
@@ -35735,7 +36027,7 @@ if TargetPlayerName~=nil then
 self:_AddPlayerFromUnit(TargetUNIT)
 end
 self:T("Hitting Something")
-if TargetCategory then
+if(TargetCategory~=nil)and(TargetIsScenery==false)then
 local Player=self.Players[InitPlayerName]
 Player.Hit[TargetCategory]=Player.Hit[TargetCategory]or{}
 Player.Hit[TargetCategory][TargetUnitName]=Player.Hit[TargetCategory][TargetUnitName]or{}
@@ -35746,7 +36038,7 @@ PlayerHit.ScoreHit=PlayerHit.ScoreHit or 0
 PlayerHit.PenaltyHit=PlayerHit.PenaltyHit or 0
 PlayerHit.TimeStamp=PlayerHit.TimeStamp or 0
 PlayerHit.UNIT=PlayerHit.UNIT or TargetUNIT
-if PlayerHit.UNIT.ThreatType==nil then
+if PlayerHit.UNIT and PlayerHit.UNIT.ThreatType==nil then
 PlayerHit.ThreatLevel,PlayerHit.ThreatType=PlayerHit.UNIT:GetThreatLevel()
 if PlayerHit.ThreatType==nil or PlayerHit.ThreatType==""then
 PlayerHit.ThreatLevel=1
@@ -35818,15 +36110,12 @@ end
 end
 elseif InitPlayerName==nil then
 end
-if Event.WeaponPlayerName~=nil then
-self:_AddPlayerFromUnit(Event.WeaponUNIT)
-if self.Players[Event.WeaponPlayerName]then
-if TargetPlayerName~=nil then
-self:_AddPlayerFromUnit(TargetUNIT)
-end
-self:T("Hitting Scenery")
-if TargetCategory then
-local Player=self.Players[Event.WeaponPlayerName]
+if Event.WeaponPlayerName~=nil or TargetIsScenery==true then
+local playername=Event.WeaponPlayerName or Event.IniPlayerName or"Ghost"
+if self.Players[playername]then
+self:T("Hitting Scenery or Static")
+if Event.TgtObjectCategory then
+local Player=self.Players[playername]
 Player.Hit[TargetCategory]=Player.Hit[TargetCategory]or{}
 Player.Hit[TargetCategory][TargetUnitName]=Player.Hit[TargetCategory][TargetUnitName]or{}
 local PlayerHit=Player.Hit[TargetCategory][TargetUnitName]
@@ -35836,52 +36125,63 @@ PlayerHit.ScoreHit=PlayerHit.ScoreHit or 0
 PlayerHit.PenaltyHit=PlayerHit.PenaltyHit or 0
 PlayerHit.TimeStamp=PlayerHit.TimeStamp or 0
 PlayerHit.UNIT=PlayerHit.UNIT or TargetUNIT
-if PlayerHit.UNIT.ThreatType==nil then
+if PlayerHit.UNIT and PlayerHit.UNIT.ThreatType==nil then
 PlayerHit.ThreatLevel,PlayerHit.ThreatType=PlayerHit.UNIT:GetThreatLevel()
 if PlayerHit.ThreatType==nil then
 PlayerHit.ThreatLevel=1
 PlayerHit.ThreatType="Unknown"
 end
 else
-PlayerHit.ThreatLevel=PlayerHit.UNIT.ThreatLevel
-PlayerHit.ThreatType=PlayerHit.UNIT.ThreatType
+PlayerHit.ThreatLevel=PlayerHit.UNIT and PlayerHit.UNIT.ThreatLevel or 1
+PlayerHit.ThreatType=PlayerHit.UNIT and PlayerHit.UNIT.ThreatType or"Unknown"
 end
 if timer.getTime()-PlayerHit.TimeStamp>1 then
 PlayerHit.TimeStamp=timer.getTime()
 local Score=0
-if InitCoalition then
-if InitCoalition==TargetCoalition then
-local Penalty=10
-Player.Penalty=Player.Penalty+Penalty
-PlayerHit.Penalty=PlayerHit.Penalty+Penalty
-PlayerHit.PenaltyHit=PlayerHit.PenaltyHit+1*self.ScaleDestroyPenalty
-MESSAGE
-:NewType(self.DisplayMessagePrefix.."Player '"..Event.WeaponPlayerName.."' hit friendly target "..
-TargetUnitCategory.." ( "..TargetType.." ) "..
-"Penalty: -"..Penalty.." = "..Player.Score-Player.Penalty,
-MESSAGE.Type.Update
-)
-:ToAllIf(self:IfMessagesHit()and self:IfMessagesToAll())
-:ToCoalitionIf(Event.WeaponCoalition,self:IfMessagesHit()and self:IfMessagesToCoalition())
-self:ScoreCSV(Event.WeaponPlayerName,TargetPlayerName,"HIT_PENALTY",1,-10,Event.WeaponName,Event.WeaponCoalition,Event.WeaponCategory,Event.WeaponTypeName,TargetUnitName,TargetUnitCoalition,TargetUnitCategory,TargetUnitType)
-else
+local TgtName=Event.TgtDCSUnit and Event.TgtDCSUnit.getName and Event.TgtDCSUnit:getName()or"Unknown"
+if TargetIsScenery==true and self.ScoringScenery:IsInSet(TargetSceneryObject)then
 Player.Score=Player.Score+self.ScoreIncrementOnHit
 PlayerHit.Score=PlayerHit.Score+self.ScoreIncrementOnHit
 PlayerHit.ScoreHit=PlayerHit.ScoreHit+1
-MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..Event.WeaponPlayerName.."' hit enemy target "..TargetUnitCategory.." ( "..TargetType.." ) "..
+MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..playername.."' hit scenery target "..TargetUnitCategory.." ( "..TargetType.." ) "..
 "Score: "..PlayerHit.Score..".  Score Total:"..Player.Score-Player.Penalty,
 MESSAGE.Type.Update)
 :ToAllIf(self:IfMessagesHit()and self:IfMessagesToAll())
 :ToCoalitionIf(Event.WeaponCoalition,self:IfMessagesHit()and self:IfMessagesToCoalition())
-self:ScoreCSV(Event.WeaponPlayerName,TargetPlayerName,"HIT_SCORE",1,1,Event.WeaponName,Event.WeaponCoalition,Event.WeaponCategory,Event.WeaponTypeName,TargetUnitName,TargetUnitCoalition,TargetUnitCategory,TargetUnitType)
-end
-else
-MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..Event.WeaponPlayerName.."' hit scenery object.",
+self:ScoreCSV(playername,TargetPlayerName,"HIT_SCORE",1,1,Event.WeaponName,Event.WeaponCoalition,Event.WeaponCategory,Event.WeaponTypeName,TargetUnitName,TargetUnitCoalition,TargetUnitCategory,TargetUnitType)
+elseif TargetIsScenery==false and Event.TgtObjectCategory==Object.Category.STATIC and self.ScoringObjects[TgtName]then
+Player.Score=Player.Score+self.ScoreIncrementOnHit
+PlayerHit.Score=PlayerHit.Score+self.ScoreIncrementOnHit
+PlayerHit.ScoreHit=PlayerHit.ScoreHit+1
+MESSAGE:NewType(self.DisplayMessagePrefix.."Player '"..playername.."' hit static target "..TargetUnitCategory.." ( "..TargetType.." ) "..
+"Score: "..PlayerHit.Score..".  Score Total:"..Player.Score-Player.Penalty,
 MESSAGE.Type.Update)
 :ToAllIf(self:IfMessagesHit()and self:IfMessagesToAll())
-:ToCoalitionIf(InitCoalition,self:IfMessagesHit()and self:IfMessagesToCoalition())
-self:ScoreCSV(Event.WeaponPlayerName,"","HIT_SCORE",1,0,Event.WeaponName,Event.WeaponCoalition,Event.WeaponCategory,Event.WeaponTypeName,TargetUnitName,"","Scenery",TargetUnitType)
+:ToCoalitionIf(Event.WeaponCoalition,self:IfMessagesHit()and self:IfMessagesToCoalition())
+self:ScoreCSV(playername,TargetPlayerName,"HIT_SCORE",1,1,Event.WeaponName,Event.WeaponCoalition,Event.WeaponCategory,Event.WeaponTypeName,TargetUnitName,TargetUnitCoalition,TargetUnitCategory,TargetUnitType)
+else
+self:E("Hit unregistered scenery or static object - NO target! ("..TgtName..")")
 end
+end
+end
+end
+for ZoneName,ScoreZoneData in pairs(self.ScoringZones)do
+self:F({ScoringZone=ScoreZoneData})
+local hit=Event.TgtUnit
+local ScoreZone=ScoreZoneData.ScoreZone
+local Score=ScoreZoneData.Score
+if TargetUNIT and ScoreZone:IsVec2InZone(TargetUNIT:GetVec2())then
+local PlayerName=Event.IniPlayerName or"Ghost"
+local Player=self.Players[PlayerName]
+if Player then
+Player.Score=Player.Score+Score
+Player.Score=Player.Score+self.ScoreIncrementOnHit
+MESSAGE:NewType(self.DisplayMessagePrefix.."hit in zone '"..ScoreZone:GetName().."'."..
+"Player '"..PlayerName.."' receives an extra "..Score.." points! ".."Total: "..Player.Score-Player.Penalty,
+MESSAGE.Type.Information)
+:ToAllIf(self:IfMessagesZone()and self:IfMessagesToAll())
+:ToCoalitionIf(InitCoalition,self:IfMessagesZone()and self:IfMessagesToCoalition())
+self:ScoreCSV(PlayerName,"","HIT_SCORE",1,Score,InitUnitName,InitUnitCoalition,InitUnitCategory,InitUnitType,TargetUnitName,"","Zone",TargetUnitType)
 end
 end
 end
@@ -35925,7 +36225,7 @@ local InitUnitCoalition=_SCORINGCoalition[InitCoalition]
 local InitUnitCategory=_SCORINGCategory[InitCategory]
 self:T({InitUnitName,InitUnitType,InitUnitCoalition,InitCoalition,InitUnitCategory,InitCategory})
 local Destroyed=false
-if Player and Player.Hit and Player.Hit[TargetCategory]and Player.Hit[TargetCategory][TargetUnitName]and Player.Hit[TargetCategory][TargetUnitName].TimeStamp~=0 and(TargetUnit.BirthTime==nil or Player.Hit[TargetCategory][TargetUnitName].TimeStamp>TargetUnit.BirthTime)then
+if Player and Player.Hit and Player.Hit[TargetCategory]and Player.Hit[TargetCategory][TargetUnitName]and Player.Hit[TargetCategory][TargetUnitName].TimeStamp~=0 and TargetUnit and(TargetUnit.BirthTime==nil or Player.Hit[TargetCategory][TargetUnitName].TimeStamp>TargetUnit.BirthTime)then
 local TargetThreatLevel=Player.Hit[TargetCategory][TargetUnitName].ThreatLevel
 local TargetThreatType=Player.Hit[TargetCategory][TargetUnitName].ThreatType
 Player.Destroy[TargetCategory]=Player.Destroy[TargetCategory]or{}
@@ -44681,12 +44981,18 @@ self.controlmsrs:SetPort(Port or MSRS.port)
 self.controlmsrs:SetCoalition(Coalition or coalition.side.BLUE)
 self.controlmsrs:SetLabel("RANGEC")
 self.controlmsrs:SetVolume(Volume or 1.0)
+if self.rangezone then
+self.controlmsrs:SetCoordinate(self.rangezone:GetCoordinate())
+end
 self.controlsrsQ=MSRSQUEUE:New("CONTROL")
 self.instructmsrs=MSRS:New(PathToSRS or MSRS.path,Frequency or 305,Modulation or radio.modulation.AM)
 self.instructmsrs:SetPort(Port or MSRS.port)
 self.instructmsrs:SetCoalition(Coalition or coalition.side.BLUE)
 self.instructmsrs:SetLabel("RANGEI")
 self.instructmsrs:SetVolume(Volume or 1.0)
+if self.rangezone then
+self.instructmsrs:SetCoordinate(self.rangezone:GetCoordinate())
+end
 self.instructsrsQ=MSRSQUEUE:New("INSTRUCT")
 if PathToGoogleKey then
 self.controlmsrs:SetProviderOptionsGoogle(PathToGoogleKey,PathToGoogleKey)
@@ -44713,8 +45019,13 @@ self.controlmsrs:SetGender(gender or"female")
 self.rangecontrol=true
 if relayunitname then
 local unit=UNIT:FindByName(relayunitname)
+if unit then
 local Coordinate=unit:GetCoordinate()
 self.rangecontrolrelayname=relayunitname
+self.controlmsrs:SetCoordinate(Coordinate)
+else
+MESSAGE:New("RANGE: Control Relay Unit "..relayunitname.." not found!",15,"ERROR"):ToAllIf(self.Debug):ToLog()
+end
 end
 return self
 end
@@ -44732,9 +45043,13 @@ self.instructmsrs:SetGender(gender or"male")
 self.instructor=true
 if relayunitname then
 local unit=UNIT:FindByName(relayunitname)
+if unit then
 local Coordinate=unit:GetCoordinate()
 self.instructmsrs:SetCoordinate(Coordinate)
 self.instructorrelayname=relayunitname
+else
+MESSAGE:New("RANGE: Instructor Relay Unit "..relayunitname.." not found!",15,"ERROR"):ToAllIf(self.Debug):ToLog()
+end
 end
 return self
 end
@@ -46929,7 +47244,7 @@ maxrange=7000,
 reloadtime=nil,
 },
 }
-ARTY.version="1.3.3"
+ARTY.version="1.3.4"
 function ARTY:New(group,alias)
 local self=BASE:Inherit(self,FSM_CONTROLLABLE:New())
 if type(group)=="string"then
@@ -47609,7 +47924,7 @@ _destroyweapon=true
 end
 elseif target.weapontype==ARTY.WeaponType.SmokeShells then
 if _dist<target.radius then
-local _cr=_coord:GetRandomCoordinateInRadius(_data.target.radius)
+local _cr=_coord:GetRandomCoordinateInRadius(target.radius)
 _cr:Smoke(self.smokeColor)
 _destroyweapon=true
 end
@@ -69721,7 +70036,7 @@ CTLD.FixedWingTypes={
 ["Mosquito"]="Mosquito",
 ["C-130J-30"]="C-130J-30",
 }
-CTLD.version="1.3.39"
+CTLD.version="1.3.40"
 function CTLD:New(Coalition,Prefixes,Alias)
 local self=BASE:Inherit(self,FSM:New())
 BASE:T({Coalition,Prefixes,Alias})
@@ -70073,6 +70388,12 @@ function CTLD:_FindCratesCargoObject(Name)
 self:T(self.lid.." _FindCratesCargoObject")
 local cargo=nil
 for _,_cargo in pairs(self.Cargo_Crates)do
+local cargo=_cargo
+if cargo.Name==Name then
+return cargo
+end
+end
+for _,_cargo in pairs(self.Cargo_Statics)do
 local cargo=_cargo
 if cargo.Name==Name then
 return cargo
@@ -70507,14 +70828,16 @@ self:_GetCrates(Group,Unit,cargoObj,total,false,false,true)
 return self
 end
 function CTLD:_AddCrateQuantityMenus(Group,Unit,parentMenu,cargoObj,stockSummary)
+self:T("_AddCrateQuantityMenus "..cargoObj.Name)
 local needed=cargoObj:GetCratesNeeded()or 1
 local stockEntry=self:_GetCrateStockEntry(cargoObj,stockSummary)
-local stock=nil
+local stock=0
 if stockEntry and type(stockEntry.Stock)=="number"then
 stock=stockEntry.Stock
 else
 stock=cargoObj:GetStock()
 end
+self:T("_AddCrateQuantityMenus "..cargoObj.Name.." Stock: "..tostring(stock))
 local maxQuantity=self.maxCrateMenuQuantity or 1
 local availableSets=nil
 if type(stock)=="number"and stock>=0 then
@@ -70528,6 +70851,7 @@ maxQuantity=availableSets
 end
 end
 maxQuantity=math.floor(maxQuantity)
+self:T("_AddCrateQuantityMenus maxQuantity "..maxQuantity)
 if maxQuantity<1 then
 return self
 end
@@ -70563,6 +70887,7 @@ allowLoad=false
 maxQuantity=1
 end
 end
+self:T("_AddCrateQuantityMenus maxQuantity "..maxQuantity.." allowLoad "..tostring(allowLoad))
 local maxMassSets=nil
 if Unit then
 local maxload=self:_GetMaxLoadableMass(Unit)
@@ -70578,10 +70903,12 @@ maxQuantity=maxMassSets
 end
 end
 end
+self:T("_AddCrateQuantityMenus maxQuantity "..maxQuantity.." allowLoad "..tostring(allowLoad))
 if maxQuantity<1 then
 return self
 end
 if maxQuantity==1 then
+self:T("_AddCrateQuantityMenus maxQuantity "..maxQuantity.." Menu for MaxQ=1 ".."parentMenu.MenuText = "..parentMenu.MenuText)
 MENU_GROUP_COMMAND:New(Group,"Get",parentMenu,self._GetCrateQuantity,self,Group,Unit,cargoObj,1)
 local canLoad=(allowLoad and(not capacitySets or capacitySets>=1)and(not maxMassSets or maxMassSets>=1))
 if canLoad then
@@ -70595,10 +70922,13 @@ msg="Crate limit reached"
 end
 MENU_GROUP_COMMAND:New(Group,msg,parentMenu,self._SendMessage,self,msg,10,false,Group)
 end
+parentMenu:Refresh()
 return self
 end
 for quantity=1,maxQuantity do
+self:T("_AddCrateQuantityMenus maxQuantity "..maxQuantity.." Menu for MaxQ>1")
 local label=tostring(quantity)
+self:T("_AddCrateQuantityMenus Label "..label)
 local qMenu=MENU_GROUP:New(Group,label,parentMenu)
 MENU_GROUP_COMMAND:New(Group,"Get",qMenu,self._GetCrateQuantity,self,Group,Unit,cargoObj,quantity)
 local canLoad=(allowLoad and(not capacitySets or capacitySets>=quantity)and(not maxMassSets or maxMassSets>=quantity))
@@ -72388,7 +72718,12 @@ if cargoObj.DontShowInMenu then
 return
 end
 local needed=cargoObj:GetCratesNeeded()or 1
-local txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
+local txt
+if needed>1 then
+txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
+else
+txt=string.format("%s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+end
 if cargoObj.Location then txt=txt.."[R]"end
 if self.showstockinmenuitems then
 local suffix=self:_FormatCrateStockSuffix(cargoObj,crateStockSummary)
@@ -72398,7 +72733,7 @@ local mSet=MENU_GROUP:New(_group,txt,parentMenu)
 _group.CTLD_CrateMenus[cargoObj.Name]=mSet
 self:_AddCrateQuantityMenus(_group,_unit,mSet,cargoObj,crateStockSummary)
 end
-if self.usesubcats then
+if self.usesubcats==true then
 local subcatmenus={}
 for catName,_ in pairs(self.subcats)do
 subcatmenus[catName]=MENU_GROUP:New(_group,catName,cratesmenu)
@@ -72426,7 +72761,12 @@ end
 for _,cargoObj in pairs(self.Cargo_Crates)do
 if not cargoObj.DontShowInMenu then
 local needed=cargoObj:GetCratesNeeded()or 1
-local txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
+local txt
+if needed>1 then
+txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
+else
+txt=string.format("%s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+end
 if cargoObj.Location then txt=txt.."[R]"end
 local stock=cargoObj:GetStock()
 if stock>=0 and self.showstockinmenuitems then txt=txt.."["..stock.."]"end
@@ -72436,7 +72776,12 @@ end
 for _,cargoObj in pairs(self.Cargo_Statics)do
 if not cargoObj.DontShowInMenu then
 local needed=cargoObj:GetCratesNeeded()or 1
-local txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
+local txt
+if needed>1 then
+txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
+else
+txt=string.format("%s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+end
 if cargoObj.Location then txt=txt.."[R]"end
 local stock=cargoObj:GetStock()
 if stock>=0 and self.showstockinmenuitems then txt=txt.."["..stock.."]"end
@@ -72447,7 +72792,12 @@ else
 for _,cargoObj in pairs(self.Cargo_Crates)do
 if not cargoObj.DontShowInMenu then
 local needed=cargoObj:GetCratesNeeded()or 1
-local txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
+local txt
+if needed>1 then
+txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
+else
+txt=string.format("%s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+end
 if cargoObj.Location then txt=txt.."[R]"end
 local stock=cargoObj:GetStock()
 if stock>=0 and self.showstockinmenuitems then txt=txt.."["..stock.."]"end
@@ -72457,7 +72807,12 @@ end
 for _,cargoObj in pairs(self.Cargo_Statics)do
 if not cargoObj.DontShowInMenu then
 local needed=cargoObj:GetCratesNeeded()or 1
-local txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
+local txt
+if needed>1 then
+txt=string.format("%d crate%s %s (%dkg)",needed,needed==1 and""or"s",cargoObj.Name,cargoObj.PerCrateMass or 0)
+else
+txt=string.format("%s (%dkg)",cargoObj.Name,cargoObj.PerCrateMass or 0)
+end
 if cargoObj.Location then txt=txt.."[R]"end
 local stock=cargoObj:GetStock()
 if stock>=0 and self.showstockinmenuitems then txt=txt.."["..stock.."]"end
